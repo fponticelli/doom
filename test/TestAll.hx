@@ -17,5 +17,8 @@ class TestAll {
     Assert.same([], (Empty : Node).diff(Empty));
     Assert.same([], (Text("a") : Node).diff(Text("a")));
     Assert.same([ContentChanged("b")], (Text("a") : Node).diff(Text("b")));
+    Assert.same([ReplaceWithText("b")], (Empty : Node).diff(Text("b")));
+    Assert.same([ReplaceWithComment("b")], (Empty : Node).diff(Comment("b")));
+    Assert.same([Remove], (Text("a") : Node).diff(Empty));
   }
 }
