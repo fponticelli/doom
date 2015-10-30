@@ -15,7 +15,7 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
       case [Element(_, a1, e1, c1), Element(_, a2, e2, c2)]:
         diffAttributes(a1, a2)
           .concat(diffEvents(e1, e2))
-          .concat(diffChildren(c1, c2));
+          .concat(diffNodes(c1, c2));
       case [_, Element(n2, a2, e2, c2)]:
         [ReplaceWithElement(n2, a2, e2, c2)];
       case [Text(t1), Text(t2)] | [Comment(t1), Comment(t2)] if(t1 != t2):
@@ -55,7 +55,7 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
       .concat(added.map.fn(Patch.SetEvent(_, b.get(_))));
   }
 
-  public static function diffChildren(a : Array<Node>, b : Array<Node>) : Array<Patch> {
+  public static function diffNodes(a : Array<Node>, b : Array<Node>) : Array<Patch> {
     var min = a.length.min(b.length),
         result = [];
     for(i in min...a.length) {
