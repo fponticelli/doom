@@ -1,6 +1,13 @@
 package doom;
 
 enum Patch {
+  AddText(text : String);
+  AddComment(text : String);
+  AddElement(
+    name : String,
+    attributes : Map<String, String>,
+    events : Map<String, EventHandler>,
+    children : Array<Node>);
   Remove;
   RemoveAttribute(name : String);
   SetAttribute(name : String, value : String);
