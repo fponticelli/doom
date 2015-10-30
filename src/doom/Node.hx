@@ -2,6 +2,7 @@ package doom;
 
 using thx.Arrays;
 using thx.Functions;
+using thx.Ints;
 using thx.Iterators;
 using thx.Strings;
 using thx.Set;
@@ -55,7 +56,27 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
   }
 
   public static function diffChildren(a : Array<Node>, b : Array<Node>) : Array<Patch> {
-    return [];
+    var min = a.length.min(b.length),
+        result = [];
+    for(i in min...a.length) {
+      result.push(Patch.PatchChild(i, Remove));
+    }
+    for(i in min...b.length) {
+      switch b[i] {
+        case Element(n, a, e, c):
+          result.push(PatchChild(i, AddElement(n, a, e, c)));
+        case Text(t):
+          result.push(PatchChild(i, AddText(t)));
+        case Comment(t):
+          result.push(PatchChild(i, AddComment(t)));
+        case Empty:
+          // do nothing
+      };
+    }
+    for(i in 0...min) {
+      result = result.concat(a[i].diff(b[i]).map.fn(Patch.PatchChild(i, _)));
+    }
+    return result;
   }
 }
 
