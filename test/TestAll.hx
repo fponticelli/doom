@@ -1,6 +1,7 @@
 import utest.UTest;
 
 import utest.Assert;
+import doom.Doom;
 import doom.Node;
 import doom.Patch;
 
@@ -42,15 +43,24 @@ class TestAll {
     Assert.same([SetEvent("a", hc)], Node.diffEvents(["a" => hb], ["a" => hc]));
   }
 
+  static var emptys = new Map();
+  static var emptye = new Map();
+  static var el1 : Node = Element("a", emptys, emptye, []);
+  static var el2 : Node = Element("div", emptys, emptye, [el1]);
+  static var el3 : Node = Element("div", emptys, emptye, [el1, el1]);
+  static var el4 : Node = Element("div", ["name" => "value"], emptye, [el1]);
   public function testChildrenDiff() {
-    var emptys = new Map(),
-        emptye = new Map(),
-        el1 : Node = Element("a", emptys, emptye, []),
-        el2 : Node = Element("div", emptys, emptye, [el1]),
-        el3 : Node = Element("div", emptys, emptye, [el1, el1]);
     Assert.same([], el2.diff(el2));
     Assert.same([ReplaceWithElement("div", emptys, emptye, [el1])], el1.diff(el2));
     Assert.same([PatchChild(1, AddElement("a", emptys, emptye, []))], el2.diff(el3));
     Assert.same([PatchChild(1, Remove)], el3.diff(el2));
+  }
+
+  public function testToString() {
+    Assert.equals('<div name="value"><a/></div>', Doom.nodeToString(el4));
+  }
+
+  public function testToXml() {
+    Assert.equals('<div name="value"><a/></div>', Doom.nodeToXml(el4).toString());
   }
 }
