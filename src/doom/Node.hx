@@ -1,7 +1,5 @@
 package doom;
 
-import thx.OrderedMap;
-
 abstract Node(NodeImpl) from NodeImpl to NodeImpl {
   public function diff(that : Node) : Array<Patch> {
     return switch [this, that] {
@@ -26,11 +24,11 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
     };
   }
 
-  public static function diffAttributes(a : OrderedMap<String, String>, b : OrderedMap<String, String>) : Array<Patch> {
+  public static function diffAttributes(a : Map<String, String>, b : Map<String, String>) : Array<Patch> {
     return [];
   }
 
-  public static function diffEvents(a : OrderedMap<String, EventHandler>, b : OrderedMap<String, EventHandler>) : Array<Patch> {
+  public static function diffEvents(a : Map<String, EventHandler>, b : Map<String, EventHandler>) : Array<Patch> {
     return [];
   }
 
@@ -42,8 +40,8 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
 enum NodeImpl {
   Element(
     name : String,
-    attributes : OrderedMap<String, String>,
-    events : OrderedMap<String, EventHandler>,
+    attributes : Map<String, String>,
+    events : Map<String, EventHandler>,
     children : Array<Node>);
   Text(text : String);
   Comment(text : String);

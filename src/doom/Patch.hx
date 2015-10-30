@@ -1,13 +1,11 @@
 package doom;
 
-import thx.OrderedMap;
-
 enum Patch {
   Remove;
   ReplaceWithElement(
     name : String,
-    attributes : OrderedMap<String, String>,
-    events : OrderedMap<String, EventHandler>,
+    attributes : Map<String, String>,
+    events : Map<String, EventHandler>,
     children : Array<Node>);
   ReplaceWithText(text : String);
   ReplaceWithComment(text : String);

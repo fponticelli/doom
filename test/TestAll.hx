@@ -21,4 +21,16 @@ class TestAll {
     Assert.same([ReplaceWithComment("b")], (Empty : Node).diff(Comment("b")));
     Assert.same([Remove], (Text("a") : Node).diff(Empty));
   }
+
+  public function testAttributeDiff() {
+
+  }
+
+  public function testEventDiff() {
+
+  }
+
+  public function testChildrenDiff() {
+
+  }
 }
