@@ -43,6 +43,14 @@ class TestAll {
   }
 
   public function testChildrenDiff() {
-
+    var emptys = new Map(),
+        emptye = new Map(),
+        el1 : Node = Element("a", emptys, emptye, []),
+        el2 : Node = Element("div", emptys, emptye, [el1]),
+        el3 : Node = Element("div", emptys, emptye, [el1, el1]);
+    Assert.same([], el2.diff(el2));
+    Assert.same([ReplaceWithElement("div", emptys, emptye, [el1])], el1.diff(el2));
+    Assert.same([PatchChild(1, AddElement("a", emptys, emptye, []))], el2.diff(el3));
+    Assert.same([PatchChild(1, Remove)], el3.diff(el2));
   }
 }
