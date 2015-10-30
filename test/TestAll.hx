@@ -1,8 +1,8 @@
 import utest.UTest;
 
 import utest.Assert;
-import doom.*;
 import doom.Node;
+import doom.Patch;
 
 class TestAll {
   static function main() {
@@ -13,8 +13,9 @@ class TestAll {
 
   public function new() {}
 
-  public function testDiffEmpty() {
-    var node : Node = Empty;
-    Assert.same([], node.diff(Empty));
+  public function testDiff() {
+    Assert.same([], (Empty : Node).diff(Empty));
+    Assert.same([], (Text("a") : Node).diff(Text("a")));
+    Assert.same([ContentChanged("b")], (Text("a") : Node).diff(Text("b")));
   }
 }
