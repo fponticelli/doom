@@ -1,14 +1,17 @@
 import utest.UTest;
 
 import utest.Assert;
-import doom.Doom;
+using doom.XmlNode;
 import doom.Node;
 import doom.Patch;
 
 class TestAll {
   static function main() {
     UTest.run([
-      new TestAll()
+      new TestAll(),
+      #if (js && html)
+      new TestHtml()
+      #end
     ]);
   }
 
@@ -43,12 +46,12 @@ class TestAll {
     Assert.same([SetEvent("a", hc)], Node.diffEvents(["a" => hb], ["a" => hc]));
   }
 
-  static var emptys = new Map();
-  static var emptye = new Map();
-  static var el1 : Node = Element("a", emptys, emptye, []);
-  static var el2 : Node = Element("div", emptys, emptye, [el1]);
-  static var el3 : Node = Element("div", emptys, emptye, [el1, el1]);
-  static var el4 : Node = Element("div", ["name" => "value"], emptye, [el1]);
+  public static var emptys = new Map();
+  public static var emptye = new Map();
+  public static var el1 : Node = Element("a", emptys, emptye, []);
+  public static var el2 : Node = Element("div", emptys, emptye, [el1]);
+  public static var el3 : Node = Element("div", emptys, emptye, [el1, el1]);
+  public static var el4 : Node = Element("div", ["name" => "value"], emptye, [el1]);
   public function testChildrenDiff() {
     Assert.same([], el2.diff(el2));
     Assert.same([ReplaceWithElement("div", emptys, emptye, [el1])], el1.diff(el2));
@@ -57,10 +60,10 @@ class TestAll {
   }
 
   public function testToString() {
-    Assert.equals('<div name="value"><a/></div>', Doom.nodeToString(el4));
+    Assert.equals('<div name="value"><a/></div>', el4.toString());
   }
 
   public function testToXml() {
-    Assert.equals('<div name="value"><a/></div>', Doom.nodeToXml(el4).toString());
+    Assert.equals('<div name="value"><a/></div>', el4.toXml().toString());
   }
 }

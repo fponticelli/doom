@@ -1,9 +1,18 @@
--js bin/test.js
+-js bin/node.js
+-cp src
+-cp test
+-lib thx.core
+-lib utest
+-main TestAll
+
+-cmd node bin/node.js
+
+--next
+
+-js bin/browser.js
 -cp src
 -cp test
 -lib thx.core
 -lib utest
 -main TestAll
 -D html
-
--cmd node bin/test.js
