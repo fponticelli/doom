@@ -4,6 +4,8 @@ enum Patch {
   Remove;
   RemoveAttribute(name : String);
   SetAttribute(name : String, value : String);
+  RemoveEvent(name : String);
+  SetEvent(name : String, handler : EventHandler);
   ReplaceWithElement(
     name : String,
     attributes : Map<String, String>,

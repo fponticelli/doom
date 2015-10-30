@@ -32,7 +32,14 @@ class TestAll {
   }
 
   public function testEventDiff() {
-
+    var empty = new Map(),
+        hb = function(_) {},
+        hc = function(_) {};
+    Assert.same([], Node.diffEvents(empty, empty));
+    Assert.same([RemoveEvent("a")], Node.diffEvents(["a" => hb], empty));
+    Assert.same([SetEvent("a", hb)], Node.diffEvents(empty, ["a" => hb]));
+    Assert.same([], Node.diffEvents(["a" => hb], ["a" => hb]));
+    Assert.same([SetEvent("a", hc)], Node.diffEvents(["a" => hb], ["a" => hc]));
   }
 
   public function testChildrenDiff() {

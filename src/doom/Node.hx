@@ -43,7 +43,15 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
   }
 
   public static function diffEvents(a : Map<String, EventHandler>, b : Map<String, EventHandler>) : Array<Patch> {
-    return [];
+    var ka = Set.createString(a.keys().toArray()),
+        kb = Set.createString(b.keys().toArray()),
+        removed = ka.difference(kb).toArray(),
+        added   = kb.difference(ka).toArray(),
+        common  = ka.intersection(kb).toArray();
+
+    return removed.map.fn(Patch.RemoveEvent(_))
+      .concat(common.filter.fn(a.get(_) != b.get(_)).map.fn(Patch.SetEvent(_, b.get(_))))
+      .concat(added.map.fn(Patch.SetEvent(_, b.get(_))));
   }
 
   public static function diffChildren(a : Array<Node>, b : Array<Node>) : Array<Patch> {
