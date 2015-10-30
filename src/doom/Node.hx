@@ -2,7 +2,19 @@ package doom;
 
 import thx.OrderedMap;
 
-enum Node {
+abstract Node(NodeImpl) from NodeImpl to NodeImpl {
+  public function diff(that : Node) : Array<Patch> {
+    return switch [this, that] {
+
+      case [Empty, Empty]:
+        [];
+      case [_, _]:
+        throw new thx.Error('pattern not implemented yet [$this, $that]');
+    };
+  }
+}
+
+enum NodeImpl {
   Element(
     name : String,
     attributes : OrderedMap<String, String>,
