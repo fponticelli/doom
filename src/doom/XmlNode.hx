@@ -2,40 +2,16 @@ package doom;
 
 using thx.Functions;
 using thx.Strings;
-
 import doom.Node;
 
-#if (js && html)
-import js.html.*;
-import js.Browser.*;
-#end
-
-class Doom {
-#if (js && html)
-  public static function nodeToHtml(node : Node) return switch (node : NodeImpl) {
-    case Element(name, attributes, events, children):
-      var el = document.createElement(name);
-      for(key in attributes.keys())
-        el.setAttribute(key, attributes.get(key));
-      for(child in children) {
-        var n = nodeToHtml(child);
-        if(null != n)
-          el.appendChild(n);
-      }
-      el;
-    case Text(text): document.createTextNode(text);
-    case Comment(text): document.createComment(text);
-    case Empty: null;
-  }
-#end
-
-  public static function nodeToXml(node : Node) return switch (node : NodeImpl) {
+class XmlNode {
+  public static function toXml(node : Node) return switch (node : NodeImpl) {
     case Element(name, attributes, events, children):
       var xml = Xml.createElement(name);
       for(key in attributes.keys())
         xml.set(key, attributes.get(key));
       for(child in children) {
-        var n = nodeToXml(child);
+        var n = toXml(child);
         if(null != n)
           xml.addChild(n);
       }
@@ -45,14 +21,14 @@ class Doom {
     case Empty: null;
   };
 
-  public static function nodeToString(node : Node) return switch (node : NodeImpl) {
+  public static function toString(node : Node) return switch (node : NodeImpl) {
     case Element(name, attributes, events, children):
       var buf = '<$name${attributesToString(attributes)}';
       if(children.length == 0)
         buf += '/>';
       else {
         buf += '>';
-        buf += children.map.fn(nodeToString(_)).join("");
+        buf += children.map.fn(toString(_)).join("");
         buf += '</$name>';
       }
       buf;
