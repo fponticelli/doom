@@ -4,5 +4,6 @@
 -lib thx.core
 -lib utest
 -main TestAll
+-D html
 
 -cmd node bin/test.js
