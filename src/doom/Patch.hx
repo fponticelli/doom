@@ -2,6 +2,8 @@ package doom;
 
 enum Patch {
   Remove;
+  RemoveAttribute(name : String);
+  SetAttribute(name : String, value : String);
   ReplaceWithElement(
     name : String,
     attributes : Map<String, String>,

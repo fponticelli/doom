@@ -23,7 +23,12 @@ class TestAll {
   }
 
   public function testAttributeDiff() {
-
+    var empty = new Map();
+    Assert.same([], Node.diffAttributes(empty, empty));
+    Assert.same([RemoveAttribute("a")], Node.diffAttributes(["a" => "b"], empty));
+    Assert.same([SetAttribute("a", "b")], Node.diffAttributes(empty, ["a" => "b"]));
+    Assert.same([], Node.diffAttributes(["a" => "b"], ["a" => "b"]));
+    Assert.same([SetAttribute("a", "c")], Node.diffAttributes(["a" => "b"], ["a" => "c"]));
   }
 
   public function testEventDiff() {

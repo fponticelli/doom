@@ -1,5 +1,11 @@
 package doom;
 
+using thx.Arrays;
+using thx.Functions;
+using thx.Iterators;
+using thx.Strings;
+using thx.Set;
+
 abstract Node(NodeImpl) from NodeImpl to NodeImpl {
   public function diff(that : Node) : Array<Patch> {
     return switch [this, that] {
@@ -25,7 +31,15 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
   }
 
   public static function diffAttributes(a : Map<String, String>, b : Map<String, String>) : Array<Patch> {
-    return [];
+    var ka = Set.createString(a.keys().toArray()),
+        kb = Set.createString(b.keys().toArray()),
+        removed = ka.difference(kb),
+        added   = kb.difference(ka),
+        common  = ka.intersection(kb);
+
+    return removed.map.fn(Patch.RemoveAttribute(_))
+      .concat(common.filter.fn(a.get(_) != b.get(_)).map.fn(Patch.SetAttribute(_, b.get(_))))
+      .concat(added.map.fn(Patch.SetAttribute(_, b.get(_))));
   }
 
   public static function diffEvents(a : Map<String, EventHandler>, b : Map<String, EventHandler>) : Array<Patch> {
