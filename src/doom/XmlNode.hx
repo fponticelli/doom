@@ -21,6 +21,26 @@ class XmlNode {
     case Empty: null;
   };
 
+  public static function applyPatches(patches : Array<Patch>, node : js.html.Node)
+    for(patch in patches)
+      applyPatch(patch, node);
+
+  public static function applyPatch(patch : Patch, node : js.html.Node) switch [patch, node.nodeType] {
+    case [AddText(text), _]:
+    case [AddComment(text), _]:
+    case [AddElement(name, attributes, events, children), _]:
+    case [Remove, _]:
+    case [RemoveAttribute(name), _]:
+    case [SetAttribute(name, value), _]:
+    case [RemoveEvent(name), _]:
+    case [SetEvent(name, handler), _]:
+    case [ReplaceWithElement(name, attributes, events, children), _]:
+    case [ReplaceWithText(text), _]:
+    case [ReplaceWithComment(text), _]:
+    case [ContentChanged(newcontent), _]:
+    case [PatchChild(index, patch), _]:
+  };
+
   public static function toString(node : Node) return switch (node : NodeImpl) {
     case Element(name, attributes, events, children):
       var buf = '<$name${attributesToString(attributes)}';
