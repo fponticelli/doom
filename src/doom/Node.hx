@@ -8,6 +8,34 @@ using thx.Strings;
 using thx.Set;
 
 abstract Node(NodeImpl) from NodeImpl to NodeImpl {
+  public static function el(name : String,
+    ?attributes : Map<String, String>,
+    ?events : Map<String, EventHandler>,
+    ?children : Array<Node>,
+    ?child : Node,
+    ?text : String) {
+    if(null == attributes)
+      attributes = new Map();
+    if(null == events)
+      events = new Map();
+    if(null == children)
+      children = [];
+    if(null != child)
+      children.push(child);
+    if(null != text)
+      children.push(Text(text));
+    return Element(name, attributes, events, children);
+  }
+
+  inline public static function comment(content : String)
+    return Comment(content);
+
+  inline public static function text(content : String)
+    return Text(content);
+
+  inline public static function empty()
+    return Empty;
+
   public static function diffAttributes(a : Map<String, String>, b : Map<String, String>) : Array<Patch> {
     var ka = Set.createString(a.keys().toArray()),
         kb = Set.createString(b.keys().toArray()),
@@ -80,6 +108,10 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
         [Patch.Remove];
     };
   }
+
+  @:to
+  public function toString() : String
+    return XmlNode.toString(this);
 }
 
 enum NodeImpl {
