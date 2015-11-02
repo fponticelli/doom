@@ -55,8 +55,8 @@ class TestAll {
   public function testChildrenDiff() {
     Assert.same([], el2.diff(el2));
     Assert.same([ReplaceWithElement("div", emptys, emptye, [el1])], el1.diff(el2));
-    Assert.same([PatchChild(1, AddElement("a", emptys, emptye, []))], el2.diff(el3));
-    Assert.same([PatchChild(1, Remove)], el3.diff(el2));
+    Assert.same([PatchChild(1, [AddElement("a", emptys, emptye, [])])], el2.diff(el3));
+    Assert.same([PatchChild(1, [Remove])], el3.diff(el2));
   }
 
   public function testToString() {
@@ -65,5 +65,16 @@ class TestAll {
 
   public function testToXml() {
     Assert.equals('<div name="value"><a/></div>', el4.toXml().toString());
+  }
+
+  public function testXmlPatch() {
+    var xml = Xml.createElement("div"),
+        patches = [
+          SetAttribute("name", "value"),
+          AddElement("a", ["href" => "#"], null, []),
+          PatchChild(0, [AddText("hello")])
+        ];
+    XmlNode.applyPatches(patches, xml);
+    Assert.equals('<div name="value"><a href="#">hello</a></div>', xml.toString());
   }
 }

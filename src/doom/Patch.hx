@@ -21,5 +21,5 @@ enum Patch {
   ReplaceWithText(text : String);
   ReplaceWithComment(text : String);
   ContentChanged(newcontent : String);
-  PatchChild(index : Int, patch : Patch);
+  PatchChild(index : Int, patches : Array<Patch>);
 }

@@ -59,22 +59,24 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
     var min = a.length.min(b.length),
         result = [];
     for(i in min...a.length) {
-      result.push(Patch.PatchChild(i, Remove));
+      result.push(Patch.PatchChild(i, [Remove]));
     }
     for(i in min...b.length) {
       switch b[i] {
         case Element(n, a, e, c):
-          result.push(PatchChild(i, AddElement(n, a, e, c)));
+          result.push(PatchChild(i, [AddElement(n, a, e, c)]));
         case Text(t):
-          result.push(PatchChild(i, AddText(t)));
+          result.push(PatchChild(i, [AddText(t)]));
         case Comment(t):
-          result.push(PatchChild(i, AddComment(t)));
+          result.push(PatchChild(i, [AddComment(t)]));
         case Empty:
           // do nothing
       };
     }
     for(i in 0...min) {
-      result = result.concat(a[i].diff(b[i]).map.fn(Patch.PatchChild(i, _)));
+      var diff = a[i].diff(b[i]);
+      if(diff.length > 0)
+        result.push(PatchChild(i, diff));
     }
     return result;
   }
