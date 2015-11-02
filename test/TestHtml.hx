@@ -14,4 +14,19 @@ class TestHtml {
     Assert.equals("DIV", dom.nodeName);
     Assert.equals("value", dom.getAttribute("name"));
   }
+
+  public function testXmlPatch() {
+    var dom = js.Browser.document.getElementById("ref"),
+        patches = [
+          SetAttribute("name", "value"),
+          AddElement("a", ["href" => "#"], null, []),
+          PatchChild(0, [AddText("hello")])
+        ];
+    HtmlNode.applyPatches(patches, dom);
+    Assert.equals("DIV", dom.nodeName);
+    Assert.equals("value", dom.getAttribute("name"));
+    Assert.equals("A", dom.firstElementChild.nodeName);
+    Assert.equals("#", dom.firstElementChild.getAttribute("href"));
+    Assert.equals("hello", dom.firstElementChild.textContent);
+  }
 }
