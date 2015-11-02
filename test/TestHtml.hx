@@ -3,6 +3,7 @@ import utest.UTest;
 import utest.Assert;
 using doom.HtmlNode;
 import doom.Node;
+import doom.Node.*;
 import doom.Patch;
 
 class TestHtml {
@@ -11,9 +12,11 @@ class TestHtml {
     dom = js.Browser.document.getElementById("ref");
   }
 
-  public function setup() {
+  public function setup()
     dom.innerHTML = "";
-  }
+
+  public function teardown()
+    dom.innerHTML = "";
 
   public function testHtml() {
     var dom : js.html.Element = cast TestAll.el4.toHtml();
@@ -33,9 +36,5 @@ class TestHtml {
     Assert.equals("A", dom.firstElementChild.nodeName);
     Assert.equals("#", dom.firstElementChild.getAttribute("href"));
     Assert.equals("hello", dom.firstElementChild.textContent);
-  }
-
-  public function testSample() {
-
   }
 }

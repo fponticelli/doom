@@ -3,6 +3,7 @@ import utest.UTest;
 import utest.Assert;
 using doom.XmlNode;
 import doom.Node;
+import doom.Node.*;
 import doom.Patch;
 
 class TestAll {
@@ -76,5 +77,17 @@ class TestAll {
         ];
     XmlNode.applyPatches(patches, xml);
     Assert.equals('<div name="value"><a href="#">hello</a></div>', xml.toString());
+  }
+
+  public function testQuickBuilding() {
+    var dom = el("div",
+          ["class" => "some"],
+          ["onclick" => function(_) trace("click")],
+          [el("a",
+            ["href" => "#"],
+            [text("hello")]
+          )]
+        );
+    Assert.equals('<div class="some"><a href="#">hello</a></div>', dom.toString());
   }
 }
