@@ -13,7 +13,7 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
     ?events : Map<String, EventHandler>,
     ?children : Array<Node>,
     ?child : Node,
-    ?text : String) {
+    ?text : String) : Node {
     if(null == attributes)
       attributes = new Map();
     if(null == events)
@@ -27,13 +27,13 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
     return Element(name, attributes, events, children);
   }
 
-  inline public static function comment(content : String)
+  inline public static function comment(content : String) : Node
     return Comment(content);
 
-  inline public static function text(content : String)
+  inline public static function text(content : String) : Node
     return Text(content);
 
-  inline public static function empty()
+  inline public static function empty() : Node
     return Empty;
 
   public static function diffAttributes(a : Map<String, String>, b : Map<String, String>) : Array<Patch> {
