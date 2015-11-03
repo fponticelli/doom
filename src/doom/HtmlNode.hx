@@ -18,7 +18,6 @@ class HtmlNode {
     case Empty: null;
   }
 
-  // TODO trigger mount events
   static function createElement(name : String, attributes : Map<String, String>, events : Map<String, EventHandler>, children : Array<Node>) {
     var el = document.createElement(name);
     for(key in attributes.keys())
@@ -28,6 +27,8 @@ class HtmlNode {
       if(null != n)
         el.appendChild(n);
     }
+    for(key in events.keys())
+      addEvent(el, key, events.get(key));
     trigger(el, "create");
     return el;
   }
@@ -41,7 +42,18 @@ class HtmlNode {
     el.dispatchEvent(event);
   }
 
-  // TODO trigger mount events
+  static function addEvent(el : js.html.Element, name : String, handler : EventHandler) {
+    Reflect.setField(el, 'on$name', handler);
+    if(customEvents.exists(name))
+      el.addEventListener(name, handler, false);
+  }
+
+  static function removeEvent(el : js.html.Element, name : String) {
+    if(customEvents.exists(name))
+      el.removeEventListener(name, Reflect.field(el, 'on$name'), false);
+    Reflect.deleteField(el, 'on$name');
+  }
+
   public static function applyPatch(patch : Patch, node : N) switch [patch, node.nodeType] {
     case [AddText(text), N.ELEMENT_NODE]:
       node.appendChild(document.createTextNode(text));
@@ -58,27 +70,20 @@ class HtmlNode {
     case [SetAttribute(name, value), N.ELEMENT_NODE]:
       (cast node : js.html.Element).setAttribute(name, value);
     case [RemoveEvent(name), N.ELEMENT_NODE]:
-      if(customEvents.exists(name))
-        (cast node : js.html.Element).removeEventListener(name, Reflect.field(node, 'on$name'), false);
-      Reflect.deleteField(node, 'on$name');
+      removeEvent(cast node, name);
     case [SetEvent(name, handler), N.ELEMENT_NODE]:
-      Reflect.setField(node, 'on$name', handler);
-      if(customEvents.exists(name))
-        (cast node : js.html.Element).addEventListener(name, handler, false);
+      addEvent(cast node, name, handler);
     case [ReplaceWithElement(name, attributes, events, children), _]:
       var parent = node.parentNode,
           el = createElement(name, attributes, events, children);
-      parent.insertBefore(el, node);
-      parent.removeChild(node);
+      parent.replaceChild(el, node);
       trigger(el, "mount");
     case [ReplaceWithText(text), _]:
       var parent = node.parentNode;
-      parent.insertBefore(document.createTextNode(text), node);
-      parent.removeChild(node);
+      parent.replaceChild(document.createTextNode(text), node);
     case [ReplaceWithComment(text), _]:
       var parent = node.parentNode;
-      parent.insertBefore(document.createComment(text), node);
-      parent.removeChild(node);
+      parent.replaceChild(document.createComment(text), node);
     case [ContentChanged(newcontent), N.TEXT_NODE]
        | [ContentChanged(newcontent), N.COMMENT_NODE]:
       node.nodeValue = newcontent;

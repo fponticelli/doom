@@ -19,8 +19,7 @@ class Component<T> {
     if(null == oldNode) {
       var parent = mountNode.parentNode,
           el = HtmlNode.toHtml(node);
-      parent.insertBefore(el, mountNode);
-      parent.removeChild(mountNode);
+      parent.appendChild(el); // TODO meh
       mountNode = el;
     } else {
       var patches = oldNode.diff(newNode);
@@ -52,8 +51,8 @@ class Component<T> {
 
   public function mount(node : DomNode) {
     mountNode = node;
-    if(mountNode.nodeType == DomNode.ELEMENT_NODE)
-      (cast mountNode : js.html.Element).innerHTML = "";
+    //if(mountNode.nodeType == DomNode.ELEMENT_NODE)
+    //  (cast mountNode : js.html.Element).innerHTML = "";
     return this;
   }
 }
