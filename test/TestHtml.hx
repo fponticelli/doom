@@ -1,30 +1,15 @@
-import utest.UTest;
-
 import utest.Assert;
 using doom.HtmlNode;
-import doom.Node;
-import doom.Node.*;
 import doom.Patch;
 
-class TestHtml {
-  var dom : js.html.Element;
-  public function new() {
-    dom = js.Browser.document.getElementById("ref");
-  }
-
-  public function setup()
-    dom.innerHTML = "";
-
-  public function teardown()
-    dom.innerHTML = "";
-
+class TestHtml extends TestBaseHtml {
   public function testHtml() {
-    var dom : js.html.Element = cast TestAll.el4.toHtml();
+    var dom : js.html.Element = cast el4.toHtml();
     Assert.equals("DIV", dom.nodeName);
     Assert.equals("value", dom.getAttribute("name"));
   }
 
-  public function testXmlPatch() {
+  public function testHtmlPatch() {
     var patches = [
           SetAttribute("name", "value"),
           AddElement("a", ["href" => "#"], null, []),
