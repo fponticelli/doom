@@ -109,9 +109,8 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
     };
   }
 
-  @:to
-  public function toString() : String
-    return XmlNode.toString(this);
+  @:to public function toString() : String
+    return doom.XmlNode.toString(this);
 }
 
 enum NodeImpl {
