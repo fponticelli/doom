@@ -1,0 +1,8 @@
+-js demo/bin/public/scripts/demo.js
+-cp src
+-cp demo
+-lib thx.core
+-lib thx.load
+-lib thx.http
+-main Main
+-D html

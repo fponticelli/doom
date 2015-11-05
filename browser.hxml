@@ -1,8 +1,9 @@
--js bin/node.js
+-js bin/browser.js
 -cp src
 -cp test
 -lib thx.core
 -lib utest
 -main TestAll
+-D html
 
--cmd node bin/node.js
+-cmd phantomjs bin/phantom.js
