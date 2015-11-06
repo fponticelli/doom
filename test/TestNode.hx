@@ -1,7 +1,7 @@
 import utest.Assert;
 import doom.Node;
 import doom.Node.*;
-import doom.Patch;
+using doom.Patch;
 
 class TestNode extends TestBase {
   public function testDiff() {
@@ -36,8 +36,51 @@ class TestNode extends TestBase {
   public function testChildrenDiff() {
     Assert.same([], el2.diff(el2));
     Assert.same([ReplaceWithElement("div", emptys, emptye, [el1])], el1.diff(el2));
-    Assert.same([PatchChild(1, [AddElement("a", emptys, emptye, [])])], el2.diff(el3));
+    Assert.same([AddElement("a", emptys, emptye, [])], el2.diff(el3));
     Assert.same([PatchChild(1, [Remove])], el3.diff(el2));
+  }
+
+  public function testIssue20151105() {
+    var comments = [
+            { author : "Pete Hunt", text : "This is one comment" },
+            { author : "Jordan Walke", text : "This is *another* comment" }
+          ],
+        o = el("div", ["class" => "loading"], "Loading ..."),
+        n = el("div",
+              ["class" => "commentList"],
+              comments.map(function(comment) return el("div",
+                ["class" => "comment"],
+                [el("h2",
+                  ["class" => "comment"],
+                  comment.author
+                )],
+                comment.text
+              ))
+            );
+    var patches = o.diff(n);
+    trace(patches.toPrettyString());
+    Assert.same(
+      [
+        SetAttribute("class", "commentList"),
+        AddElement("div", ["class" => "comment"], new Map(), [
+          el("h2",
+            ["class" => "comment"],
+            "Jordan Walke"
+          ),
+          text("This is *another* comment")
+        ]),
+        PatchChild(0, [ReplaceWithElement("div", ["class" => "comment"], new Map(),
+          [
+            el("h2",
+              ["class" => "comment"],
+              "Pete Hunt"
+            ),
+            text("This is one comment")
+          ]
+        )])
+      ],
+      patches
+    );
   }
 
   public function testToString() {
