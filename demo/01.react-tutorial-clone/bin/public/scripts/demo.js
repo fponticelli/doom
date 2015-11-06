@@ -275,34 +275,31 @@ CommentBox.prototype = $extend(doom_Component.prototype,{
 			if(__map_reserved["class"] != null) _g.setReserved("class","commentBox"); else _g.h["class"] = "commentBox";
 			$r = _g;
 			return $r;
-		}(this)),null,[doom__$Node_Node_$Impl_$.el("h1",null,null,null,null,"comments"),new CommentList(url).view(Loader.Loading),new CommentForm().view(thx_Nil.nil)]);
+		}(this)),null,[doom__$Node_Node_$Impl_$.el("h1",null,null,null,null,"comments"),new CommentList().view(HttpLoader.Load(url)),new CommentForm().view(thx_Nil.nil)]);
 	}
 	,__class__: CommentBox
 });
-var CommentList = function(url) {
-	this.url = url;
+var CommentList = function() {
 	doom_Component.call(this);
 };
 CommentList.__name__ = ["CommentList"];
 CommentList.__super__ = doom_Component;
 CommentList.prototype = $extend(doom_Component.prototype,{
-	url: null
-	,render: function(data) {
+	render: function(data) {
 		var _g = this;
 		switch(data[1]) {
 		case 0:
-			thx_promise__$Promise_Promise_$Impl_$.failure(thx_promise__$Promise_Promise_$Impl_$.success(thx_promise__$Promise_Promise_$Impl_$.mapSuccessPromise(thx_load_Loader.getJson(this.url),function(comments) {
+			var url = data[2];
+			thx_promise__$Promise_Promise_$Impl_$.failure(thx_promise__$Promise_Promise_$Impl_$.success(thx_promise__$Promise_Promise_$Impl_$.mapSuccessPromise(thx_load_Loader.getJson(url),function(comments) {
 				return thx_promise__$Promise_Promise_$Impl_$.create(function(resolve,_) {
 					thx_Timer.delay(function() {
 						resolve(comments);
 					},2000);
 				});
 			}),function(comments1) {
-				haxe_Log.trace("SUCCESS",{ fileName : "Main.hx", lineNumber : 57, className : "CommentList", methodName : "render"});
-				_g.update(Loader.Loaded(comments1));
+				_g.update(HttpLoader.Loaded(comments1));
 			}),function(err) {
-				haxe_Log.trace("ERROR",{ fileName : "Main.hx", lineNumber : 61, className : "CommentList", methodName : "render"});
-				_g.update(Loader.Error(err.toString()));
+				_g.update(HttpLoader.Error(err.toString()));
 			});
 			return doom__$Node_Node_$Impl_$.el("div",(function($this) {
 				var $r;
@@ -380,12 +377,10 @@ Comment.prototype = $extend(doom_Component.prototype,{
 	}
 	,__class__: Comment
 });
-var Loader = { __ename__ : ["Loader"], __constructs__ : ["Loading","Error","Loaded"] };
-Loader.Loading = ["Loading",0];
-Loader.Loading.toString = $estr;
-Loader.Loading.__enum__ = Loader;
-Loader.Error = function(msg) { var $x = ["Error",1,msg]; $x.__enum__ = Loader; $x.toString = $estr; return $x; };
-Loader.Loaded = function(data) { var $x = ["Loaded",2,data]; $x.__enum__ = Loader; $x.toString = $estr; return $x; };
+var HttpLoader = { __ename__ : ["HttpLoader"], __constructs__ : ["Load","Error","Loaded"] };
+HttpLoader.Load = function(url) { var $x = ["Load",0,url]; $x.__enum__ = HttpLoader; $x.toString = $estr; return $x; };
+HttpLoader.Error = function(msg) { var $x = ["Error",1,msg]; $x.__enum__ = HttpLoader; $x.toString = $estr; return $x; };
+HttpLoader.Loaded = function(data) { var $x = ["Loaded",2,data]; $x.__enum__ = HttpLoader; $x.toString = $estr; return $x; };
 var Markdown = function() { };
 Markdown.__name__ = ["Markdown"];
 Markdown.markdownToHtml = function(markdown) {
@@ -4114,6 +4109,14 @@ thx_Arrays.each = function(arr,effect) {
 		effect(element);
 	}
 };
+thx_Arrays.eachi = function(arr,effect) {
+	var _g1 = 0;
+	var _g = arr.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		effect(arr[i],i);
+	}
+};
 thx_Arrays.all = function(arr,predicate) {
 	var $it0 = HxOverrides.iter(arr);
 	while( $it0.hasNext() ) {
@@ -5385,9 +5388,6 @@ thx_Floats.roundTo = function(f,decimals) {
 thx_Floats.sign = function(value) {
 	if(value < 0) return -1; else return 1;
 };
-thx_Floats.toString = function(v) {
-	return "" + v;
-};
 thx_Floats.toFloat = function(s) {
 	return thx_Floats.parse(s);
 };
@@ -5585,16 +5585,16 @@ thx_Functions.identity = function(value) {
 };
 thx_Functions.noop = function() {
 };
-var thx_OrderingImpl = { __ename__ : ["thx","OrderingImpl"], __constructs__ : ["LT","GT","EQ"] };
-thx_OrderingImpl.LT = ["LT",0];
-thx_OrderingImpl.LT.toString = $estr;
-thx_OrderingImpl.LT.__enum__ = thx_OrderingImpl;
-thx_OrderingImpl.GT = ["GT",1];
-thx_OrderingImpl.GT.toString = $estr;
-thx_OrderingImpl.GT.__enum__ = thx_OrderingImpl;
-thx_OrderingImpl.EQ = ["EQ",2];
-thx_OrderingImpl.EQ.toString = $estr;
-thx_OrderingImpl.EQ.__enum__ = thx_OrderingImpl;
+var thx_Ordering = { __ename__ : ["thx","Ordering"], __constructs__ : ["LT","GT","EQ"] };
+thx_Ordering.LT = ["LT",0];
+thx_Ordering.LT.toString = $estr;
+thx_Ordering.LT.__enum__ = thx_Ordering;
+thx_Ordering.GT = ["GT",1];
+thx_Ordering.GT.toString = $estr;
+thx_Ordering.GT.__enum__ = thx_Ordering;
+thx_Ordering.EQ = ["EQ",2];
+thx_Ordering.EQ.toString = $estr;
+thx_Ordering.EQ.__enum__ = thx_Ordering;
 var thx_Ints = function() { };
 thx_Ints.__name__ = ["thx","Ints"];
 thx_Ints.abs = function(v) {
@@ -5792,7 +5792,7 @@ thx_Iterables.min = function(it,ord) {
 		var a1 = [a];
 		if(thx_Options.any(found,(function(a1) {
 			return function(a0) {
-				return ord(a0,a1[0]) == thx_OrderingImpl.LT;
+				return thx__$Ord_Ord_$Impl_$.order(ord,a0,a1[0]) == thx_Ordering.LT;
 			};
 		})(a1))) found = found; else found = haxe_ds_Option.Some(a1[0]);
 	}
@@ -5806,13 +5806,7 @@ thx_Iterables.minBy = function(it,f,ord) {
 		var a1 = [a];
 		if(thx_Options.any(found,(function(a1) {
 			return function(a0) {
-				return (function($this) {
-					var $r;
-					var a01 = f(a0);
-					var a11 = f(a1[0]);
-					$r = ord(a01,a11);
-					return $r;
-				}(this)) == thx_OrderingImpl.LT;
+				return thx__$Ord_Ord_$Impl_$.order(ord,f(a0),f(a1[0])) == thx_Ordering.LT;
 			};
 		})(a1))) found = found; else found = haxe_ds_Option.Some(a1[0]);
 	}
@@ -6389,15 +6383,6 @@ thx_Options.toValue = function(option) {
 		return v;
 	}
 };
-thx_Options.toValueWithAlt = function(option,alt) {
-	switch(option[1]) {
-	case 1:
-		return alt;
-	case 0:
-		var v = option[2];
-		return v;
-	}
-};
 thx_Options.all = function(option,f) {
 	switch(option[1]) {
 	case 1:
@@ -6416,31 +6401,8 @@ thx_Options.any = function(option,f) {
 		return f(v);
 	}
 };
-var thx__$Ord_Ordering_$Impl_$ = {};
-thx__$Ord_Ordering_$Impl_$.__name__ = ["thx","_Ord","Ordering_Impl_"];
-thx__$Ord_Ordering_$Impl_$.fromInt = function(value) {
-	if(value < 0) return thx_OrderingImpl.LT; else if(value > 0) return thx_OrderingImpl.GT; else return thx_OrderingImpl.EQ;
-};
-thx__$Ord_Ordering_$Impl_$.fromFloat = function(value) {
-	if(value < 0) return thx_OrderingImpl.LT; else if(value > 0) return thx_OrderingImpl.GT; else return thx_OrderingImpl.EQ;
-};
-thx__$Ord_Ordering_$Impl_$.toInt = function(this1) {
-	switch(this1[1]) {
-	case 0:
-		return -1;
-	case 1:
-		return 1;
-	case 2:
-		return 0;
-	}
-};
 var thx__$Ord_Ord_$Impl_$ = {};
 thx__$Ord_Ord_$Impl_$.__name__ = ["thx","_Ord","Ord_Impl_"];
-thx__$Ord_Ord_$Impl_$.fromIntComparison = function(f) {
-	return function(a,b) {
-		return thx__$Ord_Ordering_$Impl_$.fromInt(f(a,b));
-	};
-};
 thx__$Ord_Ord_$Impl_$.order = function(this1,a0,a1) {
 	return this1(a0,a1);
 };
@@ -8030,21 +7992,24 @@ thx_http_core_Html5Request.make = function(requestInfo) {
 				bus.pulse(haxe_io_Bytes.ofData(req.response));
 				bus.emit(thx_stream_StreamValue.End(false));
 			}
+			haxe_Log.trace("onload",{ fileName : "Html5Request.hx", lineNumber : 45, className : "thx.http.core.Html5Request", methodName : "make"});
 			resolve(new thx_http_core_Html5Response(req,bus));
 		};
 		req.onreadystatechange = function(e4) {
+			haxe_Log.trace("ready",{ fileName : "Html5Request.hx", lineNumber : 50, className : "thx.http.core.Html5Request", methodName : "make", customParams : [req]});
 			if(req.readyState == 1) {
 				send();
 				return;
 			}
 			if(req.readyState != 2) return;
+			haxe_Log.trace(req,{ fileName : "Html5Request.hx", lineNumber : 58, className : "thx.http.core.Html5Request", methodName : "make", customParams : [req.readyState]});
 			resolve(new thx_http_core_Html5Response(req,bus));
 		};
 		req.onabort = function(e5) {
-			reject(new thx_error_ErrorWrapper("connection aborted",e5,null,{ fileName : "Html5Request.hx", lineNumber : 60, className : "thx.http.core.Html5Request", methodName : "make"}));
+			reject(new thx_error_ErrorWrapper("connection aborted",e5,null,{ fileName : "Html5Request.hx", lineNumber : 63, className : "thx.http.core.Html5Request", methodName : "make"}));
 		};
 		req.onerror = function(e6) {
-			reject(thx_Error.fromDynamic(e6,{ fileName : "Html5Request.hx", lineNumber : 63, className : "thx.http.core.Html5Request", methodName : "make"}));
+			reject(thx_Error.fromDynamic(e6,{ fileName : "Html5Request.hx", lineNumber : 66, className : "thx.http.core.Html5Request", methodName : "make"}));
 		};
 		req.open(requestInfo.method,thx__$Url_Url_$Impl_$.toString(requestInfo.url),true);
 		req.responseType = "arraybuffer";
@@ -10463,7 +10428,7 @@ thx_Floats.pattern_parse = new EReg("^(\\+|-)?\\d+(\\.\\d+)?(e-?\\d+)?$","");
 thx_Ints.pattern_parse = new EReg("^[ \t\r\n]*[+-]?(\\d+|0x[0-9A-F]+)","i");
 thx_Ints.BASE = "0123456789abcdefghijklmnopqrstuvwxyz";
 thx_Ints.order = function(i0,i1) {
-	if(i0 > i1) return thx_OrderingImpl.GT; else if(i0 == i1) return thx_OrderingImpl.EQ; else return thx_OrderingImpl.LT;
+	if(i0 > i1) return thx_Ordering.GT; else if(i0 == i1) return thx_Ordering.EQ; else return thx_Ordering.LT;
 };
 thx__$QueryString_QueryString_$Impl_$.separator = "&";
 thx__$QueryString_QueryString_$Impl_$.assignment = "=";

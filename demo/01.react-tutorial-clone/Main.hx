@@ -4,7 +4,7 @@ import doom.Node.*;
 import Markdown.*;
 import thx.Nil;
 import thx.promise.*;
-import thx.load.Loader as Load;
+import thx.load.Loader;
 
 class Main {
   public static function main() {
@@ -34,22 +34,16 @@ class CommentBox extends Component<String> {
       ["class" => "commentBox"],
       [
         el("h1", "comments"),
-        new CommentList(url).view(Loading),
+        new CommentList().view(Load(url)),
         new CommentForm().view(nil)
       ]
     );
 }
 
-class CommentList extends Component<Loader<Array<CommentData>>> {
-  var url : String;
-  public function new(url : String) {
-    this.url = url;
-    super();
-  }
-
-  override function render(data : Loader<Array<CommentData>>) return switch data {
-    case Load:
-      Load.getJson(url)
+class CommentList extends Component<HttpLoader<Array<CommentData>>> {
+  override function render(data : HttpLoader<Array<CommentData>>) return switch data {
+    case Load(url):
+      Loader.getJson(url)
         .mapSuccessPromise(function(comments) {
           return Promise.create(function(resolve, _) thx.Timer.delay(function() resolve(comments), 2000));
         })
