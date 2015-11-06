@@ -10,6 +10,7 @@ class XmlNode {
     case Element(name, attributes, events, children):
       createElement(name, attributes, events, children);
     case Text(text): Xml.createPCData(text);
+    case Raw(text): Xml.parse(text);
     case Comment(text): Xml.createComment(text);
     case Empty: null;
   };
@@ -33,6 +34,8 @@ class XmlNode {
   public static function applyPatch(patch : Patch, node : Xml) switch [patch, node.nodeType] {
     case [AddText(text), Xml.Element]:
       node.addChild(Xml.createPCData(text));
+    case [AddRaw(text), Xml.Element]:
+      node.addChild(Xml.parse(text));
     case [AddComment(text), Xml.Element]:
       node.addChild(Xml.createComment(text));
     case [AddElement(name, attributes, events, children), Xml.Element]:
@@ -57,6 +60,11 @@ class XmlNode {
           pos = parent.iterator().indexOf(node);
       parent.removeChild(node);
       parent.insertChild(Xml.createPCData(text), pos);
+    case [ReplaceWithRaw(text), _]:
+      var parent = node.parent,
+          pos = parent.iterator().indexOf(node);
+      parent.removeChild(node);
+      parent.insertChild(Xml.parse(text), pos);
     case [ReplaceWithComment(text), _]:
       var parent = node.parent,
           pos = parent.iterator().indexOf(node);
@@ -84,6 +92,7 @@ class XmlNode {
       }
       buf;
     case Text(text): text;
+    case Raw(text): text;
     case Comment(text): '<!--$text-->';
     case Empty: "";
   };

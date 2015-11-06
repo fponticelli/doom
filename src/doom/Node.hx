@@ -33,6 +33,9 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
   inline public static function text(content : String) : Node
     return Text(content);
 
+  inline public static function raw(content : String) : Node
+    return Raw(content);
+
   inline public static function empty() : Node
     return Empty;
 
@@ -72,6 +75,8 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
           result.push(PatchChild(i, [AddElement(n, a, e, c)]));
         case Text(t):
           result.push(PatchChild(i, [AddText(t)]));
+        case Raw(t):
+          result.push(AddRaw(t));
         case Comment(t):
           result.push(PatchChild(i, [AddComment(t)]));
         case Empty:
@@ -102,6 +107,8 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
         [];
       case [_, Text(t)]:
         [ReplaceWithText(t)];
+      case [_, Raw(t)]:
+        [ReplaceWithRaw(t)];
       case [_, Comment(t)]:
         [ReplaceWithComment(t)];
       case [_, Empty]: // TODO is this needed?
@@ -119,6 +126,7 @@ enum NodeImpl {
     attributes : Map<String, String>,
     events : Map<String, EventHandler>,
     children : Array<Node>);
+  Raw(text : String);
   Text(text : String);
   Comment(text : String);
   Empty;

@@ -13,6 +13,8 @@ class HtmlNode {
   public static function toHtml(node : Node) : js.html.Node return switch (node : NodeImpl) {
     case Element(name, attributes, events, children):
       createElement(name, attributes, events, children);
+    case Raw(text):
+      createElementFromHtml(text);
     case Text(text): document.createTextNode(text);
     case Comment(text): document.createComment(text);
     case Empty: null;
@@ -79,6 +81,9 @@ class HtmlNode {
       parent.replaceChild(el, node);
       trigger(el, "mount");
     case [ReplaceWithText(text), _]:
+      var parent = node.parentNode;
+      parent.replaceChild(document.createTextNode(text), node);
+    case [ReplaceWithRaw(text), _]:
       var parent = node.parentNode;
       parent.replaceChild(document.createTextNode(text), node);
     case [ReplaceWithComment(text), _]:

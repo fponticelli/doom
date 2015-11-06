@@ -1,7 +1,11 @@
 package doom;
 
+using thx.Arrays;
+using thx.Iterators;
+
 enum Patch {
   AddText(text : String);
+  AddRaw(text : String);
   AddComment(text : String);
   AddElement(
     name : String,
@@ -19,6 +23,7 @@ enum Patch {
     events : Map<String, EventHandler>,
     children : Array<Node>);
   ReplaceWithText(text : String);
+  ReplaceWithRaw(text : String);
   ReplaceWithComment(text : String);
   ContentChanged(newcontent : String);
   PatchChild(index : Int, patches : Array<Patch>);
