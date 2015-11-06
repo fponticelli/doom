@@ -2,9 +2,10 @@
 package doom;
 
 import js.html.*;
-import js.html.Node as N;
+import js.html.Node as DomNode;
 import js.Browser.*;
 import doom.Node;
+using doom.Patch;
 import thx.Set;
 
 class HtmlNode {
@@ -24,20 +25,34 @@ class HtmlNode {
     var el = document.createElement(name);
     for(key in attributes.keys())
       el.setAttribute(key, attributes.get(key));
+    for(key in events.keys())
+      addEvent(el, key, events.get(key));
+    trigger(el, "create");
     for(child in children) {
       var n = toHtml(child);
       if(null != n)
         el.appendChild(n);
     }
-    for(key in events.keys())
-      addEvent(el, key, events.get(key));
-    trigger(el, "create");
     return el;
   }
 
-  public static function applyPatches(patches : Array<Patch>, node : N)
+  static function createElementFromHtml(text : String) : js.html.Node {
+    var el = document.createElement('div');
+    el.innerHTML = text;
+    if(el.childNodes.length == 0)
+      return null;
+    else if(el.childNodes.length > 1)
+      return el;
+    else
+      return el.firstChild;
+  }
+
+  public static function applyPatches(patches : Array<Patch>, node : DomNode) {
+    // trace(untyped node.outerHTML);
+    // trace(patches.toPrettyString());
     for(patch in patches)
       applyPatch(patch, node);
+  }
 
   static function trigger(el : Element, name : String) {
     var event = new js.html.CustomEvent(name);
@@ -56,24 +71,26 @@ class HtmlNode {
     Reflect.deleteField(el, 'on$name');
   }
 
-  public static function applyPatch(patch : Patch, node : N) switch [patch, node.nodeType] {
-    case [AddText(text), N.ELEMENT_NODE]:
+  public static function applyPatch(patch : Patch, node : DomNode) switch [patch, node.nodeType] {
+    case [AddText(text), DomNode.ELEMENT_NODE]:
       node.appendChild(document.createTextNode(text));
-    case [AddComment(text), N.ELEMENT_NODE]:
+    case [AddRaw(text), DomNode.ELEMENT_NODE]:
+      node.appendChild(createElementFromHtml(text));
+    case [AddComment(text), DomNode.ELEMENT_NODE]:
       node.appendChild(document.createComment(text));
-    case [AddElement(name, attributes, events, children), N.ELEMENT_NODE]:
+    case [AddElement(name, attributes, events, children), DomNode.ELEMENT_NODE]:
       var el = createElement(name, attributes, events, children);
       node.appendChild(el);
       trigger(el, "mount");
     case [Remove, _]:
       node.parentNode.removeChild(node);
-    case [RemoveAttribute(name), N.ELEMENT_NODE]:
+    case [RemoveAttribute(name), DomNode.ELEMENT_NODE]:
       (cast node : js.html.Element).removeAttribute(name);
-    case [SetAttribute(name, value), N.ELEMENT_NODE]:
+    case [SetAttribute(name, value), DomNode.ELEMENT_NODE]:
       (cast node : js.html.Element).setAttribute(name, value);
-    case [RemoveEvent(name), N.ELEMENT_NODE]:
+    case [RemoveEvent(name), DomNode.ELEMENT_NODE]:
       removeEvent(cast node, name);
-    case [SetEvent(name, handler), N.ELEMENT_NODE]:
+    case [SetEvent(name, handler), DomNode.ELEMENT_NODE]:
       addEvent(cast node, name, handler);
     case [ReplaceWithElement(name, attributes, events, children), _]:
       var parent = node.parentNode,
@@ -88,11 +105,11 @@ class HtmlNode {
       parent.replaceChild(document.createTextNode(text), node);
     case [ReplaceWithComment(text), _]:
       var parent = node.parentNode;
-      parent.replaceChild(document.createComment(text), node);
-    case [ContentChanged(newcontent), N.TEXT_NODE]
-       | [ContentChanged(newcontent), N.COMMENT_NODE]:
+      parent.replaceChild(createElementFromHtml(text), node);
+    case [ContentChanged(newcontent), DomNode.TEXT_NODE]
+       | [ContentChanged(newcontent), DomNode.COMMENT_NODE]:
       node.nodeValue = newcontent;
-    case [PatchChild(index, patches), N.ELEMENT_NODE]:
+    case [PatchChild(index, patches), DomNode.ELEMENT_NODE]:
       var n = (cast node : js.html.Element).childNodes.item(index);
       applyPatches(patches, n);
     case [p, n]:
