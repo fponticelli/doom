@@ -28,3 +28,28 @@ enum Patch {
   ContentChanged(newcontent : String);
   PatchChild(index : Int, patches : Array<Patch>);
 }
+
+class Patches {
+  public static function toString(patch : Patch) return switch patch {
+    case AddElement(name, attributes, events, children):
+      var e = events.keys().toArray().toString(),
+          c = children.map(function(child) return "\n  " + child.toString().split("\n").join("\n  "));
+      return 'AddElement($name, ${attributes}, $e, $c)';
+    case ReplaceWithElement(name, attributes, events, children):
+      var e = events.keys().toArray().toString(),
+          c = children.map(function(child) return "\n  " + child.toString().split("\n").join("\n  "));
+      return 'ReplaceWithElement($name, ${attributes}, $e, $c)';
+    case SetEvent(name, handler):
+      return 'SetEvent($name, ƒ)';
+    case PatchChild(index, patches):
+      var p = "  " + PatchArray.toPrettyString(patches).split("\n").join("\n  ");
+      return 'PatchChild($index, $p)';
+    case _:
+      Std.string(patch);
+  }
+}
+
+class PatchArray {
+  public static function toPrettyString(patches : Array<Patch>)
+    return "\n" + patches.map(Patches.toString).join("\n");
+}
