@@ -72,13 +72,13 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
     for(i in min...b.length) {
       switch b[i] {
         case Element(n, a, e, c):
-          result.push(PatchChild(i, [AddElement(n, a, e, c)]));
+          result.push(AddElement(n, a, e, c));
         case Text(t):
-          result.push(PatchChild(i, [AddText(t)]));
+          result.push(AddText(t));
         case Raw(t):
           result.push(AddRaw(t));
         case Comment(t):
-          result.push(PatchChild(i, [AddComment(t)]));
+          result.push(AddComment(t));
         case Empty:
           // do nothing
       };
