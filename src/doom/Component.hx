@@ -60,4 +60,10 @@ class Component<T> {
     this.parent = parent;
     return this;
   }
+
+  public function toString() {
+    var cls = Type.getClassName(Type.getClass(this)).split(".").pop();
+    var state = null == node ? "never rendered" : node.toString();
+    return '$cls($state)';
+  }
 }

@@ -48,8 +48,6 @@ class HtmlNode {
   }
 
   public static function applyPatches(patches : Array<Patch>, node : DomNode) {
-    // trace(untyped node.outerHTML);
-    // trace(patches.toPrettyString());
     for(patch in patches)
       applyPatch(patch, node);
   }

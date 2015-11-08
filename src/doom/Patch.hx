@@ -2,6 +2,7 @@ package doom;
 
 using thx.Arrays;
 using thx.Iterators;
+using thx.Maps;
 
 enum Patch {
   AddText(text : String);
@@ -34,11 +35,11 @@ class Patches {
     case AddElement(name, attributes, events, children):
       var e = events.keys().toArray().toString(),
           c = children.map(function(child) return "\n  " + child.toString().split("\n").join("\n  "));
-      return 'AddElement($name, ${attributes}, $e, $c)';
+      return 'AddElement($name, ${attributes.string()}, $e, $c)';
     case ReplaceWithElement(name, attributes, events, children):
       var e = events.keys().toArray().toString(),
           c = children.map(function(child) return "\n  " + child.toString().split("\n").join("\n  "));
-      return 'ReplaceWithElement($name, ${attributes}, $e, $c)';
+      return 'ReplaceWithElement($name, ${attributes.string()}, $e, $c)';
     case SetEvent(name, handler):
       return 'SetEvent($name, ƒ)';
     case PatchChild(index, patches):
