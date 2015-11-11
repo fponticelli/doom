@@ -1,0 +1,5 @@
+-js bin/demo.js
+-cp ../../src
+-lib thx.core
+-main Main
+-D html
