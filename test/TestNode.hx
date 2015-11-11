@@ -42,8 +42,8 @@ class TestNode extends TestBase {
 
   public function testIssue20151105() {
     var comments = [
-            { author : "Pete Hunt", text : "This is one comment" },
-            { author : "Jordan Walke", text : "This is *another* comment" }
+            { author : "An Author", text : "This is one comment" },
+            { author : "Some Guy", text : "This is *another* comment" }
           ],
         o = el("div", ["class" => "loading"], "Loading ..."),
         n = el("div",
@@ -58,14 +58,13 @@ class TestNode extends TestBase {
               ))
             );
     var patches = o.diff(n);
-    trace(patches.toPrettyString());
     Assert.same(
       [
         SetAttribute("class", "commentList"),
         AddElement("div", ["class" => "comment"], new Map(), [
           el("h2",
             ["class" => "comment"],
-            "Jordan Walke"
+            "Some Guy"
           ),
           text("This is *another* comment")
         ]),
@@ -73,11 +72,74 @@ class TestNode extends TestBase {
           [
             el("h2",
               ["class" => "comment"],
-              "Pete Hunt"
+              "An Author"
             ),
             text("This is one comment")
           ]
         )])
+      ],
+      patches
+    );
+  }
+
+  public function testIssue20151107a() {
+    var comments = [
+            { author : "An Author", text : "This is one comment" },
+            { author : "Some Guy", text : "This is *another* comment" }
+          ],
+        comments2 = [
+            { author : "An Author", text : "This is one comment" },
+            { author : "Some Guy", text : "This is *another* comment" },
+            { author : "Someone Else", text : "With another comment" }
+          ],
+        o = el("div",
+              ["class" => "commentList"],
+              comments.map(function(comment) return el("div",
+                ["class" => "comment"],
+                [el("h2", comment.author)],
+                comment.text
+              ))
+            ),
+        n = el("div",
+              ["class" => "commentList"],
+              comments2.map(function(comment) return el("div",
+                ["class" => "comment"],
+                [el("h2", comment.author)],
+                comment.text
+              ))
+            );
+    var patches = o.diff(n);
+    Assert.same(
+      [
+        AddElement("div", ["class" => "comment"], new Map(), [
+          el("h2", "Someone Else"),
+          text("With another comment")
+        ])
+      ],
+      patches
+    );
+  }
+
+  public function testIssue20151107b() {
+    var comments = [
+            { author : "An Author", text : "This is one comment" },
+            { author : "Some Guy", text : "This is *another* comment" }
+          ],
+        o = el("div",
+              ["class" => "commentList"],
+              comments.map(function(comment) return el("div",
+                ["class" => "comment"],
+                [el("h2", comment.author)],
+                comment.text
+              ))
+            ),
+        n = el("div", ["class" => "loading"], "Loading ...");
+    var patches = o.diff(n);
+    Assert.same(
+      [
+        SetAttribute("class", "loading"),
+        PatchChild(1, [Remove]),
+        PatchChild(0, [ReplaceWithText("Loading ...")])
       ],
       patches
     );
