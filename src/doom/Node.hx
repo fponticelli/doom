@@ -39,6 +39,10 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
   inline public static function empty() : Node
     return Empty;
 
+  @:from
+  inline public static function component<T>(comp : Component<T>) : Node
+    return Component(comp);
+
   public static function diffAttributes(a : Map<String, String>, b : Map<String, String>) : Array<Patch> {
     var ka = Set.createString(a.keys().toArray()),
         kb = Set.createString(b.keys().toArray()),
@@ -58,8 +62,10 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
         added   = kb.difference(ka).toArray(),
         common  = ka.intersection(kb).toArray();
 
+    trace('events', ka, kb, removed, added, common);
+
     return removed.map.fn(Patch.RemoveEvent(_))
-      .concat(common.filter.fn(a.get(_) != b.get(_)).map.fn(Patch.SetEvent(_, b.get(_))))
+      .concat(common.filter.fn(!Reflect.compareMethods(a.get(_), b.get(_))).map.fn(Patch.SetEvent(_, b.get(_))))
       .concat(added.map.fn(Patch.SetEvent(_, b.get(_))));
   }
 
@@ -79,6 +85,8 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
           result.push(AddRaw(t));
         case Comment(t):
           result.push(AddComment(t));
+        case Component(comp):
+          // TODO
         case Empty:
           // do nothing
       };
@@ -93,6 +101,12 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
 
   public function diff(that : Node) : Array<Patch> {
     return switch [this, that] {
+      case [Component(o), Component(n)] if(thx.Types.sameType(o, n)):
+        []; // TODO
+      case [Component(o), Component(n)]:
+        []; // TODO
+      case [_, Component(n)]:
+        []; // TODO
       case [Element(n1, a1, e1, c1), Element(n2, a2, e2, c2)] if(n1 != n2):
         [ReplaceWithElement(n2, a2, e2, c2)];
       case [Element(_, a1, e1, c1), Element(_, a2, e2, c2)]:
@@ -130,4 +144,5 @@ enum NodeImpl {
   Text(text : String);
   Comment(text : String);
   Empty;
+  Component<T>(comp : Component<T>);
 }

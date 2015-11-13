@@ -167,79 +167,77 @@ Lambda.has = function(it,elt) {
 var Main = function() { };
 Main.__name__ = ["Main"];
 Main.main = function() {
-	new Dashboard(window.document.getElementById("content"),{ counter : 0});
+	new Like(window.document.getElementById("content"),{ liked : false});
 };
-var doom_View = function(ref,state) {
-	this.node = this.render(state);
+var doom_Component = function(state) {
+	this.state = state;
+	this.node = this.render();
 	this.element = doom_HtmlNode.toHtml(this.node);
-	ref.innerHTML = "";
-	ref.appendChild(this.element);
 };
-doom_View.__name__ = ["doom","View"];
-doom_View.prototype = {
+doom_Component.__name__ = ["doom","Component"];
+doom_Component.prototype = {
 	element: null
 	,node: null
-	,render: function(state) {
-		throw new thx_error_AbstractMethod({ fileName : "View.hx", lineNumber : 19, className : "doom.View", methodName : "render"});
+	,state: null
+	,render: function() {
+		throw new thx_error_AbstractMethod({ fileName : "Component.hx", lineNumber : 18, className : "doom.Component", methodName : "render"});
 	}
 	,update: function(state) {
-		haxe_Log.trace("UPDATE",{ fileName : "View.hx", lineNumber : 22, className : "doom.View", methodName : "update", customParams : [state]});
-		var newNode = this.render(state);
-		haxe_Log.trace("PATCH?",{ fileName : "View.hx", lineNumber : 25, className : "doom.View", methodName : "update", customParams : [this.toString(),doom__$Node_Node_$Impl_$.toString(this.node),doom__$Node_Node_$Impl_$.toString(newNode),null != this.element]});
+		this.state = state;
+		if(!this.shouldRender(this.state,state)) return;
+		var newNode = this.render();
 		var patches = doom__$Node_Node_$Impl_$.diff(this.node,newNode);
-		haxe_Log.trace("PATCH",{ fileName : "View.hx", lineNumber : 28, className : "doom.View", methodName : "update", customParams : [doom_PatchArray.toPrettyString(patches)]});
-		haxe_Log.trace("HTML BEFORE PATCH",{ fileName : "View.hx", lineNumber : 29, className : "doom.View", methodName : "update", customParams : [this.element.outerHTML]});
 		doom_HtmlNode.applyPatches(patches,this.element);
-		haxe_Log.trace("HTML AFTER PATCH",{ fileName : "View.hx", lineNumber : 31, className : "doom.View", methodName : "update", customParams : [this.element.outerHTML]});
 		this.node = newNode;
+	}
+	,shouldRender: function(oldState,newState) {
+		return true;
 	}
 	,toString: function() {
 		var cls = Type.getClassName(js_Boot.getClass(this)).split(".").pop();
 		var state = doom__$Node_Node_$Impl_$.toString(this.node);
 		return "" + cls + "(" + state + ")";
 	}
-	,__class__: doom_View
+	,__class__: doom_Component
 };
-var Dashboard = function(ref,state) {
-	this.cancel = function() {
-	};
+var doom_View = function(ref,state) {
+	doom_Component.call(this,state);
+	ref.innerHTML = "";
+	ref.appendChild(this.element);
+};
+doom_View.__name__ = ["doom","View"];
+doom_View.__super__ = doom_Component;
+doom_View.prototype = $extend(doom_Component.prototype,{
+	__class__: doom_View
+});
+var Like = function(ref,state) {
 	doom_View.call(this,ref,state);
 };
-Dashboard.__name__ = ["Dashboard"];
-Dashboard.__super__ = doom_View;
-Dashboard.prototype = $extend(doom_View.prototype,{
-	state: null
-	,cancel: null
-	,startCount: function(_) {
-		var _g = this;
-		haxe_Log.trace("Start",{ fileName : "Main.hx", lineNumber : 18, className : "Dashboard", methodName : "startCount"});
-		this.cancel = thx_Timer.repeat(function() {
-			_g.state.counter++;
-			_g.update(_g.state);
-		},50);
-	}
-	,stopCount: function(_) {
-		this.cancel();
-		this.cancel = function() {
-		};
-	}
-	,render: function(state) {
-		this.state = state;
-		return doom__$Node_Node_$Impl_$.el("div",null,null,[doom__$Node_Node_$Impl_$.el("div",null,null,null,null,"count: " + state.counter),doom__$Node_Node_$Impl_$.el("div",null,null,[doom__$Node_Node_$Impl_$.el("button",null,(function($this) {
+Like.__name__ = ["Like"];
+Like.__super__ = doom_View;
+Like.prototype = $extend(doom_View.prototype,{
+	render: function() {
+		var text;
+		if(this.state.liked) text = "like"; else text = "haven't liked";
+		return doom__$Node_Node_$Impl_$.el("p",null,(function($this) {
 			var $r;
-			var _g16 = new haxe_ds_StringMap();
-			_g16.set("click",$bind($this,$this.startCount));
-			$r = _g16;
+			var _g = new haxe_ds_StringMap();
+			{
+				var value = (function(f,a1) {
+					return function(_) {
+						f(_,a1);
+					};
+				})($bind($this,$this.handleClick),$this.state.liked);
+				if(__map_reserved.click != null) _g.setReserved("click",value); else _g.h["click"] = value;
+			}
+			$r = _g;
 			return $r;
-		}(this)),null,null,"start count"),doom__$Node_Node_$Impl_$.el("button",null,(function($this) {
-			var $r;
-			var _g17 = new haxe_ds_StringMap();
-			_g17.set("click",$bind($this,$this.stopCount));
-			$r = _g17;
-			return $r;
-		}(this)),null,null,"stop count")])]);
+		}(this)),null,null,"You " + text + " this. Click to toggle.");
 	}
-	,__class__: Dashboard
+	,handleClick: function(_,liked) {
+		this.update({ liked : !liked});
+	}
+	,__class__: Like
 });
 Math.__name__ = ["Math"];
 var Reflect = function() { };
@@ -730,6 +728,9 @@ doom_HtmlNode.toHtml = function(node) {
 		case 3:
 			var text2 = _g[2];
 			return window.document.createComment(text2);
+		case 5:
+			var comp = _g[2];
+			return null;
 		case 4:
 			return null;
 		}
@@ -795,7 +796,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				node.appendChild(window.document.createTextNode(text));
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n,null,{ fileName : "HtmlNode.hx", lineNumber : 114, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n,null,{ fileName : "HtmlNode.hx", lineNumber : 117, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 1:
@@ -806,7 +807,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				node.appendChild(doom_HtmlNode.createElementFromHtml(text1));
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n1,null,{ fileName : "HtmlNode.hx", lineNumber : 114, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n1,null,{ fileName : "HtmlNode.hx", lineNumber : 117, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 2:
@@ -817,7 +818,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				node.appendChild(window.document.createComment(text2));
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n2,null,{ fileName : "HtmlNode.hx", lineNumber : 114, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n2,null,{ fileName : "HtmlNode.hx", lineNumber : 117, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 3:
@@ -833,7 +834,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				doom_HtmlNode.trigger(el,"mount");
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n3,null,{ fileName : "HtmlNode.hx", lineNumber : 114, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n3,null,{ fileName : "HtmlNode.hx", lineNumber : 117, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 4:
@@ -847,7 +848,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				node.removeAttribute(name1);
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n4,null,{ fileName : "HtmlNode.hx", lineNumber : 114, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n4,null,{ fileName : "HtmlNode.hx", lineNumber : 117, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 6:
@@ -859,7 +860,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				node.setAttribute(name2,value);
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n5,null,{ fileName : "HtmlNode.hx", lineNumber : 114, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n5,null,{ fileName : "HtmlNode.hx", lineNumber : 117, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 7:
@@ -870,7 +871,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				doom_HtmlNode.removeEvent(node,name3);
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n6,null,{ fileName : "HtmlNode.hx", lineNumber : 114, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n6,null,{ fileName : "HtmlNode.hx", lineNumber : 117, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 8:
@@ -882,7 +883,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				doom_HtmlNode.addEvent(node,name4,handler);
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n7,null,{ fileName : "HtmlNode.hx", lineNumber : 114, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n7,null,{ fileName : "HtmlNode.hx", lineNumber : 117, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 9:
@@ -922,7 +923,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				node.nodeValue = newcontent1;
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n8,null,{ fileName : "HtmlNode.hx", lineNumber : 114, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n8,null,{ fileName : "HtmlNode.hx", lineNumber : 117, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 14:
@@ -935,7 +936,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				doom_HtmlNode.applyPatches(patches,n10);
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n9,null,{ fileName : "HtmlNode.hx", lineNumber : 114, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n9,null,{ fileName : "HtmlNode.hx", lineNumber : 117, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		}
@@ -962,6 +963,9 @@ doom__$Node_Node_$Impl_$.raw = function(content) {
 };
 doom__$Node_Node_$Impl_$.empty = function() {
 	return doom_NodeImpl.Empty;
+};
+doom__$Node_Node_$Impl_$.component = function(comp) {
+	return doom_NodeImpl.Component(comp);
 };
 doom__$Node_Node_$Impl_$.diffAttributes = function(a,b) {
 	var ka = thx__$Set_Set_$Impl_$.createString(thx_Iterators.toArray(a.keys()));
@@ -1052,7 +1056,7 @@ doom__$Node_Node_$Impl_$.diffEvents = function(a,b) {
 		$r = result2;
 		return $r;
 	}(this)));
-	haxe_Log.trace("events",{ fileName : "Node.hx", lineNumber : 61, className : "doom._Node.Node_Impl_", methodName : "diffEvents", customParams : [ka,kb,removed,added,common]});
+	haxe_Log.trace("events",{ fileName : "Node.hx", lineNumber : 65, className : "doom._Node.Node_Impl_", methodName : "diffEvents", customParams : [ka,kb,removed,added,common]});
 	return removed.map(function(_) {
 		return doom_Patch.RemoveEvent(_);
 	}).concat(common.filter(function(_1) {
@@ -1098,6 +1102,9 @@ doom__$Node_Node_$Impl_$.diffNodes = function(a,b) {
 				var t2 = _g21[2];
 				result.push(doom_Patch.AddComment(t2));
 				break;
+			case 5:
+				var comp = _g21[2];
+				break;
 			case 4:
 				break;
 			}
@@ -1113,27 +1120,23 @@ doom__$Node_Node_$Impl_$.diffNodes = function(a,b) {
 };
 doom__$Node_Node_$Impl_$.diff = function(this1,that) {
 	switch(this1[1]) {
-	case 0:
+	case 5:
 		switch(that[1]) {
+		case 5:
+			var o = this1[2];
+			var n = that[2];
+			if(thx_Types.sameType(o,n)) return []; else {
+				var o1 = this1[2];
+				var n1 = that[2];
+				return [];
+			}
+			break;
 		case 0:
-			var n1 = this1[2];
-			var c1 = this1[5];
-			var e1 = this1[4];
-			var a1 = this1[3];
 			var c2 = that[5];
 			var e2 = that[4];
 			var a2 = that[3];
 			var n2 = that[2];
-			if(n1 != n2) return [doom_Patch.ReplaceWithElement(n2,a2,e2,c2)]; else {
-				var c11 = this1[5];
-				var e11 = this1[4];
-				var a11 = this1[3];
-				var c21 = that[5];
-				var e21 = that[4];
-				var a21 = that[3];
-				return doom__$Node_Node_$Impl_$.diffAttributes(a11,a21).concat(doom__$Node_Node_$Impl_$.diffEvents(e11,e21)).concat(doom__$Node_Node_$Impl_$.diffNodes(c11,c21));
-			}
-			break;
+			return [doom_Patch.ReplaceWithElement(n2,a2,e2,c2)];
 		case 2:
 			var t = that[2];
 			return [doom_Patch.ReplaceWithText(t)];
@@ -1147,81 +1150,108 @@ doom__$Node_Node_$Impl_$.diff = function(this1,that) {
 			return [doom_Patch.Remove];
 		}
 		break;
-	case 2:
+	case 0:
 		switch(that[1]) {
+		case 5:
+			var n3 = that[2];
+			return [];
 		case 0:
-			var c22 = that[5];
-			var e22 = that[4];
-			var a22 = that[3];
+			var n11 = this1[2];
+			var c1 = this1[5];
+			var e1 = this1[4];
+			var a1 = this1[3];
+			var c21 = that[5];
+			var e21 = that[4];
+			var a21 = that[3];
 			var n21 = that[2];
-			return [doom_Patch.ReplaceWithElement(n21,a22,e22,c22)];
-		case 2:
-			var t11 = this1[2];
-			var t21 = that[2];
-			if(t11 != t21) return [doom_Patch.ContentChanged(t21)]; else return [];
+			if(n11 != n21) return [doom_Patch.ReplaceWithElement(n21,a21,e21,c21)]; else {
+				var c11 = this1[5];
+				var e11 = this1[4];
+				var a11 = this1[3];
+				var c22 = that[5];
+				var e22 = that[4];
+				var a22 = that[3];
+				return doom__$Node_Node_$Impl_$.diffAttributes(a11,a22).concat(doom__$Node_Node_$Impl_$.diffEvents(e11,e22)).concat(doom__$Node_Node_$Impl_$.diffNodes(c11,c22));
+			}
 			break;
-		case 1:
+		case 2:
 			var t3 = that[2];
-			return [doom_Patch.ReplaceWithRaw(t3)];
-		case 3:
+			return [doom_Patch.ReplaceWithText(t3)];
+		case 1:
 			var t4 = that[2];
-			return [doom_Patch.ReplaceWithComment(t4)];
+			return [doom_Patch.ReplaceWithRaw(t4)];
+		case 3:
+			var t5 = that[2];
+			return [doom_Patch.ReplaceWithComment(t5)];
 		case 4:
 			return [doom_Patch.Remove];
 		}
 		break;
-	case 3:
+	case 2:
 		switch(that[1]) {
+		case 5:
+			var n4 = that[2];
+			return [];
 		case 0:
 			var c23 = that[5];
 			var e23 = that[4];
 			var a23 = that[3];
 			var n22 = that[2];
 			return [doom_Patch.ReplaceWithElement(n22,a23,e23,c23)];
-		case 3:
-			var t12 = this1[2];
-			var t22 = that[2];
-			if(t12 != t22) return [doom_Patch.ContentChanged(t22)]; else return [];
-			break;
 		case 2:
-			var t5 = that[2];
-			return [doom_Patch.ReplaceWithText(t5)];
+			var t11 = this1[2];
+			var t21 = that[2];
+			if(t11 != t21) return [doom_Patch.ContentChanged(t21)]; else return [];
+			break;
 		case 1:
 			var t6 = that[2];
 			return [doom_Patch.ReplaceWithRaw(t6)];
+		case 3:
+			var t7 = that[2];
+			return [doom_Patch.ReplaceWithComment(t7)];
 		case 4:
 			return [doom_Patch.Remove];
 		}
 		break;
-	case 4:
+	case 3:
 		switch(that[1]) {
+		case 5:
+			var n5 = that[2];
+			return [];
 		case 0:
 			var c24 = that[5];
 			var e24 = that[4];
 			var a24 = that[3];
 			var n23 = that[2];
 			return [doom_Patch.ReplaceWithElement(n23,a24,e24,c24)];
-		case 4:
-			return [];
-		case 2:
-			var t7 = that[2];
-			return [doom_Patch.ReplaceWithText(t7)];
-		case 1:
-			var t8 = that[2];
-			return [doom_Patch.ReplaceWithRaw(t8)];
 		case 3:
+			var t12 = this1[2];
+			var t22 = that[2];
+			if(t12 != t22) return [doom_Patch.ContentChanged(t22)]; else return [];
+			break;
+		case 2:
+			var t8 = that[2];
+			return [doom_Patch.ReplaceWithText(t8)];
+		case 1:
 			var t9 = that[2];
-			return [doom_Patch.ReplaceWithComment(t9)];
+			return [doom_Patch.ReplaceWithRaw(t9)];
+		case 4:
+			return [doom_Patch.Remove];
 		}
 		break;
-	default:
+	case 4:
 		switch(that[1]) {
+		case 5:
+			var n6 = that[2];
+			return [];
 		case 0:
 			var c25 = that[5];
 			var e25 = that[4];
 			var a25 = that[3];
 			var n24 = that[2];
 			return [doom_Patch.ReplaceWithElement(n24,a25,e25,c25)];
+		case 4:
+			return [];
 		case 2:
 			var t10 = that[2];
 			return [doom_Patch.ReplaceWithText(t10)];
@@ -1231,6 +1261,28 @@ doom__$Node_Node_$Impl_$.diff = function(this1,that) {
 		case 3:
 			var t14 = that[2];
 			return [doom_Patch.ReplaceWithComment(t14)];
+		}
+		break;
+	default:
+		switch(that[1]) {
+		case 5:
+			var n7 = that[2];
+			return [];
+		case 0:
+			var c26 = that[5];
+			var e26 = that[4];
+			var a26 = that[3];
+			var n25 = that[2];
+			return [doom_Patch.ReplaceWithElement(n25,a26,e26,c26)];
+		case 2:
+			var t15 = that[2];
+			return [doom_Patch.ReplaceWithText(t15)];
+		case 1:
+			var t16 = that[2];
+			return [doom_Patch.ReplaceWithRaw(t16)];
+		case 3:
+			var t17 = that[2];
+			return [doom_Patch.ReplaceWithComment(t17)];
 		case 4:
 			return [doom_Patch.Remove];
 		}
@@ -1239,7 +1291,7 @@ doom__$Node_Node_$Impl_$.diff = function(this1,that) {
 doom__$Node_Node_$Impl_$.toString = function(this1) {
 	return doom_XmlNode.toString(this1);
 };
-var doom_NodeImpl = { __ename__ : ["doom","NodeImpl"], __constructs__ : ["Element","Raw","Text","Comment","Empty"] };
+var doom_NodeImpl = { __ename__ : ["doom","NodeImpl"], __constructs__ : ["Element","Raw","Text","Comment","Empty","Component"] };
 doom_NodeImpl.Element = function(name,attributes,events,children) { var $x = ["Element",0,name,attributes,events,children]; $x.__enum__ = doom_NodeImpl; $x.toString = $estr; return $x; };
 doom_NodeImpl.Raw = function(text) { var $x = ["Raw",1,text]; $x.__enum__ = doom_NodeImpl; $x.toString = $estr; return $x; };
 doom_NodeImpl.Text = function(text) { var $x = ["Text",2,text]; $x.__enum__ = doom_NodeImpl; $x.toString = $estr; return $x; };
@@ -1247,6 +1299,7 @@ doom_NodeImpl.Comment = function(text) { var $x = ["Comment",3,text]; $x.__enum_
 doom_NodeImpl.Empty = ["Empty",4];
 doom_NodeImpl.Empty.toString = $estr;
 doom_NodeImpl.Empty.__enum__ = doom_NodeImpl;
+doom_NodeImpl.Component = function(comp) { var $x = ["Component",5,comp]; $x.__enum__ = doom_NodeImpl; $x.toString = $estr; return $x; };
 var doom_Patch = { __ename__ : ["doom","Patch"], __constructs__ : ["AddText","AddRaw","AddComment","AddElement","Remove","RemoveAttribute","SetAttribute","RemoveEvent","SetEvent","ReplaceWithElement","ReplaceWithText","ReplaceWithRaw","ReplaceWithComment","ContentChanged","PatchChild"] };
 doom_Patch.AddText = function(text) { var $x = ["AddText",0,text]; $x.__enum__ = doom_Patch; $x.toString = $estr; return $x; };
 doom_Patch.AddRaw = function(text) { var $x = ["AddRaw",1,text]; $x.__enum__ = doom_Patch; $x.toString = $estr; return $x; };
@@ -1328,6 +1381,9 @@ doom_XmlNode.toXml = function(node) {
 		case 3:
 			var text2 = _g[2];
 			return Xml.createComment(text2);
+		case 5:
+			var comp = _g[2];
+			return null;
 		case 4:
 			return null;
 		}
@@ -1370,7 +1426,7 @@ doom_XmlNode.applyPatch = function(patch,node) {
 				node.addChild(Xml.createPCData(text));
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n,null,{ fileName : "XmlNode.hx", lineNumber : 80, className : "doom.XmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n,null,{ fileName : "XmlNode.hx", lineNumber : 83, className : "doom.XmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 1:
@@ -1381,7 +1437,7 @@ doom_XmlNode.applyPatch = function(patch,node) {
 				node.addChild(Xml.parse(text1));
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n1,null,{ fileName : "XmlNode.hx", lineNumber : 80, className : "doom.XmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n1,null,{ fileName : "XmlNode.hx", lineNumber : 83, className : "doom.XmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 2:
@@ -1392,7 +1448,7 @@ doom_XmlNode.applyPatch = function(patch,node) {
 				node.addChild(Xml.createComment(text2));
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n2,null,{ fileName : "XmlNode.hx", lineNumber : 80, className : "doom.XmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n2,null,{ fileName : "XmlNode.hx", lineNumber : 83, className : "doom.XmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 3:
@@ -1406,7 +1462,7 @@ doom_XmlNode.applyPatch = function(patch,node) {
 				node.addChild(doom_XmlNode.createElement(name,attributes,events,children));
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n3,null,{ fileName : "XmlNode.hx", lineNumber : 80, className : "doom.XmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n3,null,{ fileName : "XmlNode.hx", lineNumber : 83, className : "doom.XmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 4:
@@ -1420,7 +1476,7 @@ doom_XmlNode.applyPatch = function(patch,node) {
 				node.remove(name1);
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n4,null,{ fileName : "XmlNode.hx", lineNumber : 80, className : "doom.XmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n4,null,{ fileName : "XmlNode.hx", lineNumber : 83, className : "doom.XmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 6:
@@ -1432,7 +1488,7 @@ doom_XmlNode.applyPatch = function(patch,node) {
 				node.set(name2,value);
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n5,null,{ fileName : "XmlNode.hx", lineNumber : 80, className : "doom.XmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n5,null,{ fileName : "XmlNode.hx", lineNumber : 83, className : "doom.XmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 7:
@@ -1442,7 +1498,7 @@ doom_XmlNode.applyPatch = function(patch,node) {
 				var name3 = patch[2];
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n6,null,{ fileName : "XmlNode.hx", lineNumber : 80, className : "doom.XmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n6,null,{ fileName : "XmlNode.hx", lineNumber : 83, className : "doom.XmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 8:
@@ -1453,7 +1509,7 @@ doom_XmlNode.applyPatch = function(patch,node) {
 				var handler = patch[3];
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n7,null,{ fileName : "XmlNode.hx", lineNumber : 80, className : "doom.XmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n7,null,{ fileName : "XmlNode.hx", lineNumber : 83, className : "doom.XmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 9:
@@ -1521,7 +1577,7 @@ doom_XmlNode.applyPatch = function(patch,node) {
 				node.nodeValue = newcontent1;
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n8,null,{ fileName : "XmlNode.hx", lineNumber : 80, className : "doom.XmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n8,null,{ fileName : "XmlNode.hx", lineNumber : 83, className : "doom.XmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 14:
@@ -1539,7 +1595,7 @@ doom_XmlNode.applyPatch = function(patch,node) {
 				doom_XmlNode.applyPatches(patches,n10);
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n9,null,{ fileName : "XmlNode.hx", lineNumber : 80, className : "doom.XmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n9,null,{ fileName : "XmlNode.hx", lineNumber : 83, className : "doom.XmlNode", methodName : "applyPatch"});
 			}
 			break;
 		}
@@ -1572,6 +1628,9 @@ doom_XmlNode.toString = function(node) {
 		case 3:
 			var text2 = _g[2];
 			return "<!--" + text2 + "-->";
+		case 5:
+			var comp = _g[2];
+			return "";
 		case 4:
 			return "";
 		}

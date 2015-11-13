@@ -7,40 +7,23 @@ import doom.Node.*;
 
 class Main {
   public static function main() {
-    new Dashboard(document.getElementById("content"), { counter : 0 });
+    new Like(document.getElementById("content"), { liked : false });
   }
 }
 
-class Dashboard extends View<DashboardModel> {
-  var state : DashboardModel;
-  var cancel : Void -> Void = function() {};
-  function startCount(_) {
-    trace("Start");
-    cancel = Timer.repeat(function() {
-      state.counter++;
-      update(state);
-    }, 50);
-  }
-
-  function stopCount(_) {
-    cancel();
-    cancel = function() {};
-  }
-
-  override function render(state : DashboardModel) {
-    this.state = state;
-    return el("div",
-      [
-        el("div", 'count: ${state.counter}'),
-        el("div", [
-          el("button", ["click" => startCount], "start count"),
-          el("button", ["click" => stopCount],  "stop count")
-        ])
-      ]
+class Like extends View<LikeModel> {
+  override function render() {
+    var text = state.liked ? 'like' : "haven't liked";
+    return el("p",
+      ["click" => handleClick.bind(_, state.liked)],
+      'You $text this. Click to toggle.'
     );
   }
+
+  function handleClick(_, liked)
+    update({ liked : !liked});
 }
 
-typedef DashboardModel = {
-  counter : Int
+typedef LikeModel = {
+  liked : Bool
 }
