@@ -40,7 +40,7 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
     return Empty;
 
   @:from
-  inline public static function component<T>(comp : Component<T>) : Node
+  inline public static function comp<T>(comp : Component<T>) : Node
     return Component(comp);
 
   public static function diffAttributes(a : Map<String, String>, b : Map<String, String>) : Array<Patch> {

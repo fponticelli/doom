@@ -9,6 +9,7 @@ class View<State> extends Component<State> {
   public function new(ref : DomElement, state : State) {
     super(state);
     ref.innerHTML = "";
+    init();
     ref.appendChild(element);
   }
 }

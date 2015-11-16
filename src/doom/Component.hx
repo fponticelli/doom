@@ -9,9 +9,24 @@ class Component<State> {
 
   public function new(state : State) {
     this.state = state;
+  }
+
+  public function init() {
     this.node = render();
     // TODO should this be js.html.Node
     this.element = cast HtmlNode.toHtml(node);
+  }
+
+  public function migrate(element : Element, oldNode : Node) {
+    this.element = element;
+    updateNode(oldNode);
+  }
+
+  private function updateNode(oldNode : Node) {
+    var newNode = render();
+    var patches = oldNode.diff(newNode);
+    HtmlNode.applyPatches(patches, element);
+    node = newNode;
   }
 
   private function render() : Node
@@ -21,10 +36,7 @@ class Component<State> {
     this.state = state;
     if(!shouldRender(this.state, state))
       return;
-    var newNode = render();
-    var patches = node.diff(newNode);
-    HtmlNode.applyPatches(patches, element);
-    node = newNode;
+    updateNode(node);
   }
 
   public function shouldRender(oldState : State, newState : State)
