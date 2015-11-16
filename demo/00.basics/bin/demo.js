@@ -167,28 +167,37 @@ Lambda.has = function(it,elt) {
 var Main = function() { };
 Main.__name__ = ["Main"];
 Main.main = function() {
-	new Like(window.document.getElementById("content"),{ liked : false});
+	new Todo(window.document.getElementById("content"),{ items : []});
 };
 var doom_Component = function(state) {
 	this.state = state;
-	this.node = this.render();
-	this.element = doom_HtmlNode.toHtml(this.node);
 };
 doom_Component.__name__ = ["doom","Component"];
 doom_Component.prototype = {
 	element: null
 	,node: null
 	,state: null
+	,init: function() {
+		this.node = this.render();
+		this.element = doom_HtmlNode.toHtml(this.node);
+	}
+	,migrate: function(element,oldNode) {
+		this.element = element;
+		this.updateNode(oldNode);
+	}
+	,updateNode: function(oldNode) {
+		var newNode = this.render();
+		var patches = doom__$Node_Node_$Impl_$.diff(oldNode,newNode);
+		doom_HtmlNode.applyPatches(patches,this.element);
+		this.node = newNode;
+	}
 	,render: function() {
-		throw new thx_error_AbstractMethod({ fileName : "Component.hx", lineNumber : 18, className : "doom.Component", methodName : "render"});
+		throw new thx_error_AbstractMethod({ fileName : "Component.hx", lineNumber : 33, className : "doom.Component", methodName : "render"});
 	}
 	,update: function(state) {
 		this.state = state;
 		if(!this.shouldRender(this.state,state)) return;
-		var newNode = this.render();
-		var patches = doom__$Node_Node_$Impl_$.diff(this.node,newNode);
-		doom_HtmlNode.applyPatches(patches,this.element);
-		this.node = newNode;
+		this.updateNode(this.node);
 	}
 	,shouldRender: function(oldState,newState) {
 		return true;
@@ -203,6 +212,7 @@ doom_Component.prototype = {
 var doom_View = function(ref,state) {
 	doom_Component.call(this,state);
 	ref.innerHTML = "";
+	this.init();
 	ref.appendChild(this.element);
 };
 doom_View.__name__ = ["doom","View"];
@@ -210,34 +220,78 @@ doom_View.__super__ = doom_Component;
 doom_View.prototype = $extend(doom_Component.prototype,{
 	__class__: doom_View
 });
-var Like = function(ref,state) {
+var Todo = function(ref,state) {
 	doom_View.call(this,ref,state);
 };
-Like.__name__ = ["Like"];
-Like.__super__ = doom_View;
-Like.prototype = $extend(doom_View.prototype,{
-	render: function() {
-		var text;
-		if(this.state.liked) text = "like"; else text = "haven't liked";
-		return doom__$Node_Node_$Impl_$.el("p",null,(function($this) {
+Todo.__name__ = ["Todo"];
+Todo.__super__ = doom_View;
+Todo.prototype = $extend(doom_View.prototype,{
+	appendItem: function(description) {
+	}
+	,removeChecked: function() {
+	}
+	,setTodoValues: function(todo) {
+	}
+	,render: function() {
+		var form = new TodoForm(thx_Nil.nil);
+		return doom__$Node_Node_$Impl_$.el("div",(function($this) {
 			var $r;
 			var _g = new haxe_ds_StringMap();
-			{
-				var value = (function(f,a1) {
-					return function(_) {
-						f(_,a1);
-					};
-				})($bind($this,$this.handleClick),$this.state.liked);
-				if(__map_reserved.click != null) _g.setReserved("click",value); else _g.h["click"] = value;
-			}
+			if(__map_reserved["class"] != null) _g.setReserved("class","todo"); else _g.h["class"] = "todo";
 			$r = _g;
 			return $r;
-		}(this)),null,null,"You " + text + " this. Click to toggle.");
+		}(this)),null,[(function($this) {
+			var $r;
+			var comp = new TodoList($this.state);
+			$r = doom_NodeImpl.ComponentNode(comp);
+			return $r;
+		}(this)),(function($this) {
+			var $r;
+			var comp1 = new TodoForm(thx_Nil.nil);
+			$r = doom_NodeImpl.ComponentNode(comp1);
+			return $r;
+		}(this))]);
 	}
-	,handleClick: function(_,liked) {
-		this.update({ liked : !liked});
+	,__class__: Todo
+});
+var TodoList = function(state) {
+	doom_Component.call(this,state);
+};
+TodoList.__name__ = ["TodoList"];
+TodoList.__super__ = doom_Component;
+TodoList.prototype = $extend(doom_Component.prototype,{
+	render: function() {
+		return doom_NodeImpl.Empty;
 	}
-	,__class__: Like
+	,__class__: TodoList
+});
+var TodoForm = function(state) {
+	doom_Component.call(this,state);
+};
+TodoForm.__name__ = ["TodoForm"];
+TodoForm.__super__ = doom_Component;
+TodoForm.prototype = $extend(doom_Component.prototype,{
+	render: function() {
+		return doom__$Node_Node_$Impl_$.el("form",null,null,[doom__$Node_Node_$Impl_$.el("input",(function($this) {
+			var $r;
+			var _g2 = new haxe_ds_StringMap();
+			if(__map_reserved.placeholder != null) _g2.setReserved("placeholder","add a new tod here"); else _g2.h["placeholder"] = "add a new tod here";
+			$r = _g2;
+			return $r;
+		}(this)))]);
+	}
+	,__class__: TodoForm
+});
+var TodoItem = function(state) {
+	doom_Component.call(this,state);
+};
+TodoItem.__name__ = ["TodoItem"];
+TodoItem.__super__ = doom_Component;
+TodoItem.prototype = $extend(doom_Component.prototype,{
+	render: function() {
+		return doom_NodeImpl.Empty;
+	}
+	,__class__: TodoItem
 });
 Math.__name__ = ["Math"];
 var Reflect = function() { };
@@ -730,7 +784,8 @@ doom_HtmlNode.toHtml = function(node) {
 			return window.document.createComment(text2);
 		case 5:
 			var comp = _g[2];
-			return null;
+			comp.init();
+			return comp.element;
 		case 4:
 			return null;
 		}
@@ -964,8 +1019,8 @@ doom__$Node_Node_$Impl_$.raw = function(content) {
 doom__$Node_Node_$Impl_$.empty = function() {
 	return doom_NodeImpl.Empty;
 };
-doom__$Node_Node_$Impl_$.component = function(comp) {
-	return doom_NodeImpl.Component(comp);
+doom__$Node_Node_$Impl_$.comp = function(comp) {
+	return doom_NodeImpl.ComponentNode(comp);
 };
 doom__$Node_Node_$Impl_$.diffAttributes = function(a,b) {
 	var ka = thx__$Set_Set_$Impl_$.createString(thx_Iterators.toArray(a.keys()));
@@ -1056,7 +1111,7 @@ doom__$Node_Node_$Impl_$.diffEvents = function(a,b) {
 		$r = result2;
 		return $r;
 	}(this)));
-	haxe_Log.trace("events",{ fileName : "Node.hx", lineNumber : 65, className : "doom._Node.Node_Impl_", methodName : "diffEvents", customParams : [ka,kb,removed,added,common]});
+	haxe_Log.trace("events",{ fileName : "Node.hx", lineNumber : 66, className : "doom._Node.Node_Impl_", methodName : "diffEvents", customParams : [ka,kb,removed,added,common]});
 	return removed.map(function(_) {
 		return doom_Patch.RemoveEvent(_);
 	}).concat(common.filter(function(_1) {
@@ -1291,7 +1346,7 @@ doom__$Node_Node_$Impl_$.diff = function(this1,that) {
 doom__$Node_Node_$Impl_$.toString = function(this1) {
 	return doom_XmlNode.toString(this1);
 };
-var doom_NodeImpl = { __ename__ : ["doom","NodeImpl"], __constructs__ : ["Element","Raw","Text","Comment","Empty","Component"] };
+var doom_NodeImpl = { __ename__ : ["doom","NodeImpl"], __constructs__ : ["Element","Raw","Text","Comment","Empty","ComponentNode"] };
 doom_NodeImpl.Element = function(name,attributes,events,children) { var $x = ["Element",0,name,attributes,events,children]; $x.__enum__ = doom_NodeImpl; $x.toString = $estr; return $x; };
 doom_NodeImpl.Raw = function(text) { var $x = ["Raw",1,text]; $x.__enum__ = doom_NodeImpl; $x.toString = $estr; return $x; };
 doom_NodeImpl.Text = function(text) { var $x = ["Text",2,text]; $x.__enum__ = doom_NodeImpl; $x.toString = $estr; return $x; };
@@ -1299,7 +1354,7 @@ doom_NodeImpl.Comment = function(text) { var $x = ["Comment",3,text]; $x.__enum_
 doom_NodeImpl.Empty = ["Empty",4];
 doom_NodeImpl.Empty.toString = $estr;
 doom_NodeImpl.Empty.__enum__ = doom_NodeImpl;
-doom_NodeImpl.Component = function(comp) { var $x = ["Component",5,comp]; $x.__enum__ = doom_NodeImpl; $x.toString = $estr; return $x; };
+doom_NodeImpl.ComponentNode = function(comp) { var $x = ["ComponentNode",5,comp]; $x.__enum__ = doom_NodeImpl; $x.toString = $estr; return $x; };
 var doom_Patch = { __ename__ : ["doom","Patch"], __constructs__ : ["AddText","AddRaw","AddComment","AddElement","Remove","RemoveAttribute","SetAttribute","RemoveEvent","SetEvent","ReplaceWithElement","ReplaceWithText","ReplaceWithRaw","ReplaceWithComment","ContentChanged","PatchChild"] };
 doom_Patch.AddText = function(text) { var $x = ["AddText",0,text]; $x.__enum__ = doom_Patch; $x.toString = $estr; return $x; };
 doom_Patch.AddRaw = function(text) { var $x = ["AddRaw",1,text]; $x.__enum__ = doom_Patch; $x.toString = $estr; return $x; };

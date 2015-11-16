@@ -26,11 +26,12 @@ class Todo extends View<TodoListModel> {
   }
 
   override function render() {
+    var form = new TodoForm(nil);
     return el("div",
       ["class" => "todo"],
       [
-        comp(new TodoList(state)),
-        comp(new TodoForm(nil))
+        Node.comp(new TodoList(state)),
+        Node.comp(new TodoForm(nil))
       ]
     );
   }
@@ -44,7 +45,13 @@ class TodoList extends Component<TodoListModel> {
 
 class TodoForm extends Component<Nil> {
   override function render() {
-    return Empty;
+    return el("form",
+      [
+        el("input", [
+          "placeholder" => "add a new todo here"
+        ])
+      ]
+    );
   }
 }
 

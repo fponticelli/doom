@@ -18,9 +18,9 @@ class HtmlNode {
       createElementFromHtml(text);
     case Text(text): document.createTextNode(text);
     case Comment(text): document.createComment(text);
-    case Component(comp):
-      // TODO
-      null;
+    case ComponentNode(comp):
+      comp.init();
+      return comp.element;
     case Empty: null;
   }
 

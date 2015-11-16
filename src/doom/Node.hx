@@ -30,6 +30,7 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
   inline public static function comment(content : String) : Node
     return Comment(content);
 
+  //@:from
   inline public static function text(content : String) : Node
     return Text(content);
 
@@ -39,9 +40,9 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
   inline public static function empty() : Node
     return Empty;
 
-  @:from
+  //@:from
   inline public static function comp<T>(comp : Component<T>) : Node
-    return Component(comp);
+    return ComponentNode(comp);
 
   public static function diffAttributes(a : Map<String, String>, b : Map<String, String>) : Array<Patch> {
     var ka = Set.createString(a.keys().toArray()),
@@ -85,7 +86,7 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
           result.push(AddRaw(t));
         case Comment(t):
           result.push(AddComment(t));
-        case Component(comp):
+        case ComponentNode(comp):
           // TODO
         case Empty:
           // do nothing
@@ -101,11 +102,11 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
 
   public function diff(that : Node) : Array<Patch> {
     return switch [this, that] {
-      case [Component(o), Component(n)] if(thx.Types.sameType(o, n)):
+      case [ComponentNode(o), ComponentNode(n)] if(thx.Types.sameType(o, n)):
         []; // TODO
-      case [Component(o), Component(n)]:
+      case [ComponentNode(o), ComponentNode(n)]:
         []; // TODO
-      case [_, Component(n)]:
+      case [_, ComponentNode(n)]:
         []; // TODO
       case [Element(n1, a1, e1, c1), Element(n2, a2, e2, c2)] if(n1 != n2):
         [ReplaceWithElement(n2, a2, e2, c2)];
@@ -144,5 +145,5 @@ enum NodeImpl {
   Text(text : String);
   Comment(text : String);
   Empty;
-  Component<T>(comp : Component<T>);
+  ComponentNode<T>(comp : Component<T>);
 }

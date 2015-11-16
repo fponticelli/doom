@@ -12,7 +12,7 @@ class XmlNode {
     case Text(text): Xml.createPCData(text);
     case Raw(text): Xml.parse(text);
     case Comment(text): Xml.createComment(text);
-    case Component(comp):
+    case ComponentNode(comp):
       // TODO
       null;
     case Empty: null;
@@ -97,7 +97,7 @@ class XmlNode {
     case Text(text): text;
     case Raw(text): text;
     case Comment(text): '<!--$text-->';
-    case Component(comp):
+    case ComponentNode(comp):
       // TODO
       "";
     case Empty: "";
