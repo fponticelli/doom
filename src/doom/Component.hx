@@ -1,6 +1,7 @@
 package doom;
 
 import js.html.Element;
+using doom.Patch;
 
 class Component<State> {
   public var element : Element;
@@ -9,22 +10,19 @@ class Component<State> {
 
   public function new(state : State) {
     this.state = state;
+    this.node = render();
   }
 
   public function init() {
-    this.node = render();
     // TODO should this be js.html.Node
-    this.element = cast HtmlNode.toHtml(node);
-  }
-
-  public function migrate(element : Element, oldNode : Node) {
-    this.element = element;
-    updateNode(oldNode);
+    element = cast HtmlNode.toHtml(node);
   }
 
   private function updateNode(oldNode : Node) {
     var newNode = render();
+    //trace('updateNode'); //, oldNode, newNode);
     var patches = oldNode.diff(newNode);
+    //trace(patches.toPrettyString());
     HtmlNode.applyPatches(patches, element);
     node = newNode;
   }
@@ -34,6 +32,7 @@ class Component<State> {
 
   public function update(state : State) {
     this.state = state;
+    //trace('update');
     if(!shouldRender(this.state, state))
       return;
     updateNode(node);

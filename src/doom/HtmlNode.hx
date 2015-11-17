@@ -7,6 +7,7 @@ import js.Browser.*;
 import doom.Node;
 using doom.Patch;
 import thx.Set;
+using thx.Strings;
 
 class HtmlNode {
   static var customEvents = Set.createString(["create", "mount"]);
@@ -26,8 +27,12 @@ class HtmlNode {
 
   static function createElement(name : String, attributes : Map<String, String>, events : Map<String, EventHandler>, children : Array<Node>) {
     var el = document.createElement(name);
-    for(key in attributes.keys())
-      el.setAttribute(key, attributes.get(key));
+    for(key in attributes.keys()) {
+      var value = attributes.get(key);
+      if(null == value)
+        continue;
+      el.setAttribute(key, value);
+    }
     for(key in events.keys())
       addEvent(el, key, events.get(key));
     trigger(el, "create");
@@ -86,6 +91,8 @@ class HtmlNode {
     case [Remove, _]:
       node.parentNode.removeChild(node);
     case [RemoveAttribute(name), DomNode.ELEMENT_NODE]:
+      (cast node : js.html.Element).removeAttribute(name);
+    case [SetAttribute(name, value), DomNode.ELEMENT_NODE] if(value.isEmpty()):
       (cast node : js.html.Element).removeAttribute(name);
     case [SetAttribute(name, value), DomNode.ELEMENT_NODE]:
       (cast node : js.html.Element).setAttribute(name, value);

@@ -8,6 +8,7 @@ enum Patch {
   AddText(text : String);
   AddRaw(text : String);
   AddComment(text : String);
+  // AddComponent<T>(comp : Component<T>);
   AddElement(
     name : String,
     attributes : Map<String, String>,

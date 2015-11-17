@@ -63,12 +63,29 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
         added   = kb.difference(ka).toArray(),
         common  = ka.intersection(kb).toArray();
 
-    trace('events', ka, kb, removed, added, common);
+//    trace('events', ka, kb, removed, added, common);
 
     return removed.map.fn(Patch.RemoveEvent(_))
       .concat(common.filter.fn(!Reflect.compareMethods(a.get(_), b.get(_))).map.fn(Patch.SetEvent(_, b.get(_))))
       .concat(added.map.fn(Patch.SetEvent(_, b.get(_))));
   }
+
+  static function diffAdd(node : Node) : Array<Patch>
+    return switch node {
+      case Element(n, a, e, c):
+        [AddElement(n, a, e, c)];
+      case Text(t):
+        [AddText(t)];
+      case Raw(t):
+        [AddRaw(t)];
+      case Comment(t):
+        [AddComment(t)];
+      case ComponentNode(comp):
+        diffAdd(comp.node);
+      case Empty:
+        // do nothing
+        [];
+    };
 
   public static function diffNodes(a : Array<Node>, b : Array<Node>) : Array<Patch> {
     var min = a.length.min(b.length),
@@ -77,20 +94,7 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
       result.push(Patch.PatchChild(i, [Remove]));
     }
     for(i in min...b.length) {
-      switch b[i] {
-        case Element(n, a, e, c):
-          result.push(AddElement(n, a, e, c));
-        case Text(t):
-          result.push(AddText(t));
-        case Raw(t):
-          result.push(AddRaw(t));
-        case Comment(t):
-          result.push(AddComment(t));
-        case ComponentNode(comp):
-          // TODO
-        case Empty:
-          // do nothing
-      };
+      result = result.concat(diffAdd(b[i]));
     }
     for(i in 0...min) {
       var diff = a[i].diff(b[i]);
@@ -102,12 +106,11 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
 
   public function diff(that : Node) : Array<Patch> {
     return switch [this, that] {
-      case [ComponentNode(o), ComponentNode(n)] if(thx.Types.sameType(o, n)):
-        []; // TODO
-      case [ComponentNode(o), ComponentNode(n)]:
-        []; // TODO
-      case [_, ComponentNode(n)]:
-        []; // TODO
+      case [ComponentNode(old), ComponentNode(comp)]:
+        comp.element = old.element;
+        diff(comp.node);
+      case [_, ComponentNode(comp)]:
+        diff(comp.node);
       case [Element(n1, a1, e1, c1), Element(n2, a2, e2, c2)] if(n1 != n2):
         [ReplaceWithElement(n2, a2, e2, c2)];
       case [Element(_, a1, e1, c1), Element(_, a2, e2, c2)]:
@@ -126,7 +129,7 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
         [ReplaceWithRaw(t)];
       case [_, Comment(t)]:
         [ReplaceWithComment(t)];
-      case [_, Empty]: // TODO is this needed?
+      case [_, Empty]:
         [Patch.Remove];
     };
   }

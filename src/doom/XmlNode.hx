@@ -12,9 +12,7 @@ class XmlNode {
     case Text(text): Xml.createPCData(text);
     case Raw(text): Xml.parse(text);
     case Comment(text): Xml.createComment(text);
-    case ComponentNode(comp):
-      // TODO
-      null;
+    case ComponentNode(comp): toXml(comp.node);
     case Empty: null;
   };
 
@@ -97,16 +95,17 @@ class XmlNode {
     case Text(text): text;
     case Raw(text): text;
     case Comment(text): '<!--$text-->';
-    case ComponentNode(comp):
-      // TODO
-      "";
+    case ComponentNode(comp): toString(comp.node);
     case Empty: "";
   };
 
   public static function attributesToString(attributes : Map<String, String>) {
     var buf = "";
     for(key in attributes.keys()) {
-      buf += ' $key="${attributes.get(key).replace('"', '&quot;')}"';
+      var value = attributes.get(key);
+      if(null == value)
+        continue;
+      buf += ' $key="${value.replace('"', '&quot;')}"';
     }
     return buf;
   }
