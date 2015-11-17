@@ -2,6 +2,7 @@ import thx.Nil;
 import doom.Component;
 import js.Browser.*;
 import doom.Node.*;
+using thx.Arrays;
 using thx.Strings;
 
 class Main {
@@ -18,76 +19,158 @@ class Main {
         description : "take shower"
       }
       ]}),
-      document.getElementById("content"));
+      document.querySelector(".todoapp")
+    );
   }
 }
 
 class Todo extends Component<TodoListData> {
-  public function addTodo(description : String) {
+  function addTodo(description : String) {
     state.items.push({ checked : false, description : description });
     update(state);
   }
 
-  public function removeCompleted() {
+  function removeCompleted() {
     state.items = state.items.filter(function(item) return !item.checked);
     update(state);
   }
 
+  function deleteItem(item : TodoItemData) {
+    state.items.remove(item);
+    update(state);
+  }
+
+  function refresh() {
+    update(state);
+  }
+
+  function toggleChecked() {
+    var value = !allSelected();
+    state.items.each(function(item) return item.checked = value);
+    update(state);
+  }
+
+  function allSelected()
+    return state.items.all(function(item) return item.checked);
+
   override function render() {
     return el("div",
-      ["class" => "todo"], [
-        comp(new TodoList(state)),
-        comp(new TodoForm(addTodo, removeCompleted, nil))
+      [
+        comp(new TodoForm(addTodo, nil)),
+        comp(new TodoList(refresh, toggleChecked, deleteItem, state)),
+        comp(new TodoFooter(nil))
       ]
     );
   }
 }
 
+class TodoFooter extends Component<Nil> {
+  override function render() {
+    return el("footer", ["class" => "footer"], [
+      el("span", ["class" => "todo-count"], [
+        el("strong", "777"),
+        text(" items left")
+      ]),
+      el("ul", ["class" => "filters"], [
+        el("li", [
+          el("a", ["href" => "#", "class" => "selected"], "All")
+        ]),
+        el("li", [
+          el("a", ["href" => "#/active", "class" => "selected"], "Active")
+        ]),
+        el("li", [
+          el("a", ["href" => "#/completed", "class" => "selected"], "Completed")
+        ])
+      ]),
+      el("button", ["class" => "clear-completed"],
+        "Clear completed"
+      )
+    ]);
+  }
+/*
+<footer class="footer" style="display: block;">
+  <span class="todo-count"><strong>3</strong> items left</span>
+  <ul class="filters">
+    <li>
+    <a href="#/" class="selected">All</a>
+    </li>
+    <li>
+    <a href="#/active">Active</a>
+    </li>
+    <li>
+    <a href="#/completed">Completed</a>
+    </li>
+  </ul>
+  <button class="clear-completed" style="display: block;">Clear completed</button>
+</footer>
+*/
+}
+
 class TodoList extends Component<TodoListData> {
+  var deleteItem : TodoItemData -> Void;
+  var refresh : Void -> Void;
+  var toggleChecked : Void -> Void;
+  public function new(refresh : Void -> Void, toggleChecked : Void -> Void, deleteItem : TodoItemData -> Void, state : TodoListData) {
+    this.refresh = refresh;
+    this.deleteItem = deleteItem;
+    this.toggleChecked = toggleChecked;
+    super(state);
+  }
   override function render() {
     if(state.items.length == 0) {
-      return el("div", "no need to do anything at all");
+      return empty();
     } else {
-      return el("ul",
-        [for(item in state.items)
-          el("li", [comp(new TodoItem(item))])
-        ]
-      );
+      return el("section", [
+        "class" => "main"
+      ], [
+        el("input", [
+            "class" => "toggle-all",
+            "type" => "checkbox",
+            "checked" => (allSelected() ? "true" : null)
+          ], [
+            "change" => onToggleAll
+          ]
+        ),
+        el("label", [
+          "for" => "toggle-all"],
+          "Mark all as complete"),
+        el("ul",
+          ["class" => "todo-list"],
+          [for(item in state.items)
+            comp(new TodoItem(refresh, deleteItem, item))
+          ]
+        )
+      ]);
     }
   }
+
+  function onToggleAll(_) {
+    toggleChecked();
+  }
+
+  function allSelected()
+    return state.items.all(function(item) return item.checked);
 }
 
 class TodoForm extends Component<Nil> {
   var addTodo : String -> Void;
-  var removeCompleted : Void -> Void;
-  public function new(addTodo : String -> Void, removeCompleted : Void -> Void, state : Nil) {
+  public function new(addTodo : String -> Void, state : Nil) {
     super(state);
     this.addTodo = addTodo;
-    this.removeCompleted = removeCompleted;
   }
 
   override function render() {
-    return el("form", [
+    return el("header", ["class" => "header"], [
+      el("h1", "todos"),
+      el("form", [
         "submit" => onSubmit
       ], [
         el("input", [
-          "placeholder" => "add a new todo here",
-          "value" => ""
-        ]),
-        el("div", [
-          el("a", [
-            "href" => "#"
-          ], [
-            "click" => onClickRemoveCompleted
-          ], "remove completed")
+          "placeholder" => "What needs to be done?",
+          "class" => "new-todo"
         ])
-      ]
-    );
-  }
-
-  function onClickRemoveCompleted(e : js.html.Event) {
-    e.preventDefault();
-    removeCompleted();
+      ])
+    ]);
   }
 
   function onSubmit(e : js.html.Event) {
@@ -102,23 +185,44 @@ class TodoForm extends Component<Nil> {
 }
 
 class TodoItem extends Component<TodoItemData> {
+  var deleteItem : TodoItemData -> Void;
+  var refresh : Void -> Void;
+  public function new(refresh : Void -> Void, deleteItem : TodoItemData -> Void, state : TodoItemData) {
+    this.refresh = refresh;
+    this.deleteItem = deleteItem;
+    super(state);
+  }
+
   override function render() {
-    return el("label", [
-      el("input", [
-        "type" => "checkbox",
-        "checked" => (state.checked ? "true" : null)
-      ], [
-        "change" => onCheckChange
+    return el("li", [
+      "class" => (state.checked ? "completed" : null)
+    ], [
+      el("div", ["class" => "view"], [
+        el("input", [
+          "class" => "toggle",
+          "type" => "checkbox",
+          "checked" => (state.checked ? "true" : null)
+        ], [
+          "change" => onCheckChange
+        ]),
+        el("label", state.description),
+        el("button", ["class" => "destroy"],
+        ["click" => onDelete])
       ]),
-      el("span", [
-        "class" => (state.checked ? "done" : null)
-      ], state.description)
+      el("input", [
+        "class" => "edit",
+        "value" => state.description
+      ])
     ]);
   }
 
   function onCheckChange(_) {
     state.checked = !state.checked;
-    update(state);
+    refresh();
+  }
+
+  function onDelete(_) {
+    deleteItem(state);
   }
 }
 

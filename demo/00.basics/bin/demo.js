@@ -167,7 +167,7 @@ Lambda.has = function(it,elt) {
 var Main = function() { };
 Main.__name__ = ["Main"];
 Main.main = function() {
-	doom_Component.mount(new Todo({ items : [{ checked : false, description : "brush teeth"},{ checked : false, description : "pee"},{ checked : true, description : "take shower"}]}),window.document.getElementById("content"));
+	doom_Component.mount(new Todo({ items : [{ checked : false, description : "brush teeth"},{ checked : false, description : "pee"},{ checked : true, description : "take shower"}]}),window.document.querySelector(".todoapp"));
 };
 var doom_Component = function(state) {
 	this.state = state;
@@ -175,6 +175,7 @@ var doom_Component = function(state) {
 };
 doom_Component.__name__ = ["doom","Component"];
 doom_Component.mount = function(component,ref) {
+	if(null == ref) throw new js__$Boot_HaxeError("reference element is set to null");
 	ref.innerHTML = "";
 	component.init();
 	ref.appendChild(component.element);
@@ -193,7 +194,7 @@ doom_Component.prototype = {
 		this.node = newNode;
 	}
 	,render: function() {
-		throw new thx_error_AbstractMethod({ fileName : "Component.hx", lineNumber : 35, className : "doom.Component", methodName : "render"});
+		throw new thx_error_AbstractMethod({ fileName : "Component.hx", lineNumber : 37, className : "doom.Component", methodName : "render"});
 	}
 	,update: function(newState) {
 		var oldState = this.state;
@@ -227,98 +228,210 @@ Todo.prototype = $extend(doom_Component.prototype,{
 		});
 		this.update(this.state);
 	}
+	,deleteItem: function(item) {
+		HxOverrides.remove(this.state.items,item);
+		this.update(this.state);
+	}
+	,refresh: function() {
+		this.update(this.state);
+	}
+	,toggleChecked: function() {
+		var value = !this.allSelected();
+		thx_Arrays.each(this.state.items,function(item) {
+			return item.checked = value;
+		});
+		this.update(this.state);
+	}
+	,allSelected: function() {
+		return thx_Arrays.all(this.state.items,function(item) {
+			return item.checked;
+		});
+	}
 	,render: function() {
-		return doom__$Node_Node_$Impl_$.el("div",(function($this) {
+		return doom__$Node_Node_$Impl_$.el("div",null,null,[(function($this) {
 			var $r;
-			var _g = new haxe_ds_StringMap();
-			if(__map_reserved["class"] != null) _g.setReserved("class","todo"); else _g.h["class"] = "todo";
-			$r = _g;
-			return $r;
-		}(this)),null,[(function($this) {
-			var $r;
-			var comp = new TodoList($this.state);
+			var comp = new TodoForm($bind($this,$this.addTodo),thx_Nil.nil);
 			$r = doom_NodeImpl.ComponentNode(comp);
 			return $r;
 		}(this)),(function($this) {
 			var $r;
-			var comp1 = new TodoForm($bind($this,$this.addTodo),$bind($this,$this.removeCompleted),thx_Nil.nil);
+			var comp1 = new TodoList($bind($this,$this.refresh),$bind($this,$this.toggleChecked),$bind($this,$this.deleteItem),$this.state);
 			$r = doom_NodeImpl.ComponentNode(comp1);
+			return $r;
+		}(this)),(function($this) {
+			var $r;
+			var comp2 = new TodoFooter(thx_Nil.nil);
+			$r = doom_NodeImpl.ComponentNode(comp2);
 			return $r;
 		}(this))]);
 	}
 	,__class__: Todo
 });
-var TodoList = function(state) {
+var TodoFooter = function(state) {
+	doom_Component.call(this,state);
+};
+TodoFooter.__name__ = ["TodoFooter"];
+TodoFooter.__super__ = doom_Component;
+TodoFooter.prototype = $extend(doom_Component.prototype,{
+	render: function() {
+		return doom__$Node_Node_$Impl_$.el("footer",(function($this) {
+			var $r;
+			var _g = new haxe_ds_StringMap();
+			if(__map_reserved["class"] != null) _g.setReserved("class","footer"); else _g.h["class"] = "footer";
+			$r = _g;
+			return $r;
+		}(this)),null,[doom__$Node_Node_$Impl_$.el("span",(function($this) {
+			var $r;
+			var _g22 = new haxe_ds_StringMap();
+			if(__map_reserved["class"] != null) _g22.setReserved("class","todo-count"); else _g22.h["class"] = "todo-count";
+			$r = _g22;
+			return $r;
+		}(this)),null,[doom__$Node_Node_$Impl_$.el("strong",null,null,null,null,"777"),doom_NodeImpl.Text(" items left")]),doom__$Node_Node_$Impl_$.el("ul",(function($this) {
+			var $r;
+			var _g23 = new haxe_ds_StringMap();
+			if(__map_reserved["class"] != null) _g23.setReserved("class","filters"); else _g23.h["class"] = "filters";
+			$r = _g23;
+			return $r;
+		}(this)),null,[doom__$Node_Node_$Impl_$.el("li",null,null,[doom__$Node_Node_$Impl_$.el("a",(function($this) {
+			var $r;
+			var _g35 = new haxe_ds_StringMap();
+			if(__map_reserved.href != null) _g35.setReserved("href","#"); else _g35.h["href"] = "#";
+			if(__map_reserved["class"] != null) _g35.setReserved("class","selected"); else _g35.h["class"] = "selected";
+			$r = _g35;
+			return $r;
+		}(this)),null,null,null,"All")]),doom__$Node_Node_$Impl_$.el("li",null,null,[doom__$Node_Node_$Impl_$.el("a",(function($this) {
+			var $r;
+			var _g38 = new haxe_ds_StringMap();
+			if(__map_reserved.href != null) _g38.setReserved("href","#/active"); else _g38.h["href"] = "#/active";
+			if(__map_reserved["class"] != null) _g38.setReserved("class","selected"); else _g38.h["class"] = "selected";
+			$r = _g38;
+			return $r;
+		}(this)),null,null,null,"Active")]),doom__$Node_Node_$Impl_$.el("li",null,null,[doom__$Node_Node_$Impl_$.el("a",(function($this) {
+			var $r;
+			var _g41 = new haxe_ds_StringMap();
+			if(__map_reserved.href != null) _g41.setReserved("href","#/completed"); else _g41.h["href"] = "#/completed";
+			if(__map_reserved["class"] != null) _g41.setReserved("class","selected"); else _g41.h["class"] = "selected";
+			$r = _g41;
+			return $r;
+		}(this)),null,null,null,"Completed")])]),doom__$Node_Node_$Impl_$.el("button",(function($this) {
+			var $r;
+			var _g42 = new haxe_ds_StringMap();
+			if(__map_reserved["class"] != null) _g42.setReserved("class","clear-completed"); else _g42.h["class"] = "clear-completed";
+			$r = _g42;
+			return $r;
+		}(this)),null,null,null,"Clear completed")]);
+	}
+	,__class__: TodoFooter
+});
+var TodoList = function(refresh,toggleChecked,deleteItem,state) {
+	this.refresh = refresh;
+	this.deleteItem = deleteItem;
+	this.toggleChecked = toggleChecked;
 	doom_Component.call(this,state);
 };
 TodoList.__name__ = ["TodoList"];
 TodoList.__super__ = doom_Component;
 TodoList.prototype = $extend(doom_Component.prototype,{
-	render: function() {
-		if(this.state.items.length == 0) return doom__$Node_Node_$Impl_$.el("div",null,null,null,null,"no need to do anything at all"); else return doom__$Node_Node_$Impl_$.el("ul",null,null,(function($this) {
+	deleteItem: null
+	,refresh: null
+	,toggleChecked: null
+	,render: function() {
+		if(this.state.items.length == 0) return doom_NodeImpl.Empty; else return doom__$Node_Node_$Impl_$.el("section",(function($this) {
 			var $r;
-			var _g2 = [];
+			var _g = new haxe_ds_StringMap();
+			if(__map_reserved["class"] != null) _g.setReserved("class","main"); else _g.h["class"] = "main";
+			$r = _g;
+			return $r;
+		}(this)),null,[doom__$Node_Node_$Impl_$.el("input",(function($this) {
+			var $r;
+			var _g7 = new haxe_ds_StringMap();
+			if(__map_reserved["class"] != null) _g7.setReserved("class","toggle-all"); else _g7.h["class"] = "toggle-all";
+			if(__map_reserved.type != null) _g7.setReserved("type","checkbox"); else _g7.h["type"] = "checkbox";
 			{
-				var _g3 = 0;
-				var _g4 = $this.state.items;
-				while(_g3 < _g4.length) {
-					var item = _g4[_g3];
-					++_g3;
-					_g2.push(doom__$Node_Node_$Impl_$.el("li",null,null,[(function($this) {
+				var value;
+				if($this.allSelected()) value = "true"; else value = null;
+				if(__map_reserved.checked != null) _g7.setReserved("checked",value); else _g7.h["checked"] = value;
+			}
+			$r = _g7;
+			return $r;
+		}(this)),(function($this) {
+			var $r;
+			var _g8 = new haxe_ds_StringMap();
+			_g8.set("change",$bind($this,$this.onToggleAll));
+			$r = _g8;
+			return $r;
+		}(this))),doom__$Node_Node_$Impl_$.el("label",(function($this) {
+			var $r;
+			var _g9 = new haxe_ds_StringMap();
+			if(__map_reserved["for"] != null) _g9.setReserved("for","toggle-all"); else _g9.h["for"] = "toggle-all";
+			$r = _g9;
+			return $r;
+		}(this)),null,null,null,"Mark all as complete"),doom__$Node_Node_$Impl_$.el("ul",(function($this) {
+			var $r;
+			var _g10 = new haxe_ds_StringMap();
+			if(__map_reserved["class"] != null) _g10.setReserved("class","todo-list"); else _g10.h["class"] = "todo-list";
+			$r = _g10;
+			return $r;
+		}(this)),null,(function($this) {
+			var $r;
+			var _g12 = [];
+			{
+				var _g13 = 0;
+				var _g14 = $this.state.items;
+				while(_g13 < _g14.length) {
+					var item = _g14[_g13];
+					++_g13;
+					_g12.push((function($this) {
 						var $r;
-						var comp = new TodoItem(item);
+						var comp = new TodoItem($this.refresh,$this.deleteItem,item);
 						$r = doom_NodeImpl.ComponentNode(comp);
 						return $r;
-					}($this))]));
+					}($this)));
 				}
 			}
-			$r = _g2;
+			$r = _g12;
 			return $r;
-		}(this)));
+		}(this)))]);
+	}
+	,onToggleAll: function(_) {
+		this.toggleChecked();
+	}
+	,allSelected: function() {
+		return thx_Arrays.all(this.state.items,function(item) {
+			return item.checked;
+		});
 	}
 	,__class__: TodoList
 });
-var TodoForm = function(addTodo,removeCompleted,state) {
+var TodoForm = function(addTodo,state) {
 	doom_Component.call(this,state);
 	this.addTodo = addTodo;
-	this.removeCompleted = removeCompleted;
 };
 TodoForm.__name__ = ["TodoForm"];
 TodoForm.__super__ = doom_Component;
 TodoForm.prototype = $extend(doom_Component.prototype,{
 	addTodo: null
-	,removeCompleted: null
 	,render: function() {
-		return doom__$Node_Node_$Impl_$.el("form",null,(function($this) {
+		return doom__$Node_Node_$Impl_$.el("header",(function($this) {
 			var $r;
 			var _g = new haxe_ds_StringMap();
-			_g.set("submit",$bind($this,$this.onSubmit));
+			if(__map_reserved["class"] != null) _g.setReserved("class","header"); else _g.h["class"] = "header";
 			$r = _g;
+			return $r;
+		}(this)),null,[doom__$Node_Node_$Impl_$.el("h1",null,null,null,null,"todos"),doom__$Node_Node_$Impl_$.el("form",null,(function($this) {
+			var $r;
+			var _g3 = new haxe_ds_StringMap();
+			_g3.set("submit",$bind($this,$this.onSubmit));
+			$r = _g3;
 			return $r;
 		}(this)),[doom__$Node_Node_$Impl_$.el("input",(function($this) {
 			var $r;
-			var _g1 = new haxe_ds_StringMap();
-			if(__map_reserved.placeholder != null) _g1.setReserved("placeholder","add a new todo here"); else _g1.h["placeholder"] = "add a new todo here";
-			if(__map_reserved.value != null) _g1.setReserved("value",""); else _g1.h["value"] = "";
-			$r = _g1;
+			var _g4 = new haxe_ds_StringMap();
+			if(__map_reserved.placeholder != null) _g4.setReserved("placeholder","What needs to be done?"); else _g4.h["placeholder"] = "What needs to be done?";
+			if(__map_reserved["class"] != null) _g4.setReserved("class","new-todo"); else _g4.h["class"] = "new-todo";
+			$r = _g4;
 			return $r;
-		}(this))),doom__$Node_Node_$Impl_$.el("div",null,null,[doom__$Node_Node_$Impl_$.el("a",(function($this) {
-			var $r;
-			var _g6 = new haxe_ds_StringMap();
-			if(__map_reserved.href != null) _g6.setReserved("href","#"); else _g6.h["href"] = "#";
-			$r = _g6;
-			return $r;
-		}(this)),(function($this) {
-			var $r;
-			var _g7 = new haxe_ds_StringMap();
-			_g7.set("click",$bind($this,$this.onClickRemoveCompleted));
-			$r = _g7;
-			return $r;
-		}(this)),null,null,"remove completed")])]);
-	}
-	,onClickRemoveCompleted: function(e) {
-		e.preventDefault();
-		this.removeCompleted();
+		}(this)))])]);
 	}
 	,onSubmit: function(e) {
 		e.preventDefault();
@@ -330,37 +443,70 @@ TodoForm.prototype = $extend(doom_Component.prototype,{
 	}
 	,__class__: TodoForm
 });
-var TodoItem = function(state) {
+var TodoItem = function(refresh,deleteItem,state) {
+	this.refresh = refresh;
+	this.deleteItem = deleteItem;
 	doom_Component.call(this,state);
 };
 TodoItem.__name__ = ["TodoItem"];
 TodoItem.__super__ = doom_Component;
 TodoItem.prototype = $extend(doom_Component.prototype,{
-	render: function() {
-		return doom__$Node_Node_$Impl_$.el("label",null,null,[doom__$Node_Node_$Impl_$.el("input",(function($this) {
+	deleteItem: null
+	,refresh: null
+	,render: function() {
+		return doom__$Node_Node_$Impl_$.el("li",(function($this) {
 			var $r;
-			var _g6 = new haxe_ds_StringMap();
-			if(__map_reserved.type != null) _g6.setReserved("type","checkbox"); else _g6.h["type"] = "checkbox";
-			_g6.set("checked",$this.state.checked?"true":null);
-			$r = _g6;
+			var _g = new haxe_ds_StringMap();
+			_g.set("class",$this.state.checked?"completed":null);
+			$r = _g;
+			return $r;
+		}(this)),null,[doom__$Node_Node_$Impl_$.el("div",(function($this) {
+			var $r;
+			var _g11 = new haxe_ds_StringMap();
+			if(__map_reserved["class"] != null) _g11.setReserved("class","view"); else _g11.h["class"] = "view";
+			$r = _g11;
+			return $r;
+		}(this)),null,[doom__$Node_Node_$Impl_$.el("input",(function($this) {
+			var $r;
+			var _g16 = new haxe_ds_StringMap();
+			if(__map_reserved["class"] != null) _g16.setReserved("class","toggle"); else _g16.h["class"] = "toggle";
+			if(__map_reserved.type != null) _g16.setReserved("type","checkbox"); else _g16.h["type"] = "checkbox";
+			_g16.set("checked",$this.state.checked?"true":null);
+			$r = _g16;
 			return $r;
 		}(this)),(function($this) {
 			var $r;
-			var _g7 = new haxe_ds_StringMap();
-			_g7.set("change",$bind($this,$this.onCheckChange));
-			$r = _g7;
+			var _g17 = new haxe_ds_StringMap();
+			_g17.set("change",$bind($this,$this.onCheckChange));
+			$r = _g17;
 			return $r;
-		}(this))),doom__$Node_Node_$Impl_$.el("span",(function($this) {
+		}(this))),doom__$Node_Node_$Impl_$.el("label",null,null,null,null,this.state.description),doom__$Node_Node_$Impl_$.el("button",(function($this) {
 			var $r;
-			var _g8 = new haxe_ds_StringMap();
-			_g8.set("class",$this.state.checked?"done":null);
-			$r = _g8;
+			var _g18 = new haxe_ds_StringMap();
+			if(__map_reserved["class"] != null) _g18.setReserved("class","destroy"); else _g18.h["class"] = "destroy";
+			$r = _g18;
 			return $r;
-		}(this)),null,null,null,this.state.description)]);
+		}(this)),(function($this) {
+			var $r;
+			var _g19 = new haxe_ds_StringMap();
+			_g19.set("click",$bind($this,$this.onDelete));
+			$r = _g19;
+			return $r;
+		}(this)))]),doom__$Node_Node_$Impl_$.el("input",(function($this) {
+			var $r;
+			var _g20 = new haxe_ds_StringMap();
+			if(__map_reserved["class"] != null) _g20.setReserved("class","edit"); else _g20.h["class"] = "edit";
+			_g20.set("value",$this.state.description);
+			$r = _g20;
+			return $r;
+		}(this)))]);
 	}
 	,onCheckChange: function(_) {
 		this.state.checked = !this.state.checked;
-		this.update(this.state);
+		this.refresh();
+	}
+	,onDelete: function(_) {
+		this.deleteItem(this.state);
 	}
 	,__class__: TodoItem
 });
