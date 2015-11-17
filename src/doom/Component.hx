@@ -25,10 +25,8 @@ class Component<State> {
   }
 
   private function updateNode(oldNode : Node) {
-    var newNode = render();
-    //trace('updateNode'); //, oldNode, newNode);
-    var patches = oldNode.diff(newNode);
-    //trace(patches.toPrettyString());
+    var newNode = render(),
+        patches = oldNode.diff(newNode);
     HtmlNode.applyPatches(patches, element);
     node = newNode;
   }
@@ -38,7 +36,6 @@ class Component<State> {
 
   public function update(state : State) {
     this.state = state;
-    //trace('update');
     if(!shouldRender(this.state, state))
       return;
     updateNode(node);
