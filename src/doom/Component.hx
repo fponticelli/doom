@@ -4,6 +4,12 @@ import js.html.Element;
 using doom.Patch;
 
 class Component<State> {
+  public static function mount<T>(component : Component<T>, ref : Element) {
+    ref.innerHTML = "";
+    component.init();
+    ref.appendChild(component.element);
+  }
+
   public var element : Element;
   public var node : Node;
   public var state : State;

@@ -167,13 +167,18 @@ Lambda.has = function(it,elt) {
 var Main = function() { };
 Main.__name__ = ["Main"];
 Main.main = function() {
-	new Todo(window.document.getElementById("content"),{ items : [{ checked : false, description : "brush teeth"},{ checked : false, description : "pee"},{ checked : true, description : "take shower"}]});
+	doom_Component.mount(new Todo({ items : [{ checked : false, description : "brush teeth"},{ checked : false, description : "pee"},{ checked : true, description : "take shower"}]}),window.document.getElementById("content"));
 };
 var doom_Component = function(state) {
 	this.state = state;
 	this.node = this.render();
 };
 doom_Component.__name__ = ["doom","Component"];
+doom_Component.mount = function(component,ref) {
+	ref.innerHTML = "";
+	component.init();
+	ref.appendChild(component.element);
+};
 doom_Component.prototype = {
 	element: null
 	,node: null
@@ -188,7 +193,7 @@ doom_Component.prototype = {
 		this.node = newNode;
 	}
 	,render: function() {
-		throw new thx_error_AbstractMethod({ fileName : "Component.hx", lineNumber : 31, className : "doom.Component", methodName : "render"});
+		throw new thx_error_AbstractMethod({ fileName : "Component.hx", lineNumber : 37, className : "doom.Component", methodName : "render"});
 	}
 	,update: function(state) {
 		this.state = state;
@@ -205,23 +210,12 @@ doom_Component.prototype = {
 	}
 	,__class__: doom_Component
 };
-var doom_View = function(ref,state) {
+var Todo = function(state) {
 	doom_Component.call(this,state);
-	ref.innerHTML = "";
-	this.init();
-	ref.appendChild(this.element);
-};
-doom_View.__name__ = ["doom","View"];
-doom_View.__super__ = doom_Component;
-doom_View.prototype = $extend(doom_Component.prototype,{
-	__class__: doom_View
-});
-var Todo = function(ref,state) {
-	doom_View.call(this,ref,state);
 };
 Todo.__name__ = ["Todo"];
-Todo.__super__ = doom_View;
-Todo.prototype = $extend(doom_View.prototype,{
+Todo.__super__ = doom_Component;
+Todo.prototype = $extend(doom_Component.prototype,{
 	addTodo: function(description) {
 		this.state.items.push({ checked : false, description : description});
 		this.update(this.state);

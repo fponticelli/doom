@@ -1,5 +1,4 @@
 import thx.Nil;
-import doom.View;
 import doom.Component;
 import js.Browser.*;
 import doom.Node.*;
@@ -7,7 +6,7 @@ using thx.Strings;
 
 class Main {
   public static function main() {
-    new Todo(document.getElementById("content"), { items : [
+    Component.mount(new Todo({ items : [
       {
         checked : false,
         description : "brush teeth"
@@ -18,11 +17,12 @@ class Main {
         checked : true,
         description : "take shower"
       }
-      ]});
+      ]}),
+      document.getElementById("content"));
   }
 }
 
-class Todo extends View<TodoListData> {
+class Todo extends Component<TodoListData> {
   public function addTodo(description : String) {
     state.items.push({ checked : false, description : description });
     update(state);
