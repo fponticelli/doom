@@ -5,6 +5,8 @@ using doom.Patch;
 
 class Component<State> {
   public static function mount<T>(component : Component<T>, ref : Element) {
+    if(null == ref)
+      throw 'reference element is set to null';
     ref.innerHTML = "";
     component.init();
     ref.appendChild(component.element);
