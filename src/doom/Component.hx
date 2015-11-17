@@ -34,9 +34,10 @@ class Component<State> {
   private function render() : Node
     return throw new thx.error.AbstractMethod();
 
-  public function update(state : State) {
-    this.state = state;
-    if(!shouldRender(this.state, state))
+  public function update(newState : State) {
+    var oldState = this.state;
+    this.state = newState;
+    if(!shouldRender(oldState, newState))
       return;
     updateNode(node);
   }

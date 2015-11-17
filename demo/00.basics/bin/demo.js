@@ -193,11 +193,12 @@ doom_Component.prototype = {
 		this.node = newNode;
 	}
 	,render: function() {
-		throw new thx_error_AbstractMethod({ fileName : "Component.hx", lineNumber : 37, className : "doom.Component", methodName : "render"});
+		throw new thx_error_AbstractMethod({ fileName : "Component.hx", lineNumber : 35, className : "doom.Component", methodName : "render"});
 	}
-	,update: function(state) {
-		this.state = state;
-		if(!this.shouldRender(this.state,state)) return;
+	,update: function(newState) {
+		var oldState = this.state;
+		this.state = newState;
+		if(!this.shouldRender(oldState,newState)) return;
 		this.updateNode(this.node);
 	}
 	,shouldRender: function(oldState,newState) {
