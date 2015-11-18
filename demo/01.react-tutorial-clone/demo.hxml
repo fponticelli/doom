@@ -1,8 +1,0 @@
--js bin/public/scripts/demo.js
--cp ../../src
--lib thx.core
--lib thx.load
--lib thx.http
--lib markdown
--main Main
--D html
