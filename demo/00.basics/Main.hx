@@ -2,6 +2,8 @@ import thx.Nil;
 import doom.Component;
 import js.Browser.*;
 import doom.Node.*;
+import dots.Query;
+using dots.Attribute;
 using thx.Arrays;
 using thx.Strings;
 
@@ -19,7 +21,7 @@ class Main {
         description : "take shower"
       }
       ]}),
-      document.querySelector(".todoapp")
+      Query.first(".todoapp")
     );
   }
 }
@@ -195,7 +197,7 @@ class TodoItem extends Component<TodoItemData> {
 
   override function render() {
     return el("li", [
-      "class" => (state.checked ? "completed" : null)
+      "class" => ["completed" => state.checked].asAttribute()
     ], [
       el("div", ["class" => "view"], [
         el("input", [
@@ -232,5 +234,6 @@ typedef TodoListData = {
 
 typedef TodoItemData = {
   checked : Bool,
-  description : String
+  description : String,
+  ?editing : Bool
 }
