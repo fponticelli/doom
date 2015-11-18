@@ -41,7 +41,7 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
     return Empty;
 
   //@:from
-  inline public static function comp<T>(comp : Component<T>) : Node
+  inline public static function comp(comp : IComponent) : Node
     return ComponentNode(comp);
 
   public static function diffAttributes(a : Map<String, String>, b : Map<String, String>) : Array<Patch> {
@@ -148,5 +148,5 @@ enum NodeImpl {
   Text(text : String);
   Comment(text : String);
   Empty;
-  ComponentNode<T>(comp : Component<T>);
+  ComponentNode(comp : IComponent);
 }

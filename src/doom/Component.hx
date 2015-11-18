@@ -3,7 +3,7 @@ package doom;
 import js.html.Element;
 using doom.Patch;
 
-class Component<State> {
+class Component<State> implements IComponent {
   public static function mount<T>(component : Component<T>, ref : Element) {
     if(null == ref)
       throw 'reference element is set to null';
