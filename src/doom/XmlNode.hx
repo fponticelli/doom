@@ -4,11 +4,12 @@ using thx.Functions;
 using thx.Strings;
 using thx.Iterators;
 import doom.Node;
+import doom.AttributeValue;
 
 class XmlNode {
   public static function toXml(node : Node) return switch (node : NodeImpl) {
-    case Element(name, attributes, events, children):
-      createElement(name, attributes, events, children);
+    case Element(name, attributes, children):
+      createElement(name, attributes, children);
     case Text(text): Xml.createPCData(text);
     case Raw(text): Xml.parse(text);
     case Comment(text): Xml.createComment(text);
@@ -16,10 +17,17 @@ class XmlNode {
     case Empty: null;
   };
 
-  static function createElement(name : String, attributes : Map<String, String>, events : Map<String, EventHandler>, children : Array<Node>) {
+  static function createElement(name : String, attributes : Map<String, AttributeValue>, children : Array<Node>) {
     var xml = Xml.createElement(name);
-    for(key in attributes.keys())
-      xml.set(key, attributes.get(key));
+    for(key in attributes.keys()) {
+      var v = attributes.get(key);
+      switch v {
+        case StringAttribute(s): xml.set(key, s);
+        case BoolAttribute(b) if(b): xml.set(key, key);
+        case _: // do nothing for events
+      }
+    }
+
     for(child in children) {
       var n = toXml(child);
       if(null != n)
@@ -39,23 +47,27 @@ class XmlNode {
       node.addChild(Xml.parse(text));
     case [AddComment(text), Xml.Element]:
       node.addChild(Xml.createComment(text));
-    case [AddElement(name, attributes, events, children), Xml.Element]:
-      node.addChild(createElement(name, attributes, events, children));
+    case [AddElement(name, attributes, children), Xml.Element]:
+      node.addChild(createElement(name, attributes, children));
     case [Remove, _]:
       node.parent.removeChild(node);
     case [RemoveAttribute(name), Xml.Element]:
       node.remove(name);
     case [SetAttribute(name, value), Xml.Element]:
-      node.set(name, value);
-    case [RemoveEvent(name), Xml.Element]:
-      // not implemented for XML
-    case [SetEvent(name, handler), Xml.Element]:
-      // not implemented for XML
-    case [ReplaceWithElement(name, attributes, events, children), _]:
+      switch value {
+        case StringAttribute(s) if(s.hasContent()):
+          node.set(name, s);
+        case BoolAttribute(b) if(b):
+          node.set(name, name);
+        case StringAttribute(_), BoolAttribute(_):
+          node.remove(name);
+        case _:
+      }
+    case [ReplaceWithElement(name, attributes, children), _]:
       var parent = node.parent,
           pos = parent.iterator().indexOf(node);
       parent.removeChild(node);
-      parent.insertChild(createElement(name, attributes, events, children), pos);
+      parent.insertChild(createElement(name, attributes, children), pos);
     case [ReplaceWithText(text), _]:
       var parent = node.parent,
           pos = parent.iterator().indexOf(node);
@@ -82,7 +94,7 @@ class XmlNode {
   };
 
   public static function toString(node : Node) return switch (node : NodeImpl) {
-    case Element(name, attributes, events, children):
+    case Element(name, attributes, children):
       var buf = '<$name${attributesToString(attributes)}';
       if(children.length == 0)
         buf += '/>';
@@ -99,13 +111,17 @@ class XmlNode {
     case Empty: "";
   };
 
-  public static function attributesToString(attributes : Map<String, String>) {
+  public static function attributesToString(attributes : Map<String, AttributeValue>) {
     var buf = "";
     for(key in attributes.keys()) {
       var value = attributes.get(key);
-      if(null == value)
-        continue;
-      buf += ' $key="${value.replace('"', '&quot;')}"';
+      switch value {
+        case StringAttribute(s) if(s.hasContent()):
+          buf += ' $key="${s.replace('"', '&quot;')}"';
+        case BoolAttribute(b) if(b):
+          buf += ' $key="$key"';
+        case _:
+      }
     }
     return buf;
   }

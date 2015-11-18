@@ -8,21 +8,16 @@ enum Patch {
   AddText(text : String);
   AddRaw(text : String);
   AddComment(text : String);
-  // AddComponent<T>(comp : Component<T>);
   AddElement(
     name : String,
-    attributes : Map<String, String>,
-    events : Map<String, EventHandler>,
+    attributes : Map<String, AttributeValue>,
     children : Array<Node>);
   Remove;
   RemoveAttribute(name : String);
-  SetAttribute(name : String, value : String);
-  RemoveEvent(name : String);
-  SetEvent(name : String, handler : EventHandler);
+  SetAttribute(name : String, value : AttributeValue);
   ReplaceWithElement(
     name : String,
-    attributes : Map<String, String>,
-    events : Map<String, EventHandler>,
+    attributes : Map<String, AttributeValue>,
     children : Array<Node>);
   ReplaceWithText(text : String);
   ReplaceWithRaw(text : String);
@@ -33,16 +28,12 @@ enum Patch {
 
 class Patches {
   public static function toString(patch : Patch) return switch patch {
-    case AddElement(name, attributes, events, children):
-      var e = events.keys().toArray().toString(),
-          c = children.map(function(child) return "\n  " + child.toString().split("\n").join("\n  "));
-      return 'AddElement($name, ${attributes.string()}, $e, $c)';
-    case ReplaceWithElement(name, attributes, events, children):
-      var e = events.keys().toArray().toString(),
-          c = children.map(function(child) return "\n  " + child.toString().split("\n").join("\n  "));
-      return 'ReplaceWithElement($name, ${attributes.string()}, $e, $c)';
-    case SetEvent(name, handler):
-      return 'SetEvent($name, ƒ)';
+    case AddElement(name, attributes, children):
+      var c = children.map(function(child) return "\n  " + child.toString().split("\n").join("\n  "));
+      return 'AddElement($name, ${attributes.string()}, $c)';
+    case ReplaceWithElement(name, attributes, children):
+      var c = children.map(function(child) return "\n  " + child.toString().split("\n").join("\n  "));
+      return 'ReplaceWithElement($name, ${attributes.string()}, $c)';
     case PatchChild(index, patches):
       var p = "  " + PatchArray.toPrettyString(patches).split("\n").join("\n  ");
       return 'PatchChild($index, $p)';

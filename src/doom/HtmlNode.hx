@@ -9,13 +9,14 @@ using doom.Patch;
 import thx.Set;
 import dots.Html;
 using thx.Strings;
+import doom.AttributeValue;
 
 class HtmlNode {
   static var customEvents = Set.createString(["create", "mount"]);
 
   public static function toHtml(node : Node) : js.html.Node return switch (node : NodeImpl) {
-    case Element(name, attributes, events, children):
-      createElement(name, attributes, events, children);
+    case Element(name, attributes, children):
+      createElement(name, attributes, children);
     case Raw(text):
       Html.parse(text);
     case Text(text): document.createTextNode(text);
@@ -26,16 +27,20 @@ class HtmlNode {
     case Empty: null;
   }
 
-  static function createElement(name : String, attributes : Map<String, String>, events : Map<String, EventHandler>, children : Array<Node>) {
+  static function createElement(name : String, attributes : Map<String, AttributeValue>, children : Array<Node>) {
     var el = document.createElement(name);
     for(key in attributes.keys()) {
       var value = attributes.get(key);
-      if(null == value)
-        continue;
-      el.setAttribute(key, value);
+      switch value {
+        case StringAttribute(s) if(s.hasContent()):
+          el.setAttribute(key, s);
+        case BoolAttribute(b) if(b):
+          el.setAttribute(key, "");
+        case EventAttribute(e):
+          addEvent(el, key, e);
+        case _:
+      }
     }
-    for(key in events.keys())
-      addEvent(el, key, events.get(key));
     trigger(el, "create");
     for(child in children) {
       var n = toHtml(child);
@@ -74,25 +79,28 @@ class HtmlNode {
       node.appendChild(Html.parse(text));
     case [AddComment(text), DomNode.ELEMENT_NODE]:
       node.appendChild(document.createComment(text));
-    case [AddElement(name, attributes, events, children), DomNode.ELEMENT_NODE]:
-      var el = createElement(name, attributes, events, children);
+    case [AddElement(name, attributes, children), DomNode.ELEMENT_NODE]:
+      var el = createElement(name, attributes, children);
       node.appendChild(el);
       trigger(el, "mount");
     case [Remove, _]:
       node.parentNode.removeChild(node);
     case [RemoveAttribute(name), DomNode.ELEMENT_NODE]:
       (cast node : js.html.Element).removeAttribute(name);
-    case [SetAttribute(name, value), DomNode.ELEMENT_NODE] if(value.isEmpty()):
-      (cast node : js.html.Element).removeAttribute(name);
     case [SetAttribute(name, value), DomNode.ELEMENT_NODE]:
-      (cast node : js.html.Element).setAttribute(name, value);
-    case [RemoveEvent(name), DomNode.ELEMENT_NODE]:
-      removeEvent(cast node, name);
-    case [SetEvent(name, handler), DomNode.ELEMENT_NODE]:
-      addEvent(cast node, name, handler);
-    case [ReplaceWithElement(name, attributes, events, children), _]:
+      switch value {
+        case StringAttribute(s) if(s.hasContent()):
+          (cast node : js.html.Element).setAttribute(name, s);
+        case BoolAttribute(b) if(b):
+          (cast node : js.html.Element).setAttribute(name, name);
+        case StringAttribute(_), BoolAttribute(_):
+          (cast node : js.html.Element).removeAttribute(name);
+        case EventAttribute(e):
+          addEvent(cast node, name, e);
+      }
+    case [ReplaceWithElement(name, attributes, children), _]:
       var parent = node.parentNode,
-          el = createElement(name, attributes, events, children);
+          el = createElement(name, attributes, children);
       parent.replaceChild(el, node);
       trigger(el, "mount");
     case [ReplaceWithText(text), _]:

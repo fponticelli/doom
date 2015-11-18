@@ -128,8 +128,7 @@ class TodoList extends Component<TodoListData> {
         el("input", [
             "class" => "toggle-all",
             "type" => "checkbox",
-            "checked" => (allSelected() ? "true" : null)
-          ], [
+            "checked" => allSelected(),
             "change" => onToggleAll
           ]
         ),
@@ -203,13 +202,14 @@ class TodoItem extends Component<TodoItemData> {
         el("input", [
           "class" => "toggle",
           "type" => "checkbox",
-          "checked" => (state.checked ? "true" : null)
-        ], [
+          "checked" => state.checked,
           "change" => onCheckChange
         ]),
         el("label", state.description),
-        el("button", ["class" => "destroy"],
-        ["click" => onDelete])
+        el("button", [
+          "class" => "destroy",
+          "click" => onDelete
+        ])
       ]),
       el("input", [
         "class" => "edit",
