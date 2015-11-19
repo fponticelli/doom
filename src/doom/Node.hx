@@ -12,23 +12,22 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
   public static function el(name : String,
     ?attributes : Map<String, AttributeValue>,
     ?children : Array<Node>,
-    ?child : Node,
-    ?text : String) : Node {
+    ?child : Node) : Node {
     if(null == attributes)
       attributes = new Map();
     if(null == children)
       children = [];
     if(null != child)
       children.push(child);
-    if(null != text)
-      children.push(Text(text));
+    // if(null != text)
+    //   children.push(Text(text));
     return Element(name, attributes, children);
   }
 
   inline public static function comment(content : String) : Node
     return Comment(content);
 
-  //@:from
+  @:from
   inline public static function text(content : String) : Node
     return Text(content);
 
@@ -38,7 +37,7 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
   inline public static function empty() : Node
     return Empty;
 
-  //@:from
+  @:from
   inline public static function comp(comp : IComponent) : Node
     return ComponentNode(comp);
 

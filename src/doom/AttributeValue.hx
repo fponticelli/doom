@@ -1,6 +1,8 @@
 package doom;
 
 import js.html.Event;
+import js.html.KeyboardEvent;
+import js.html.InputElement;
 
 abstract AttributeValue(AttributeValueImpl) from AttributeValueImpl to AttributeValueImpl {
   @:from static public function fromString(s : String) : AttributeValue
@@ -17,8 +19,17 @@ abstract AttributeValue(AttributeValueImpl) from AttributeValueImpl to Attribute
   @:from static public function fromBool(b : Bool) : AttributeValue
     return BoolAttribute(b);
 
-  @:from static public function fromEventTargetHandler(f : Event -> Void) : AttributeValue
+  @:from static public function fromEventHandler(f : Event -> Void) : AttributeValue
     return EventAttribute(f);
+
+  @:from static public function fromKeyboardEventHandler(f : KeyboardEvent -> Void) : AttributeValue
+    return EventAttribute(f);
+
+  @:from static public function fromInputElementHandler(f : InputElement -> Void) : AttributeValue
+    return EventAttribute(function(e : Event) {
+      var input : InputElement = cast e.target;
+      f(input);
+    });
 
   @:op(A==B)
   public function equalsTo(that : AttributeValue)
@@ -36,5 +47,5 @@ abstract AttributeValue(AttributeValueImpl) from AttributeValueImpl to Attribute
 enum AttributeValueImpl {
   BoolAttribute(b : Bool);
   StringAttribute(s : String);
-  EventAttribute(f : Event -> Void);
+  EventAttribute<T : Event>(f : T -> Void);
 }

@@ -196,7 +196,7 @@ class TodoItem extends Component<TodoItemData> {
 
   override function render() {
     return el("li", [
-      "class" => ["completed" => state.checked].asAttribute()
+      "class" => ["completed" => state.checked, "editing" => state.editing == true].asAttribute()
     ], [
       el("div", ["class" => "view"], [
         el("input", [
@@ -205,15 +205,21 @@ class TodoItem extends Component<TodoItemData> {
           "checked" => state.checked,
           "change" => onCheckChange
         ]),
-        el("label", state.description),
+        el("label", [
+            "dblclick" => onDoubleClick
+          ],
+          state.description
+        ),
         el("button", [
           "class" => "destroy",
-          "click" => onDelete
+          "click" => onDelete,
         ])
       ]),
       el("input", [
         "class" => "edit",
-        "value" => state.description
+        "value" => state.description,
+        "blur" => onSubmit,
+        "keydown" => onKeyDown
       ])
     ]);
   }
@@ -223,8 +229,31 @@ class TodoItem extends Component<TodoItemData> {
     refresh();
   }
 
+  function onDoubleClick(_) {
+    state.editing = !state.editing;
+    refresh();
+  }
+
   function onDelete(_) {
     deleteItem(state);
+  }
+
+  function onSubmit(_) {
+
+  }
+
+  function onChange(input : js.html.InputElement) {
+
+  }
+
+  function onKeyDown(e : js.html.KeyboardEvent) {
+    trace(e.which);
+    if (e.which == 9) {
+      state.editing = !state.editing;
+      refresh();
+    } else if (e.which == 13) {
+      onSubmit(e);
+    }
   }
 }
 
