@@ -3,6 +3,9 @@ import doom.Component;
 
 class Main {
   static function main() {
-    Component.mount(new ToDoApp(new ToDoModel()), Query.first("section.todoapp"));
+    Component.mount(
+      new ToDoApp(new ToDoModel()),
+      Query.first("section.todoapp")
+    );
   }
 }

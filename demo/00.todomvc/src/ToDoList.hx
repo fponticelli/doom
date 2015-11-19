@@ -1,6 +1,5 @@
 import doom.Component;
 import doom.Node.*;
-import thx.Nil;
 
 class ToDoList extends Component<ToDoModel> {
   override function render() {
