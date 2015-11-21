@@ -4,14 +4,6 @@ import js.html.Element;
 using doom.Patch;
 
 class Component<State> implements IComponent {
-  public static function mount(component : IComponent, ref : Element) {
-    if(null == ref)
-      throw 'reference element is set to null';
-    ref.innerHTML = "";
-    component.init();
-    ref.appendChild(component.element);
-  }
-
   public var element : Element;
   public var node : Node;
   public var state : State;
