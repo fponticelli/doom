@@ -19,6 +19,12 @@ abstract AttributeValue(AttributeValueImpl) from AttributeValueImpl to Attribute
   @:from static public function fromBool(b : Bool) : AttributeValue
     return BoolAttribute(b);
 
+  @:from static public function fromHandler(f : Void -> Void) : AttributeValue
+    return EventAttribute(function(e : Event) {
+      e.preventDefault();
+      f();
+    });
+
   @:from static public function fromEventHandler(f : Event -> Void) : AttributeValue
     return EventAttribute(f);
 
