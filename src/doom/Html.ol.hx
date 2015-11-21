@@ -3,7 +3,7 @@ package doom;
 import doom.Node;
 import doom.Node.*;
 
-class HTML {
+class Html {
   inline public static function A(?attributes : Map<String, AttributeValue>, ?children : Array<Node>, ?child : Node)
     return el("a", attributes, children, child);
   inline public static function ABBR(?attributes : Map<String, AttributeValue>, ?children : Array<Node>, ?child : Node)
@@ -249,8 +249,10 @@ class HTML {
   inline public static function raw(content : String) : Node
     return Node.raw(content);
 
-  inline public static function empty() : Node
-    return Node.empty();
+  inline public static function dummy(?text : String = "empty node") : Node
+    return Node.el("div", ["style" => "display:none"], [
+      Node.comment(' $text ')
+    ]);
 
   inline public static function comp(comp : IComponent) : Node
     return Node.comp(comp);
