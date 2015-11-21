@@ -709,12 +709,16 @@ ToDoItem.prototype = $extend(doom_PropertiesComponent.prototype,{
 				var value = doom__$AttributeValue_AttributeValue_$Impl_$.fromMap((function($this) {
 					var $r;
 					var _g = new haxe_ds_StringMap();
-					_g.set("completed",$this.state.completed);
-					if(__map_reserved.edit != null) _g.setReserved("edit",false); else _g.h["edit"] = false;
+					_g.set("completed",$this.state.item.completed);
+					_g.set("editing",$this.state.editing);
 					$r = _g;
 					return $r;
 				}($this)));
 				if(__map_reserved["class"] != null) _g1.setReserved("class",value); else _g1.h["class"] = value;
+			}
+			{
+				var value1 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler($bind($this,$this.handleDblClick));
+				if(__map_reserved.dblclick != null) _g1.setReserved("dblclick",value1); else _g1.h["dblclick"] = value1;
 			}
 			$r = _g1;
 			return $r;
@@ -722,8 +726,8 @@ ToDoItem.prototype = $extend(doom_PropertiesComponent.prototype,{
 			var $r;
 			var _g2 = new haxe_ds_StringMap();
 			{
-				var value1 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("view");
-				if(__map_reserved["class"] != null) _g2.setReserved("class",value1); else _g2.h["class"] = value1;
+				var value2 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("view");
+				if(__map_reserved["class"] != null) _g2.setReserved("class",value2); else _g2.h["class"] = value2;
 			}
 			$r = _g2;
 			return $r;
@@ -731,33 +735,33 @@ ToDoItem.prototype = $extend(doom_PropertiesComponent.prototype,{
 			var $r;
 			var _g3 = new haxe_ds_StringMap();
 			{
-				var value2 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("toggle");
-				if(__map_reserved["class"] != null) _g3.setReserved("class",value2); else _g3.h["class"] = value2;
+				var value3 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("toggle");
+				if(__map_reserved["class"] != null) _g3.setReserved("class",value3); else _g3.h["class"] = value3;
 			}
 			{
-				var value3 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("checkbox");
-				if(__map_reserved.type != null) _g3.setReserved("type",value3); else _g3.h["type"] = value3;
+				var value4 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("checkbox");
+				if(__map_reserved.type != null) _g3.setReserved("type",value4); else _g3.h["type"] = value4;
 			}
 			{
-				var value4 = doom__$AttributeValue_AttributeValue_$Impl_$.fromBool($this.state.completed);
-				if(__map_reserved.checked != null) _g3.setReserved("checked",value4); else _g3.h["checked"] = value4;
+				var value5 = doom__$AttributeValue_AttributeValue_$Impl_$.fromBool($this.state.item.completed);
+				if(__map_reserved.checked != null) _g3.setReserved("checked",value5); else _g3.h["checked"] = value5;
 			}
 			{
-				var value5 = doom__$AttributeValue_AttributeValue_$Impl_$.fromInputElementHandler($bind($this,$this.handleChecked));
-				if(__map_reserved.change != null) _g3.setReserved("change",value5); else _g3.h["change"] = value5;
+				var value6 = doom__$AttributeValue_AttributeValue_$Impl_$.fromInputElementHandler($bind($this,$this.handleChecked));
+				if(__map_reserved.change != null) _g3.setReserved("change",value6); else _g3.h["change"] = value6;
 			}
 			$r = _g3;
 			return $r;
-		}(this))),doom_Html.LABEL(null,null,doom_NodeImpl.Text(this.state.label)),doom_Html.BUTTON((function($this) {
+		}(this))),doom_Html.LABEL(null,null,doom_NodeImpl.Text(this.state.item.label)),doom_Html.BUTTON((function($this) {
 			var $r;
 			var _g4 = new haxe_ds_StringMap();
 			{
-				var value6 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("destroy");
-				if(__map_reserved["class"] != null) _g4.setReserved("class",value6); else _g4.h["class"] = value6;
+				var value7 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("destroy");
+				if(__map_reserved["class"] != null) _g4.setReserved("class",value7); else _g4.h["class"] = value7;
 			}
 			{
-				var value7 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler($bind($this,$this.handleRemove));
-				if(__map_reserved.click != null) _g4.setReserved("click",value7); else _g4.h["click"] = value7;
+				var value8 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler($bind($this,$this.handleRemove));
+				if(__map_reserved.click != null) _g4.setReserved("click",value8); else _g4.h["click"] = value8;
 			}
 			$r = _g4;
 			return $r;
@@ -765,23 +769,54 @@ ToDoItem.prototype = $extend(doom_PropertiesComponent.prototype,{
 			var $r;
 			var _g5 = new haxe_ds_StringMap();
 			{
-				var value8 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("edit");
-				if(__map_reserved["class"] != null) _g5.setReserved("class",value8); else _g5.h["class"] = value8;
+				var value9 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("edit");
+				if(__map_reserved["class"] != null) _g5.setReserved("class",value9); else _g5.h["class"] = value9;
 			}
 			{
-				var value9 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString($this.state.label);
-				if(__map_reserved.value != null) _g5.setReserved("value",value9); else _g5.h["value"] = value9;
+				var value10 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString($this.state.item.label);
+				if(__map_reserved.value != null) _g5.setReserved("value",value10); else _g5.h["value"] = value10;
+			}
+			{
+				var value11 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler($bind($this,$this.handleBlur));
+				if(__map_reserved.blur != null) _g5.setReserved("blur",value11); else _g5.h["blur"] = value11;
+			}
+			{
+				var value12 = doom__$AttributeValue_AttributeValue_$Impl_$.fromKeyboardEventHandler($bind($this,$this.handleKeydown));
+				if(__map_reserved.keyup != null) _g5.setReserved("keyup",value12); else _g5.h["keyup"] = value12;
 			}
 			$r = _g5;
 			return $r;
 		}(this)))],null);
 	}
 	,handleChecked: function(el) {
-		this.state.completed = el.checked;
+		this.state.item.completed = el.checked;
 		this.prop.refresh();
 	}
 	,handleRemove: function() {
-		this.prop.remove(this.state);
+		this.prop.remove(this.state.item);
+	}
+	,handleDblClick: function() {
+		this.state.editing = true;
+		this.update(this.state);
+	}
+	,handleBlur: function() {
+		if(!this.state.editing) return;
+		this.state.editing = false;
+		var value = this.getInputValue();
+		if(thx_Strings.isEmpty(value)) this.handleRemove(); else {
+			this.state.item.label = value;
+			this.prop.save();
+			this.update(this.state);
+		}
+	}
+	,handleKeydown: function(e) {
+		if(e.which != 13) return;
+		this.handleBlur();
+	}
+	,getInputValue: function() {
+		var el = this.element.querySelector("input.edit");
+		var value = el.value;
+		return value;
 	}
 	,__class__: ToDoItem
 });
@@ -823,7 +858,7 @@ ToDoList.prototype = $extend(doom_PropertiesComponent.prototype,{
 				if(__map_reserved.checked != null) _g1.setReserved("checked",value3); else _g1.h["checked"] = value3;
 			}
 			{
-				var value4 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler($bind($this,$this.handleChange));
+				var value4 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler(($_=$this.prop,$bind($_,$_.toggleCheck)));
 				if(__map_reserved.change != null) _g1.setReserved("change",value4); else _g1.h["change"] = value4;
 			}
 			$r = _g1;
@@ -854,7 +889,7 @@ ToDoList.prototype = $extend(doom_PropertiesComponent.prototype,{
 				var item = $it0.next();
 				_g4.push((function($this) {
 					var $r;
-					var comp = new ToDoItem($this.prop,item);
+					var comp = new ToDoItem($this.prop,{ item : item, editing : false});
 					$r = doom_NodeImpl.ComponentNode(comp);
 					return $r;
 				}($this)));
@@ -862,9 +897,6 @@ ToDoList.prototype = $extend(doom_PropertiesComponent.prototype,{
 			$r = _g4;
 			return $r;
 		}(this)),null)],null);
-	}
-	,handleChange: function() {
-		this.prop.toggleCheck();
 	}
 	,__class__: ToDoList
 });

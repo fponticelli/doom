@@ -56,7 +56,7 @@ class ToDoController {
   }
 
   static inline var STORAGE_KEY : String = "TodoMVC-Doom";
-  function save() {
+  public function save() {
     window.localStorage.setItem(STORAGE_KEY, Json.stringify(allItems));
   }
 

@@ -11,15 +11,11 @@ class ToDoList extends PropertiesComponent<ToDoController, ReadonlyArray<ToDoIte
         "class" => "toggle-all",
         "type" => "checkbox",
         "checked" => state.all.fn(_.completed),
-        "change" => handleChange
+        "change" => prop.toggleCheck
       ]),
       LABEL(["for" => "toggle-all"], "Mark all as complete"),
       UL(["class" => "todo-list"], [
-        for(item in state) new ToDoItem(prop, item)
+        for(item in state) new ToDoItem(prop, { item : item, editing : false })
       ])
     ]);
-
-  function handleChange() {
-    prop.toggleCheck();
-  }
 }
