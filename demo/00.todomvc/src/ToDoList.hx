@@ -1,13 +1,14 @@
-import doom.Component;
-import doom.Node.*;
+import doom.PropertiesComponent;
+import doom.HTML.*;
+import thx.ReadonlyArray;
 
-class ToDoList extends Component<ToDoModel> {
+class ToDoList extends PropertiesComponent<ToDoController, ReadonlyArray<ToDoItemModel>> {
   override function render() {
-    return el("section", ["class" => "main"], [
-      el("input", ["class" => "toggle-all", "type" => "checkbox"]),
-      el("label", ["for" => "toggle-all"], "Mark all as complete"),
-      el("ul", ["class" => "todo-list"], [
-        for(item in state.filteredItems) new ToDoItem(item)
+    return SECTION(["class" => "main"], [
+      INPUT(["class" => "toggle-all", "type" => "checkbox"]),
+      LABEL(["for" => "toggle-all"], "Mark all as complete"),
+      UL(["class" => "todo-list"], [
+        for(item in state) new ToDoItem(prop, item)
       ])
     ]);
   }

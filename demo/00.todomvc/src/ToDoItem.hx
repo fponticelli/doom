@@ -1,27 +1,44 @@
-import doom.Component;
-import doom.Node.*;
+import doom.PropertiesComponent;
+import doom.HTML.*;
 
-class ToDoItem extends Component<ToDoItemModel> {
+class ToDoItem extends PropertiesComponent<RemoveItemController, ToDoItemModel> {
   override function render() {
-    return el("li", [
+    return LI([
         "class" => [
           "completed" => state.completed,
           "edit" => false
         ]
       ], [
-      el("div", ["class" => "view"], [
-        el("input", [
+      DIV(["class" => "view"], [
+        INPUT([
           "class" => "toggle",
           "type" => "checkbox",
-          "checked" => state.completed
+          "checked" => state.completed,
+          "change" => handleChecked
         ]),
-        el("label", state.label),
-        el("button", ["class" => "destroy"])
+        LABEL(state.label),
+        BUTTON([
+          "class" => "destroy",
+          "click" => handleRemove
+        ])
       ]),
-      el("input", [
-        "class" => "edit",
-        "value" => state.label
+      INPUT([
+        "class"  => "edit",
+        "value"  => state.label
       ])
     ]);
   }
+
+  function handleChecked(el : js.html.InputElement) {
+    state.completed = el.checked;
+    update(state);
+  }
+
+  function handleRemove() {
+    prop.remove(state);
+  }
+}
+
+typedef RemoveItemController = {
+  public function remove(item : ToDoItemModel) : Void;
 }

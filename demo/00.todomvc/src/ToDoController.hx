@@ -1,7 +1,10 @@
 import thx.ReadonlyArray;
 using thx.Functions;
+using thx.Strings;
+import haxe.Json;
+import js.Browser.*;
 
-class ToDoModel {
+class ToDoController {
   public var length(default, null) : Int;
   public var filter(default, null) : ToDoFilter;
   public var filteredItems(default, null) : ReadonlyArray<ToDoItemModel>;
@@ -10,11 +13,7 @@ class ToDoModel {
 
   public function new() {
     filter = All;
-    allItems = [
-      { label : "something todo", completed : false },
-      { label : "something else", completed : false },
-      { label : "this is done", completed : true }
-    ];
+    allItems = load();
     onUpdate = function() {};
     update();
   }
@@ -25,12 +24,15 @@ class ToDoModel {
   }
 
   public function add(label : String) {
+    trace("add", label);
     allItems.push({ label : label, completed : false});
+    save();
     update();
   }
 
   public function remove(item : ToDoItemModel) {
     allItems.remove(item);
+    save();
     update();
   }
 
@@ -45,5 +47,18 @@ class ToDoModel {
     }
     length = filteredItems.length;
     onUpdate();
+  }
+
+  static inline var STORAGE_KEY : String = "TodoMVC-Doom";
+  function save() {
+    window.localStorage.setItem(STORAGE_KEY, Json.stringify(allItems));
+  }
+
+  function load() {
+    var v = window.localStorage.getItem(STORAGE_KEY);
+    if(v.hasContent())
+      return Json.parse(v);
+    else
+      return [];
   }
 }

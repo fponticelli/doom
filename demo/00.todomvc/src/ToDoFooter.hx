@@ -1,22 +1,20 @@
-import doom.Component;
-import doom.Node.*;
-import thx.Nil;
+import doom.StatelessComponent;
+import doom.HTML.*;
 
-class ToDoFooter extends Component<Nil> {
+class ToDoFooter extends StatelessComponent {
   override function render() {
-    return el("footer", ["class" => "footer"], [
-        el("span", [
+    return FOOTER(["class" => "footer"], [
+        SPAN([
           "class" => "todo-count"
         ], [
-          el("strong", "0"),
-          "item left"
+          STRONG("0"), " item left"
         ]),
-        el("ul", ["class" => "filters"], [
-          el("li", el("a", ["class" => ["selected" => true], "href" => "#"], "All")),
-          el("li", el("a", ["class" => ["selected" => false], "href" => "#/active"], "Active")),
-          el("li", el("a", ["class" => ["selected" => false], "href" => "#/completed"], "Completed"))
+        UL(["class" => "filters"], [
+          LI(A(["class" => ["selected" => true], "href" => "#"], "All")),
+          LI(A(["class" => ["selected" => false], "href" => "#/active"], "Active")),
+          LI(A(["class" => ["selected" => false], "href" => "#/completed"], "Completed"))
         ]),
-        el("button", ["class" => "clear-completed"], "Clear completed")
+        BUTTON(["class" => "clear-completed"], "Clear completed")
       ]);
   }
 }

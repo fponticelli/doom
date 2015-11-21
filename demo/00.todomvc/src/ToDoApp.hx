@@ -1,26 +1,29 @@
-import doom.Component;
-import doom.Node.*;
-import thx.Nil;
+import doom.PropertiesComponent;
+import doom.HTML.*;
+import thx.ReadonlyArray;
 
-class ToDoApp extends Component<ToDoModel> {
-  public function new(state : ToDoModel) {
-    super(state);
-    state.onUpdate = function() {
-      update(state);
-    };
+class ToDoApp extends PropertiesComponent<ToDoController, ReadonlyArray<ToDoItemModel>> {
+  override function render() {
+    return DIV([
+      new ToDoHeader(prop),
+      new ToDoBody(prop, state)
+    ]);
+  }
+}
+
+class ToDoBody extends PropertiesComponent<ToDoController, ReadonlyArray<ToDoItemModel>> {
+  public function new(prop : ToDoController, state : ReadonlyArray<ToDoItemModel>) {
+    super(prop, state);
+    prop.onUpdate = function() update(prop.filteredItems);
   }
 
   override function render() {
-    var header = new ToDoHeader(nil);
     return if(state.length == 0) {
-      el("div", [
-        header
-      ]);
+      empty();
     } else {
-      el("div", [
-        header,
-        new ToDoList(state),
-        new ToDoFooter(nil)
+      DIV([
+        new ToDoList(prop, state),
+        new ToDoFooter()
       ]);
     };
   }
