@@ -41,19 +41,19 @@ class XmlNode {
       applyPatch(patch, node);
 
   public static function applyPatch(patch : Patch, node : Xml) switch [patch, node.nodeType] {
-    case [AddText(text), Xml.Element]:
+    case [AddText(text), Element]:
       node.addChild(Xml.createPCData(text));
-    case [AddRaw(text), Xml.Element]:
+    case [AddRaw(text), Element]:
       node.addChild(Xml.parse(text));
-    case [AddComment(text), Xml.Element]:
+    case [AddComment(text), Element]:
       node.addChild(Xml.createComment(text));
-    case [AddElement(name, attributes, children), Xml.Element]:
+    case [AddElement(name, attributes, children), Element]:
       node.addChild(createElement(name, attributes, children));
     case [Remove, _]:
       node.parent.removeChild(node);
-    case [RemoveAttribute(name), Xml.Element]:
+    case [RemoveAttribute(name), Element]:
       node.remove(name);
-    case [SetAttribute(name, value), Xml.Element]:
+    case [SetAttribute(name, value), Element]:
       switch value {
         case StringAttribute(s) if(s.hasContent()):
           node.set(name, s);
@@ -83,10 +83,10 @@ class XmlNode {
           pos = parent.iterator().indexOf(node);
       parent.removeChild(node);
       parent.insertChild(Xml.createComment(text), pos);
-    case [ContentChanged(newcontent), Xml.CData]
-       | [ContentChanged(newcontent), Xml.Comment]:
+    case [ContentChanged(newcontent), CData]
+       | [ContentChanged(newcontent), Comment]:
       node.nodeValue = newcontent;
-    case [PatchChild(index, patches), Xml.Element]:
+    case [PatchChild(index, patches), Element]:
       var n = node.iterator().get(index);
       applyPatches(patches, n);
     case [p, n]:
