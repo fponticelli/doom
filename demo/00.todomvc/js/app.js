@@ -2267,6 +2267,11 @@ haxe__$Int32_Int32_$Impl_$.__name__ = ["haxe","_Int32","Int32_Impl_"];
 haxe__$Int32_Int32_$Impl_$.mul = function(a,b) {
 	return a * (b & 65535) + (a * (b >>> 16) << 16 | 0) | 0;
 };
+var haxe_Log = function() { };
+haxe_Log.__name__ = ["haxe","Log"];
+haxe_Log.trace = function(v,infos) {
+	js_Boot.__trace(v,infos);
+};
 var haxe_Utf8 = function() { };
 haxe_Utf8.__name__ = ["haxe","Utf8"];
 haxe_Utf8.compare = function(a,b) {
@@ -2973,6 +2978,25 @@ js__$Boot_HaxeError.prototype = $extend(Error.prototype,{
 });
 var js_Boot = function() { };
 js_Boot.__name__ = ["js","Boot"];
+js_Boot.__unhtml = function(s) {
+	return s.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;");
+};
+js_Boot.__trace = function(v,i) {
+	var msg;
+	if(i != null) msg = i.fileName + ":" + i.lineNumber + ": "; else msg = "";
+	msg += js_Boot.__string_rec(v,"");
+	if(i != null && i.customParams != null) {
+		var _g = 0;
+		var _g1 = i.customParams;
+		while(_g < _g1.length) {
+			var v1 = _g1[_g];
+			++_g;
+			msg += "," + js_Boot.__string_rec(v1,"");
+		}
+	}
+	var d;
+	if(typeof(document) != "undefined" && (d = document.getElementById("haxe:trace")) != null) d.innerHTML += js_Boot.__unhtml(msg) + "<br/>"; else if(typeof console != "undefined" && console.log != null) console.log(msg);
+};
 js_Boot.getClass = function(o) {
 	if((o instanceof Array) && o.__enum__ == null) return Array; else {
 		var cl = o.__class__;
@@ -6740,7 +6764,8 @@ todomvc_App.prototype = $extend(doom_PropertiesComponent.prototype,{
 	,__class__: todomvc_App
 });
 var todomvc_AppProperties = function() {
-	this.filter = todomvc_Filter.All;
+	this.filter = this.getFilterFromHash();
+	haxe_Log.trace(this.filter,{ fileName : "AppProperties.hx", lineNumber : 22, className : "todomvc.AppProperties", methodName : "new", customParams : [window.location.hash]});
 	this.allItems = this.load();
 	this.onUpdate = function() {
 	};
@@ -6756,6 +6781,7 @@ todomvc_AppProperties.prototype = {
 	,allItems: null
 	,setFilter: function(filter) {
 		this.filter = filter;
+		this.setFilterIntHash(filter);
 		this.refresh();
 	}
 	,add: function(label) {
@@ -6817,6 +6843,30 @@ todomvc_AppProperties.prototype = {
 	}
 	,save: function() {
 		window.localStorage.setItem("TodoMVC-Doom",JSON.stringify(this.allItems));
+	}
+	,getFilterFromHash: function() {
+		var hash = thx_Strings.trimCharsLeft(window.location.hash,"#");
+		switch(hash) {
+		case "/active":
+			return todomvc_Filter.Active;
+		case "/completed":
+			return todomvc_Filter.Completed;
+		default:
+			return todomvc_Filter.All;
+		}
+	}
+	,setFilterIntHash: function(filter) {
+		switch(filter[1]) {
+		case 1:
+			window.location.hash = "/active";
+			break;
+		case 2:
+			window.location.hash = "/completed";
+			break;
+		case 0:
+			window.location.hash = "";
+			break;
+		}
 	}
 	,load: function() {
 		var v = window.localStorage.getItem("TodoMVC-Doom");
@@ -7164,6 +7214,7 @@ todomvc_Item.prototype = $extend(doom_PropertiesComponent.prototype,{
 	}
 	,handleChecked: function(checked) {
 		this.state.item.completed = checked;
+		this.prop.save();
 		this.prop.refresh();
 	}
 	,handleRemove: function() {

@@ -18,7 +18,8 @@ class AppProperties {
   var allItems : Array<ItemData>;
 
   public function new() {
-    filter = All;
+    filter = getFilterFromHash();
+    trace(filter, window.location.hash);
     allItems = load();
     onUpdate = function() {};
     refresh();
@@ -26,6 +27,7 @@ class AppProperties {
 
   public function setFilter(filter : Filter) {
     this.filter = filter;
+    setFilterIntHash(filter);
     refresh();
   }
 
@@ -66,8 +68,26 @@ class AppProperties {
     complete = allItems.length;
     onUpdate();
   }
+
   public function save() {
     window.localStorage.setItem(STORAGE_KEY, Json.stringify(allItems));
+  }
+
+  public function getFilterFromHash() : Filter {
+    var hash = window.location.hash.trimCharsLeft("#");
+    return switch hash {
+      case "/active": Active;
+      case "/completed": Completed;
+      case _: All;
+    };
+  }
+
+  public function setFilterIntHash(filter : Filter) {
+    window.location.hash = switch filter {
+      case Active : "/active";
+      case Completed : "/completed";
+      case All: "";
+    };
   }
 
   function load() {
