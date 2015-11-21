@@ -23,8 +23,9 @@ class HtmlNode {
     case Comment(text): document.createComment(text);
     case ComponentNode(comp):
       comp.init();
-      return comp.element;
-    case Empty: null;
+      comp.element;
+    case Empty:
+      null;
   }
 
   static function createElement(name : String, attributes : Map<String, AttributeValue>, children : Array<Node>) {
