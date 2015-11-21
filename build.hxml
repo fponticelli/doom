@@ -1,6 +1,7 @@
 -js bin/node.js
 -cp src
 -cp test
+-lib dots
 -lib thx.core
 -lib utest
 -main TestAll

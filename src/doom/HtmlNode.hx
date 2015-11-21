@@ -7,26 +7,40 @@ import js.Browser.*;
 import doom.Node;
 using doom.Patch;
 import thx.Set;
+import dots.Html;
+using thx.Strings;
+import doom.AttributeValue;
 
 class HtmlNode {
   static var customEvents = Set.createString(["create", "mount"]);
 
   public static function toHtml(node : Node) : js.html.Node return switch (node : NodeImpl) {
-    case Element(name, attributes, events, children):
-      createElement(name, attributes, events, children);
+    case Element(name, attributes, children):
+      createElement(name, attributes, children);
     case Raw(text):
-      createElementFromHtml(text);
+      Html.parse(text);
     case Text(text): document.createTextNode(text);
-    case Comment(text): document.createComment(text);
-    case Empty: null;
+    case Comment(text):
+      createComment(text);
+    case ComponentNode(comp):
+      comp.init();
+      comp.element;
   }
 
-  static function createElement(name : String, attributes : Map<String, String>, events : Map<String, EventHandler>, children : Array<Node>) {
+  static function createElement(name : String, attributes : Map<String, AttributeValue>, children : Array<Node>) : Element {
     var el = document.createElement(name);
-    for(key in attributes.keys())
-      el.setAttribute(key, attributes.get(key));
-    for(key in events.keys())
-      addEvent(el, key, events.get(key));
+    for(key in attributes.keys()) {
+      var value = attributes.get(key);
+      switch value {
+        case StringAttribute(s) if(s.hasContent()):
+          el.setAttribute(key, s);
+        case BoolAttribute(b) if(b):
+          el.setAttribute(key, "");
+        case EventAttribute(e):
+          addEvent(el, key, e);
+        case _:
+      }
+    }
     trigger(el, "create");
     for(child in children) {
       var n = toHtml(child);
@@ -36,16 +50,8 @@ class HtmlNode {
     return el;
   }
 
-  static function createElementFromHtml(text : String) : js.html.Node {
-    var el = document.createElement('div');
-    el.innerHTML = text;
-    if(el.childNodes.length == 0)
-      return null;
-    else if(el.childNodes.length > 1)
-      return el;
-    else
-      return el.firstChild;
-  }
+  public static function createComment(comment : String)
+    return document.createComment(comment);
 
   public static function applyPatches(patches : Array<Patch>, node : DomNode) {
     for(patch in patches)
@@ -73,11 +79,11 @@ class HtmlNode {
     case [AddText(text), DomNode.ELEMENT_NODE]:
       node.appendChild(document.createTextNode(text));
     case [AddRaw(text), DomNode.ELEMENT_NODE]:
-      node.appendChild(createElementFromHtml(text));
+      node.appendChild(Html.parse(text));
     case [AddComment(text), DomNode.ELEMENT_NODE]:
-      node.appendChild(document.createComment(text));
-    case [AddElement(name, attributes, events, children), DomNode.ELEMENT_NODE]:
-      var el = createElement(name, attributes, events, children);
+      node.appendChild(createComment(text));
+    case [AddElement(name, attributes, children), DomNode.ELEMENT_NODE]:
+      var el = createElement(name, attributes, children);
       node.appendChild(el);
       trigger(el, "mount");
     case [Remove, _]:
@@ -85,14 +91,19 @@ class HtmlNode {
     case [RemoveAttribute(name), DomNode.ELEMENT_NODE]:
       (cast node : js.html.Element).removeAttribute(name);
     case [SetAttribute(name, value), DomNode.ELEMENT_NODE]:
-      (cast node : js.html.Element).setAttribute(name, value);
-    case [RemoveEvent(name), DomNode.ELEMENT_NODE]:
-      removeEvent(cast node, name);
-    case [SetEvent(name, handler), DomNode.ELEMENT_NODE]:
-      addEvent(cast node, name, handler);
-    case [ReplaceWithElement(name, attributes, events, children), _]:
+      switch value {
+        case StringAttribute(s) if(s.hasContent()):
+          (cast node : js.html.Element).setAttribute(name, s);
+        case BoolAttribute(b) if(b):
+          (cast node : js.html.Element).setAttribute(name, name);
+        case StringAttribute(_), BoolAttribute(_):
+          (cast node : js.html.Element).removeAttribute(name);
+        case EventAttribute(e):
+          addEvent(cast node, name, e);
+      }
+    case [ReplaceWithElement(name, attributes, children), _]:
       var parent = node.parentNode,
-          el = createElement(name, attributes, events, children);
+          el = createElement(name, attributes, children);
       parent.replaceChild(el, node);
       trigger(el, "mount");
     case [ReplaceWithText(text), _]:
@@ -103,7 +114,7 @@ class HtmlNode {
       parent.replaceChild(document.createTextNode(text), node);
     case [ReplaceWithComment(text), _]:
       var parent = node.parentNode;
-      parent.replaceChild(createElementFromHtml(text), node);
+      parent.replaceChild(createComment(text), node);
     case [ContentChanged(newcontent), DomNode.TEXT_NODE]
        | [ContentChanged(newcontent), DomNode.COMMENT_NODE]:
       node.nodeValue = newcontent;

@@ -3,13 +3,11 @@ package doom;
 import js.html.Element;
 using doom.Patch;
 
-class Component<State> implements IComponent {
+class StatelessComponent implements IComponent {
   public var element : Element;
   public var node : Node;
-  public var state : State;
 
-  public function new(state : State) {
-    this.state = state;
+  public function new() {
     this.node = render();
   }
 
@@ -19,12 +17,8 @@ class Component<State> implements IComponent {
   }
 
   private function updateNode(oldNode : Node) {
-    var newNode = render();
-    switch newNode {
-      case doom.Node.NodeImpl.Element(_): // do nothing
-      case _: throw new thx.Error('Component can (and must) return only element nodes');
-    }
-    var patches = oldNode.diff(newNode);
+    var newNode = render(),
+        patches = oldNode.diff(newNode);
     HtmlNode.applyPatches(patches, element);
     node = newNode;
   }
@@ -32,16 +26,9 @@ class Component<State> implements IComponent {
   private function render() : Node
     return throw new thx.error.AbstractMethod();
 
-  public function update(newState : State) {
-    var oldState = this.state;
-    this.state = newState;
-    if(!shouldRender(oldState, newState))
-      return;
+  public function update() {
     updateNode(node);
   }
-
-  public function shouldRender(oldState : State, newState : State)
-    return true;
 
   public function toString() {
     var cls = Type.getClassName(Type.getClass(this)).split(".").pop();
