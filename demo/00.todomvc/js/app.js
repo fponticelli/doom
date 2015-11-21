@@ -407,7 +407,7 @@ ToDoBody.prototype = $extend(doom_PropertiesComponent.prototype,{
 			return $r;
 		}(this)),(function($this) {
 			var $r;
-			var comp1 = new ToDoFooter();
+			var comp1 = new ToDoFooter({ items : $this.state});
 			$r = doom_NodeImpl.ComponentNode(comp1);
 			return $r;
 		}(this))],null);
@@ -498,41 +498,12 @@ ToDoFilter.Active.__enum__ = ToDoFilter;
 ToDoFilter.Completed = ["Completed",2];
 ToDoFilter.Completed.toString = $estr;
 ToDoFilter.Completed.__enum__ = ToDoFilter;
-var doom_StatelessComponent = function() {
-	this.node = this.render();
-};
-doom_StatelessComponent.__name__ = ["doom","StatelessComponent"];
-doom_StatelessComponent.__interfaces__ = [doom_IComponent];
-doom_StatelessComponent.prototype = {
-	element: null
-	,node: null
-	,init: function() {
-		this.element = doom_HtmlNode.toHtml(this.node);
-	}
-	,updateNode: function(oldNode) {
-		var newNode = this.render();
-		var patches = doom__$Node_Node_$Impl_$.diff(oldNode,newNode);
-		doom_HtmlNode.applyPatches(patches,this.element);
-		this.node = newNode;
-	}
-	,render: function() {
-		throw new thx_error_AbstractMethod({ fileName : "StatelessComponent.hx", lineNumber : 27, className : "doom.StatelessComponent", methodName : "render"});
-	}
-	,update: function() {
-		this.updateNode(this.node);
-	}
-	,toString: function() {
-		var cls = Type.getClassName(js_Boot.getClass(this)).split(".").pop();
-		return "" + cls + "(" + doom__$Node_Node_$Impl_$.toString(this.node) + ")";
-	}
-	,__class__: doom_StatelessComponent
-};
-var ToDoFooter = function() {
-	doom_StatelessComponent.call(this);
+var ToDoFooter = function(state) {
+	doom_Component.call(this,state);
 };
 ToDoFooter.__name__ = ["ToDoFooter"];
-ToDoFooter.__super__ = doom_StatelessComponent;
-ToDoFooter.prototype = $extend(doom_StatelessComponent.prototype,{
+ToDoFooter.__super__ = doom_Component;
+ToDoFooter.prototype = $extend(doom_Component.prototype,{
 	render: function() {
 		return doom_Html.FOOTER((function($this) {
 			var $r;
@@ -552,7 +523,7 @@ ToDoFooter.prototype = $extend(doom_StatelessComponent.prototype,{
 			}
 			$r = _g1;
 			return $r;
-		}(this)),[doom_Html.STRONG(null,null,doom_NodeImpl.Text("0")),doom_NodeImpl.Text(" item left")],null),doom_Html.UL((function($this) {
+		}(this)),this.getItemsLeftLabel(),null),doom_Html.UL((function($this) {
 			var $r;
 			var _g2 = new haxe_ds_StringMap();
 			{
@@ -629,8 +600,46 @@ ToDoFooter.prototype = $extend(doom_StatelessComponent.prototype,{
 			return $r;
 		}(this)),null,doom_NodeImpl.Text("Clear completed"))],null);
 	}
+	,getItemsLeft: function() {
+		return this.state.items.filter(function(_) {
+			return !_.completed;
+		}).length;
+	}
+	,getItemsLeftLabel: function() {
+		var left = this.getItemsLeft();
+		if(left == 1) return [doom_Html.STRONG(null,null,doom_NodeImpl.Text("1")),doom_NodeImpl.Text(" item left")]; else return [doom_Html.STRONG(null,null,doom_NodeImpl.Text("" + left)),doom_NodeImpl.Text(" items left")];
+	}
 	,__class__: ToDoFooter
 });
+var doom_StatelessComponent = function() {
+	this.node = this.render();
+};
+doom_StatelessComponent.__name__ = ["doom","StatelessComponent"];
+doom_StatelessComponent.__interfaces__ = [doom_IComponent];
+doom_StatelessComponent.prototype = {
+	element: null
+	,node: null
+	,init: function() {
+		this.element = doom_HtmlNode.toHtml(this.node);
+	}
+	,updateNode: function(oldNode) {
+		var newNode = this.render();
+		var patches = doom__$Node_Node_$Impl_$.diff(oldNode,newNode);
+		doom_HtmlNode.applyPatches(patches,this.element);
+		this.node = newNode;
+	}
+	,render: function() {
+		throw new thx_error_AbstractMethod({ fileName : "StatelessComponent.hx", lineNumber : 27, className : "doom.StatelessComponent", methodName : "render"});
+	}
+	,update: function() {
+		this.updateNode(this.node);
+	}
+	,toString: function() {
+		var cls = Type.getClassName(js_Boot.getClass(this)).split(".").pop();
+		return "" + cls + "(" + doom__$Node_Node_$Impl_$.toString(this.node) + ")";
+	}
+	,__class__: doom_StatelessComponent
+};
 var doom_PropertiesStatelessComponent = function(prop) {
 	this.prop = prop;
 	doom_StatelessComponent.call(this);

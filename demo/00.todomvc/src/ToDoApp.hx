@@ -23,7 +23,9 @@ class ToDoBody extends PropertiesComponent<ToDoController, ReadonlyArray<ToDoIte
     } else {
       DIV([
         new ToDoList(prop, state),
-        new ToDoFooter()
+        new ToDoFooter({
+          items : state
+        })
       ]);
     };
   }
