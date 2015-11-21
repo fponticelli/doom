@@ -419,7 +419,7 @@ var ToDoController = function() {
 	this.allItems = this.load();
 	this.onUpdate = function() {
 	};
-	this.update();
+	this.refresh();
 };
 ToDoController.__name__ = ["ToDoController"];
 ToDoController.prototype = {
@@ -430,19 +430,36 @@ ToDoController.prototype = {
 	,allItems: null
 	,setFilter: function(filter) {
 		this.filter = filter;
-		this.update();
+		this.refresh();
 	}
 	,add: function(label) {
 		this.allItems.push({ label : label, completed : false});
 		this.save();
-		this.update();
+		this.refresh();
 	}
 	,remove: function(item) {
 		HxOverrides.remove(this.allItems,item);
 		this.save();
-		this.update();
+		this.refresh();
 	}
-	,update: function() {
+	,toggleCheck: function() {
+		var completed = ((function(_e) {
+			return function(predicate) {
+				return thx_Arrays.all(_e,predicate);
+			};
+		})(this.allItems))(function(_) {
+			return _.completed;
+		});
+		((function(_e1) {
+			return function(effect) {
+				thx_Arrays.each(_e1,effect);
+			};
+		})(this.allItems))(function(_1) {
+			return _1.completed = !completed;
+		});
+		this.refresh();
+	}
+	,refresh: function() {
 		var _g = this.filter;
 		switch(_g[1]) {
 		case 0:
@@ -761,7 +778,7 @@ ToDoItem.prototype = $extend(doom_PropertiesComponent.prototype,{
 	}
 	,handleChecked: function(el) {
 		this.state.completed = el.checked;
-		this.update(this.state);
+		this.prop.refresh();
 	}
 	,handleRemove: function() {
 		this.prop.remove(this.state);
@@ -795,14 +812,28 @@ ToDoList.prototype = $extend(doom_PropertiesComponent.prototype,{
 				var value2 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("checkbox");
 				if(__map_reserved.type != null) _g1.setReserved("type",value2); else _g1.h["type"] = value2;
 			}
+			{
+				var value3 = doom__$AttributeValue_AttributeValue_$Impl_$.fromBool(((function(_e) {
+					return function(predicate) {
+						return thx_Arrays.all(_e,predicate);
+					};
+				})($this.state))(function(_) {
+					return _.completed;
+				}));
+				if(__map_reserved.checked != null) _g1.setReserved("checked",value3); else _g1.h["checked"] = value3;
+			}
+			{
+				var value4 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler($bind($this,$this.handleChange));
+				if(__map_reserved.change != null) _g1.setReserved("change",value4); else _g1.h["change"] = value4;
+			}
 			$r = _g1;
 			return $r;
 		}(this))),doom_Html.LABEL((function($this) {
 			var $r;
 			var _g2 = new haxe_ds_StringMap();
 			{
-				var value3 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("toggle-all");
-				if(__map_reserved["for"] != null) _g2.setReserved("for",value3); else _g2.h["for"] = value3;
+				var value5 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("toggle-all");
+				if(__map_reserved["for"] != null) _g2.setReserved("for",value5); else _g2.h["for"] = value5;
 			}
 			$r = _g2;
 			return $r;
@@ -810,8 +841,8 @@ ToDoList.prototype = $extend(doom_PropertiesComponent.prototype,{
 			var $r;
 			var _g3 = new haxe_ds_StringMap();
 			{
-				var value4 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("todo-list");
-				if(__map_reserved["class"] != null) _g3.setReserved("class",value4); else _g3.h["class"] = value4;
+				var value6 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("todo-list");
+				if(__map_reserved["class"] != null) _g3.setReserved("class",value6); else _g3.h["class"] = value6;
 			}
 			$r = _g3;
 			return $r;
@@ -831,6 +862,9 @@ ToDoList.prototype = $extend(doom_PropertiesComponent.prototype,{
 			$r = _g4;
 			return $r;
 		}(this)),null)],null);
+	}
+	,handleChange: function() {
+		this.prop.toggleCheck();
 	}
 	,__class__: ToDoList
 });

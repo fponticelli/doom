@@ -1,4 +1,5 @@
 import thx.ReadonlyArray;
+using thx.Arrays;
 using thx.Functions;
 using thx.Strings;
 import haxe.Json;
@@ -15,27 +16,33 @@ class ToDoController {
     filter = All;
     allItems = load();
     onUpdate = function() {};
-    update();
+    refresh();
   }
 
   public function setFilter(filter : ToDoFilter) {
     this.filter = filter;
-    update();
+    refresh();
   }
 
   public function add(label : String) {
     allItems.push({ label : label, completed : false});
     save();
-    update();
+    refresh();
   }
 
   public function remove(item : ToDoItemModel) {
     allItems.remove(item);
     save();
-    update();
+    refresh();
   }
 
-  function update() {
+  public function toggleCheck() {
+    var completed = allItems.all.fn(_.completed);
+    allItems.each.fn(_.completed = !completed);
+    refresh();
+  }
+
+  public function refresh() {
     switch filter {
       case All:
         filteredItems = allItems.copy();

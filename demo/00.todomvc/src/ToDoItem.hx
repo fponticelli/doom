@@ -31,7 +31,7 @@ class ToDoItem extends PropertiesComponent<RemoveItemController, ToDoItemModel> 
 
   function handleChecked(el : js.html.InputElement) {
     state.completed = el.checked;
-    update(state);
+    prop.refresh();
   }
 
   function handleRemove() {
@@ -41,4 +41,5 @@ class ToDoItem extends PropertiesComponent<RemoveItemController, ToDoItemModel> 
 
 typedef RemoveItemController = {
   public function remove(item : ToDoItemModel) : Void;
+  public function refresh() : Void;
 }
