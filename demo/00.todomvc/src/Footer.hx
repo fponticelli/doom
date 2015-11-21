@@ -1,10 +1,10 @@
 import doom.PropertiesComponent;
-import doom.Html.*;
+import Doom.*;
 import doom.Node;
 import thx.ReadonlyArray;
 using thx.Functions;
 
-class ToDoFooter extends PropertiesComponent<FooterProp, FooterState> {
+class Footer extends PropertiesComponent<FooterProp, FooterState> {
   override function render() {
     var footerContent = [
         SPAN([
@@ -51,11 +51,11 @@ class ToDoFooter extends PropertiesComponent<FooterProp, FooterState> {
     prop.clearCompleted();
   }
 
-  function handleClickFilter(filter : ToDoFilter) {
+  function handleClickFilter(filter : Filter) {
     prop.setFilter(filter);
   }
 
-  function isFilter(filter : ToDoFilter)
+  function isFilter(filter : Filter)
     return Type.enumEq(state.filter, filter);
 
   function getItemsLeftLabel() : Array<Node> {
@@ -64,12 +64,12 @@ class ToDoFooter extends PropertiesComponent<FooterProp, FooterState> {
 }
 
 typedef FooterProp = {
-  public function setFilter(filter : ToDoFilter) : Void;
+  public function setFilter(filter : Filter) : Void;
   public function clearCompleted() : Void;
 }
 
 typedef FooterState = {
   countActive : Int,
-  filter : ToDoFilter,
+  filter : Filter,
   hasCompleted : Bool
 }

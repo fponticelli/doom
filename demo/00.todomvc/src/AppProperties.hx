@@ -5,13 +5,13 @@ using thx.Strings;
 import haxe.Json;
 import js.Browser.*;
 
-class ToDoController {
+class AppProperties {
   public var countActive(default, null) : Int;
   public var countTotal(default, null) : Int;
-  public var filter(default, null) : ToDoFilter;
-  public var filteredItems(default, null) : ReadonlyArray<ToDoItemModel>;
+  public var filter(default, null) : Filter;
+  public var filteredItems(default, null) : ReadonlyArray<ItemData>;
   public var onUpdate : Void -> Void;
-  var allItems : Array<ToDoItemModel>;
+  var allItems : Array<ItemData>;
 
   public function new() {
     filter = All;
@@ -20,7 +20,7 @@ class ToDoController {
     refresh();
   }
 
-  public function setFilter(filter : ToDoFilter) {
+  public function setFilter(filter : Filter) {
     this.filter = filter;
     refresh();
   }
@@ -31,7 +31,7 @@ class ToDoController {
     refresh();
   }
 
-  public function remove(item : ToDoItemModel) {
+  public function remove(item : ItemData) {
     allItems.remove(item);
     save();
     refresh();

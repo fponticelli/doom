@@ -1,9 +1,10 @@
 import doom.PropertiesComponent;
-import doom.Html.*;
+import Doom.*;
 using thx.Strings;
 import js.html.KeyboardEvent;
+import js.html.InputElement;
 
-class ToDoItem extends PropertiesComponent<ItemController, ItemState> {
+class Item extends PropertiesComponent<ItemProperties, ItemState> {
   override function render() {
     return LI([
         "class" => [
@@ -34,7 +35,7 @@ class ToDoItem extends PropertiesComponent<ItemController, ItemState> {
     ]);
   }
 
-  function handleChecked(el : js.html.InputElement) {
+  function handleChecked(el : InputElement) {
     state.item.completed = el.checked;
     prop.refresh();
   }
@@ -77,13 +78,13 @@ class ToDoItem extends PropertiesComponent<ItemController, ItemState> {
   }
 }
 
-typedef ItemController = {
-  public function remove(item : ToDoItemModel) : Void;
+typedef ItemProperties = {
+  public function remove(item : ItemData) : Void;
   public function refresh() : Void;
   public function save() : Void;
 }
 
 typedef ItemState = {
-  item : ToDoItemModel,
+  item : ItemData,
   editing : Bool
 }

@@ -1,4 +1,4 @@
-enum ToDoFilter {
+enum Filter {
   All;
   Active;
   Completed;

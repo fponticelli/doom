@@ -1,10 +1,10 @@
 import doom.PropertiesComponent;
-import doom.Html.*;
+import Doom.*;
 import thx.ReadonlyArray;
 using thx.Arrays;
 using thx.Functions;
 
-class ToDoList extends PropertiesComponent<ToDoController, ToDoListState> {
+class ToDoList extends PropertiesComponent<AppProperties, ToDoListState> {
   override function render()
     return SECTION(["class" => "main"], [
       INPUT([
@@ -15,12 +15,12 @@ class ToDoList extends PropertiesComponent<ToDoController, ToDoListState> {
       ]),
       LABEL(["for" => "toggle-all"], "Mark all as complete"),
       UL(["class" => "todo-list"], [
-        for(item in state.items) new ToDoItem(prop, { item : item, editing : false })
+        for(item in state.items) new Item(prop, { item : item, editing : false })
       ])
     ]);
 }
 
 typedef ToDoListState = {
-  items : ReadonlyArray<ToDoItemModel>,
+  items : ReadonlyArray<ItemData>,
   allCompleted : Bool
 }

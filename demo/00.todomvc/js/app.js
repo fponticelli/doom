@@ -7,6 +7,177 @@ function $extend(from, fields) {
 	if( fields.toString !== Object.prototype.toString ) proto.toString = fields.toString;
 	return proto;
 }
+var AppProperties = function() {
+	this.filter = Filter.All;
+	this.allItems = this.load();
+	this.onUpdate = function() {
+	};
+	this.refresh();
+};
+AppProperties.__name__ = ["AppProperties"];
+AppProperties.prototype = {
+	countActive: null
+	,countTotal: null
+	,filter: null
+	,filteredItems: null
+	,onUpdate: null
+	,allItems: null
+	,setFilter: function(filter) {
+		this.filter = filter;
+		this.refresh();
+	}
+	,add: function(label) {
+		this.allItems.push({ label : label, completed : false});
+		this.save();
+		this.refresh();
+	}
+	,remove: function(item) {
+		HxOverrides.remove(this.allItems,item);
+		this.save();
+		this.refresh();
+	}
+	,clearCompleted: function() {
+		this.allItems = this.allItems.filter(function(_) {
+			return !_.completed;
+		});
+		this.save();
+		this.refresh();
+	}
+	,toggleCheck: function() {
+		var completed = ((function(_e) {
+			return function(predicate) {
+				return thx_Arrays.all(_e,predicate);
+			};
+		})(this.allItems))(function(_) {
+			return _.completed;
+		});
+		((function(_e1) {
+			return function(effect) {
+				thx_Arrays.each(_e1,effect);
+			};
+		})(this.allItems))(function(_1) {
+			return _1.completed = !completed;
+		});
+		this.refresh();
+	}
+	,refresh: function() {
+		var _g = this.filter;
+		switch(_g[1]) {
+		case 0:
+			this.filteredItems = this.allItems.slice();
+			break;
+		case 1:
+			this.filteredItems = this.allItems.filter(function(_) {
+				return !_.completed;
+			});
+			break;
+		case 2:
+			this.filteredItems = this.allItems.filter(function(_1) {
+				return _1.completed;
+			});
+			break;
+		}
+		this.countActive = this.allItems.filter(function(_2) {
+			return !_2.completed;
+		}).length;
+		this.countTotal = this.allItems.length;
+		this.onUpdate();
+	}
+	,save: function() {
+		window.localStorage.setItem("TodoMVC-Doom",JSON.stringify(this.allItems));
+	}
+	,load: function() {
+		var v = window.localStorage.getItem("TodoMVC-Doom");
+		if(v != null && v.length > 0) return JSON.parse(v); else return [];
+	}
+	,__class__: AppProperties
+};
+var doom_IComponent = function() { };
+doom_IComponent.__name__ = ["doom","IComponent"];
+doom_IComponent.prototype = {
+	element: null
+	,node: null
+	,init: null
+	,__class__: doom_IComponent
+};
+var doom_Component = function(state) {
+	this.state = state;
+	this.node = this.render();
+};
+doom_Component.__name__ = ["doom","Component"];
+doom_Component.__interfaces__ = [doom_IComponent];
+doom_Component.prototype = {
+	element: null
+	,node: null
+	,state: null
+	,init: function() {
+		this.element = doom_HtmlNode.toHtml(this.node);
+	}
+	,updateNode: function(oldNode) {
+		var newNode = this.render();
+		switch(newNode[1]) {
+		case 0:
+			break;
+		default:
+			throw new thx_Error("Component can (and must) return only element nodes",null,{ fileName : "Component.hx", lineNumber : 25, className : "doom.Component", methodName : "updateNode"});
+		}
+		var patches = doom__$Node_Node_$Impl_$.diff(oldNode,newNode);
+		doom_HtmlNode.applyPatches(patches,this.element);
+		this.node = newNode;
+	}
+	,render: function() {
+		throw new thx_error_AbstractMethod({ fileName : "Component.hx", lineNumber : 33, className : "doom.Component", methodName : "render"});
+	}
+	,update: function(newState) {
+		var oldState = this.state;
+		this.state = newState;
+		if(!this.shouldRender(oldState,newState)) return;
+		this.updateNode(this.node);
+	}
+	,shouldRender: function(oldState,newState) {
+		return true;
+	}
+	,toString: function() {
+		var cls = Type.getClassName(js_Boot.getClass(this)).split(".").pop();
+		return "" + cls + "(" + doom__$Node_Node_$Impl_$.toString(this.node) + ")";
+	}
+	,__class__: doom_Component
+};
+var doom_PropertiesComponent = function(prop,state) {
+	this.prop = prop;
+	doom_Component.call(this,state);
+};
+doom_PropertiesComponent.__name__ = ["doom","PropertiesComponent"];
+doom_PropertiesComponent.__super__ = doom_Component;
+doom_PropertiesComponent.prototype = $extend(doom_Component.prototype,{
+	prop: null
+	,__class__: doom_PropertiesComponent
+});
+var Body = function(prop,state) {
+	var _g = this;
+	doom_PropertiesComponent.call(this,prop,state);
+	prop.onUpdate = function() {
+		_g.update({ items : prop.filteredItems, countActive : prop.countActive, countTotal : prop.countTotal});
+	};
+};
+Body.__name__ = ["Body"];
+Body.__super__ = doom_PropertiesComponent;
+Body.prototype = $extend(doom_PropertiesComponent.prototype,{
+	render: function() {
+		if(this.state.countTotal == 0) return Doom.dummy("nothing to do yet"); else return Doom.DIV(null,[(function($this) {
+			var $r;
+			var comp = new ToDoList($this.prop,{ items : $this.state.items, allCompleted : $this.state.countActive == 0});
+			$r = doom_NodeImpl.ComponentNode(comp);
+			return $r;
+		}(this)),(function($this) {
+			var $r;
+			var comp1 = new Footer($this.prop,{ countActive : $this.state.countActive, filter : $this.prop.filter, hasCompleted : $this.state.countTotal - $this.state.countActive > 0});
+			$r = doom_NodeImpl.ComponentNode(comp1);
+			return $r;
+		}(this))],null);
+	}
+	,__class__: Body
+});
 var DateTools = function() { };
 DateTools.__name__ = ["DateTools"];
 DateTools.getMonthDays = function(d) {
@@ -15,6 +186,384 @@ DateTools.getMonthDays = function(d) {
 	if(month != 1) return DateTools.DAYS_OF_MONTH[month];
 	var isB = year % 4 == 0 && year % 100 != 0 || year % 400 == 0;
 	if(isB) return 29; else return 28;
+};
+var Doom = function() { };
+Doom.__name__ = ["Doom"];
+Doom.mount = function(component,ref) {
+	if(null == ref) throw new js__$Boot_HaxeError("reference element is set to null");
+	ref.innerHTML = "";
+	component.init();
+	ref.appendChild(component.element);
+};
+Doom.A = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("a",attributes,children,child);
+};
+Doom.ABBR = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("abbr",attributes,children,child);
+};
+Doom.ADDRESS = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("address",attributes,children,child);
+};
+Doom.AREA = function(attributes) {
+	return doom__$Node_Node_$Impl_$.el("area",attributes,null,null);
+};
+Doom.ARTICLE = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("article",attributes,children,child);
+};
+Doom.ASIDE = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("aside",attributes,children,child);
+};
+Doom.AUDIO = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("audio",attributes,children,child);
+};
+Doom.B = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("b",attributes,children,child);
+};
+Doom.BASE = function(attributes) {
+	return doom__$Node_Node_$Impl_$.el("base",attributes,null,null);
+};
+Doom.BDI = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("bdi",attributes,children,child);
+};
+Doom.BDO = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("bdo",attributes,children,child);
+};
+Doom.BLOCKQUOTE = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("blockquote",attributes,children,child);
+};
+Doom.BODY = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("body",attributes,children,child);
+};
+Doom.BR = function(attributes) {
+	return doom__$Node_Node_$Impl_$.el("br",attributes,null,null);
+};
+Doom.BUTTON = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("button",attributes,children,child);
+};
+Doom.CANVAS = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("canvas",attributes,children,child);
+};
+Doom.CAPTION = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("caption",attributes,children,child);
+};
+Doom.CITE = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("cite",attributes,children,child);
+};
+Doom.CODE = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("code",attributes,children,child);
+};
+Doom.COL = function(attributes) {
+	return doom__$Node_Node_$Impl_$.el("col",attributes,null,null);
+};
+Doom.COLGROUP = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("colgroup",attributes,children,child);
+};
+Doom.DATA = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("data",attributes,children,child);
+};
+Doom.DATALIST = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("datalist",attributes,children,child);
+};
+Doom.DD = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("dd",attributes,children,child);
+};
+Doom.DEL = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("del",attributes,children,child);
+};
+Doom.DETAILS = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("details",attributes,children,child);
+};
+Doom.DFN = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("dfn",attributes,children,child);
+};
+Doom.DIALOG = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("dialog",attributes,children,child);
+};
+Doom.DIV = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("div",attributes,children,child);
+};
+Doom.DL = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("dl",attributes,children,child);
+};
+Doom.DT = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("dt",attributes,children,child);
+};
+Doom.EM = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("em",attributes,children,child);
+};
+Doom.EMBED = function(attributes) {
+	return doom__$Node_Node_$Impl_$.el("embed",attributes,null,null);
+};
+Doom.FIELDSET = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("fieldset",attributes,children,child);
+};
+Doom.FIGCAPTION = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("figcaption",attributes,children,child);
+};
+Doom.FIGURE = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("figure",attributes,children,child);
+};
+Doom.FOOTER = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("footer",attributes,children,child);
+};
+Doom.FORM = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("form",attributes,children,child);
+};
+Doom.H1 = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("h1",attributes,children,child);
+};
+Doom.H2 = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("h2",attributes,children,child);
+};
+Doom.H3 = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("h3",attributes,children,child);
+};
+Doom.H4 = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("h4",attributes,children,child);
+};
+Doom.H5 = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("h5",attributes,children,child);
+};
+Doom.H6 = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("h6",attributes,children,child);
+};
+Doom.HEAD = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("head",attributes,children,child);
+};
+Doom.HEADER = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("header",attributes,children,child);
+};
+Doom.HGROUP = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("hgroup",attributes,children,child);
+};
+Doom.HR = function(attributes) {
+	return doom__$Node_Node_$Impl_$.el("hr",attributes,null,null);
+};
+Doom.HTML = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("html",attributes,children,child);
+};
+Doom.I = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("i",attributes,children,child);
+};
+Doom.IFRAME = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("iframe",attributes,children,child);
+};
+Doom.IMG = function(attributes) {
+	return doom__$Node_Node_$Impl_$.el("img",attributes,null,null);
+};
+Doom.INPUT = function(attributes) {
+	return doom__$Node_Node_$Impl_$.el("input",attributes,null,null);
+};
+Doom.INS = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("ins",attributes,children,child);
+};
+Doom.KBD = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("kbd",attributes,children,child);
+};
+Doom.KEYGEN = function(attributes) {
+	return doom__$Node_Node_$Impl_$.el("keygen",attributes,null,null);
+};
+Doom.LABEL = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("label",attributes,children,child);
+};
+Doom.LEGEND = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("legend",attributes,children,child);
+};
+Doom.LI = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("li",attributes,children,child);
+};
+Doom.LINK = function(attributes) {
+	return doom__$Node_Node_$Impl_$.el("link",attributes,null,null);
+};
+Doom.MAIN = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("main",attributes,children,child);
+};
+Doom.MAP = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("map",attributes,children,child);
+};
+Doom.MARK = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("mark",attributes,children,child);
+};
+Doom.MENU = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("menu",attributes,children,child);
+};
+Doom.MENUITEM = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("menuitem",attributes,children,child);
+};
+Doom.META = function(attributes) {
+	return doom__$Node_Node_$Impl_$.el("meta",attributes,null,null);
+};
+Doom.METER = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("meter",attributes,children,child);
+};
+Doom.NAV = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("nav",attributes,children,child);
+};
+Doom.NOSCRIPT = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("noscript",attributes,children,child);
+};
+Doom.OBJECT = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("object",attributes,children,child);
+};
+Doom.OL = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("ol",attributes,children,child);
+};
+Doom.OPTGROUP = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("optgroup",attributes,children,child);
+};
+Doom.OPTION = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("option",attributes,children,child);
+};
+Doom.OUTPUT = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("output",attributes,children,child);
+};
+Doom.P = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("p",attributes,children,child);
+};
+Doom.PARAM = function(attributes) {
+	return doom__$Node_Node_$Impl_$.el("param",attributes,null,null);
+};
+Doom.PRE = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("pre",attributes,children,child);
+};
+Doom.PROGRESS = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("progress",attributes,children,child);
+};
+Doom.Q = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("q",attributes,children,child);
+};
+Doom.RB = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("rb",attributes,children,child);
+};
+Doom.RP = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("rp",attributes,children,child);
+};
+Doom.RT = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("rt",attributes,children,child);
+};
+Doom.RTC = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("rtc",attributes,children,child);
+};
+Doom.RUBY = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("ruby",attributes,children,child);
+};
+Doom.S = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("s",attributes,children,child);
+};
+Doom.SAMP = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("samp",attributes,children,child);
+};
+Doom.SCRIPT = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("script",attributes,children,child);
+};
+Doom.SECTION = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("section",attributes,children,child);
+};
+Doom.SELECT = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("select",attributes,children,child);
+};
+Doom.SMALL = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("small",attributes,children,child);
+};
+Doom.SOURCE = function(attributes) {
+	return doom__$Node_Node_$Impl_$.el("source",attributes,null,null);
+};
+Doom.SPAN = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("span",attributes,children,child);
+};
+Doom.STRONG = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("strong",attributes,children,child);
+};
+Doom.STYLE = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("style",attributes,children,child);
+};
+Doom.SUB = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("sub",attributes,children,child);
+};
+Doom.SUMMARY = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("summary",attributes,children,child);
+};
+Doom.SUP = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("sup",attributes,children,child);
+};
+Doom.TABLE = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("table",attributes,children,child);
+};
+Doom.TBODY = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("tbody",attributes,children,child);
+};
+Doom.TD = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("td",attributes,children,child);
+};
+Doom.TEMPLATE = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("template",attributes,children,child);
+};
+Doom.TEXTAREA = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("textarea",attributes,children,child);
+};
+Doom.TFOOT = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("tfoot",attributes,children,child);
+};
+Doom.TH = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("th",attributes,children,child);
+};
+Doom.THEAD = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("thead",attributes,children,child);
+};
+Doom.TIME = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("time",attributes,children,child);
+};
+Doom.TITLE = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("title",attributes,children,child);
+};
+Doom.TR = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("tr",attributes,children,child);
+};
+Doom.TRACK = function(attributes) {
+	return doom__$Node_Node_$Impl_$.el("track",attributes,null,null);
+};
+Doom.U = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("u",attributes,children,child);
+};
+Doom.UL = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("ul",attributes,children,child);
+};
+Doom.VAR = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("var",attributes,children,child);
+};
+Doom.VIDEO = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("video",attributes,children,child);
+};
+Doom.WBR = function(attributes) {
+	return doom__$Node_Node_$Impl_$.el("wbr",attributes,null,null);
+};
+Doom.el = function(name,attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el(name,attributes,children,child);
+};
+Doom.comment = function(content) {
+	return doom_NodeImpl.Comment(content);
+};
+Doom.text = function(content) {
+	return doom_NodeImpl.Text(content);
+};
+Doom.raw = function(content) {
+	return doom_NodeImpl.Raw(content);
+};
+Doom.dummy = function(text) {
+	if(text == null) text = "empty node";
+	return doom__$Node_Node_$Impl_$.el("div",(function($this) {
+		var $r;
+		var _g = new haxe_ds_StringMap();
+		{
+			var value = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("display:none");
+			if(__map_reserved.style != null) _g.setReserved("style",value); else _g.h["style"] = value;
+		}
+		$r = _g;
+		return $r;
+	}(this)),[doom_NodeImpl.Comment(" " + text + " ")]);
+};
+Doom.comp = function(comp) {
+	return doom_NodeImpl.ComponentNode(comp);
 };
 var EReg = function(r,opt) {
 	opt = opt.split("u").join("");
@@ -81,6 +630,264 @@ EReg.prototype = {
 	}
 	,__class__: EReg
 };
+var Filter = { __ename__ : ["Filter"], __constructs__ : ["All","Active","Completed"] };
+Filter.All = ["All",0];
+Filter.All.toString = $estr;
+Filter.All.__enum__ = Filter;
+Filter.Active = ["Active",1];
+Filter.Active.toString = $estr;
+Filter.Active.__enum__ = Filter;
+Filter.Completed = ["Completed",2];
+Filter.Completed.toString = $estr;
+Filter.Completed.__enum__ = Filter;
+var Footer = function(prop,state) {
+	doom_PropertiesComponent.call(this,prop,state);
+};
+Footer.__name__ = ["Footer"];
+Footer.__super__ = doom_PropertiesComponent;
+Footer.prototype = $extend(doom_PropertiesComponent.prototype,{
+	render: function() {
+		var footerContent = [Doom.SPAN((function($this) {
+			var $r;
+			var _g = new haxe_ds_StringMap();
+			{
+				var value = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("todo-count");
+				if(__map_reserved["class"] != null) _g.setReserved("class",value); else _g.h["class"] = value;
+			}
+			$r = _g;
+			return $r;
+		}(this)),this.getItemsLeftLabel(),null),Doom.UL((function($this) {
+			var $r;
+			var _g1 = new haxe_ds_StringMap();
+			{
+				var value1 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("filters");
+				if(__map_reserved["class"] != null) _g1.setReserved("class",value1); else _g1.h["class"] = value1;
+			}
+			$r = _g1;
+			return $r;
+		}(this)),[Doom.LI(null,null,Doom.A((function($this) {
+			var $r;
+			var _g7 = new haxe_ds_StringMap();
+			{
+				var value3 = doom__$AttributeValue_AttributeValue_$Impl_$.fromMap((function($this) {
+					var $r;
+					var _g6 = new haxe_ds_StringMap();
+					{
+						var value2 = $this.isFilter(Filter.All);
+						if(__map_reserved.selected != null) _g6.setReserved("selected",value2); else _g6.h["selected"] = value2;
+					}
+					$r = _g6;
+					return $r;
+				}($this)));
+				if(__map_reserved["class"] != null) _g7.setReserved("class",value3); else _g7.h["class"] = value3;
+			}
+			{
+				var value4 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("#");
+				if(__map_reserved.href != null) _g7.setReserved("href",value4); else _g7.h["href"] = value4;
+			}
+			{
+				var value5 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler((function(f,a1) {
+					return function() {
+						f(a1);
+					};
+				})($bind($this,$this.handleClickFilter),Filter.All));
+				if(__map_reserved.click != null) _g7.setReserved("click",value5); else _g7.h["click"] = value5;
+			}
+			$r = _g7;
+			return $r;
+		}(this)),null,doom_NodeImpl.Text("All"))),Doom.LI(null,null,Doom.A((function($this) {
+			var $r;
+			var _g13 = new haxe_ds_StringMap();
+			{
+				var value7 = doom__$AttributeValue_AttributeValue_$Impl_$.fromMap((function($this) {
+					var $r;
+					var _g12 = new haxe_ds_StringMap();
+					{
+						var value6 = $this.isFilter(Filter.Active);
+						if(__map_reserved.selected != null) _g12.setReserved("selected",value6); else _g12.h["selected"] = value6;
+					}
+					$r = _g12;
+					return $r;
+				}($this)));
+				if(__map_reserved["class"] != null) _g13.setReserved("class",value7); else _g13.h["class"] = value7;
+			}
+			{
+				var value8 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("#/active");
+				if(__map_reserved.href != null) _g13.setReserved("href",value8); else _g13.h["href"] = value8;
+			}
+			{
+				var value9 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler((function(f1,a11) {
+					return function() {
+						f1(a11);
+					};
+				})($bind($this,$this.handleClickFilter),Filter.Active));
+				if(__map_reserved.click != null) _g13.setReserved("click",value9); else _g13.h["click"] = value9;
+			}
+			$r = _g13;
+			return $r;
+		}(this)),null,doom_NodeImpl.Text("Active"))),Doom.LI(null,null,Doom.A((function($this) {
+			var $r;
+			var _g19 = new haxe_ds_StringMap();
+			{
+				var value11 = doom__$AttributeValue_AttributeValue_$Impl_$.fromMap((function($this) {
+					var $r;
+					var _g18 = new haxe_ds_StringMap();
+					{
+						var value10 = $this.isFilter(Filter.Completed);
+						if(__map_reserved.selected != null) _g18.setReserved("selected",value10); else _g18.h["selected"] = value10;
+					}
+					$r = _g18;
+					return $r;
+				}($this)));
+				if(__map_reserved["class"] != null) _g19.setReserved("class",value11); else _g19.h["class"] = value11;
+			}
+			{
+				var value12 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("#/completed");
+				if(__map_reserved.href != null) _g19.setReserved("href",value12); else _g19.h["href"] = value12;
+			}
+			{
+				var value13 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler((function(f2,a12) {
+					return function() {
+						f2(a12);
+					};
+				})($bind($this,$this.handleClickFilter),Filter.Completed));
+				if(__map_reserved.click != null) _g19.setReserved("click",value13); else _g19.h["click"] = value13;
+			}
+			$r = _g19;
+			return $r;
+		}(this)),null,doom_NodeImpl.Text("Completed")))],null)];
+		if(this.state.hasCompleted) footerContent.push(Doom.BUTTON((function($this) {
+			var $r;
+			var _g20 = new haxe_ds_StringMap();
+			{
+				var value14 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("clear-completed");
+				if(__map_reserved["class"] != null) _g20.setReserved("class",value14); else _g20.h["class"] = value14;
+			}
+			{
+				var value15 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler($bind($this,$this.handleClear));
+				if(__map_reserved.click != null) _g20.setReserved("click",value15); else _g20.h["click"] = value15;
+			}
+			$r = _g20;
+			return $r;
+		}(this)),null,doom_NodeImpl.Text("Clear completed")));
+		return Doom.FOOTER((function($this) {
+			var $r;
+			var _g201 = new haxe_ds_StringMap();
+			{
+				var value16 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("footer");
+				if(__map_reserved["class"] != null) _g201.setReserved("class",value16); else _g201.h["class"] = value16;
+			}
+			$r = _g201;
+			return $r;
+		}(this)),footerContent,null);
+	}
+	,handleClear: function() {
+		this.prop.clearCompleted();
+	}
+	,handleClickFilter: function(filter) {
+		this.prop.setFilter(filter);
+	}
+	,isFilter: function(filter) {
+		return Type.enumEq(this.state.filter,filter);
+	}
+	,getItemsLeftLabel: function() {
+		if(this.state.countActive == 1) return [Doom.STRONG(null,null,doom_NodeImpl.Text("1")),doom_NodeImpl.Text(" item left")]; else return [Doom.STRONG(null,null,doom_NodeImpl.Text("" + this.state.countActive)),doom_NodeImpl.Text(" items left")];
+	}
+	,__class__: Footer
+});
+var doom_StatelessComponent = function() {
+	this.node = this.render();
+};
+doom_StatelessComponent.__name__ = ["doom","StatelessComponent"];
+doom_StatelessComponent.__interfaces__ = [doom_IComponent];
+doom_StatelessComponent.prototype = {
+	element: null
+	,node: null
+	,init: function() {
+		this.element = doom_HtmlNode.toHtml(this.node);
+	}
+	,updateNode: function(oldNode) {
+		var newNode = this.render();
+		var patches = doom__$Node_Node_$Impl_$.diff(oldNode,newNode);
+		doom_HtmlNode.applyPatches(patches,this.element);
+		this.node = newNode;
+	}
+	,render: function() {
+		throw new thx_error_AbstractMethod({ fileName : "StatelessComponent.hx", lineNumber : 27, className : "doom.StatelessComponent", methodName : "render"});
+	}
+	,update: function() {
+		this.updateNode(this.node);
+	}
+	,toString: function() {
+		var cls = Type.getClassName(js_Boot.getClass(this)).split(".").pop();
+		return "" + cls + "(" + doom__$Node_Node_$Impl_$.toString(this.node) + ")";
+	}
+	,__class__: doom_StatelessComponent
+};
+var doom_PropertiesStatelessComponent = function(prop) {
+	this.prop = prop;
+	doom_StatelessComponent.call(this);
+};
+doom_PropertiesStatelessComponent.__name__ = ["doom","PropertiesStatelessComponent"];
+doom_PropertiesStatelessComponent.__super__ = doom_StatelessComponent;
+doom_PropertiesStatelessComponent.prototype = $extend(doom_StatelessComponent.prototype,{
+	prop: null
+	,__class__: doom_PropertiesStatelessComponent
+});
+var Header = function(prop) {
+	doom_PropertiesStatelessComponent.call(this,prop);
+};
+Header.__name__ = ["Header"];
+Header.__super__ = doom_PropertiesStatelessComponent;
+Header.prototype = $extend(doom_PropertiesStatelessComponent.prototype,{
+	render: function() {
+		return Doom.HEADER((function($this) {
+			var $r;
+			var _g = new haxe_ds_StringMap();
+			{
+				var value = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("header");
+				if(__map_reserved["class"] != null) _g.setReserved("class",value); else _g.h["class"] = value;
+			}
+			$r = _g;
+			return $r;
+		}(this)),[Doom.H1(null,null,doom_NodeImpl.Text("todos")),Doom.INPUT((function($this) {
+			var $r;
+			var _g1 = new haxe_ds_StringMap();
+			{
+				var value1 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("new-todo");
+				if(__map_reserved["class"] != null) _g1.setReserved("class",value1); else _g1.h["class"] = value1;
+			}
+			{
+				var value2 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("What needs to be done?");
+				if(__map_reserved.placeholder != null) _g1.setReserved("placeholder",value2); else _g1.h["placeholder"] = value2;
+			}
+			{
+				var value3 = doom__$AttributeValue_AttributeValue_$Impl_$.fromBool(true);
+				if(__map_reserved.autofocus != null) _g1.setReserved("autofocus",value3); else _g1.h["autofocus"] = value3;
+			}
+			{
+				var value4 = doom__$AttributeValue_AttributeValue_$Impl_$.fromKeyboardEventHandler($bind($this,$this.handleKeys));
+				if(__map_reserved.keyup != null) _g1.setReserved("keyup",value4); else _g1.h["keyup"] = value4;
+			}
+			$r = _g1;
+			return $r;
+		}(this)))],null);
+	}
+	,handleKeys: function(e) {
+		e.preventDefault();
+		if(13 != e.which) return;
+		var value = this.getInputValueAndEmpty();
+		if(thx_Strings.isEmpty(value)) return;
+		this.prop.add(value);
+	}
+	,getInputValueAndEmpty: function() {
+		var el = this.element.querySelector("input");
+		var value = StringTools.trim(el.value);
+		el.value = "";
+		return value;
+	}
+	,__class__: Header
+});
 var HxOverrides = function() { };
 HxOverrides.__name__ = ["HxOverrides"];
 HxOverrides.dateStr = function(date) {
@@ -154,6 +961,134 @@ HxOverrides.iter = function(a) {
 		return this.arr[this.cur++];
 	}};
 };
+var Item = function(prop,state) {
+	doom_PropertiesComponent.call(this,prop,state);
+};
+Item.__name__ = ["Item"];
+Item.__super__ = doom_PropertiesComponent;
+Item.prototype = $extend(doom_PropertiesComponent.prototype,{
+	render: function() {
+		return Doom.LI((function($this) {
+			var $r;
+			var _g1 = new haxe_ds_StringMap();
+			{
+				var value = doom__$AttributeValue_AttributeValue_$Impl_$.fromMap((function($this) {
+					var $r;
+					var _g = new haxe_ds_StringMap();
+					_g.set("completed",$this.state.item.completed);
+					_g.set("editing",$this.state.editing);
+					$r = _g;
+					return $r;
+				}($this)));
+				if(__map_reserved["class"] != null) _g1.setReserved("class",value); else _g1.h["class"] = value;
+			}
+			{
+				var value1 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler($bind($this,$this.handleDblClick));
+				if(__map_reserved.dblclick != null) _g1.setReserved("dblclick",value1); else _g1.h["dblclick"] = value1;
+			}
+			$r = _g1;
+			return $r;
+		}(this)),[Doom.DIV((function($this) {
+			var $r;
+			var _g2 = new haxe_ds_StringMap();
+			{
+				var value2 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("view");
+				if(__map_reserved["class"] != null) _g2.setReserved("class",value2); else _g2.h["class"] = value2;
+			}
+			$r = _g2;
+			return $r;
+		}(this)),[Doom.INPUT((function($this) {
+			var $r;
+			var _g3 = new haxe_ds_StringMap();
+			{
+				var value3 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("toggle");
+				if(__map_reserved["class"] != null) _g3.setReserved("class",value3); else _g3.h["class"] = value3;
+			}
+			{
+				var value4 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("checkbox");
+				if(__map_reserved.type != null) _g3.setReserved("type",value4); else _g3.h["type"] = value4;
+			}
+			{
+				var value5 = doom__$AttributeValue_AttributeValue_$Impl_$.fromBool($this.state.item.completed);
+				if(__map_reserved.checked != null) _g3.setReserved("checked",value5); else _g3.h["checked"] = value5;
+			}
+			{
+				var value6 = doom__$AttributeValue_AttributeValue_$Impl_$.fromInputElementHandler($bind($this,$this.handleChecked));
+				if(__map_reserved.change != null) _g3.setReserved("change",value6); else _g3.h["change"] = value6;
+			}
+			$r = _g3;
+			return $r;
+		}(this))),Doom.LABEL(null,null,doom_NodeImpl.Text(this.state.item.label)),Doom.BUTTON((function($this) {
+			var $r;
+			var _g4 = new haxe_ds_StringMap();
+			{
+				var value7 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("destroy");
+				if(__map_reserved["class"] != null) _g4.setReserved("class",value7); else _g4.h["class"] = value7;
+			}
+			{
+				var value8 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler($bind($this,$this.handleRemove));
+				if(__map_reserved.click != null) _g4.setReserved("click",value8); else _g4.h["click"] = value8;
+			}
+			$r = _g4;
+			return $r;
+		}(this)),null,null)],null),Doom.INPUT((function($this) {
+			var $r;
+			var _g5 = new haxe_ds_StringMap();
+			{
+				var value9 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("edit");
+				if(__map_reserved["class"] != null) _g5.setReserved("class",value9); else _g5.h["class"] = value9;
+			}
+			{
+				var value10 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString($this.state.item.label);
+				if(__map_reserved.value != null) _g5.setReserved("value",value10); else _g5.h["value"] = value10;
+			}
+			{
+				var value11 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler($bind($this,$this.handleBlur));
+				if(__map_reserved.blur != null) _g5.setReserved("blur",value11); else _g5.h["blur"] = value11;
+			}
+			{
+				var value12 = doom__$AttributeValue_AttributeValue_$Impl_$.fromKeyboardEventHandler($bind($this,$this.handleKeydown));
+				if(__map_reserved.keyup != null) _g5.setReserved("keyup",value12); else _g5.h["keyup"] = value12;
+			}
+			$r = _g5;
+			return $r;
+		}(this)))],null);
+	}
+	,handleChecked: function(el) {
+		this.state.item.completed = el.checked;
+		this.prop.refresh();
+	}
+	,handleRemove: function() {
+		this.prop.remove(this.state.item);
+	}
+	,handleDblClick: function() {
+		this.state.editing = true;
+		this.update(this.state);
+		this.getInput().select();
+	}
+	,handleBlur: function() {
+		if(!this.state.editing) return;
+		this.state.editing = false;
+		var value = this.getInputValueAndTrim();
+		if(thx_Strings.isEmpty(value)) this.handleRemove(); else {
+			this.state.item.label = value;
+			this.prop.save();
+			this.update(this.state);
+		}
+	}
+	,handleKeydown: function(e) {
+		if(e.which != 13) return;
+		this.handleBlur();
+	}
+	,getInput: function() {
+		return this.element.querySelector("input.edit");
+	}
+	,getInputValueAndTrim: function() {
+		var input = this.getInput();
+		return input.value = StringTools.trim(input.value);
+	}
+	,__class__: Item
+});
 var Lambda = function() { };
 Lambda.__name__ = ["Lambda"];
 Lambda.has = function(it,elt) {
@@ -167,8 +1102,8 @@ Lambda.has = function(it,elt) {
 var Main = function() { };
 Main.__name__ = ["Main"];
 Main.main = function() {
-	var controller = new ToDoController();
-	doom_Component.mount(new ToDoApp(controller,{ items : controller.filteredItems, countActive : controller.countActive, countTotal : controller.countTotal}),dots_Query.first("section.todoapp"));
+	var prop = new AppProperties();
+	Doom.mount(new ToDoApp(prop,{ items : prop.filteredItems, countActive : prop.countActive, countTotal : prop.countTotal}),dots_Query.first("section.todoapp"));
 };
 Math.__name__ = ["Math"];
 var Reflect = function() { };
@@ -301,73 +1236,6 @@ StringTools.replace = function(s,sub,by) {
 StringTools.fastCodeAt = function(s,index) {
 	return s.charCodeAt(index);
 };
-var doom_IComponent = function() { };
-doom_IComponent.__name__ = ["doom","IComponent"];
-doom_IComponent.prototype = {
-	element: null
-	,node: null
-	,init: null
-	,__class__: doom_IComponent
-};
-var doom_Component = function(state) {
-	this.state = state;
-	this.node = this.render();
-};
-doom_Component.__name__ = ["doom","Component"];
-doom_Component.__interfaces__ = [doom_IComponent];
-doom_Component.mount = function(component,ref) {
-	if(null == ref) throw new js__$Boot_HaxeError("reference element is set to null");
-	ref.innerHTML = "";
-	component.init();
-	ref.appendChild(component.element);
-};
-doom_Component.prototype = {
-	element: null
-	,node: null
-	,state: null
-	,init: function() {
-		this.element = doom_HtmlNode.toHtml(this.node);
-	}
-	,updateNode: function(oldNode) {
-		var newNode = this.render();
-		switch(newNode[1]) {
-		case 0:
-			break;
-		default:
-			throw new thx_Error("Component can (and must) return only element nodes",null,{ fileName : "Component.hx", lineNumber : 33, className : "doom.Component", methodName : "updateNode"});
-		}
-		var patches = doom__$Node_Node_$Impl_$.diff(oldNode,newNode);
-		doom_HtmlNode.applyPatches(patches,this.element);
-		this.node = newNode;
-	}
-	,render: function() {
-		throw new thx_error_AbstractMethod({ fileName : "Component.hx", lineNumber : 41, className : "doom.Component", methodName : "render"});
-	}
-	,update: function(newState) {
-		var oldState = this.state;
-		this.state = newState;
-		if(!this.shouldRender(oldState,newState)) return;
-		this.updateNode(this.node);
-	}
-	,shouldRender: function(oldState,newState) {
-		return true;
-	}
-	,toString: function() {
-		var cls = Type.getClassName(js_Boot.getClass(this)).split(".").pop();
-		return "" + cls + "(" + doom__$Node_Node_$Impl_$.toString(this.node) + ")";
-	}
-	,__class__: doom_Component
-};
-var doom_PropertiesComponent = function(prop,state) {
-	this.prop = prop;
-	doom_Component.call(this,state);
-};
-doom_PropertiesComponent.__name__ = ["doom","PropertiesComponent"];
-doom_PropertiesComponent.__super__ = doom_Component;
-doom_PropertiesComponent.prototype = $extend(doom_Component.prototype,{
-	prop: null
-	,__class__: doom_PropertiesComponent
-});
 var ToDoApp = function(prop,state) {
 	doom_PropertiesComponent.call(this,prop,state);
 };
@@ -375,515 +1243,19 @@ ToDoApp.__name__ = ["ToDoApp"];
 ToDoApp.__super__ = doom_PropertiesComponent;
 ToDoApp.prototype = $extend(doom_PropertiesComponent.prototype,{
 	render: function() {
-		return doom_Html.DIV(null,[(function($this) {
+		return Doom.DIV(null,[(function($this) {
 			var $r;
-			var comp = new ToDoHeader($this.prop);
+			var comp = new Header($this.prop);
 			$r = doom_NodeImpl.ComponentNode(comp);
 			return $r;
 		}(this)),(function($this) {
 			var $r;
-			var comp1 = new ToDoBody($this.prop,$this.state);
+			var comp1 = new Body($this.prop,$this.state);
 			$r = doom_NodeImpl.ComponentNode(comp1);
 			return $r;
 		}(this))],null);
 	}
 	,__class__: ToDoApp
-});
-var ToDoBody = function(prop,state) {
-	var _g = this;
-	doom_PropertiesComponent.call(this,prop,state);
-	prop.onUpdate = function() {
-		_g.update({ items : prop.filteredItems, countActive : prop.countActive, countTotal : prop.countTotal});
-	};
-};
-ToDoBody.__name__ = ["ToDoBody"];
-ToDoBody.__super__ = doom_PropertiesComponent;
-ToDoBody.prototype = $extend(doom_PropertiesComponent.prototype,{
-	render: function() {
-		if(this.state.countTotal == 0) return doom_Html.dummy("nothing to do yet"); else return doom_Html.DIV(null,[(function($this) {
-			var $r;
-			var comp = new ToDoList($this.prop,{ items : $this.state.items, allCompleted : $this.state.countActive == 0});
-			$r = doom_NodeImpl.ComponentNode(comp);
-			return $r;
-		}(this)),(function($this) {
-			var $r;
-			var comp1 = new ToDoFooter($this.prop,{ countActive : $this.state.countActive, filter : $this.prop.filter, hasCompleted : $this.state.countTotal - $this.state.countActive > 0});
-			$r = doom_NodeImpl.ComponentNode(comp1);
-			return $r;
-		}(this))],null);
-	}
-	,__class__: ToDoBody
-});
-var ToDoController = function() {
-	this.filter = ToDoFilter.All;
-	this.allItems = this.load();
-	this.onUpdate = function() {
-	};
-	this.refresh();
-};
-ToDoController.__name__ = ["ToDoController"];
-ToDoController.prototype = {
-	countActive: null
-	,countTotal: null
-	,filter: null
-	,filteredItems: null
-	,onUpdate: null
-	,allItems: null
-	,setFilter: function(filter) {
-		this.filter = filter;
-		this.refresh();
-	}
-	,add: function(label) {
-		this.allItems.push({ label : label, completed : false});
-		this.save();
-		this.refresh();
-	}
-	,remove: function(item) {
-		HxOverrides.remove(this.allItems,item);
-		this.save();
-		this.refresh();
-	}
-	,clearCompleted: function() {
-		this.allItems = this.allItems.filter(function(_) {
-			return !_.completed;
-		});
-		this.save();
-		this.refresh();
-	}
-	,toggleCheck: function() {
-		var completed = ((function(_e) {
-			return function(predicate) {
-				return thx_Arrays.all(_e,predicate);
-			};
-		})(this.allItems))(function(_) {
-			return _.completed;
-		});
-		((function(_e1) {
-			return function(effect) {
-				thx_Arrays.each(_e1,effect);
-			};
-		})(this.allItems))(function(_1) {
-			return _1.completed = !completed;
-		});
-		this.refresh();
-	}
-	,refresh: function() {
-		var _g = this.filter;
-		switch(_g[1]) {
-		case 0:
-			this.filteredItems = this.allItems.slice();
-			break;
-		case 1:
-			this.filteredItems = this.allItems.filter(function(_) {
-				return !_.completed;
-			});
-			break;
-		case 2:
-			this.filteredItems = this.allItems.filter(function(_1) {
-				return _1.completed;
-			});
-			break;
-		}
-		this.countActive = this.allItems.filter(function(_2) {
-			return !_2.completed;
-		}).length;
-		this.countTotal = this.allItems.length;
-		this.onUpdate();
-	}
-	,save: function() {
-		window.localStorage.setItem("TodoMVC-Doom",JSON.stringify(this.allItems));
-	}
-	,load: function() {
-		var v = window.localStorage.getItem("TodoMVC-Doom");
-		if(v != null && v.length > 0) return JSON.parse(v); else return [];
-	}
-	,__class__: ToDoController
-};
-var ToDoFilter = { __ename__ : ["ToDoFilter"], __constructs__ : ["All","Active","Completed"] };
-ToDoFilter.All = ["All",0];
-ToDoFilter.All.toString = $estr;
-ToDoFilter.All.__enum__ = ToDoFilter;
-ToDoFilter.Active = ["Active",1];
-ToDoFilter.Active.toString = $estr;
-ToDoFilter.Active.__enum__ = ToDoFilter;
-ToDoFilter.Completed = ["Completed",2];
-ToDoFilter.Completed.toString = $estr;
-ToDoFilter.Completed.__enum__ = ToDoFilter;
-var ToDoFooter = function(prop,state) {
-	doom_PropertiesComponent.call(this,prop,state);
-};
-ToDoFooter.__name__ = ["ToDoFooter"];
-ToDoFooter.__super__ = doom_PropertiesComponent;
-ToDoFooter.prototype = $extend(doom_PropertiesComponent.prototype,{
-	render: function() {
-		var footerContent = [doom_Html.SPAN((function($this) {
-			var $r;
-			var _g = new haxe_ds_StringMap();
-			{
-				var value = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("todo-count");
-				if(__map_reserved["class"] != null) _g.setReserved("class",value); else _g.h["class"] = value;
-			}
-			$r = _g;
-			return $r;
-		}(this)),this.getItemsLeftLabel(),null),doom_Html.UL((function($this) {
-			var $r;
-			var _g1 = new haxe_ds_StringMap();
-			{
-				var value1 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("filters");
-				if(__map_reserved["class"] != null) _g1.setReserved("class",value1); else _g1.h["class"] = value1;
-			}
-			$r = _g1;
-			return $r;
-		}(this)),[doom_Html.LI(null,null,doom_Html.A((function($this) {
-			var $r;
-			var _g7 = new haxe_ds_StringMap();
-			{
-				var value3 = doom__$AttributeValue_AttributeValue_$Impl_$.fromMap((function($this) {
-					var $r;
-					var _g6 = new haxe_ds_StringMap();
-					{
-						var value2 = $this.isFilter(ToDoFilter.All);
-						if(__map_reserved.selected != null) _g6.setReserved("selected",value2); else _g6.h["selected"] = value2;
-					}
-					$r = _g6;
-					return $r;
-				}($this)));
-				if(__map_reserved["class"] != null) _g7.setReserved("class",value3); else _g7.h["class"] = value3;
-			}
-			{
-				var value4 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("#");
-				if(__map_reserved.href != null) _g7.setReserved("href",value4); else _g7.h["href"] = value4;
-			}
-			{
-				var value5 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler((function(f,a1) {
-					return function() {
-						f(a1);
-					};
-				})($bind($this,$this.handleClickFilter),ToDoFilter.All));
-				if(__map_reserved.click != null) _g7.setReserved("click",value5); else _g7.h["click"] = value5;
-			}
-			$r = _g7;
-			return $r;
-		}(this)),null,doom_NodeImpl.Text("All"))),doom_Html.LI(null,null,doom_Html.A((function($this) {
-			var $r;
-			var _g13 = new haxe_ds_StringMap();
-			{
-				var value7 = doom__$AttributeValue_AttributeValue_$Impl_$.fromMap((function($this) {
-					var $r;
-					var _g12 = new haxe_ds_StringMap();
-					{
-						var value6 = $this.isFilter(ToDoFilter.Active);
-						if(__map_reserved.selected != null) _g12.setReserved("selected",value6); else _g12.h["selected"] = value6;
-					}
-					$r = _g12;
-					return $r;
-				}($this)));
-				if(__map_reserved["class"] != null) _g13.setReserved("class",value7); else _g13.h["class"] = value7;
-			}
-			{
-				var value8 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("#/active");
-				if(__map_reserved.href != null) _g13.setReserved("href",value8); else _g13.h["href"] = value8;
-			}
-			{
-				var value9 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler((function(f1,a11) {
-					return function() {
-						f1(a11);
-					};
-				})($bind($this,$this.handleClickFilter),ToDoFilter.Active));
-				if(__map_reserved.click != null) _g13.setReserved("click",value9); else _g13.h["click"] = value9;
-			}
-			$r = _g13;
-			return $r;
-		}(this)),null,doom_NodeImpl.Text("Active"))),doom_Html.LI(null,null,doom_Html.A((function($this) {
-			var $r;
-			var _g19 = new haxe_ds_StringMap();
-			{
-				var value11 = doom__$AttributeValue_AttributeValue_$Impl_$.fromMap((function($this) {
-					var $r;
-					var _g18 = new haxe_ds_StringMap();
-					{
-						var value10 = $this.isFilter(ToDoFilter.Completed);
-						if(__map_reserved.selected != null) _g18.setReserved("selected",value10); else _g18.h["selected"] = value10;
-					}
-					$r = _g18;
-					return $r;
-				}($this)));
-				if(__map_reserved["class"] != null) _g19.setReserved("class",value11); else _g19.h["class"] = value11;
-			}
-			{
-				var value12 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("#/completed");
-				if(__map_reserved.href != null) _g19.setReserved("href",value12); else _g19.h["href"] = value12;
-			}
-			{
-				var value13 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler((function(f2,a12) {
-					return function() {
-						f2(a12);
-					};
-				})($bind($this,$this.handleClickFilter),ToDoFilter.Completed));
-				if(__map_reserved.click != null) _g19.setReserved("click",value13); else _g19.h["click"] = value13;
-			}
-			$r = _g19;
-			return $r;
-		}(this)),null,doom_NodeImpl.Text("Completed")))],null)];
-		if(this.state.hasCompleted) footerContent.push(doom_Html.BUTTON((function($this) {
-			var $r;
-			var _g20 = new haxe_ds_StringMap();
-			{
-				var value14 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("clear-completed");
-				if(__map_reserved["class"] != null) _g20.setReserved("class",value14); else _g20.h["class"] = value14;
-			}
-			{
-				var value15 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler($bind($this,$this.handleClear));
-				if(__map_reserved.click != null) _g20.setReserved("click",value15); else _g20.h["click"] = value15;
-			}
-			$r = _g20;
-			return $r;
-		}(this)),null,doom_NodeImpl.Text("Clear completed")));
-		return doom_Html.FOOTER((function($this) {
-			var $r;
-			var _g201 = new haxe_ds_StringMap();
-			{
-				var value16 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("footer");
-				if(__map_reserved["class"] != null) _g201.setReserved("class",value16); else _g201.h["class"] = value16;
-			}
-			$r = _g201;
-			return $r;
-		}(this)),footerContent,null);
-	}
-	,handleClear: function() {
-		this.prop.clearCompleted();
-	}
-	,handleClickFilter: function(filter) {
-		this.prop.setFilter(filter);
-	}
-	,isFilter: function(filter) {
-		return Type.enumEq(this.state.filter,filter);
-	}
-	,getItemsLeftLabel: function() {
-		if(this.state.countActive == 1) return [doom_Html.STRONG(null,null,doom_NodeImpl.Text("1")),doom_NodeImpl.Text(" item left")]; else return [doom_Html.STRONG(null,null,doom_NodeImpl.Text("" + this.state.countActive)),doom_NodeImpl.Text(" items left")];
-	}
-	,__class__: ToDoFooter
-});
-var doom_StatelessComponent = function() {
-	this.node = this.render();
-};
-doom_StatelessComponent.__name__ = ["doom","StatelessComponent"];
-doom_StatelessComponent.__interfaces__ = [doom_IComponent];
-doom_StatelessComponent.prototype = {
-	element: null
-	,node: null
-	,init: function() {
-		this.element = doom_HtmlNode.toHtml(this.node);
-	}
-	,updateNode: function(oldNode) {
-		var newNode = this.render();
-		var patches = doom__$Node_Node_$Impl_$.diff(oldNode,newNode);
-		doom_HtmlNode.applyPatches(patches,this.element);
-		this.node = newNode;
-	}
-	,render: function() {
-		throw new thx_error_AbstractMethod({ fileName : "StatelessComponent.hx", lineNumber : 27, className : "doom.StatelessComponent", methodName : "render"});
-	}
-	,update: function() {
-		this.updateNode(this.node);
-	}
-	,toString: function() {
-		var cls = Type.getClassName(js_Boot.getClass(this)).split(".").pop();
-		return "" + cls + "(" + doom__$Node_Node_$Impl_$.toString(this.node) + ")";
-	}
-	,__class__: doom_StatelessComponent
-};
-var doom_PropertiesStatelessComponent = function(prop) {
-	this.prop = prop;
-	doom_StatelessComponent.call(this);
-};
-doom_PropertiesStatelessComponent.__name__ = ["doom","PropertiesStatelessComponent"];
-doom_PropertiesStatelessComponent.__super__ = doom_StatelessComponent;
-doom_PropertiesStatelessComponent.prototype = $extend(doom_StatelessComponent.prototype,{
-	prop: null
-	,__class__: doom_PropertiesStatelessComponent
-});
-var ToDoHeader = function(prop) {
-	doom_PropertiesStatelessComponent.call(this,prop);
-};
-ToDoHeader.__name__ = ["ToDoHeader"];
-ToDoHeader.__super__ = doom_PropertiesStatelessComponent;
-ToDoHeader.prototype = $extend(doom_PropertiesStatelessComponent.prototype,{
-	render: function() {
-		return doom_Html.HEADER((function($this) {
-			var $r;
-			var _g = new haxe_ds_StringMap();
-			{
-				var value = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("header");
-				if(__map_reserved["class"] != null) _g.setReserved("class",value); else _g.h["class"] = value;
-			}
-			$r = _g;
-			return $r;
-		}(this)),[doom_Html.H1(null,null,doom_NodeImpl.Text("todos")),doom_Html.INPUT((function($this) {
-			var $r;
-			var _g1 = new haxe_ds_StringMap();
-			{
-				var value1 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("new-todo");
-				if(__map_reserved["class"] != null) _g1.setReserved("class",value1); else _g1.h["class"] = value1;
-			}
-			{
-				var value2 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("What needs to be done?");
-				if(__map_reserved.placeholder != null) _g1.setReserved("placeholder",value2); else _g1.h["placeholder"] = value2;
-			}
-			{
-				var value3 = doom__$AttributeValue_AttributeValue_$Impl_$.fromBool(true);
-				if(__map_reserved.autofocus != null) _g1.setReserved("autofocus",value3); else _g1.h["autofocus"] = value3;
-			}
-			{
-				var value4 = doom__$AttributeValue_AttributeValue_$Impl_$.fromKeyboardEventHandler($bind($this,$this.handleKeys));
-				if(__map_reserved.keyup != null) _g1.setReserved("keyup",value4); else _g1.h["keyup"] = value4;
-			}
-			$r = _g1;
-			return $r;
-		}(this)))],null);
-	}
-	,handleKeys: function(e) {
-		e.preventDefault();
-		if(13 != e.which) return;
-		var value = this.getInputValueAndEmpty();
-		if(thx_Strings.isEmpty(value)) return;
-		this.prop.add(value);
-	}
-	,getInputValueAndEmpty: function() {
-		var el = this.element.querySelector("input");
-		var value = StringTools.trim(el.value);
-		el.value = "";
-		return value;
-	}
-	,__class__: ToDoHeader
-});
-var ToDoItem = function(prop,state) {
-	doom_PropertiesComponent.call(this,prop,state);
-};
-ToDoItem.__name__ = ["ToDoItem"];
-ToDoItem.__super__ = doom_PropertiesComponent;
-ToDoItem.prototype = $extend(doom_PropertiesComponent.prototype,{
-	render: function() {
-		return doom_Html.LI((function($this) {
-			var $r;
-			var _g1 = new haxe_ds_StringMap();
-			{
-				var value = doom__$AttributeValue_AttributeValue_$Impl_$.fromMap((function($this) {
-					var $r;
-					var _g = new haxe_ds_StringMap();
-					_g.set("completed",$this.state.item.completed);
-					_g.set("editing",$this.state.editing);
-					$r = _g;
-					return $r;
-				}($this)));
-				if(__map_reserved["class"] != null) _g1.setReserved("class",value); else _g1.h["class"] = value;
-			}
-			{
-				var value1 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler($bind($this,$this.handleDblClick));
-				if(__map_reserved.dblclick != null) _g1.setReserved("dblclick",value1); else _g1.h["dblclick"] = value1;
-			}
-			$r = _g1;
-			return $r;
-		}(this)),[doom_Html.DIV((function($this) {
-			var $r;
-			var _g2 = new haxe_ds_StringMap();
-			{
-				var value2 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("view");
-				if(__map_reserved["class"] != null) _g2.setReserved("class",value2); else _g2.h["class"] = value2;
-			}
-			$r = _g2;
-			return $r;
-		}(this)),[doom_Html.INPUT((function($this) {
-			var $r;
-			var _g3 = new haxe_ds_StringMap();
-			{
-				var value3 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("toggle");
-				if(__map_reserved["class"] != null) _g3.setReserved("class",value3); else _g3.h["class"] = value3;
-			}
-			{
-				var value4 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("checkbox");
-				if(__map_reserved.type != null) _g3.setReserved("type",value4); else _g3.h["type"] = value4;
-			}
-			{
-				var value5 = doom__$AttributeValue_AttributeValue_$Impl_$.fromBool($this.state.item.completed);
-				if(__map_reserved.checked != null) _g3.setReserved("checked",value5); else _g3.h["checked"] = value5;
-			}
-			{
-				var value6 = doom__$AttributeValue_AttributeValue_$Impl_$.fromInputElementHandler($bind($this,$this.handleChecked));
-				if(__map_reserved.change != null) _g3.setReserved("change",value6); else _g3.h["change"] = value6;
-			}
-			$r = _g3;
-			return $r;
-		}(this))),doom_Html.LABEL(null,null,doom_NodeImpl.Text(this.state.item.label)),doom_Html.BUTTON((function($this) {
-			var $r;
-			var _g4 = new haxe_ds_StringMap();
-			{
-				var value7 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("destroy");
-				if(__map_reserved["class"] != null) _g4.setReserved("class",value7); else _g4.h["class"] = value7;
-			}
-			{
-				var value8 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler($bind($this,$this.handleRemove));
-				if(__map_reserved.click != null) _g4.setReserved("click",value8); else _g4.h["click"] = value8;
-			}
-			$r = _g4;
-			return $r;
-		}(this)),null,null)],null),doom_Html.INPUT((function($this) {
-			var $r;
-			var _g5 = new haxe_ds_StringMap();
-			{
-				var value9 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("edit");
-				if(__map_reserved["class"] != null) _g5.setReserved("class",value9); else _g5.h["class"] = value9;
-			}
-			{
-				var value10 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString($this.state.item.label);
-				if(__map_reserved.value != null) _g5.setReserved("value",value10); else _g5.h["value"] = value10;
-			}
-			{
-				var value11 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler($bind($this,$this.handleBlur));
-				if(__map_reserved.blur != null) _g5.setReserved("blur",value11); else _g5.h["blur"] = value11;
-			}
-			{
-				var value12 = doom__$AttributeValue_AttributeValue_$Impl_$.fromKeyboardEventHandler($bind($this,$this.handleKeydown));
-				if(__map_reserved.keyup != null) _g5.setReserved("keyup",value12); else _g5.h["keyup"] = value12;
-			}
-			$r = _g5;
-			return $r;
-		}(this)))],null);
-	}
-	,handleChecked: function(el) {
-		this.state.item.completed = el.checked;
-		this.prop.refresh();
-	}
-	,handleRemove: function() {
-		this.prop.remove(this.state.item);
-	}
-	,handleDblClick: function() {
-		this.state.editing = true;
-		this.update(this.state);
-		this.getInput().select();
-	}
-	,handleBlur: function() {
-		if(!this.state.editing) return;
-		this.state.editing = false;
-		var value = this.getInputValueAndTrim();
-		if(thx_Strings.isEmpty(value)) this.handleRemove(); else {
-			this.state.item.label = value;
-			this.prop.save();
-			this.update(this.state);
-		}
-	}
-	,handleKeydown: function(e) {
-		if(e.which != 13) return;
-		this.handleBlur();
-	}
-	,getInput: function() {
-		return this.element.querySelector("input.edit");
-	}
-	,getInputValueAndTrim: function() {
-		var input = this.getInput();
-		return input.value = StringTools.trim(input.value);
-	}
-	,__class__: ToDoItem
 });
 var ToDoList = function(prop,state) {
 	doom_PropertiesComponent.call(this,prop,state);
@@ -892,7 +1264,7 @@ ToDoList.__name__ = ["ToDoList"];
 ToDoList.__super__ = doom_PropertiesComponent;
 ToDoList.prototype = $extend(doom_PropertiesComponent.prototype,{
 	render: function() {
-		return doom_Html.SECTION((function($this) {
+		return Doom.SECTION((function($this) {
 			var $r;
 			var _g = new haxe_ds_StringMap();
 			{
@@ -901,7 +1273,7 @@ ToDoList.prototype = $extend(doom_PropertiesComponent.prototype,{
 			}
 			$r = _g;
 			return $r;
-		}(this)),[doom_Html.INPUT((function($this) {
+		}(this)),[Doom.INPUT((function($this) {
 			var $r;
 			var _g1 = new haxe_ds_StringMap();
 			{
@@ -922,7 +1294,7 @@ ToDoList.prototype = $extend(doom_PropertiesComponent.prototype,{
 			}
 			$r = _g1;
 			return $r;
-		}(this))),doom_Html.LABEL((function($this) {
+		}(this))),Doom.LABEL((function($this) {
 			var $r;
 			var _g2 = new haxe_ds_StringMap();
 			{
@@ -931,7 +1303,7 @@ ToDoList.prototype = $extend(doom_PropertiesComponent.prototype,{
 			}
 			$r = _g2;
 			return $r;
-		}(this)),null,doom_NodeImpl.Text("Mark all as complete")),doom_Html.UL((function($this) {
+		}(this)),null,doom_NodeImpl.Text("Mark all as complete")),Doom.UL((function($this) {
 			var $r;
 			var _g3 = new haxe_ds_StringMap();
 			{
@@ -948,7 +1320,7 @@ ToDoList.prototype = $extend(doom_PropertiesComponent.prototype,{
 				var item = $it0.next();
 				_g4.push((function($this) {
 					var $r;
-					var comp = new ToDoItem($this.prop,{ item : item, editing : false});
+					var comp = new Item($this.prop,{ item : item, editing : false});
 					$r = doom_NodeImpl.ComponentNode(comp);
 					return $r;
 				}($this)));
@@ -1249,378 +1621,6 @@ doom__$EventHandler_EventHandler_$Impl_$.fromElementHandler = function(f) {
 	return function(e) {
 		f(e.target);
 	};
-};
-var doom_Html = function() { };
-doom_Html.__name__ = ["doom","Html"];
-doom_Html.A = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("a",attributes,children,child);
-};
-doom_Html.ABBR = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("abbr",attributes,children,child);
-};
-doom_Html.ADDRESS = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("address",attributes,children,child);
-};
-doom_Html.AREA = function(attributes) {
-	return doom__$Node_Node_$Impl_$.el("area",attributes,null,null);
-};
-doom_Html.ARTICLE = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("article",attributes,children,child);
-};
-doom_Html.ASIDE = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("aside",attributes,children,child);
-};
-doom_Html.AUDIO = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("audio",attributes,children,child);
-};
-doom_Html.B = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("b",attributes,children,child);
-};
-doom_Html.BASE = function(attributes) {
-	return doom__$Node_Node_$Impl_$.el("base",attributes,null,null);
-};
-doom_Html.BDI = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("bdi",attributes,children,child);
-};
-doom_Html.BDO = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("bdo",attributes,children,child);
-};
-doom_Html.BLOCKQUOTE = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("blockquote",attributes,children,child);
-};
-doom_Html.BODY = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("body",attributes,children,child);
-};
-doom_Html.BR = function(attributes) {
-	return doom__$Node_Node_$Impl_$.el("br",attributes,null,null);
-};
-doom_Html.BUTTON = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("button",attributes,children,child);
-};
-doom_Html.CANVAS = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("canvas",attributes,children,child);
-};
-doom_Html.CAPTION = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("caption",attributes,children,child);
-};
-doom_Html.CITE = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("cite",attributes,children,child);
-};
-doom_Html.CODE = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("code",attributes,children,child);
-};
-doom_Html.COL = function(attributes) {
-	return doom__$Node_Node_$Impl_$.el("col",attributes,null,null);
-};
-doom_Html.COLGROUP = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("colgroup",attributes,children,child);
-};
-doom_Html.DATA = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("data",attributes,children,child);
-};
-doom_Html.DATALIST = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("datalist",attributes,children,child);
-};
-doom_Html.DD = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("dd",attributes,children,child);
-};
-doom_Html.DEL = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("del",attributes,children,child);
-};
-doom_Html.DETAILS = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("details",attributes,children,child);
-};
-doom_Html.DFN = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("dfn",attributes,children,child);
-};
-doom_Html.DIALOG = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("dialog",attributes,children,child);
-};
-doom_Html.DIV = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("div",attributes,children,child);
-};
-doom_Html.DL = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("dl",attributes,children,child);
-};
-doom_Html.DT = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("dt",attributes,children,child);
-};
-doom_Html.EM = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("em",attributes,children,child);
-};
-doom_Html.EMBED = function(attributes) {
-	return doom__$Node_Node_$Impl_$.el("embed",attributes,null,null);
-};
-doom_Html.FIELDSET = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("fieldset",attributes,children,child);
-};
-doom_Html.FIGCAPTION = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("figcaption",attributes,children,child);
-};
-doom_Html.FIGURE = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("figure",attributes,children,child);
-};
-doom_Html.FOOTER = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("footer",attributes,children,child);
-};
-doom_Html.FORM = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("form",attributes,children,child);
-};
-doom_Html.H1 = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("h1",attributes,children,child);
-};
-doom_Html.H2 = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("h2",attributes,children,child);
-};
-doom_Html.H3 = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("h3",attributes,children,child);
-};
-doom_Html.H4 = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("h4",attributes,children,child);
-};
-doom_Html.H5 = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("h5",attributes,children,child);
-};
-doom_Html.H6 = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("h6",attributes,children,child);
-};
-doom_Html.HEAD = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("head",attributes,children,child);
-};
-doom_Html.HEADER = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("header",attributes,children,child);
-};
-doom_Html.HGROUP = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("hgroup",attributes,children,child);
-};
-doom_Html.HR = function(attributes) {
-	return doom__$Node_Node_$Impl_$.el("hr",attributes,null,null);
-};
-doom_Html.HTML = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("html",attributes,children,child);
-};
-doom_Html.I = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("i",attributes,children,child);
-};
-doom_Html.IFRAME = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("iframe",attributes,children,child);
-};
-doom_Html.IMG = function(attributes) {
-	return doom__$Node_Node_$Impl_$.el("img",attributes,null,null);
-};
-doom_Html.INPUT = function(attributes) {
-	return doom__$Node_Node_$Impl_$.el("input",attributes,null,null);
-};
-doom_Html.INS = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("ins",attributes,children,child);
-};
-doom_Html.KBD = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("kbd",attributes,children,child);
-};
-doom_Html.KEYGEN = function(attributes) {
-	return doom__$Node_Node_$Impl_$.el("keygen",attributes,null,null);
-};
-doom_Html.LABEL = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("label",attributes,children,child);
-};
-doom_Html.LEGEND = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("legend",attributes,children,child);
-};
-doom_Html.LI = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("li",attributes,children,child);
-};
-doom_Html.LINK = function(attributes) {
-	return doom__$Node_Node_$Impl_$.el("link",attributes,null,null);
-};
-doom_Html.MAIN = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("main",attributes,children,child);
-};
-doom_Html.MAP = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("map",attributes,children,child);
-};
-doom_Html.MARK = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("mark",attributes,children,child);
-};
-doom_Html.MENU = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("menu",attributes,children,child);
-};
-doom_Html.MENUITEM = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("menuitem",attributes,children,child);
-};
-doom_Html.META = function(attributes) {
-	return doom__$Node_Node_$Impl_$.el("meta",attributes,null,null);
-};
-doom_Html.METER = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("meter",attributes,children,child);
-};
-doom_Html.NAV = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("nav",attributes,children,child);
-};
-doom_Html.NOSCRIPT = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("noscript",attributes,children,child);
-};
-doom_Html.OBJECT = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("object",attributes,children,child);
-};
-doom_Html.OL = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("ol",attributes,children,child);
-};
-doom_Html.OPTGROUP = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("optgroup",attributes,children,child);
-};
-doom_Html.OPTION = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("option",attributes,children,child);
-};
-doom_Html.OUTPUT = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("output",attributes,children,child);
-};
-doom_Html.P = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("p",attributes,children,child);
-};
-doom_Html.PARAM = function(attributes) {
-	return doom__$Node_Node_$Impl_$.el("param",attributes,null,null);
-};
-doom_Html.PRE = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("pre",attributes,children,child);
-};
-doom_Html.PROGRESS = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("progress",attributes,children,child);
-};
-doom_Html.Q = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("q",attributes,children,child);
-};
-doom_Html.RB = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("rb",attributes,children,child);
-};
-doom_Html.RP = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("rp",attributes,children,child);
-};
-doom_Html.RT = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("rt",attributes,children,child);
-};
-doom_Html.RTC = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("rtc",attributes,children,child);
-};
-doom_Html.RUBY = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("ruby",attributes,children,child);
-};
-doom_Html.S = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("s",attributes,children,child);
-};
-doom_Html.SAMP = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("samp",attributes,children,child);
-};
-doom_Html.SCRIPT = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("script",attributes,children,child);
-};
-doom_Html.SECTION = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("section",attributes,children,child);
-};
-doom_Html.SELECT = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("select",attributes,children,child);
-};
-doom_Html.SMALL = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("small",attributes,children,child);
-};
-doom_Html.SOURCE = function(attributes) {
-	return doom__$Node_Node_$Impl_$.el("source",attributes,null,null);
-};
-doom_Html.SPAN = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("span",attributes,children,child);
-};
-doom_Html.STRONG = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("strong",attributes,children,child);
-};
-doom_Html.STYLE = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("style",attributes,children,child);
-};
-doom_Html.SUB = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("sub",attributes,children,child);
-};
-doom_Html.SUMMARY = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("summary",attributes,children,child);
-};
-doom_Html.SUP = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("sup",attributes,children,child);
-};
-doom_Html.TABLE = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("table",attributes,children,child);
-};
-doom_Html.TBODY = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("tbody",attributes,children,child);
-};
-doom_Html.TD = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("td",attributes,children,child);
-};
-doom_Html.TEMPLATE = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("template",attributes,children,child);
-};
-doom_Html.TEXTAREA = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("textarea",attributes,children,child);
-};
-doom_Html.TFOOT = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("tfoot",attributes,children,child);
-};
-doom_Html.TH = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("th",attributes,children,child);
-};
-doom_Html.THEAD = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("thead",attributes,children,child);
-};
-doom_Html.TIME = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("time",attributes,children,child);
-};
-doom_Html.TITLE = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("title",attributes,children,child);
-};
-doom_Html.TR = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("tr",attributes,children,child);
-};
-doom_Html.TRACK = function(attributes) {
-	return doom__$Node_Node_$Impl_$.el("track",attributes,null,null);
-};
-doom_Html.U = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("u",attributes,children,child);
-};
-doom_Html.UL = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("ul",attributes,children,child);
-};
-doom_Html.VAR = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("var",attributes,children,child);
-};
-doom_Html.VIDEO = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("video",attributes,children,child);
-};
-doom_Html.WBR = function(attributes) {
-	return doom__$Node_Node_$Impl_$.el("wbr",attributes,null,null);
-};
-doom_Html.el = function(name,attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el(name,attributes,children,child);
-};
-doom_Html.comment = function(content) {
-	return doom_NodeImpl.Comment(content);
-};
-doom_Html.text = function(content) {
-	return doom_NodeImpl.Text(content);
-};
-doom_Html.raw = function(content) {
-	return doom_NodeImpl.Raw(content);
-};
-doom_Html.dummy = function(text) {
-	if(text == null) text = "empty node";
-	return doom__$Node_Node_$Impl_$.el("div",(function($this) {
-		var $r;
-		var _g = new haxe_ds_StringMap();
-		{
-			var value = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("display:none");
-			if(__map_reserved.style != null) _g.setReserved("style",value); else _g.h["style"] = value;
-		}
-		$r = _g;
-		return $r;
-	}(this)),[doom_NodeImpl.Comment(" " + text + " ")]);
-};
-doom_Html.comp = function(comp) {
-	return doom_NodeImpl.ComponentNode(comp);
 };
 var thx__$Set_Set_$Impl_$ = {};
 thx__$Set_Set_$Impl_$.__name__ = ["thx","_Set","Set_Impl_"];
@@ -7294,8 +7294,8 @@ var __map_reserved = {}
         };
       }
     ;
+AppProperties.STORAGE_KEY = "TodoMVC-Doom";
 DateTools.DAYS_OF_MONTH = [31,28,31,30,31,30,31,31,30,31,30,31];
-ToDoController.STORAGE_KEY = "TodoMVC-Doom";
 Xml.Element = 0;
 Xml.PCData = 1;
 Xml.CData = 2;

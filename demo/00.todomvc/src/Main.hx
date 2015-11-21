@@ -1,14 +1,13 @@
 import dots.Query;
-import doom.Component;
 
 class Main {
   static function main() {
-    var controller = new ToDoController();
-    Component.mount(
-      new ToDoApp(controller, {
-        items : controller.filteredItems,
-        countActive : controller.countActive,
-        countTotal : controller.countTotal
+    var prop = new AppProperties();
+    Doom.mount(
+      new ToDoApp(prop, {
+        items       : prop.filteredItems,
+        countActive : prop.countActive,
+        countTotal  : prop.countTotal
       }),
       Query.first("section.todoapp")
     );

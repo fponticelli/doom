@@ -37,7 +37,7 @@ class Todo extends Component<TodoListData> {
     update(state);
   }
 
-  function deleteItem(item : TodoItemData) {
+  function deleteItem(item : ItemData) {
     state.items.remove(item);
     update(state);
   }
@@ -60,13 +60,13 @@ class Todo extends Component<TodoListData> {
       [
         comp(new TodoForm(addTodo, nil)),
         comp(new TodoList(refresh, toggleChecked, deleteItem, state)),
-        comp(new TodoFooter(nil))
+        comp(new Footer(nil))
       ]
     );
   }
 }
 
-class TodoFooter extends Component<Nil> {
+class Footer extends Component<Nil> {
   override function render() {
     return el("footer", ["class" => "footer"], [
       el("span", ["class" => "todo-count"], [
@@ -109,10 +109,10 @@ class TodoFooter extends Component<Nil> {
 }
 
 class TodoList extends Component<TodoListData> {
-  var deleteItem : TodoItemData -> Void;
+  var deleteItem : ItemData -> Void;
   var refresh : Void -> Void;
   var toggleChecked : Void -> Void;
-  public function new(refresh : Void -> Void, toggleChecked : Void -> Void, deleteItem : TodoItemData -> Void, state : TodoListData) {
+  public function new(refresh : Void -> Void, toggleChecked : Void -> Void, deleteItem : ItemData -> Void, state : TodoListData) {
     this.refresh = refresh;
     this.deleteItem = deleteItem;
     this.toggleChecked = toggleChecked;
@@ -138,7 +138,7 @@ class TodoList extends Component<TodoListData> {
         el("ul",
           ["class" => "todo-list"],
           [for(item in state.items)
-            comp(new TodoItem(refresh, deleteItem, item))
+            comp(new Item(refresh, deleteItem, item))
           ]
         )
       ]);
@@ -185,10 +185,10 @@ class TodoForm extends Component<Nil> {
   }
 }
 
-class TodoItem extends Component<TodoItemData> {
-  var deleteItem : TodoItemData -> Void;
+class Item extends Component<ItemData> {
+  var deleteItem : ItemData -> Void;
   var refresh : Void -> Void;
-  public function new(refresh : Void -> Void, deleteItem : TodoItemData -> Void, state : TodoItemData) {
+  public function new(refresh : Void -> Void, deleteItem : ItemData -> Void, state : ItemData) {
     this.refresh = refresh;
     this.deleteItem = deleteItem;
     super(state);
@@ -258,10 +258,10 @@ class TodoItem extends Component<TodoItemData> {
 }
 
 typedef TodoListData = {
-  items : Array<TodoItemData>
+  items : Array<ItemData>
 }
 
-typedef TodoItemData = {
+typedef ItemData = {
   checked : Bool,
   description : String,
   ?editing : Bool

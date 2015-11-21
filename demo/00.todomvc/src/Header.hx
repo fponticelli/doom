@@ -1,10 +1,10 @@
 import doom.PropertiesStatelessComponent;
-import doom.Html.*;
+import Doom.*;
 import dots.Keys;
 import js.html.*;
 using thx.Strings;
 
-class ToDoHeader extends PropertiesStatelessComponent<AddToDoItem> {
+class Header extends PropertiesStatelessComponent<AddItem> {
   override function render() {
     return HEADER([
         "class" => "header"
@@ -35,6 +35,6 @@ class ToDoHeader extends PropertiesStatelessComponent<AddToDoItem> {
   }
 }
 
-typedef AddToDoItem = {
+typedef AddItem = {
   public function add(label : String) : Void;
 }
