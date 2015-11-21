@@ -10,7 +10,8 @@ class Body extends PropertiesComponent<AppProperties, AppState> {
     prop.onUpdate = function() update({
       items : prop.filteredItems,
       countActive : prop.countActive,
-      countTotal : prop.countTotal
+      countTotal : prop.countTotal,
+      filter : prop.filter
     });
   }
 
@@ -25,7 +26,7 @@ class Body extends PropertiesComponent<AppProperties, AppState> {
         }),
         new Footer(prop, {
           countActive : state.countActive,
-          filter : prop.filter,
+          filter : state.filter,
           hasCompleted : state.countTotal - state.countActive > 0
         })
       ]);

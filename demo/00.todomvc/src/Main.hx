@@ -9,9 +9,10 @@ class Main {
       new App(prop, {
         items       : prop.filteredItems,
         countActive : prop.countActive,
-        countTotal  : prop.countTotal
+        countTotal  : prop.countTotal,
+        filter      : prop.filter
       }),
-      Query.first("section.App")
+      Query.first("section.todoapp")
     );
   }
 }

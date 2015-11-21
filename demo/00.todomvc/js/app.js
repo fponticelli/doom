@@ -546,7 +546,7 @@ var Main = function() { };
 Main.__name__ = ["Main"];
 Main.main = function() {
 	var prop = new todomvc_AppProperties();
-	Doom.mount(new todomvc_App(prop,{ items : prop.filteredItems, countActive : prop.countActive, countTotal : prop.countTotal}),dots_Query.first("section.App"));
+	Doom.mount(new todomvc_App(prop,{ items : prop.filteredItems, countActive : prop.countActive, countTotal : prop.countTotal, filter : prop.filter}),dots_Query.first("section.todoapp"));
 };
 Math.__name__ = ["Math"];
 var Reflect = function() { };
@@ -6778,7 +6778,7 @@ var todomvc_Body = function(prop,state) {
 	var _g = this;
 	doom_PropertiesComponent.call(this,prop,state);
 	prop.onUpdate = function() {
-		_g.update({ items : prop.filteredItems, countActive : prop.countActive, countTotal : prop.countTotal});
+		_g.update({ items : prop.filteredItems, countActive : prop.countActive, countTotal : prop.countTotal, filter : prop.filter});
 	};
 };
 todomvc_Body.__name__ = ["todomvc","Body"];
@@ -6792,7 +6792,7 @@ todomvc_Body.prototype = $extend(doom_PropertiesComponent.prototype,{
 			return $r;
 		}(this)),(function($this) {
 			var $r;
-			var comp1 = new todomvc_Footer($this.prop,{ countActive : $this.state.countActive, filter : $this.prop.filter, hasCompleted : $this.state.countTotal - $this.state.countActive > 0});
+			var comp1 = new todomvc_Footer($this.prop,{ countActive : $this.state.countActive, filter : $this.state.filter, hasCompleted : $this.state.countTotal - $this.state.countActive > 0});
 			$r = doom_NodeImpl.ComponentNode(comp1);
 			return $r;
 		}(this))],null);

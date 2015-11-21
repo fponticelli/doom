@@ -7,7 +7,7 @@ import js.html.InputElement;
 using thx.Strings;
 
 class Item extends PropertiesComponent<ItemProperties, ItemState> {
-  override function render() {
+  override function render()
     return LI([
         "class" => [
           "completed" => state.item.completed,
@@ -35,7 +35,6 @@ class Item extends PropertiesComponent<ItemProperties, ItemState> {
         "keyup" => handleKeydown,
       ])
     ]);
-  }
 
   function handleChecked(el : InputElement) {
     state.item.completed = el.checked;
