@@ -27,7 +27,7 @@ class HtmlNode {
       comp.element;
   }
 
-  static function createElement(name : String, attributes : Map<String, AttributeValue>, children : Array<Node>) {
+  static function createElement(name : String, attributes : Map<String, AttributeValue>, children : Array<Node>) : Element {
     var el = document.createElement(name);
     for(key in attributes.keys()) {
       var value = attributes.get(key);
