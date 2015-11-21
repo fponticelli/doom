@@ -26,7 +26,7 @@ class Main {
   }
 }
 
-class Todo extends Component<TodoListData> {
+class Todo extends Component<ListData> {
   function addTodo(description : String) {
     state.items.push({ checked : false, description : description });
     update(state);
@@ -59,7 +59,7 @@ class Todo extends Component<TodoListData> {
     return el("div",
       [
         comp(new TodoForm(addTodo, nil)),
-        comp(new TodoList(refresh, toggleChecked, deleteItem, state)),
+        comp(new List(refresh, toggleChecked, deleteItem, state)),
         comp(new Footer(nil))
       ]
     );
@@ -108,11 +108,11 @@ class Footer extends Component<Nil> {
 */
 }
 
-class TodoList extends Component<TodoListData> {
+class List extends Component<ListData> {
   var deleteItem : ItemData -> Void;
   var refresh : Void -> Void;
   var toggleChecked : Void -> Void;
-  public function new(refresh : Void -> Void, toggleChecked : Void -> Void, deleteItem : ItemData -> Void, state : TodoListData) {
+  public function new(refresh : Void -> Void, toggleChecked : Void -> Void, deleteItem : ItemData -> Void, state : ListData) {
     this.refresh = refresh;
     this.deleteItem = deleteItem;
     this.toggleChecked = toggleChecked;
@@ -257,7 +257,7 @@ class Item extends Component<ItemData> {
   }
 }
 
-typedef TodoListData = {
+typedef ListData = {
   items : Array<ItemData>
 }
 

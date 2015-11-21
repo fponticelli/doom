@@ -6,7 +6,7 @@ import thx.ReadonlyArray;
 using thx.Arrays;
 using thx.Functions;
 
-class ToDoList extends PropertiesComponent<AppProperties, ToDoListState> {
+class List extends PropertiesComponent<AppProperties, ListState> {
   override function render()
     return SECTION(["class" => "main"], [
       INPUT([
@@ -22,7 +22,7 @@ class ToDoList extends PropertiesComponent<AppProperties, ToDoListState> {
     ]);
 }
 
-typedef ToDoListState = {
+typedef ListState = {
   items : ReadonlyArray<ItemData>,
   allCompleted : Bool
 }

@@ -19,7 +19,7 @@ class Body extends PropertiesComponent<AppProperties, AppState> {
       dummy("nothing to do yet");
     } else {
       DIV([
-        new ToDoList(prop, {
+        new List(prop, {
           items : state.items,
           allCompleted : state.countActive == 0
         }),

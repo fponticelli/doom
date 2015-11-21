@@ -6766,7 +6766,7 @@ todomvc_Body.prototype = $extend(doom_PropertiesComponent.prototype,{
 	render: function() {
 		if(this.state.countTotal == 0) return Doom.dummy("nothing to do yet"); else return Doom.DIV(null,[(function($this) {
 			var $r;
-			var comp = new todomvc_ToDoList($this.prop,{ items : $this.state.items, allCompleted : $this.state.countActive == 0});
+			var comp = new todomvc_List($this.prop,{ items : $this.state.items, allCompleted : $this.state.countActive == 0});
 			$r = doom_NodeImpl.ComponentNode(comp);
 			return $r;
 		}(this)),(function($this) {
@@ -7125,33 +7125,12 @@ todomvc_Item.prototype = $extend(doom_PropertiesComponent.prototype,{
 	}
 	,__class__: todomvc_Item
 });
-var todomvc_ToDoApp = function(prop,state) {
+var todomvc_List = function(prop,state) {
 	doom_PropertiesComponent.call(this,prop,state);
 };
-todomvc_ToDoApp.__name__ = ["todomvc","ToDoApp"];
-todomvc_ToDoApp.__super__ = doom_PropertiesComponent;
-todomvc_ToDoApp.prototype = $extend(doom_PropertiesComponent.prototype,{
-	render: function() {
-		return Doom.DIV(null,[(function($this) {
-			var $r;
-			var comp = new todomvc_Header($this.prop);
-			$r = doom_NodeImpl.ComponentNode(comp);
-			return $r;
-		}(this)),(function($this) {
-			var $r;
-			var comp1 = new todomvc_Body($this.prop,$this.state);
-			$r = doom_NodeImpl.ComponentNode(comp1);
-			return $r;
-		}(this))],null);
-	}
-	,__class__: todomvc_ToDoApp
-});
-var todomvc_ToDoList = function(prop,state) {
-	doom_PropertiesComponent.call(this,prop,state);
-};
-todomvc_ToDoList.__name__ = ["todomvc","ToDoList"];
-todomvc_ToDoList.__super__ = doom_PropertiesComponent;
-todomvc_ToDoList.prototype = $extend(doom_PropertiesComponent.prototype,{
+todomvc_List.__name__ = ["todomvc","List"];
+todomvc_List.__super__ = doom_PropertiesComponent;
+todomvc_List.prototype = $extend(doom_PropertiesComponent.prototype,{
 	render: function() {
 		return Doom.SECTION((function($this) {
 			var $r;
@@ -7218,7 +7197,28 @@ todomvc_ToDoList.prototype = $extend(doom_PropertiesComponent.prototype,{
 			return $r;
 		}(this)),null)],null);
 	}
-	,__class__: todomvc_ToDoList
+	,__class__: todomvc_List
+});
+var todomvc_ToDoApp = function(prop,state) {
+	doom_PropertiesComponent.call(this,prop,state);
+};
+todomvc_ToDoApp.__name__ = ["todomvc","ToDoApp"];
+todomvc_ToDoApp.__super__ = doom_PropertiesComponent;
+todomvc_ToDoApp.prototype = $extend(doom_PropertiesComponent.prototype,{
+	render: function() {
+		return Doom.DIV(null,[(function($this) {
+			var $r;
+			var comp = new todomvc_Header($this.prop);
+			$r = doom_NodeImpl.ComponentNode(comp);
+			return $r;
+		}(this)),(function($this) {
+			var $r;
+			var comp1 = new todomvc_Body($this.prop,$this.state);
+			$r = doom_NodeImpl.ComponentNode(comp1);
+			return $r;
+		}(this))],null);
+	}
+	,__class__: todomvc_ToDoApp
 });
 function $iterator(o) { if( o instanceof Array ) return function() { return HxOverrides.iter(o); }; return typeof(o.iterator) == 'function' ? $bind(o,o.iterator) : o.iterator; }
 var $_, $fid = 0;
