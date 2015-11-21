@@ -6,7 +6,8 @@ import haxe.Json;
 import js.Browser.*;
 
 class ToDoController {
-  public var length(default, null) : Int;
+  public var countActive(default, null) : Int;
+  public var countTotal(default, null) : Int;
   public var filter(default, null) : ToDoFilter;
   public var filteredItems(default, null) : ReadonlyArray<ToDoItemModel>;
   public var onUpdate : Void -> Void;
@@ -36,6 +37,12 @@ class ToDoController {
     refresh();
   }
 
+  public function clearCompleted() {
+    allItems = allItems.filter.fn(!_.completed);
+    save();
+    refresh();
+  }
+
   public function toggleCheck() {
     var completed = allItems.all.fn(_.completed);
     allItems.each.fn(_.completed = !completed);
@@ -47,11 +54,12 @@ class ToDoController {
       case All:
         filteredItems = allItems.copy();
       case Active:
-        filteredItems = allItems.filter.fn(_.completed);
-      case Completed:
         filteredItems = allItems.filter.fn(!_.completed);
+      case Completed:
+        filteredItems = allItems.filter.fn(_.completed);
     }
-    length = filteredItems.length;
+    countActive = allItems.filter.fn(!_.completed).length;
+    countTotal = allItems.length;
     onUpdate();
   }
 

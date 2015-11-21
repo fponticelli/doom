@@ -46,6 +46,7 @@ class ToDoItem extends PropertiesComponent<ItemController, ItemState> {
   function handleDblClick() {
     state.editing = true;
     update(state);
+    getInput().select();
   }
 
   function handleBlur() {
@@ -67,11 +68,11 @@ class ToDoItem extends PropertiesComponent<ItemController, ItemState> {
     handleBlur();
   }
 
-  function getInputValue() {
-    var el : js.html.InputElement = cast element.querySelector("input.edit"),
-        value = el.value;
-    return value;
-  }
+  function getInput() : js.html.InputElement
+    return cast element.querySelector("input.edit");
+
+  function getInputValue()
+    return getInput().value;
 }
 
 typedef ItemController = {

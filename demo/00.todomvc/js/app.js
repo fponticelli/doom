@@ -168,7 +168,7 @@ var Main = function() { };
 Main.__name__ = ["Main"];
 Main.main = function() {
 	var controller = new ToDoController();
-	doom_Component.mount(new ToDoApp(controller,controller.filteredItems),dots_Query.first("section.todoapp"));
+	doom_Component.mount(new ToDoApp(controller,{ items : controller.filteredItems, countActive : controller.countActive, countTotal : controller.countTotal}),dots_Query.first("section.todoapp"));
 };
 Math.__name__ = ["Math"];
 var Reflect = function() { };
@@ -393,21 +393,21 @@ var ToDoBody = function(prop,state) {
 	var _g = this;
 	doom_PropertiesComponent.call(this,prop,state);
 	prop.onUpdate = function() {
-		_g.update(prop.filteredItems);
+		_g.update({ items : prop.filteredItems, countActive : prop.countActive, countTotal : prop.countTotal});
 	};
 };
 ToDoBody.__name__ = ["ToDoBody"];
 ToDoBody.__super__ = doom_PropertiesComponent;
 ToDoBody.prototype = $extend(doom_PropertiesComponent.prototype,{
 	render: function() {
-		if(this.state.length == 0) return doom_Html.dummy("nothing to do yet"); else return doom_Html.DIV(null,[(function($this) {
+		if(this.state.countTotal == 0) return doom_Html.dummy("nothing to do yet"); else return doom_Html.DIV(null,[(function($this) {
 			var $r;
-			var comp = new ToDoList($this.prop,$this.state);
+			var comp = new ToDoList($this.prop,{ items : $this.state.items, allCompleted : $this.state.countActive == 0});
 			$r = doom_NodeImpl.ComponentNode(comp);
 			return $r;
 		}(this)),(function($this) {
 			var $r;
-			var comp1 = new ToDoFooter({ items : $this.state});
+			var comp1 = new ToDoFooter($this.prop,{ countActive : $this.state.countActive, filter : $this.prop.filter, hasCompleted : $this.state.countTotal - $this.state.countActive > 0});
 			$r = doom_NodeImpl.ComponentNode(comp1);
 			return $r;
 		}(this))],null);
@@ -423,7 +423,8 @@ var ToDoController = function() {
 };
 ToDoController.__name__ = ["ToDoController"];
 ToDoController.prototype = {
-	length: null
+	countActive: null
+	,countTotal: null
 	,filter: null
 	,filteredItems: null
 	,onUpdate: null
@@ -439,6 +440,13 @@ ToDoController.prototype = {
 	}
 	,remove: function(item) {
 		HxOverrides.remove(this.allItems,item);
+		this.save();
+		this.refresh();
+	}
+	,clearCompleted: function() {
+		this.allItems = this.allItems.filter(function(_) {
+			return !_.completed;
+		});
 		this.save();
 		this.refresh();
 	}
@@ -467,16 +475,19 @@ ToDoController.prototype = {
 			break;
 		case 1:
 			this.filteredItems = this.allItems.filter(function(_) {
-				return _.completed;
+				return !_.completed;
 			});
 			break;
 		case 2:
 			this.filteredItems = this.allItems.filter(function(_1) {
-				return !_1.completed;
+				return _1.completed;
 			});
 			break;
 		}
-		this.length = this.filteredItems.length;
+		this.countActive = this.allItems.filter(function(_2) {
+			return !_2.completed;
+		}).length;
+		this.countTotal = this.allItems.length;
 		this.onUpdate();
 	}
 	,save: function() {
@@ -498,116 +509,158 @@ ToDoFilter.Active.__enum__ = ToDoFilter;
 ToDoFilter.Completed = ["Completed",2];
 ToDoFilter.Completed.toString = $estr;
 ToDoFilter.Completed.__enum__ = ToDoFilter;
-var ToDoFooter = function(state) {
-	doom_Component.call(this,state);
+var ToDoFooter = function(prop,state) {
+	doom_PropertiesComponent.call(this,prop,state);
 };
 ToDoFooter.__name__ = ["ToDoFooter"];
-ToDoFooter.__super__ = doom_Component;
-ToDoFooter.prototype = $extend(doom_Component.prototype,{
+ToDoFooter.__super__ = doom_PropertiesComponent;
+ToDoFooter.prototype = $extend(doom_PropertiesComponent.prototype,{
 	render: function() {
-		return doom_Html.FOOTER((function($this) {
+		var footerContent = [doom_Html.SPAN((function($this) {
 			var $r;
 			var _g = new haxe_ds_StringMap();
 			{
-				var value = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("footer");
+				var value = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("todo-count");
 				if(__map_reserved["class"] != null) _g.setReserved("class",value); else _g.h["class"] = value;
 			}
 			$r = _g;
 			return $r;
-		}(this)),[doom_Html.SPAN((function($this) {
+		}(this)),this.getItemsLeftLabel(),null),doom_Html.UL((function($this) {
 			var $r;
 			var _g1 = new haxe_ds_StringMap();
 			{
-				var value1 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("todo-count");
+				var value1 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("filters");
 				if(__map_reserved["class"] != null) _g1.setReserved("class",value1); else _g1.h["class"] = value1;
 			}
 			$r = _g1;
 			return $r;
-		}(this)),this.getItemsLeftLabel(),null),doom_Html.UL((function($this) {
-			var $r;
-			var _g2 = new haxe_ds_StringMap();
-			{
-				var value2 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("filters");
-				if(__map_reserved["class"] != null) _g2.setReserved("class",value2); else _g2.h["class"] = value2;
-			}
-			$r = _g2;
-			return $r;
 		}(this)),[doom_Html.LI(null,null,doom_Html.A((function($this) {
 			var $r;
-			var _g8 = new haxe_ds_StringMap();
+			var _g7 = new haxe_ds_StringMap();
 			{
 				var value3 = doom__$AttributeValue_AttributeValue_$Impl_$.fromMap((function($this) {
 					var $r;
-					var _g7 = new haxe_ds_StringMap();
-					if(__map_reserved.selected != null) _g7.setReserved("selected",true); else _g7.h["selected"] = true;
-					$r = _g7;
+					var _g6 = new haxe_ds_StringMap();
+					{
+						var value2 = $this.isFilter(ToDoFilter.All);
+						if(__map_reserved.selected != null) _g6.setReserved("selected",value2); else _g6.h["selected"] = value2;
+					}
+					$r = _g6;
 					return $r;
 				}($this)));
-				if(__map_reserved["class"] != null) _g8.setReserved("class",value3); else _g8.h["class"] = value3;
+				if(__map_reserved["class"] != null) _g7.setReserved("class",value3); else _g7.h["class"] = value3;
 			}
 			{
 				var value4 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("#");
-				if(__map_reserved.href != null) _g8.setReserved("href",value4); else _g8.h["href"] = value4;
+				if(__map_reserved.href != null) _g7.setReserved("href",value4); else _g7.h["href"] = value4;
 			}
-			$r = _g8;
+			{
+				var value5 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler((function(f,a1) {
+					return function() {
+						f(a1);
+					};
+				})($bind($this,$this.handleClickFilter),ToDoFilter.All));
+				if(__map_reserved.click != null) _g7.setReserved("click",value5); else _g7.h["click"] = value5;
+			}
+			$r = _g7;
 			return $r;
 		}(this)),null,doom_NodeImpl.Text("All"))),doom_Html.LI(null,null,doom_Html.A((function($this) {
 			var $r;
-			var _g14 = new haxe_ds_StringMap();
-			{
-				var value5 = doom__$AttributeValue_AttributeValue_$Impl_$.fromMap((function($this) {
-					var $r;
-					var _g13 = new haxe_ds_StringMap();
-					if(__map_reserved.selected != null) _g13.setReserved("selected",false); else _g13.h["selected"] = false;
-					$r = _g13;
-					return $r;
-				}($this)));
-				if(__map_reserved["class"] != null) _g14.setReserved("class",value5); else _g14.h["class"] = value5;
-			}
-			{
-				var value6 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("#/active");
-				if(__map_reserved.href != null) _g14.setReserved("href",value6); else _g14.h["href"] = value6;
-			}
-			$r = _g14;
-			return $r;
-		}(this)),null,doom_NodeImpl.Text("Active"))),doom_Html.LI(null,null,doom_Html.A((function($this) {
-			var $r;
-			var _g20 = new haxe_ds_StringMap();
+			var _g13 = new haxe_ds_StringMap();
 			{
 				var value7 = doom__$AttributeValue_AttributeValue_$Impl_$.fromMap((function($this) {
 					var $r;
-					var _g19 = new haxe_ds_StringMap();
-					if(__map_reserved.selected != null) _g19.setReserved("selected",false); else _g19.h["selected"] = false;
-					$r = _g19;
+					var _g12 = new haxe_ds_StringMap();
+					{
+						var value6 = $this.isFilter(ToDoFilter.Active);
+						if(__map_reserved.selected != null) _g12.setReserved("selected",value6); else _g12.h["selected"] = value6;
+					}
+					$r = _g12;
 					return $r;
 				}($this)));
-				if(__map_reserved["class"] != null) _g20.setReserved("class",value7); else _g20.h["class"] = value7;
+				if(__map_reserved["class"] != null) _g13.setReserved("class",value7); else _g13.h["class"] = value7;
 			}
 			{
-				var value8 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("#/completed");
-				if(__map_reserved.href != null) _g20.setReserved("href",value8); else _g20.h["href"] = value8;
+				var value8 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("#/active");
+				if(__map_reserved.href != null) _g13.setReserved("href",value8); else _g13.h["href"] = value8;
+			}
+			{
+				var value9 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler((function(f1,a11) {
+					return function() {
+						f1(a11);
+					};
+				})($bind($this,$this.handleClickFilter),ToDoFilter.Active));
+				if(__map_reserved.click != null) _g13.setReserved("click",value9); else _g13.h["click"] = value9;
+			}
+			$r = _g13;
+			return $r;
+		}(this)),null,doom_NodeImpl.Text("Active"))),doom_Html.LI(null,null,doom_Html.A((function($this) {
+			var $r;
+			var _g19 = new haxe_ds_StringMap();
+			{
+				var value11 = doom__$AttributeValue_AttributeValue_$Impl_$.fromMap((function($this) {
+					var $r;
+					var _g18 = new haxe_ds_StringMap();
+					{
+						var value10 = $this.isFilter(ToDoFilter.Completed);
+						if(__map_reserved.selected != null) _g18.setReserved("selected",value10); else _g18.h["selected"] = value10;
+					}
+					$r = _g18;
+					return $r;
+				}($this)));
+				if(__map_reserved["class"] != null) _g19.setReserved("class",value11); else _g19.h["class"] = value11;
+			}
+			{
+				var value12 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("#/completed");
+				if(__map_reserved.href != null) _g19.setReserved("href",value12); else _g19.h["href"] = value12;
+			}
+			{
+				var value13 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler((function(f2,a12) {
+					return function() {
+						f2(a12);
+					};
+				})($bind($this,$this.handleClickFilter),ToDoFilter.Completed));
+				if(__map_reserved.click != null) _g19.setReserved("click",value13); else _g19.h["click"] = value13;
+			}
+			$r = _g19;
+			return $r;
+		}(this)),null,doom_NodeImpl.Text("Completed")))],null)];
+		if(this.state.hasCompleted) footerContent.push(doom_Html.BUTTON((function($this) {
+			var $r;
+			var _g20 = new haxe_ds_StringMap();
+			{
+				var value14 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("clear-completed");
+				if(__map_reserved["class"] != null) _g20.setReserved("class",value14); else _g20.h["class"] = value14;
+			}
+			{
+				var value15 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler($bind($this,$this.handleClear));
+				if(__map_reserved.click != null) _g20.setReserved("click",value15); else _g20.h["click"] = value15;
 			}
 			$r = _g20;
 			return $r;
-		}(this)),null,doom_NodeImpl.Text("Completed")))],null),doom_Html.BUTTON((function($this) {
+		}(this)),null,doom_NodeImpl.Text("Clear completed")));
+		return doom_Html.FOOTER((function($this) {
 			var $r;
-			var _g21 = new haxe_ds_StringMap();
+			var _g201 = new haxe_ds_StringMap();
 			{
-				var value9 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("clear-completed");
-				if(__map_reserved["class"] != null) _g21.setReserved("class",value9); else _g21.h["class"] = value9;
+				var value16 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("footer");
+				if(__map_reserved["class"] != null) _g201.setReserved("class",value16); else _g201.h["class"] = value16;
 			}
-			$r = _g21;
+			$r = _g201;
 			return $r;
-		}(this)),null,doom_NodeImpl.Text("Clear completed"))],null);
+		}(this)),footerContent,null);
 	}
-	,getItemsLeft: function() {
-		return this.state.items.filter(function(_) {
-			return !_.completed;
-		}).length;
+	,handleClear: function() {
+		this.prop.clearCompleted();
+	}
+	,handleClickFilter: function(filter) {
+		this.prop.setFilter(filter);
+	}
+	,isFilter: function(filter) {
+		return Type.enumEq(this.state.filter,filter);
 	}
 	,getItemsLeftLabel: function() {
-		var left = this.getItemsLeft();
-		if(left == 1) return [doom_Html.STRONG(null,null,doom_NodeImpl.Text("1")),doom_NodeImpl.Text(" item left")]; else return [doom_Html.STRONG(null,null,doom_NodeImpl.Text("" + left)),doom_NodeImpl.Text(" items left")];
+		if(this.state.countActive == 1) return [doom_Html.STRONG(null,null,doom_NodeImpl.Text("1")),doom_NodeImpl.Text(" item left")]; else return [doom_Html.STRONG(null,null,doom_NodeImpl.Text("" + this.state.countActive)),doom_NodeImpl.Text(" items left")];
 	}
 	,__class__: ToDoFooter
 });
@@ -807,6 +860,7 @@ ToDoItem.prototype = $extend(doom_PropertiesComponent.prototype,{
 	,handleDblClick: function() {
 		this.state.editing = true;
 		this.update(this.state);
+		this.getInput().select();
 	}
 	,handleBlur: function() {
 		if(!this.state.editing) return;
@@ -822,10 +876,11 @@ ToDoItem.prototype = $extend(doom_PropertiesComponent.prototype,{
 		if(e.which != 13) return;
 		this.handleBlur();
 	}
+	,getInput: function() {
+		return this.element.querySelector("input.edit");
+	}
 	,getInputValue: function() {
-		var el = this.element.querySelector("input.edit");
-		var value = el.value;
-		return value;
+		return this.getInput().value;
 	}
 	,__class__: ToDoItem
 });
@@ -857,13 +912,7 @@ ToDoList.prototype = $extend(doom_PropertiesComponent.prototype,{
 				if(__map_reserved.type != null) _g1.setReserved("type",value2); else _g1.h["type"] = value2;
 			}
 			{
-				var value3 = doom__$AttributeValue_AttributeValue_$Impl_$.fromBool(((function(_e) {
-					return function(predicate) {
-						return thx_Arrays.all(_e,predicate);
-					};
-				})($this.state))(function(_) {
-					return _.completed;
-				}));
+				var value3 = doom__$AttributeValue_AttributeValue_$Impl_$.fromBool($this.state.allCompleted);
 				if(__map_reserved.checked != null) _g1.setReserved("checked",value3); else _g1.h["checked"] = value3;
 			}
 			{
@@ -893,7 +942,7 @@ ToDoList.prototype = $extend(doom_PropertiesComponent.prototype,{
 		}(this)),(function($this) {
 			var $r;
 			var _g4 = [];
-			var $it0 = HxOverrides.iter($this.state);
+			var $it0 = HxOverrides.iter($this.state.items);
 			while( $it0.hasNext() ) {
 				var item = $it0.next();
 				_g4.push((function($this) {
@@ -1016,6 +1065,25 @@ Type["typeof"] = function(v) {
 	default:
 		return ValueType.TUnknown;
 	}
+};
+Type.enumEq = function(a,b) {
+	if(a == b) return true;
+	try {
+		if(a[0] != b[0]) return false;
+		var _g1 = 2;
+		var _g = a.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			if(!Type.enumEq(a[i],b[i])) return false;
+		}
+		var e = a.__enum__;
+		if(e != b.__enum__ || e == null) return false;
+	} catch( e1 ) {
+		haxe_CallStack.lastException = e1;
+		if (e1 instanceof js__$Boot_HaxeError) e1 = e1.val;
+		return false;
+	}
+	return true;
 };
 var Xml = function(nodeType) {
 	this.nodeType = nodeType;

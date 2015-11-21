@@ -2,7 +2,7 @@ import doom.PropertiesComponent;
 import doom.Html.*;
 import thx.ReadonlyArray;
 
-class ToDoApp extends PropertiesComponent<ToDoController, ReadonlyArray<ToDoItemModel>> {
+class ToDoApp extends PropertiesComponent<ToDoController, ToDoAppState> {
   override function render() {
     return DIV([
       new ToDoHeader(prop),
@@ -11,22 +11,37 @@ class ToDoApp extends PropertiesComponent<ToDoController, ReadonlyArray<ToDoItem
   }
 }
 
-class ToDoBody extends PropertiesComponent<ToDoController, ReadonlyArray<ToDoItemModel>> {
-  public function new(prop : ToDoController, state : ReadonlyArray<ToDoItemModel>) {
+class ToDoBody extends PropertiesComponent<ToDoController, ToDoAppState> {
+  public function new(prop : ToDoController, state : ToDoAppState) {
     super(prop, state);
-    prop.onUpdate = function() update(prop.filteredItems);
+    prop.onUpdate = function() update({
+      items : prop.filteredItems,
+      countActive : prop.countActive,
+      countTotal : prop.countTotal
+    });
   }
 
   override function render() {
-    return if(state.length == 0) {
+    return if(state.countTotal == 0) {
       dummy("nothing to do yet");
     } else {
       DIV([
-        new ToDoList(prop, state),
-        new ToDoFooter({
-          items : state
+        new ToDoList(prop, {
+          items : state.items,
+          allCompleted : state.countActive == 0
+        }),
+        new ToDoFooter(prop, {
+          countActive : state.countActive,
+          filter : prop.filter,
+          hasCompleted : state.countTotal - state.countActive > 0
         })
       ]);
     };
   }
+}
+
+typedef ToDoAppState = {
+  items : ReadonlyArray<ToDoItemModel>,
+  countActive : Int,
+  countTotal : Int
 }
