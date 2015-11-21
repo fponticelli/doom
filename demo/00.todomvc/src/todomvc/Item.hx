@@ -1,3 +1,5 @@
+package todomvc;
+
 import doom.PropertiesComponent;
 import Doom.*;
 using thx.Strings;

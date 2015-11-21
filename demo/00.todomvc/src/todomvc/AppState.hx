@@ -1,3 +1,5 @@
+package todomvc;
+
 import thx.ReadonlyArray;
 
 typedef AppState = {

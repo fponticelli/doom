@@ -1,3 +1,5 @@
+package todomvc;
+
 import Doom.*;
 import doom.PropertiesComponent;
 import thx.ReadonlyArray;

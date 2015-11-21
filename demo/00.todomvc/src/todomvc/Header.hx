@@ -1,3 +1,5 @@
+package todomvc;
+
 import doom.PropertiesStatelessComponent;
 import Doom.*;
 import dots.Keys;

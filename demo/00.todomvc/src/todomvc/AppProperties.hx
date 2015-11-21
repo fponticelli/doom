@@ -1,3 +1,5 @@
+package todomvc;
+
 import thx.ReadonlyArray;
 using thx.Arrays;
 using thx.Functions;
