@@ -32,9 +32,6 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
   inline public static function raw(content : String) : Node
     return Raw(content);
 
-  inline public static function empty() : Node
-    return Empty;
-
   @:from
   inline public static function comp(comp : IComponent) : Node
     return ComponentNode(comp);
@@ -65,9 +62,6 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
         [AddComment(t)];
       case ComponentNode(comp):
         diffAdd(comp.node);
-      case Empty:
-        // do nothing
-        [];
     };
 
   public static function diffNodes(a : Array<Node>, b : Array<Node>) : Array<Patch> {
@@ -103,7 +97,7 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
         [ReplaceWithElement(n2, a2, c2)];
       case [Text(t1), Text(t2)] | [Comment(t1), Comment(t2)] if(t1 != t2):
         [ContentChanged(t2)];
-      case [Text(_), Text(_)] | [Comment(_), Comment(_)] | [Empty, Empty]:
+      case [Text(_), Text(_)] | [Comment(_), Comment(_)]:
         [];
       case [_, Text(t)]:
         [ReplaceWithText(t)];
@@ -111,8 +105,6 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
         [ReplaceWithRaw(t)];
       case [_, Comment(t)]:
         [ReplaceWithComment(t)];
-      case [_, Empty]:
-        [Patch.Remove];
     };
   }
 
@@ -128,6 +120,5 @@ enum NodeImpl {
   Raw(text : String);
   Text(text : String);
   Comment(text : String);
-  Empty;
   ComponentNode(comp : IComponent);
 }
