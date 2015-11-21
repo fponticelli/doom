@@ -14,7 +14,6 @@ class XmlNode {
     case Raw(text): Xml.parse(text);
     case Comment(text): Xml.createComment(text);
     case ComponentNode(comp): toXml(comp.node);
-    case Empty: null;
   };
 
   static function createElement(name : String, attributes : Map<String, AttributeValue>, children : Array<Node>) {
@@ -108,7 +107,6 @@ class XmlNode {
     case Raw(text): text;
     case Comment(text): '<!--$text-->';
     case ComponentNode(comp): toString(comp.node);
-    case Empty: "";
   };
 
   public static function attributesToString(attributes : Map<String, AttributeValue>) {

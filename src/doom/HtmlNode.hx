@@ -24,8 +24,6 @@ class HtmlNode {
     case ComponentNode(comp):
       comp.init();
       comp.element;
-    case Empty:
-      null;
   }
 
   static function createElement(name : String, attributes : Map<String, AttributeValue>, children : Array<Node>) {
