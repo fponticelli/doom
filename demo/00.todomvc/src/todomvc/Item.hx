@@ -36,8 +36,8 @@ class Item extends PropertiesComponent<ItemProperties, ItemState> {
       ])
     ]);
 
-  function handleChecked(el : InputElement) {
-    state.item.completed = el.checked;
+  function handleChecked(checked : Bool) {
+    state.item.completed = checked;
     prop.refresh();
   }
 

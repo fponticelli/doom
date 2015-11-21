@@ -16,16 +16,17 @@ class Header extends PropertiesStatelessComponent<AddItem> {
           "class"       => "new-todo",
           "placeholder" => "What needs to be done?",
           "autofocus"   => true,
-          "keyup"       => handleKeys
+          "keydown"     => handleKeys
         ])
       ]);
 
   function handleKeys(e : KeyboardEvent) {
-    e.preventDefault();
-    if(Keys.ENTER != e.which) return;
-    var value = getInputValueAndEmpty();
-    if(value.isEmpty()) return;
-    prop.add(value);
+    if(Keys.ENTER == e.which) {
+      e.preventDefault();
+      var value = getInputValueAndEmpty();
+      if(value.isEmpty()) return;
+      prop.add(value);
+    }
   }
 
   function getInputValueAndEmpty() {

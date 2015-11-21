@@ -921,13 +921,35 @@ doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler = function(f) {
 doom__$AttributeValue_AttributeValue_$Impl_$.fromEventHandler = function(f) {
 	return doom_AttributeValueImpl.EventAttribute(f);
 };
-doom__$AttributeValue_AttributeValue_$Impl_$.fromKeyboardEventHandler = function(f) {
-	return doom_AttributeValueImpl.EventAttribute(f);
-};
-doom__$AttributeValue_AttributeValue_$Impl_$.fromInputElementHandler = function(f) {
+doom__$AttributeValue_AttributeValue_$Impl_$.fromElementHandler = function(f) {
 	return doom_AttributeValueImpl.EventAttribute(function(e) {
+		e.preventDefault();
 		var input = e.target;
 		f(input);
+	});
+};
+doom__$AttributeValue_AttributeValue_$Impl_$.fromStringValueHandler = function(f) {
+	return doom_AttributeValueImpl.EventAttribute(function(e) {
+		e.preventDefault();
+		var value = dots_Dom.getValue(e.target);
+		f(value);
+	});
+};
+doom__$AttributeValue_AttributeValue_$Impl_$.fromBoolValueHandler = function(f) {
+	return doom_AttributeValueImpl.EventAttribute(function(e) {
+		e.preventDefault();
+		var value = e.target.checked;
+		f(value);
+	});
+};
+doom__$AttributeValue_AttributeValue_$Impl_$.fromIntValueHandler = function(f) {
+	return doom__$AttributeValue_AttributeValue_$Impl_$.fromStringValueHandler(function(s) {
+		if(thx_Ints.canParse(s)) f(thx_Ints.parse(s));
+	});
+};
+doom__$AttributeValue_AttributeValue_$Impl_$.fromFloatValueHandler = function(f) {
+	return doom__$AttributeValue_AttributeValue_$Impl_$.fromStringValueHandler(function(s) {
+		if(thx_Floats.canParse(s)) f(thx_Floats.parse(s));
 	});
 };
 doom__$AttributeValue_AttributeValue_$Impl_$.equalsTo = function(this1,that) {
@@ -2025,6 +2047,34 @@ doom_XmlNode.attributesToString = function(attributes) {
 		}
 	}
 	return buf;
+};
+var dots_Dom = function() { };
+dots_Dom.__name__ = ["dots","Dom"];
+dots_Dom.addCss = function(css,container) {
+	if(null == container) container = window.document.head;
+	var style;
+	var _this = window.document;
+	style = _this.createElement("style");
+	style.type = "text/css";
+	style.appendChild(window.document.createTextNode(css));
+	container.appendChild(style);
+};
+dots_Dom.getValue = function(el) {
+	var _g = el.nodeName;
+	switch(_g) {
+	case "input":
+		var input = el;
+		return input.value;
+	case "textarea":
+		var textarea = el;
+		return textarea.value;
+	case "select":
+		var select = el;
+		var option = select.options.item(select.selectedIndex);
+		return option.value;
+	default:
+		return el.innerHTML;
+	}
 };
 var dots_Html = function() { };
 dots_Html.__name__ = ["dots","Html"];
@@ -6996,19 +7046,20 @@ todomvc_Header.prototype = $extend(doom_PropertiesStatelessComponent.prototype,{
 				if(__map_reserved.autofocus != null) _g1.setReserved("autofocus",value3); else _g1.h["autofocus"] = value3;
 			}
 			{
-				var value4 = doom__$AttributeValue_AttributeValue_$Impl_$.fromKeyboardEventHandler($bind($this,$this.handleKeys));
-				if(__map_reserved.keyup != null) _g1.setReserved("keyup",value4); else _g1.h["keyup"] = value4;
+				var value4 = doom__$AttributeValue_AttributeValue_$Impl_$.fromEventHandler($bind($this,$this.handleKeys));
+				if(__map_reserved.keydown != null) _g1.setReserved("keydown",value4); else _g1.h["keydown"] = value4;
 			}
 			$r = _g1;
 			return $r;
 		}(this)))],null);
 	}
 	,handleKeys: function(e) {
-		e.preventDefault();
-		if(13 != e.which) return;
-		var value = this.getInputValueAndEmpty();
-		if(thx_Strings.isEmpty(value)) return;
-		this.prop.add(value);
+		if(13 == e.which) {
+			e.preventDefault();
+			var value = this.getInputValueAndEmpty();
+			if(thx_Strings.isEmpty(value)) return;
+			this.prop.add(value);
+		}
 	}
 	,getInputValueAndEmpty: function() {
 		var el = this.element.querySelector("input");
@@ -7070,7 +7121,7 @@ todomvc_Item.prototype = $extend(doom_PropertiesComponent.prototype,{
 				if(__map_reserved.checked != null) _g3.setReserved("checked",value5); else _g3.h["checked"] = value5;
 			}
 			{
-				var value6 = doom__$AttributeValue_AttributeValue_$Impl_$.fromInputElementHandler($bind($this,$this.handleChecked));
+				var value6 = doom__$AttributeValue_AttributeValue_$Impl_$.fromBoolValueHandler($bind($this,$this.handleChecked));
 				if(__map_reserved.change != null) _g3.setReserved("change",value6); else _g3.h["change"] = value6;
 			}
 			$r = _g3;
@@ -7104,15 +7155,15 @@ todomvc_Item.prototype = $extend(doom_PropertiesComponent.prototype,{
 				if(__map_reserved.blur != null) _g5.setReserved("blur",value11); else _g5.h["blur"] = value11;
 			}
 			{
-				var value12 = doom__$AttributeValue_AttributeValue_$Impl_$.fromKeyboardEventHandler($bind($this,$this.handleKeydown));
+				var value12 = doom__$AttributeValue_AttributeValue_$Impl_$.fromEventHandler($bind($this,$this.handleKeydown));
 				if(__map_reserved.keyup != null) _g5.setReserved("keyup",value12); else _g5.h["keyup"] = value12;
 			}
 			$r = _g5;
 			return $r;
 		}(this)))],null);
 	}
-	,handleChecked: function(el) {
-		this.state.item.completed = el.checked;
+	,handleChecked: function(checked) {
+		this.state.item.completed = checked;
 		this.prop.refresh();
 	}
 	,handleRemove: function() {

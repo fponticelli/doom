@@ -15,7 +15,8 @@ class List extends PropertiesComponent<AppProperties, ListState> {
       ]),
       LABEL(["for" => "toggle-all"], "Mark all as complete"),
       UL(["class" => "todo-list"], [
-        for(item in state.items) new Item(prop, { item : item, editing : false })
+        for(item in state.items)
+          new Item(prop, { item : item, editing : false })
       ])
     ]);
 }

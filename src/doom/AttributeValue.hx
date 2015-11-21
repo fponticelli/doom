@@ -52,14 +52,12 @@ abstract AttributeValue(AttributeValueImpl) from AttributeValueImpl to Attribute
 
   @:from static public function fromIntValueHandler(f : Int -> Void) : AttributeValue
     return fromStringValueHandler(function(s : String) {
-      if(Ints.canParse(s))
-        f(Ints.parse(s));
+      if(Ints.canParse(s)) f(Ints.parse(s));
     });
 
   @:from static public function fromFloatValueHandler(f : Float -> Void) : AttributeValue
     return fromStringValueHandler(function(s : String) {
-      if(Floats.canParse(s))
-        f(Floats.parse(s));
+      if(Floats.canParse(s)) f(Floats.parse(s));
     });
 
   @:op(A==B)
