@@ -29,7 +29,7 @@ class ToDoHeader extends PropertiesStatelessComponent<AddToDoItem> {
 
   function getInputValueAndEmpty() {
     var el : InputElement = cast element.querySelector("input"),
-        value = el.value;
+        value = el.value.trim();
     el.value = "";
     return value;
   }

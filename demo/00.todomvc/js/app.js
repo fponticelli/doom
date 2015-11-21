@@ -751,7 +751,7 @@ ToDoHeader.prototype = $extend(doom_PropertiesStatelessComponent.prototype,{
 	}
 	,getInputValueAndEmpty: function() {
 		var el = this.element.querySelector("input");
-		var value = el.value;
+		var value = StringTools.trim(el.value);
 		el.value = "";
 		return value;
 	}
@@ -865,7 +865,7 @@ ToDoItem.prototype = $extend(doom_PropertiesComponent.prototype,{
 	,handleBlur: function() {
 		if(!this.state.editing) return;
 		this.state.editing = false;
-		var value = this.getInputValue();
+		var value = this.getInputValueAndTrim();
 		if(thx_Strings.isEmpty(value)) this.handleRemove(); else {
 			this.state.item.label = value;
 			this.prop.save();
@@ -879,8 +879,9 @@ ToDoItem.prototype = $extend(doom_PropertiesComponent.prototype,{
 	,getInput: function() {
 		return this.element.querySelector("input.edit");
 	}
-	,getInputValue: function() {
-		return this.getInput().value;
+	,getInputValueAndTrim: function() {
+		var input = this.getInput();
+		return input.value = StringTools.trim(input.value);
 	}
 	,__class__: ToDoItem
 });

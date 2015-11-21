@@ -52,7 +52,7 @@ class ToDoItem extends PropertiesComponent<ItemController, ItemState> {
   function handleBlur() {
     if(!state.editing) return;
     state.editing = false;
-    var value = getInputValue();
+    var value = getInputValueAndTrim();
     if(value.isEmpty()) {
       handleRemove();
     } else {
@@ -71,8 +71,10 @@ class ToDoItem extends PropertiesComponent<ItemController, ItemState> {
   function getInput() : js.html.InputElement
     return cast element.querySelector("input.edit");
 
-  function getInputValue()
-    return getInput().value;
+  function getInputValueAndTrim() {
+    var input = getInput();
+    return input.value = input.value.trim();
+  }
 }
 
 typedef ItemController = {
