@@ -5,3 +5,4 @@
 -lib thx.core
 -main Main
 -D html
+-debug

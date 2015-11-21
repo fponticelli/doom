@@ -24,7 +24,6 @@ class ToDoController {
   }
 
   public function add(label : String) {
-    trace("add", label);
     allItems.push({ label : label, completed : false});
     save();
     update();

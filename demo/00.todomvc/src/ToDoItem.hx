@@ -1,5 +1,5 @@
 import doom.PropertiesComponent;
-import doom.HTML.*;
+import doom.Html.*;
 
 class ToDoItem extends PropertiesComponent<RemoveItemController, ToDoItemModel> {
   override function render() {

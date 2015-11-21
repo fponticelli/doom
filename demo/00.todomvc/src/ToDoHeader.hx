@@ -1,5 +1,5 @@
 import doom.PropertiesStatelessComponent;
-import doom.HTML.*;
+import doom.Html.*;
 import dots.Keys;
 import js.html.*;
 using thx.Strings;
@@ -22,16 +22,16 @@ class ToDoHeader extends PropertiesStatelessComponent<AddToDoItem> {
   function handleKeys(e : KeyboardEvent) {
     e.preventDefault();
     if(Keys.ENTER != e.which) return;
-    var value = getInputValue();
-    trace("input", value);
+    var value = getInputValueAndEmpty();
     if(value.isEmpty()) return;
     prop.add(value);
   }
 
-  function getInputValue() {
-    var el : InputElement = cast element.querySelector("input");
-    untyped __js__("console.log")(element);
-    return el.value;
+  function getInputValueAndEmpty() {
+    var el : InputElement = cast element.querySelector("input"),
+        value = el.value;
+    el.value = "";
+    return value;
   }
 }
 

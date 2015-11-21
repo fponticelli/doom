@@ -1,5 +1,5 @@
 import doom.PropertiesComponent;
-import doom.HTML.*;
+import doom.Html.*;
 import thx.ReadonlyArray;
 
 class ToDoList extends PropertiesComponent<ToDoController, ReadonlyArray<ToDoItemModel>> {

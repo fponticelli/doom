@@ -1,5 +1,5 @@
 import doom.StatelessComponent;
-import doom.HTML.*;
+import doom.Html.*;
 
 class ToDoFooter extends StatelessComponent {
   override function render() {

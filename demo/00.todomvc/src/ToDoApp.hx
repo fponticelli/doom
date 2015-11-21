@@ -1,5 +1,5 @@
 import doom.PropertiesComponent;
-import doom.HTML.*;
+import doom.Html.*;
 import thx.ReadonlyArray;
 
 class ToDoApp extends PropertiesComponent<ToDoController, ReadonlyArray<ToDoItemModel>> {
@@ -19,7 +19,7 @@ class ToDoBody extends PropertiesComponent<ToDoController, ReadonlyArray<ToDoIte
 
   override function render() {
     return if(state.length == 0) {
-      empty();
+      dummy("nothing to do yet");
     } else {
       DIV([
         new ToDoList(prop, state),
