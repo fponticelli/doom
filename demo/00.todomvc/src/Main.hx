@@ -7,10 +7,10 @@ class Main {
     var prop = new AppProperties();
     Doom.mount(
       new App(prop, {
-        items       : prop.filteredItems,
-        countActive : prop.countActive,
-        countTotal  : prop.countTotal,
-        filter      : prop.filter
+        items     : prop.filteredItems,
+        remaining : prop.remaining,
+        complete  : prop.complete,
+        filter    : prop.filter
       }),
       Query.first("section.todoapp")
     );

@@ -546,7 +546,7 @@ var Main = function() { };
 Main.__name__ = ["Main"];
 Main.main = function() {
 	var prop = new todomvc_AppProperties();
-	Doom.mount(new todomvc_App(prop,{ items : prop.filteredItems, countActive : prop.countActive, countTotal : prop.countTotal, filter : prop.filter}),dots_Query.first("section.todoapp"));
+	Doom.mount(new todomvc_App(prop,{ items : prop.filteredItems, remaining : prop.remaining, complete : prop.complete, filter : prop.filter}),dots_Query.first("section.todoapp"));
 };
 Math.__name__ = ["Math"];
 var Reflect = function() { };
@@ -6748,8 +6748,8 @@ var todomvc_AppProperties = function() {
 };
 todomvc_AppProperties.__name__ = ["todomvc","AppProperties"];
 todomvc_AppProperties.prototype = {
-	countActive: null
-	,countTotal: null
+	remaining: null
+	,complete: null
 	,filter: null
 	,filteredItems: null
 	,onUpdate: null
@@ -6809,10 +6809,10 @@ todomvc_AppProperties.prototype = {
 			});
 			break;
 		}
-		this.countActive = this.allItems.filter(function(_2) {
+		this.remaining = this.allItems.filter(function(_2) {
 			return !_2.completed;
 		}).length;
-		this.countTotal = this.allItems.length;
+		this.complete = this.allItems.length;
 		this.onUpdate();
 	}
 	,save: function() {
@@ -6828,21 +6828,21 @@ var todomvc_Body = function(prop,state) {
 	var _g = this;
 	doom_PropertiesComponent.call(this,prop,state);
 	prop.onUpdate = function() {
-		_g.update({ items : prop.filteredItems, countActive : prop.countActive, countTotal : prop.countTotal, filter : prop.filter});
+		_g.update({ items : prop.filteredItems, remaining : prop.remaining, complete : prop.complete, filter : prop.filter});
 	};
 };
 todomvc_Body.__name__ = ["todomvc","Body"];
 todomvc_Body.__super__ = doom_PropertiesComponent;
 todomvc_Body.prototype = $extend(doom_PropertiesComponent.prototype,{
 	render: function() {
-		if(this.state.countTotal == 0) return Doom.dummy("nothing to do yet"); else return Doom.DIV(null,[(function($this) {
+		if(this.state.complete == 0) return Doom.dummy("nothing to do yet"); else return Doom.DIV(null,[(function($this) {
 			var $r;
-			var comp = new todomvc_List($this.prop,{ items : $this.state.items, allCompleted : $this.state.countActive == 0});
+			var comp = new todomvc_List($this.prop,{ items : $this.state.items, allCompleted : $this.state.remaining == 0});
 			$r = doom_NodeImpl.ComponentNode(comp);
 			return $r;
 		}(this)),(function($this) {
 			var $r;
-			var comp1 = new todomvc_Footer($this.prop,{ countActive : $this.state.countActive, filter : $this.state.filter, hasCompleted : $this.state.countTotal - $this.state.countActive > 0});
+			var comp1 = new todomvc_Footer($this.prop,{ remaining : $this.state.remaining, filter : $this.state.filter, hasCompleted : $this.state.complete - $this.state.remaining > 0});
 			$r = doom_NodeImpl.ComponentNode(comp1);
 			return $r;
 		}(this))],null);
@@ -7010,7 +7010,7 @@ todomvc_Footer.prototype = $extend(doom_PropertiesComponent.prototype,{
 		return Type.enumEq(this.state.filter,filter);
 	}
 	,getItemsLeftLabel: function() {
-		if(this.state.countActive == 1) return [Doom.STRONG(null,null,doom_NodeImpl.Text("1")),doom_NodeImpl.Text(" item left")]; else return [Doom.STRONG(null,null,doom_NodeImpl.Text("" + this.state.countActive)),doom_NodeImpl.Text(" items left")];
+		if(this.state.remaining == 1) return [Doom.STRONG(null,null,doom_NodeImpl.Text("1")),doom_NodeImpl.Text(" item left")]; else return [Doom.STRONG(null,null,doom_NodeImpl.Text("" + this.state.remaining)),doom_NodeImpl.Text(" items left")];
 	}
 	,__class__: todomvc_Footer
 });

@@ -57,7 +57,7 @@ class Footer extends PropertiesComponent<FooterProp, FooterState> {
     return Type.enumEq(state.filter, filter);
 
   function getItemsLeftLabel() : Array<Node>
-    return state.countActive == 1 ? [STRONG("1"), " item left"] : [STRONG('${state.countActive}'), " items left"];
+    return state.remaining == 1 ? [STRONG("1"), " item left"] : [STRONG('${state.remaining}'), " items left"];
 }
 
 typedef FooterProp = {
@@ -66,7 +66,7 @@ typedef FooterProp = {
 }
 
 typedef FooterState = {
-  countActive : Int,
+  remaining : Int,
   filter : Filter,
   hasCompleted : Bool
 }

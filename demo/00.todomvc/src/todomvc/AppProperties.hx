@@ -10,8 +10,8 @@ using thx.Strings;
 class AppProperties {
   static inline var STORAGE_KEY : String = "TodoMVC-Doom";
 
-  public var countActive(default, null) : Int;
-  public var countTotal(default, null) : Int;
+  public var remaining(default, null) : Int;
+  public var complete(default, null) : Int;
   public var filter(default, null) : Filter;
   public var filteredItems(default, null) : ReadonlyArray<ItemData>;
   public var onUpdate : Void -> Void;
@@ -62,8 +62,8 @@ class AppProperties {
       case Completed:
         filteredItems = allItems.filter.fn(_.completed);
     }
-    countActive = allItems.filter.fn(!_.completed).length;
-    countTotal = allItems.length;
+    remaining = allItems.filter.fn(!_.completed).length;
+    complete = allItems.length;
     onUpdate();
   }
   public function save() {
