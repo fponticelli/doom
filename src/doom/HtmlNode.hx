@@ -20,7 +20,8 @@ class HtmlNode {
     case Raw(text):
       Html.parse(text);
     case Text(text): document.createTextNode(text);
-    case Comment(text): document.createComment(text);
+    case Comment(text):
+      createComment(text);
     case ComponentNode(comp):
       comp.init();
       comp.element;
@@ -48,6 +49,9 @@ class HtmlNode {
     }
     return el;
   }
+
+  public static function createComment(comment : String)
+    return document.createComment(comment);
 
   public static function applyPatches(patches : Array<Patch>, node : DomNode) {
     for(patch in patches)
@@ -77,7 +81,7 @@ class HtmlNode {
     case [AddRaw(text), DomNode.ELEMENT_NODE]:
       node.appendChild(Html.parse(text));
     case [AddComment(text), DomNode.ELEMENT_NODE]:
-      node.appendChild(document.createComment(text));
+      node.appendChild(createComment(text));
     case [AddElement(name, attributes, children), DomNode.ELEMENT_NODE]:
       var el = createElement(name, attributes, children);
       node.appendChild(el);
@@ -110,7 +114,7 @@ class HtmlNode {
       parent.replaceChild(document.createTextNode(text), node);
     case [ReplaceWithComment(text), _]:
       var parent = node.parentNode;
-      parent.replaceChild(Html.parse(text), node);
+      parent.replaceChild(createComment(text), node);
     case [ContentChanged(newcontent), DomNode.TEXT_NODE]
        | [ContentChanged(newcontent), DomNode.COMMENT_NODE]:
       node.nodeValue = newcontent;
