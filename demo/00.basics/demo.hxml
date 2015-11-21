@@ -1,6 +1,0 @@
--js bin/demo.js
--cp ../../src
--lib dots
--lib thx.core
--main Main
--D html
