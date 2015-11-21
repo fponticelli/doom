@@ -1,17 +1,17 @@
 import dots.Query;
 import todomvc.AppProperties;
-import todomvc.ToDoApp;
+import todomvc.App;
 
 class Main {
   static function main() {
     var prop = new AppProperties();
     Doom.mount(
-      new ToDoApp(prop, {
+      new App(prop, {
         items       : prop.filteredItems,
         countActive : prop.countActive,
         countTotal  : prop.countTotal
       }),
-      Query.first("section.todoapp")
+      Query.first("section.App")
     );
   }
 }

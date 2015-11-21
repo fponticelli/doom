@@ -1,13 +1,15 @@
 package todomvc;
 
+import haxe.Json;
+import js.Browser.*;
 import thx.ReadonlyArray;
 using thx.Arrays;
 using thx.Functions;
 using thx.Strings;
-import haxe.Json;
-import js.Browser.*;
 
 class AppProperties {
+  static inline var STORAGE_KEY : String = "TodoMVC-Doom";
+
   public var countActive(default, null) : Int;
   public var countTotal(default, null) : Int;
   public var filter(default, null) : Filter;
@@ -64,8 +66,6 @@ class AppProperties {
     countTotal = allItems.length;
     onUpdate();
   }
-
-  static inline var STORAGE_KEY : String = "TodoMVC-Doom";
   public function save() {
     window.localStorage.setItem(STORAGE_KEY, Json.stringify(allItems));
   }

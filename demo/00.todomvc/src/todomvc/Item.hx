@@ -1,10 +1,10 @@
 package todomvc;
 
-import doom.PropertiesComponent;
 import Doom.*;
-using thx.Strings;
+import doom.PropertiesComponent;
 import js.html.KeyboardEvent;
 import js.html.InputElement;
+using thx.Strings;
 
 class Item extends PropertiesComponent<ItemProperties, ItemState> {
   override function render() {

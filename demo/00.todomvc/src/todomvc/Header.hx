@@ -1,13 +1,13 @@
 package todomvc;
 
 import doom.PropertiesStatelessComponent;
-import Doom.*;
 import dots.Keys;
+import Doom.*;
 import js.html.*;
 using thx.Strings;
 
 class Header extends PropertiesStatelessComponent<AddItem> {
-  override function render() {
+  override function render()
     return HEADER([
         "class" => "header"
       ], [
@@ -19,7 +19,6 @@ class Header extends PropertiesStatelessComponent<AddItem> {
           "keyup"       => handleKeys
         ])
       ]);
-  }
 
   function handleKeys(e : KeyboardEvent) {
     e.preventDefault();

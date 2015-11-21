@@ -3,8 +3,6 @@ package todomvc;
 import doom.PropertiesComponent;
 import Doom.*;
 import doom.Node;
-import thx.ReadonlyArray;
-using thx.Functions;
 
 class Footer extends PropertiesComponent<FooterProp, FooterState> {
   override function render() {
@@ -49,20 +47,17 @@ class Footer extends PropertiesComponent<FooterProp, FooterState> {
     return FOOTER(["class" => "footer"], footerContent);
   }
 
-  function handleClear() {
+  function handleClear()
     prop.clearCompleted();
-  }
 
-  function handleClickFilter(filter : Filter) {
+  function handleClickFilter(filter : Filter)
     prop.setFilter(filter);
-  }
 
   function isFilter(filter : Filter)
     return Type.enumEq(state.filter, filter);
 
-  function getItemsLeftLabel() : Array<Node> {
+  function getItemsLeftLabel() : Array<Node>
     return state.countActive == 1 ? [STRONG("1"), " item left"] : [STRONG('${state.countActive}'), " items left"];
-  }
 }
 
 typedef FooterProp = {

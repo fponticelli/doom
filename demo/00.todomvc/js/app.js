@@ -546,7 +546,7 @@ var Main = function() { };
 Main.__name__ = ["Main"];
 Main.main = function() {
 	var prop = new todomvc_AppProperties();
-	Doom.mount(new todomvc_ToDoApp(prop,{ items : prop.filteredItems, countActive : prop.countActive, countTotal : prop.countTotal}),dots_Query.first("section.todoapp"));
+	Doom.mount(new todomvc_App(prop,{ items : prop.filteredItems, countActive : prop.countActive, countTotal : prop.countTotal}),dots_Query.first("section.App"));
 };
 Math.__name__ = ["Math"];
 var Reflect = function() { };
@@ -6668,6 +6668,27 @@ thx_error_ErrorWrapper.prototype = $extend(thx_Error.prototype,{
 	innerError: null
 	,__class__: thx_error_ErrorWrapper
 });
+var todomvc_App = function(prop,state) {
+	doom_PropertiesComponent.call(this,prop,state);
+};
+todomvc_App.__name__ = ["todomvc","App"];
+todomvc_App.__super__ = doom_PropertiesComponent;
+todomvc_App.prototype = $extend(doom_PropertiesComponent.prototype,{
+	render: function() {
+		return Doom.DIV(null,[(function($this) {
+			var $r;
+			var comp = new todomvc_Header($this.prop);
+			$r = doom_NodeImpl.ComponentNode(comp);
+			return $r;
+		}(this)),(function($this) {
+			var $r;
+			var comp1 = new todomvc_Body($this.prop,$this.state);
+			$r = doom_NodeImpl.ComponentNode(comp1);
+			return $r;
+		}(this))],null);
+	}
+	,__class__: todomvc_App
+});
 var todomvc_AppProperties = function() {
 	this.filter = todomvc_Filter.All;
 	this.allItems = this.load();
@@ -7198,27 +7219,6 @@ todomvc_List.prototype = $extend(doom_PropertiesComponent.prototype,{
 		}(this)),null)],null);
 	}
 	,__class__: todomvc_List
-});
-var todomvc_ToDoApp = function(prop,state) {
-	doom_PropertiesComponent.call(this,prop,state);
-};
-todomvc_ToDoApp.__name__ = ["todomvc","ToDoApp"];
-todomvc_ToDoApp.__super__ = doom_PropertiesComponent;
-todomvc_ToDoApp.prototype = $extend(doom_PropertiesComponent.prototype,{
-	render: function() {
-		return Doom.DIV(null,[(function($this) {
-			var $r;
-			var comp = new todomvc_Header($this.prop);
-			$r = doom_NodeImpl.ComponentNode(comp);
-			return $r;
-		}(this)),(function($this) {
-			var $r;
-			var comp1 = new todomvc_Body($this.prop,$this.state);
-			$r = doom_NodeImpl.ComponentNode(comp1);
-			return $r;
-		}(this))],null);
-	}
-	,__class__: todomvc_ToDoApp
 });
 function $iterator(o) { if( o instanceof Array ) return function() { return HxOverrides.iter(o); }; return typeof(o.iterator) == 'function' ? $bind(o,o.iterator) : o.iterator; }
 var $_, $fid = 0;

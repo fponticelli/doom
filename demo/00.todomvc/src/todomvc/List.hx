@@ -1,10 +1,8 @@
 package todomvc;
 
-import doom.PropertiesComponent;
 import Doom.*;
+import doom.PropertiesComponent;
 import thx.ReadonlyArray;
-using thx.Arrays;
-using thx.Functions;
 
 class List extends PropertiesComponent<AppProperties, ListState> {
   override function render()

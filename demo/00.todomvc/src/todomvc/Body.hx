@@ -14,7 +14,7 @@ class Body extends PropertiesComponent<AppProperties, AppState> {
     });
   }
 
-  override function render() {
+  override function render()
     return if(state.countTotal == 0) {
       dummy("nothing to do yet");
     } else {
@@ -30,5 +30,4 @@ class Body extends PropertiesComponent<AppProperties, AppState> {
         })
       ]);
     };
-  }
 }
