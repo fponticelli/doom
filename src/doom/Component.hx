@@ -4,7 +4,7 @@ import js.html.Element;
 using doom.Patch;
 
 class Component<State> implements IComponent {
-  public static function mount<T>(component : Component<T>, ref : Element) {
+  public static function mount(component : IComponent, ref : Element) {
     if(null == ref)
       throw 'reference element is set to null';
     ref.innerHTML = "";
@@ -49,7 +49,6 @@ class Component<State> implements IComponent {
 
   public function toString() {
     var cls = Type.getClassName(Type.getClass(this)).split(".").pop();
-    var state = node.toString();
-    return '$cls($state)';
+    return '$cls(${node.toString()})';
   }
 }
