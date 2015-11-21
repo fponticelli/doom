@@ -19,8 +19,6 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
       children = [];
     if(null != child)
       children.push(child);
-    // if(null != text)
-    //   children.push(Text(text));
     return Element(name, attributes, children);
   }
 
