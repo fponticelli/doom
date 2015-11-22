@@ -1680,6 +1680,248 @@ doom_StatelessComponent.prototype = {
 	}
 	,__class__: doom_StatelessComponent
 };
+var doom_Svg = function() { };
+doom_Svg.__name__ = ["doom","Svg"];
+doom_Svg.A = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:a",attributes,children,child);
+};
+doom_Svg.ALTGLYPH = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:altGlyph",attributes,children,child);
+};
+doom_Svg.ALTGLYPHDEF = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:altGlyphDef",attributes,children,child);
+};
+doom_Svg.ALTGLYPHITEM = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:altGlyphItem",attributes,children,child);
+};
+doom_Svg.ANIMATE = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:animate",attributes,children,child);
+};
+doom_Svg.ANIMATECOLOR = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:animateColor",attributes,children,child);
+};
+doom_Svg.ANIMATEMOTION = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:animateMotion",attributes,children,child);
+};
+doom_Svg.ANIMATETRANSFORM = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:animateTransform",attributes,children,child);
+};
+doom_Svg.CIRCLE = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:circle",attributes,children,child);
+};
+doom_Svg.CLIPPATH = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:clipPath",attributes,children,child);
+};
+doom_Svg.COLOR_PROFILE = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:color-profile",attributes,children,child);
+};
+doom_Svg.CURSOR = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:cursor",attributes,children,child);
+};
+doom_Svg.DEFS = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:defs",attributes,children,child);
+};
+doom_Svg.DESC = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:desc",attributes,children,child);
+};
+doom_Svg.ELLIPSE = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:ellipse",attributes,children,child);
+};
+doom_Svg.FEBLEND = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:feBlend",attributes,children,child);
+};
+doom_Svg.FECOLORMATRIX = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:feColorMatrix",attributes,children,child);
+};
+doom_Svg.FECOMPONENTTRANSFER = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:feComponentTransfer",attributes,children,child);
+};
+doom_Svg.FECOMPOSITE = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:feComposite",attributes,children,child);
+};
+doom_Svg.FECONVOLVEMATRIX = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:feConvolveMatrix",attributes,children,child);
+};
+doom_Svg.FEDIFFUSELIGHTING = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:feDiffuseLighting",attributes,children,child);
+};
+doom_Svg.FEDISPLACEMENTMAP = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:feDisplacementMap",attributes,children,child);
+};
+doom_Svg.FEDISTANTLIGHT = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:feDistantLight",attributes,children,child);
+};
+doom_Svg.FEFLOOD = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:feFlood",attributes,children,child);
+};
+doom_Svg.FEFUNCA = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:feFuncA",attributes,children,child);
+};
+doom_Svg.FEFUNCB = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:feFuncB",attributes,children,child);
+};
+doom_Svg.FEFUNCG = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:feFuncG",attributes,children,child);
+};
+doom_Svg.FEFUNCR = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:feFuncR",attributes,children,child);
+};
+doom_Svg.FEGAUSSIANBLUR = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:feGaussianBlur",attributes,children,child);
+};
+doom_Svg.FEIMAGE = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:feImage",attributes,children,child);
+};
+doom_Svg.FEMERGE = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:feMerge",attributes,children,child);
+};
+doom_Svg.FEMERGENODE = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:feMergeNode",attributes,children,child);
+};
+doom_Svg.FEMORPHOLOGY = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:feMorphology",attributes,children,child);
+};
+doom_Svg.FEOFFSET = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:feOffset",attributes,children,child);
+};
+doom_Svg.FEPOINTLIGHT = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:fePointLight",attributes,children,child);
+};
+doom_Svg.FESPECULARLIGHTING = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:feSpecularLighting",attributes,children,child);
+};
+doom_Svg.FESPOTLIGHT = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:feSpotLight",attributes,children,child);
+};
+doom_Svg.FETILE = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:feTile",attributes,children,child);
+};
+doom_Svg.FETURBULENCE = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:feTurbulence",attributes,children,child);
+};
+doom_Svg.FILTER = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:filter",attributes,children,child);
+};
+doom_Svg.FONT = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:font",attributes,children,child);
+};
+doom_Svg.FONT_FACE = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:font-face",attributes,children,child);
+};
+doom_Svg.FONT_FACE_FORMAT = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:font-face-format",attributes,children,child);
+};
+doom_Svg.FONT_FACE_NAME = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:font-face-name",attributes,children,child);
+};
+doom_Svg.FONT_FACE_SRC = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:font-face-src",attributes,children,child);
+};
+doom_Svg.FONT_FACE_URI = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:font-face-uri",attributes,children,child);
+};
+doom_Svg.FOREIGNOBJECT = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:foreignObject",attributes,children,child);
+};
+doom_Svg.G = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:g",attributes,children,child);
+};
+doom_Svg.GLYPH = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:glyph",attributes,children,child);
+};
+doom_Svg.GLYPHREF = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:glyphRef",attributes,children,child);
+};
+doom_Svg.HKERN = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:hkern",attributes,children,child);
+};
+doom_Svg.IMAGE = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:image",attributes,children,child);
+};
+doom_Svg.LINE = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:line",attributes,children,child);
+};
+doom_Svg.LINEARGRADIENT = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:linearGradient",attributes,children,child);
+};
+doom_Svg.MARKER = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:marker",attributes,children,child);
+};
+doom_Svg.MASK = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:mask",attributes,children,child);
+};
+doom_Svg.METADATA = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:metadata",attributes,children,child);
+};
+doom_Svg.MISSING_GLYPH = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:missing-glyph",attributes,children,child);
+};
+doom_Svg.MPATH = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:mpath",attributes,children,child);
+};
+doom_Svg.PATH = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:path",attributes,children,child);
+};
+doom_Svg.PATTERN = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:pattern",attributes,children,child);
+};
+doom_Svg.POLYGON = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:polygon",attributes,children,child);
+};
+doom_Svg.POLYLINE = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:polyline",attributes,children,child);
+};
+doom_Svg.RADIALGRADIENT = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:radialGradient",attributes,children,child);
+};
+doom_Svg.RECT = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:rect",attributes,children,child);
+};
+doom_Svg.SCRIPT = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:script",attributes,children,child);
+};
+doom_Svg.SET = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:set",attributes,children,child);
+};
+doom_Svg.STOP = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:stop",attributes,children,child);
+};
+doom_Svg.STYLE = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:style",attributes,children,child);
+};
+doom_Svg.SVG = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:svg",attributes,children,child);
+};
+doom_Svg.SWITCH = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:switch",attributes,children,child);
+};
+doom_Svg.SYMBOL = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:symbol",attributes,children,child);
+};
+doom_Svg.TEXT = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:text",attributes,children,child);
+};
+doom_Svg.TEXTPATH = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:textPath",attributes,children,child);
+};
+doom_Svg.TITLE = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:title",attributes,children,child);
+};
+doom_Svg.TREF = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:tref",attributes,children,child);
+};
+doom_Svg.TSPAN = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:tspan",attributes,children,child);
+};
+doom_Svg.USE = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:use",attributes,children,child);
+};
+doom_Svg.VIEW = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:view",attributes,children,child);
+};
+doom_Svg.VKERN = function(attributes,children,child) {
+	return doom__$Node_Node_$Impl_$.el("svg:vkern",attributes,children,child);
+};
 var doom_XmlNode = function() { };
 doom_XmlNode.__name__ = ["doom","XmlNode"];
 doom_XmlNode.toXml = function(node) {
@@ -3036,7 +3278,7 @@ svg_SvgApp.__name__ = ["svg","SvgApp"];
 svg_SvgApp.__super__ = doom_StatelessComponent;
 svg_SvgApp.prototype = $extend(doom_StatelessComponent.prototype,{
 	render: function() {
-		return Doom.el("svg:svg",(function($this) {
+		return doom_Svg.SVG((function($this) {
 			var $r;
 			var _g = new haxe_ds_StringMap();
 			{
@@ -3049,7 +3291,7 @@ svg_SvgApp.prototype = $extend(doom_StatelessComponent.prototype,{
 			}
 			$r = _g;
 			return $r;
-		}(this)),[Doom.el("svg:circle",(function($this) {
+		}(this)),[doom_Svg.CIRCLE((function($this) {
 			var $r;
 			var _g1 = new haxe_ds_StringMap();
 			{
@@ -3070,7 +3312,7 @@ svg_SvgApp.prototype = $extend(doom_StatelessComponent.prototype,{
 			}
 			$r = _g1;
 			return $r;
-		}(this)),null,null),Doom.el("svg:circle",(function($this) {
+		}(this)),null,null),doom_Svg.CIRCLE((function($this) {
 			var $r;
 			var _g2 = new haxe_ds_StringMap();
 			{
@@ -3091,7 +3333,7 @@ svg_SvgApp.prototype = $extend(doom_StatelessComponent.prototype,{
 			}
 			$r = _g2;
 			return $r;
-		}(this)),null,null),Doom.el("svg:circle",(function($this) {
+		}(this)),null,null),doom_Svg.CIRCLE((function($this) {
 			var $r;
 			var _g3 = new haxe_ds_StringMap();
 			{
