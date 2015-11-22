@@ -28,7 +28,17 @@ class HtmlNode {
   }
 
   static function createElement(name : String, attributes : Map<String, AttributeValue>, children : Array<Node>) : Element {
-    var el = document.createElement(name);
+    var colonPos = name.indexOf(":");
+    var el = if(colonPos > 0) {
+            var prefix = name.substring(0, colonPos),
+                name = name.substring(colonPos + 1),
+                ns = Doom.namespaces.get(prefix);
+            if(null == ns)
+              throw new thx.Error('element prefix "$prefix" is not associated to any namespace. Add the right namespace to Doom.namespaces.');
+            document.createElementNS(ns, name);
+          } else {
+            document.createElement(name);
+          }
     for(key in attributes.keys()) {
       var value = attributes.get(key);
       switch value {

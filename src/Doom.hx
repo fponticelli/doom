@@ -12,6 +12,11 @@ class Doom {
     ref.appendChild(component.element);
   }
 
+  // namespaces
+  public static var namespaces = [
+    "svg" => "http://www.w3.org/2000/svg"
+  ];
+
   // HTML HELPERS
   inline public static function A(?attributes : Map<String, AttributeValue>, ?children : Array<Node>, ?child : Node)
     return el("a", attributes, children, child);
