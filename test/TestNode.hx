@@ -5,12 +5,10 @@ using doom.Patch;
 
 class TestNode extends TestBase {
   public function testDiff() {
-    Assert.same([], (Empty : Node).diff(Empty));
     Assert.same([], (Text("a") : Node).diff(Text("a")));
     Assert.same([ContentChanged("b")], (Text("a") : Node).diff(Text("b")));
-    Assert.same([ReplaceWithText("b")], (Empty : Node).diff(Text("b")));
-    Assert.same([ReplaceWithComment("b")], (Empty : Node).diff(Comment("b")));
-    Assert.same([Remove], (Text("a") : Node).diff(Empty));
+    Assert.same([ReplaceWithText("b")], (Comment("a") : Node).diff(Text("b")));
+    Assert.same([ReplaceWithComment("b")], (Text("a") : Node).diff(Comment("b")));
   }
 
   public function testAttributeDiff() {
@@ -22,21 +20,10 @@ class TestNode extends TestBase {
     Assert.same([SetAttribute("a", "c")], Node.diffAttributes(["a" => "b"], ["a" => "c"]));
   }
 
-  public function testEventDiff() {
-    var empty = new Map(),
-        hb = function(_) {},
-        hc = function(_) {};
-    Assert.same([], Node.diffEvents(empty, empty));
-    Assert.same([RemoveEvent("a")], Node.diffEvents(["a" => hb], empty));
-    Assert.same([SetEvent("a", hb)], Node.diffEvents(empty, ["a" => hb]));
-    Assert.same([], Node.diffEvents(["a" => hb], ["a" => hb]));
-    Assert.same([SetEvent("a", hc)], Node.diffEvents(["a" => hb], ["a" => hc]));
-  }
-
   public function testChildrenDiff() {
     Assert.same([], el2.diff(el2));
-    Assert.same([ReplaceWithElement("div", emptys, emptye, [el1])], el1.diff(el2));
-    Assert.same([AddElement("a", emptys, emptye, [])], el2.diff(el3));
+    Assert.same([ReplaceWithElement("div", emptys, [el1])], el1.diff(el2));
+    Assert.same([AddElement("a", emptys, [])], el2.diff(el3));
     Assert.same([PatchChild(1, [Remove])], el3.diff(el2));
   }
 
@@ -61,14 +48,14 @@ class TestNode extends TestBase {
     Assert.same(
       [
         SetAttribute("class", "commentList"),
-        AddElement("div", ["class" => "comment"], new Map(), [
+        AddElement("div", ["class" => "comment"], [
           el("h2",
             ["class" => "comment"],
             "Some Guy"
           ),
           text("This is *another* comment")
         ]),
-        PatchChild(0, [ReplaceWithElement("div", ["class" => "comment"], new Map(),
+        PatchChild(0, [ReplaceWithElement("div", ["class" => "comment"],
           [
             el("h2",
               ["class" => "comment"],
@@ -111,7 +98,7 @@ class TestNode extends TestBase {
     var patches = o.diff(n);
     Assert.same(
       [
-        AddElement("div", ["class" => "comment"], new Map(), [
+        AddElement("div", ["class" => "comment"], [
           el("h2", "Someone Else"),
           text("With another comment")
         ])
@@ -151,8 +138,10 @@ class TestNode extends TestBase {
 
   public function testQuickBuilding() {
     var dom = el("div",
-          ["class" => "some"],
-          ["onclick" => function(_) trace("click")],
+          [
+            "class" => "some",
+            "onclick" => function(_) trace("click")
+          ],
           [el("a",
             ["href" => "#"],
             [text("hello")]

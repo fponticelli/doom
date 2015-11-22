@@ -1,8 +1,8 @@
 import doom.Node;
+import doom.AttributeValue;
 
 class TestBase {
-  var emptys : Map<String, String> = new Map();
-  var emptye : Map<String, doom.EventHandler> = new Map();
+  var emptys : Map<String, AttributeValue> = new Map();
   var el1 : Node;
   var el2 : Node;
   var el3 : Node;
@@ -12,10 +12,9 @@ class TestBase {
 
   public function setup() {
     emptys = new Map();
-    emptye = new Map();
-    el1 = Element("a", emptys, emptye, []);
-    el2 = Element("div", emptys, emptye, [el1]);
-    el3 = Element("div", emptys, emptye, [el1, el1]);
-    el4 = Element("div", ["name" => "value"], emptye, [el1]);
+    el1 = Element("a", emptys, []);
+    el2 = Element("div", emptys, [el1]);
+    el3 = Element("div", emptys, [el1, el1]);
+    el4 = Element("div", ["name" => "value"], [el1]);
   }
 }

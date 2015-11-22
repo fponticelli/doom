@@ -11,7 +11,7 @@ class TestXml extends TestBase {
     var xml = Xml.createElement("div"),
         patches = [
           SetAttribute("name", "value"),
-          AddElement("a", ["href" => "#"], null, []),
+          AddElement("a", ["href" => "#"], []),
           PatchChild(0, [AddText("hello")])
         ];
     XmlNode.applyPatches(patches, xml);
