@@ -140,7 +140,7 @@ class TestNode extends TestBase {
     var dom = el("div",
           [
             "class" => "some",
-            "onclick" => function(_) trace("click")
+            "onclick" => function(_) {}
           ],
           [el("a",
             ["href" => "#"],

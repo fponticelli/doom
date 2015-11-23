@@ -52,6 +52,7 @@ class HtmlNode {
       }
     }
     trigger(el, "create");
+    thx.Timer.immediate(function() trigger(el, "mount"));
     for(child in children) {
       var n = toHtml(child);
       if(null != n)
