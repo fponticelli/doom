@@ -15,7 +15,7 @@ class App extends PropertiesComponent<AppProperties, AppState> {
   override function render() {
     return DIV(["class" => "fancy-container"], [
       H1("veggies cooking time"),
-      comp(new SearchList(state))
+      comp(new SearchItem(state))
     ]);
   }
 }

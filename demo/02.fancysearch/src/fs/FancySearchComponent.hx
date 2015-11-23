@@ -1,11 +1,11 @@
 package fs;
 
 import Doom.*;
-import doom.PropertiesComponent;
+import doom.PropertiesStatelessComponent;
 import fancy.Search;
 import fancy.search.util.Types;
 
-class FancySearchComponent extends PropertiesComponent<FancySearchOptions, FancyState> {
+class FancySearchComponent extends PropertiesStatelessComponent<FancySearchOptions> {
   override function render() {
     return INPUT([
       "class" => "fancy-search-component fancify",
@@ -18,8 +18,4 @@ class FancySearchComponent extends PropertiesComponent<FancySearchOptions, Fancy
   function handleMount(el : js.html.InputElement) {
     var fancy = new Search(cast el, prop);
   }
-}
-
-typedef FancyState = {
-
 }

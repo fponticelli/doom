@@ -1508,7 +1508,7 @@ doom__$Node_Node_$Impl_$.diffNodes = function(a,b) {
 	var _g = a.length;
 	while(_g1 < _g) {
 		var i = _g1++;
-		result.push(doom_Patch.PatchChild(i,[doom_Patch.Remove]));
+		result.push(doom_Patch.PatchChild(a.length - i - 1,[doom_Patch.Remove]));
 	}
 	var _g11 = min;
 	var _g2 = b.length;
@@ -1716,6 +1716,45 @@ doom_PropertiesComponent.__super__ = doom_Component;
 doom_PropertiesComponent.prototype = $extend(doom_Component.prototype,{
 	prop: null
 	,__class__: doom_PropertiesComponent
+});
+var doom_StatelessComponent = function() {
+	this.node = this.render();
+};
+doom_StatelessComponent.__name__ = ["doom","StatelessComponent"];
+doom_StatelessComponent.__interfaces__ = [doom_IComponent];
+doom_StatelessComponent.prototype = {
+	element: null
+	,node: null
+	,init: function() {
+		this.element = doom_HtmlNode.toHtml(this.node);
+	}
+	,updateNode: function(oldNode) {
+		var newNode = this.render();
+		var patches = doom__$Node_Node_$Impl_$.diff(oldNode,newNode);
+		doom_HtmlNode.applyPatches(patches,this.element);
+		this.node = newNode;
+	}
+	,render: function() {
+		throw new thx_error_AbstractMethod({ fileName : "StatelessComponent.hx", lineNumber : 27, className : "doom.StatelessComponent", methodName : "render"});
+	}
+	,update: function() {
+		this.updateNode(this.node);
+	}
+	,toString: function() {
+		var cls = Type.getClassName(js_Boot.getClass(this)).split(".").pop();
+		return "" + cls + "(" + doom__$Node_Node_$Impl_$.toString(this.node) + ")";
+	}
+	,__class__: doom_StatelessComponent
+};
+var doom_PropertiesStatelessComponent = function(prop) {
+	this.prop = prop;
+	doom_StatelessComponent.call(this);
+};
+doom_PropertiesStatelessComponent.__name__ = ["doom","PropertiesStatelessComponent"];
+doom_PropertiesStatelessComponent.__super__ = doom_StatelessComponent;
+doom_PropertiesStatelessComponent.prototype = $extend(doom_StatelessComponent.prototype,{
+	prop: null
+	,__class__: doom_PropertiesStatelessComponent
 });
 var doom_XmlNode = function() { };
 doom_XmlNode.__name__ = ["doom","XmlNode"];
@@ -2437,7 +2476,7 @@ fs_App.prototype = $extend(doom_PropertiesComponent.prototype,{
 			}
 			$r = _g;
 			return $r;
-		}(this)),[Doom.H1(null,null,doom_NodeImpl.Text("veggies cooking time")),Doom.comp(new fs_SearchList(this.state))],null);
+		}(this)),[Doom.H1(null,null,doom_NodeImpl.Text("veggies cooking time")),Doom.comp(new fs_SearchItem(this.state))],null);
 	}
 	,__class__: fs_App
 });
@@ -2470,12 +2509,23 @@ fs_AppState.Loading.toString = $estr;
 fs_AppState.Loading.__enum__ = fs_AppState;
 fs_AppState.Error = function(msg) { var $x = ["Error",1,msg]; $x.__enum__ = fs_AppState; $x.toString = $estr; return $x; };
 fs_AppState.Data = function(data) { var $x = ["Data",2,data]; $x.__enum__ = fs_AppState; $x.toString = $estr; return $x; };
-var fs_FancySearchComponent = function(prop,state) {
+var fs_CookingComponent = function(prop,state) {
 	doom_PropertiesComponent.call(this,prop,state);
 };
+fs_CookingComponent.__name__ = ["fs","CookingComponent"];
+fs_CookingComponent.__super__ = doom_PropertiesComponent;
+fs_CookingComponent.prototype = $extend(doom_PropertiesComponent.prototype,{
+	render: function() {
+		return Doom.TR(null,[Doom.TH(null,null,doom_NodeImpl.Text(this.prop)),Doom.TD(null,[doom_NodeImpl.Text(this.state),doom_NodeImpl.Text(" min.")],null)],null);
+	}
+	,__class__: fs_CookingComponent
+});
+var fs_FancySearchComponent = function(prop) {
+	doom_PropertiesStatelessComponent.call(this,prop);
+};
 fs_FancySearchComponent.__name__ = ["fs","FancySearchComponent"];
-fs_FancySearchComponent.__super__ = doom_PropertiesComponent;
-fs_FancySearchComponent.prototype = $extend(doom_PropertiesComponent.prototype,{
+fs_FancySearchComponent.__super__ = doom_PropertiesStatelessComponent;
+fs_FancySearchComponent.prototype = $extend(doom_PropertiesStatelessComponent.prototype,{
 	render: function() {
 		return Doom.INPUT((function($this) {
 			var $r;
@@ -2505,77 +2555,88 @@ fs_FancySearchComponent.prototype = $extend(doom_PropertiesComponent.prototype,{
 	}
 	,__class__: fs_FancySearchComponent
 });
-var fs_List = function(prop,state) {
-	var _g = this;
-	doom_PropertiesComponent.call(this,prop,state);
-	prop.listener = function(f) {
-		f = f.toLowerCase();
-		_g.update(state.filter(function(i) {
-			return thx_Strings.contains(i.vegetable.toLowerCase(),f);
-		}));
-	};
-};
-fs_List.__name__ = ["fs","List"];
-fs_List.__super__ = doom_PropertiesComponent;
-fs_List.prototype = $extend(doom_PropertiesComponent.prototype,{
-	render: function() {
-		return Doom.SECTION(null,[Doom.UL(null,this.state.map(function(v) {
-			{
-				var comp = new fs_VeggieComponent(v);
-				return doom_NodeImpl.ComponentNode(comp);
-			}
-		}),null)],null);
-	}
-	,handleSelectionChange: function(_,s) {
-		haxe_Log.trace(s,{ fileName : "List.hx", lineNumber : 25, className : "fs.List", methodName : "handleSelectionChange"});
-	}
-	,__class__: fs_List
-});
-var fs_SearchList = function(state) {
+var fs_SearchItem = function(state) {
 	doom_Component.call(this,state);
 };
-fs_SearchList.__name__ = ["fs","SearchList"];
-fs_SearchList.__super__ = doom_Component;
-fs_SearchList.prototype = $extend(doom_Component.prototype,{
+fs_SearchItem.__name__ = ["fs","SearchItem"];
+fs_SearchItem.__super__ = doom_Component;
+fs_SearchItem.prototype = $extend(doom_Component.prototype,{
 	render: function() {
-		var prop = { listener : function(s) {
-		}};
+		var _g3 = this;
+		var prop_listener = function(s) {
+		};
+		var veggieComp = new fs_VeggieComponent(haxe_ds_Option.None);
 		{
 			var _g = this.state;
 			switch(_g[1]) {
 			case 0:
-				return Doom.DIV(null,null,doom_NodeImpl.Text("Loading ..."));
+				return Doom.SECTION((function($this) {
+					var $r;
+					var _g1 = new haxe_ds_StringMap();
+					{
+						var value = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("container");
+						if(__map_reserved["class"] != null) _g1.setReserved("class",value); else _g1.h["class"] = value;
+					}
+					$r = _g1;
+					return $r;
+				}(this)),null,doom_NodeImpl.Text("Loading ..."));
 			case 2:
 				var data = _g[2];
-				return Doom.DIV(null,[Doom.HEADER(null,null,(function($this) {
+				return Doom.SECTION((function($this) {
+					var $r;
+					var _g11 = new haxe_ds_StringMap();
+					{
+						var value1 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("container");
+						if(__map_reserved["class"] != null) _g11.setReserved("class",value1); else _g11.h["class"] = value1;
+					}
+					$r = _g11;
+					return $r;
+				}(this)),[Doom.HEADER(null,null,Doom.DIV((function($this) {
+					var $r;
+					var _g4 = new haxe_ds_StringMap();
+					{
+						var value2 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("fancy");
+						if(__map_reserved["class"] != null) _g4.setReserved("class",value2); else _g4.h["class"] = value2;
+					}
+					$r = _g4;
+					return $r;
+				}(this)),null,(function($this) {
 					var $r;
 					var comp = new fs_FancySearchComponent({ suggestionOptions : { suggestions : data.map(function(v) {
 						return v.vegetable;
 					}), onChooseSelection : function(_,s1) {
-						prop.listener(s1);
-					}}},{ });
+						_g3.updateVeggie(veggieComp,s1,data);
+					}}});
 					$r = doom_NodeImpl.ComponentNode(comp);
 					return $r;
-				}(this))),Doom.comp(new fs_List(prop,data))],null);
+				}(this)))),doom_NodeImpl.ComponentNode(veggieComp)],null);
 			case 1:
 				var msg = _g[2];
-				return Doom.DIV((function($this) {
+				return Doom.SECTION((function($this) {
 					var $r;
-					var _g1 = new haxe_ds_StringMap();
+					var _g12 = new haxe_ds_StringMap();
 					{
-						var value = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("error");
-						if(__map_reserved["class"] != null) _g1.setReserved("class",value); else _g1.h["class"] = value;
+						var value3 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("container error");
+						if(__map_reserved["class"] != null) _g12.setReserved("class",value3); else _g12.h["class"] = value3;
 					}
-					$r = _g1;
+					$r = _g12;
 					return $r;
 				}(this)),null,doom_NodeImpl.Text(msg));
 			}
 		}
 	}
-	,handleSelectionChange: function(_,s) {
-		haxe_Log.trace(s,{ fileName : "SearchList.hx", lineNumber : 33, className : "fs.SearchList", methodName : "handleSelectionChange"});
+	,updateVeggie: function(comp,veggie,data) {
+		veggie = veggie.toLowerCase();
+		var item = ((function(_e) {
+			return function(predicate) {
+				return thx_Arrays.find(_e,predicate);
+			};
+		})(data))(function(_) {
+			return _.vegetable.toLowerCase() == veggie;
+		});
+		comp.update(null == item?haxe_ds_Option.None:haxe_ds_Option.Some(item));
 	}
-	,__class__: fs_SearchList
+	,__class__: fs_SearchItem
 });
 var fs_VeggieComponent = function(state) {
 	doom_Component.call(this,state);
@@ -2584,7 +2645,16 @@ fs_VeggieComponent.__name__ = ["fs","VeggieComponent"];
 fs_VeggieComponent.__super__ = doom_Component;
 fs_VeggieComponent.prototype = $extend(doom_Component.prototype,{
 	render: function() {
-		return Doom.LI(null,null,doom_NodeImpl.Text(this.state.vegetable));
+		{
+			var _g = this.state;
+			switch(_g[1]) {
+			case 0:
+				var item = _g[2];
+				return Doom.ARTICLE(null,[Doom.H2(null,null,doom_NodeImpl.Text(item.vegetable)),Doom.TABLE(null,[Doom.comp(new fs_CookingComponent("steamed",item.steamed)),Doom.comp(new fs_CookingComponent("micro waved",item.microwaved)),Doom.comp(new fs_CookingComponent("blanched",item.blanched)),Doom.comp(new fs_CookingComponent("boiled",item.boiled)),Doom.comp(new fs_CookingComponent("other",item.other))],null)],null);
+			case 1:
+				return Doom.ARTICLE(null,null,doom_NodeImpl.Text("Please Search for a veggie"));
+			}
+		}
 	}
 	,__class__: fs_VeggieComponent
 });
@@ -6377,6 +6447,9 @@ thx_Objects.removePath = function(o,path) {
 };
 var thx_Options = function() { };
 thx_Options.__name__ = ["thx","Options"];
+thx_Options.ofValue = function(value) {
+	if(null == value) return haxe_ds_Option.None; else return haxe_ds_Option.Some(value);
+};
 thx_Options.equals = function(a,b,eq) {
 	switch(a[1]) {
 	case 1:
