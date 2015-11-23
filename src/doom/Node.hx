@@ -66,9 +66,9 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
 
   public static function diffNodes(a : Array<Node>, b : Array<Node>) : Array<Patch> {
     var min = a.length.min(b.length),
-        result = [];
+        result : Array<Patch> = [];
     for(i in min...a.length) {
-      result.push(Patch.PatchChild(i, [Remove]));
+      result.push(PatchChild(a.length - i - 1, [Remove]));
     }
     for(i in min...b.length) {
       result = result.concat(diffAdd(b[i]));
