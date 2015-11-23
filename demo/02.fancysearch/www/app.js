@@ -554,7 +554,7 @@ Lambda.has = function(it,elt) {
 var Main = function() { };
 Main.__name__ = ["Main"];
 Main.main = function() {
-	var properties = new fs_AppProperties("/vegetables.json");
+	var properties = new fs_AppProperties("vegetables.json");
 	Doom.mount(new fs_App(properties,properties.state),dots_Query.first("section.fs"));
 };
 Math.__name__ = ["Math"];
@@ -8615,7 +8615,10 @@ thx_load_Loader.getBinary = function(path) {
 thx_load_Loader.normalizePath = function(path) {
 	if(StringTools.startsWith(path,"http://") || StringTools.startsWith(path,"https://") || StringTools.startsWith(path,"file://")) return path;
 	var host = (typeof window != 'undefined') ? window.location.host : null;
-	if(null != host) return "" + window.location.protocol + "//" + host + path;
+	if(null != host) {
+		if(!StringTools.startsWith(path,"/")) path = window.location.pathname.split("/").slice(0,-1).concat([path]).join("/");
+		return "" + window.location.protocol + "//" + host + path;
+	}
 	return "file://" + path;
 };
 thx_load_Loader.makeTextHttpRequest = function(url) {
@@ -8627,7 +8630,7 @@ thx_load_Loader.makeTextHttpRequest = function(url) {
 		case 204:case 205:
 			return thx_promise__$Promise_Promise_$Impl_$.value(null);
 		default:
-			return thx_promise__$Promise_Promise_$Impl_$.fail(response.get_statusText(),{ fileName : "Loader.hx", lineNumber : 118, className : "thx.load.Loader", methodName : "makeTextHttpRequest"});
+			return thx_promise__$Promise_Promise_$Impl_$.fail(response.get_statusText(),{ fileName : "Loader.hx", lineNumber : 120, className : "thx.load.Loader", methodName : "makeTextHttpRequest"});
 		}
 	});
 };
@@ -8640,15 +8643,15 @@ thx_load_Loader.makeBinaryHttpRequest = function(url) {
 		case 204:case 205:
 			return thx_promise__$Promise_Promise_$Impl_$.value(null);
 		default:
-			return thx_promise__$Promise_Promise_$Impl_$.fail(response.get_statusText(),{ fileName : "Loader.hx", lineNumber : 132, className : "thx.load.Loader", methodName : "makeBinaryHttpRequest"});
+			return thx_promise__$Promise_Promise_$Impl_$.fail(response.get_statusText(),{ fileName : "Loader.hx", lineNumber : 134, className : "thx.load.Loader", methodName : "makeBinaryHttpRequest"});
 		}
 	});
 };
 thx_load_Loader.loadText = function(path) {
-	return thx_promise__$Promise_Promise_$Impl_$.fail("this target doesn't support loading files from the filesystem",{ fileName : "Loader.hx", lineNumber : 143, className : "thx.load.Loader", methodName : "loadText"});
+	return thx_promise__$Promise_Promise_$Impl_$.fail("this target doesn't support loading files from the filesystem",{ fileName : "Loader.hx", lineNumber : 145, className : "thx.load.Loader", methodName : "loadText"});
 };
 thx_load_Loader.loadBinary = function(path) {
-	return thx_promise__$Promise_Promise_$Impl_$.fail("this target doesn't support loading files from the filesystem",{ fileName : "Loader.hx", lineNumber : 153, className : "thx.load.Loader", methodName : "loadBinary"});
+	return thx_promise__$Promise_Promise_$Impl_$.fail("this target doesn't support loading files from the filesystem",{ fileName : "Loader.hx", lineNumber : 155, className : "thx.load.Loader", methodName : "loadBinary"});
 };
 var thx_promise_Future = function() {
 	this.handlers = [];
