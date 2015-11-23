@@ -7,491 +7,35 @@ function $extend(from, fields) {
 	if( fields.toString !== Object.prototype.toString ) proto.toString = fields.toString;
 	return proto;
 }
-var DateTools = function() { };
-DateTools.__name__ = ["DateTools"];
-DateTools.getMonthDays = function(d) {
-	var month = d.getMonth();
-	var year = d.getFullYear();
-	if(month != 1) return DateTools.DAYS_OF_MONTH[month];
-	var isB = year % 4 == 0 && year % 100 != 0 || year % 400 == 0;
-	if(isB) return 29; else return 28;
-};
 var Doom = function() { };
-Doom.__name__ = ["Doom"];
+Doom.__name__ = true;
 Doom.mount = function(component,ref) {
 	if(null == ref) throw new js__$Boot_HaxeError("reference element is set to null");
 	ref.innerHTML = "";
 	component.init();
 	ref.appendChild(component.element);
 };
-Doom.A = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("a",attributes,children,child);
-};
-Doom.ABBR = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("abbr",attributes,children,child);
-};
-Doom.ADDRESS = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("address",attributes,children,child);
-};
-Doom.AREA = function(attributes) {
-	return doom__$Node_Node_$Impl_$.el("area",attributes,null,null);
-};
-Doom.ARTICLE = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("article",attributes,children,child);
-};
-Doom.ASIDE = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("aside",attributes,children,child);
-};
-Doom.AUDIO = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("audio",attributes,children,child);
-};
-Doom.B = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("b",attributes,children,child);
-};
-Doom.BASE = function(attributes) {
-	return doom__$Node_Node_$Impl_$.el("base",attributes,null,null);
-};
-Doom.BDI = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("bdi",attributes,children,child);
-};
-Doom.BDO = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("bdo",attributes,children,child);
-};
-Doom.BLOCKQUOTE = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("blockquote",attributes,children,child);
-};
-Doom.BODY = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("body",attributes,children,child);
-};
-Doom.BR = function(attributes) {
-	return doom__$Node_Node_$Impl_$.el("br",attributes,null,null);
-};
-Doom.BUTTON = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("button",attributes,children,child);
-};
-Doom.CANVAS = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("canvas",attributes,children,child);
-};
-Doom.CAPTION = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("caption",attributes,children,child);
-};
-Doom.CITE = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("cite",attributes,children,child);
-};
-Doom.CODE = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("code",attributes,children,child);
-};
-Doom.COL = function(attributes) {
-	return doom__$Node_Node_$Impl_$.el("col",attributes,null,null);
-};
-Doom.COLGROUP = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("colgroup",attributes,children,child);
-};
-Doom.DATA = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("data",attributes,children,child);
-};
-Doom.DATALIST = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("datalist",attributes,children,child);
-};
-Doom.DD = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("dd",attributes,children,child);
-};
-Doom.DEL = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("del",attributes,children,child);
-};
-Doom.DETAILS = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("details",attributes,children,child);
-};
-Doom.DFN = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("dfn",attributes,children,child);
-};
-Doom.DIALOG = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("dialog",attributes,children,child);
-};
-Doom.DIV = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("div",attributes,children,child);
-};
-Doom.DL = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("dl",attributes,children,child);
-};
-Doom.DT = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("dt",attributes,children,child);
-};
-Doom.EM = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("em",attributes,children,child);
-};
-Doom.EMBED = function(attributes) {
-	return doom__$Node_Node_$Impl_$.el("embed",attributes,null,null);
-};
-Doom.FIELDSET = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("fieldset",attributes,children,child);
-};
-Doom.FIGCAPTION = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("figcaption",attributes,children,child);
-};
-Doom.FIGURE = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("figure",attributes,children,child);
-};
-Doom.FOOTER = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("footer",attributes,children,child);
-};
-Doom.FORM = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("form",attributes,children,child);
-};
-Doom.H1 = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("h1",attributes,children,child);
-};
-Doom.H2 = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("h2",attributes,children,child);
-};
-Doom.H3 = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("h3",attributes,children,child);
-};
-Doom.H4 = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("h4",attributes,children,child);
-};
-Doom.H5 = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("h5",attributes,children,child);
-};
-Doom.H6 = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("h6",attributes,children,child);
-};
-Doom.HEAD = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("head",attributes,children,child);
-};
-Doom.HEADER = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("header",attributes,children,child);
-};
-Doom.HGROUP = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("hgroup",attributes,children,child);
-};
-Doom.HR = function(attributes) {
-	return doom__$Node_Node_$Impl_$.el("hr",attributes,null,null);
-};
-Doom.HTML = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("html",attributes,children,child);
-};
-Doom.I = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("i",attributes,children,child);
-};
-Doom.IFRAME = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("iframe",attributes,children,child);
-};
-Doom.IMG = function(attributes) {
-	return doom__$Node_Node_$Impl_$.el("img",attributes,null,null);
-};
-Doom.INPUT = function(attributes) {
-	return doom__$Node_Node_$Impl_$.el("input",attributes,null,null);
-};
-Doom.INS = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("ins",attributes,children,child);
-};
-Doom.KBD = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("kbd",attributes,children,child);
-};
-Doom.KEYGEN = function(attributes) {
-	return doom__$Node_Node_$Impl_$.el("keygen",attributes,null,null);
-};
-Doom.LABEL = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("label",attributes,children,child);
-};
-Doom.LEGEND = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("legend",attributes,children,child);
-};
-Doom.LI = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("li",attributes,children,child);
-};
-Doom.LINK = function(attributes) {
-	return doom__$Node_Node_$Impl_$.el("link",attributes,null,null);
-};
-Doom.MAIN = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("main",attributes,children,child);
-};
-Doom.MAP = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("map",attributes,children,child);
-};
-Doom.MARK = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("mark",attributes,children,child);
-};
-Doom.MENU = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("menu",attributes,children,child);
-};
-Doom.MENUITEM = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("menuitem",attributes,children,child);
-};
-Doom.META = function(attributes) {
-	return doom__$Node_Node_$Impl_$.el("meta",attributes,null,null);
-};
-Doom.METER = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("meter",attributes,children,child);
-};
-Doom.NAV = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("nav",attributes,children,child);
-};
-Doom.NOSCRIPT = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("noscript",attributes,children,child);
-};
-Doom.OBJECT = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("object",attributes,children,child);
-};
-Doom.OL = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("ol",attributes,children,child);
-};
-Doom.OPTGROUP = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("optgroup",attributes,children,child);
-};
-Doom.OPTION = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("option",attributes,children,child);
-};
-Doom.OUTPUT = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("output",attributes,children,child);
-};
-Doom.P = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("p",attributes,children,child);
-};
-Doom.PARAM = function(attributes) {
-	return doom__$Node_Node_$Impl_$.el("param",attributes,null,null);
-};
-Doom.PRE = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("pre",attributes,children,child);
-};
-Doom.PROGRESS = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("progress",attributes,children,child);
-};
-Doom.Q = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("q",attributes,children,child);
-};
-Doom.RB = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("rb",attributes,children,child);
-};
-Doom.RP = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("rp",attributes,children,child);
-};
-Doom.RT = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("rt",attributes,children,child);
-};
-Doom.RTC = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("rtc",attributes,children,child);
-};
-Doom.RUBY = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("ruby",attributes,children,child);
-};
-Doom.S = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("s",attributes,children,child);
-};
-Doom.SAMP = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("samp",attributes,children,child);
-};
-Doom.SCRIPT = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("script",attributes,children,child);
-};
-Doom.SECTION = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("section",attributes,children,child);
-};
-Doom.SELECT = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("select",attributes,children,child);
-};
-Doom.SMALL = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("small",attributes,children,child);
-};
-Doom.SOURCE = function(attributes) {
-	return doom__$Node_Node_$Impl_$.el("source",attributes,null,null);
-};
-Doom.SPAN = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("span",attributes,children,child);
-};
-Doom.STRONG = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("strong",attributes,children,child);
-};
-Doom.STYLE = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("style",attributes,children,child);
-};
-Doom.SUB = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("sub",attributes,children,child);
-};
-Doom.SUMMARY = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("summary",attributes,children,child);
-};
-Doom.SUP = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("sup",attributes,children,child);
-};
-Doom.TABLE = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("table",attributes,children,child);
-};
-Doom.TBODY = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("tbody",attributes,children,child);
-};
-Doom.TD = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("td",attributes,children,child);
-};
-Doom.TEMPLATE = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("template",attributes,children,child);
-};
-Doom.TEXTAREA = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("textarea",attributes,children,child);
-};
-Doom.TFOOT = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("tfoot",attributes,children,child);
-};
-Doom.TH = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("th",attributes,children,child);
-};
-Doom.THEAD = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("thead",attributes,children,child);
-};
-Doom.TIME = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("time",attributes,children,child);
-};
-Doom.TITLE = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("title",attributes,children,child);
-};
-Doom.TR = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("tr",attributes,children,child);
-};
-Doom.TRACK = function(attributes) {
-	return doom__$Node_Node_$Impl_$.el("track",attributes,null,null);
-};
-Doom.U = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("u",attributes,children,child);
-};
-Doom.UL = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("ul",attributes,children,child);
-};
-Doom.VAR = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("var",attributes,children,child);
-};
-Doom.VIDEO = function(attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el("video",attributes,children,child);
-};
-Doom.WBR = function(attributes) {
-	return doom__$Node_Node_$Impl_$.el("wbr",attributes,null,null);
-};
-Doom.el = function(name,attributes,children,child) {
-	return doom__$Node_Node_$Impl_$.el(name,attributes,children,child);
-};
-Doom.comment = function(content) {
-	return doom_NodeImpl.Comment(content);
-};
-Doom.text = function(content) {
-	return doom_NodeImpl.Text(content);
-};
-Doom.raw = function(content) {
-	return doom_NodeImpl.Raw(content);
-};
-Doom.dummy = function(text) {
-	if(text == null) text = "empty node";
-	return doom__$Node_Node_$Impl_$.el("div",(function($this) {
-		var $r;
-		var _g = new haxe_ds_StringMap();
-		{
-			var value = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("display:none");
-			if(__map_reserved.style != null) _g.setReserved("style",value); else _g.h["style"] = value;
-		}
-		$r = _g;
-		return $r;
-	}(this)),[doom_NodeImpl.Comment(" " + text + " ")]);
-};
-Doom.comp = function(comp) {
-	return doom_NodeImpl.ComponentNode(comp);
-};
 var EReg = function(r,opt) {
 	opt = opt.split("u").join("");
 	this.r = new RegExp(r,opt);
 };
-EReg.__name__ = ["EReg"];
+EReg.__name__ = true;
 EReg.prototype = {
-	r: null
-	,match: function(s) {
+	match: function(s) {
 		if(this.r.global) this.r.lastIndex = 0;
 		this.r.m = this.r.exec(s);
 		this.r.s = s;
 		return this.r.m != null;
 	}
 	,matched: function(n) {
-		if(this.r.m != null && n >= 0 && n < this.r.m.length) return this.r.m[n]; else throw new js__$Boot_HaxeError("EReg::matched");
-	}
-	,matchedPos: function() {
-		if(this.r.m == null) throw new js__$Boot_HaxeError("No string matched");
-		return { pos : this.r.m.index, len : this.r.m[0].length};
-	}
-	,matchSub: function(s,pos,len) {
-		if(len == null) len = -1;
-		if(this.r.global) {
-			this.r.lastIndex = pos;
-			this.r.m = this.r.exec(len < 0?s:HxOverrides.substr(s,0,pos + len));
-			var b = this.r.m != null;
-			if(b) this.r.s = s;
-			return b;
-		} else {
-			var b1 = this.match(len < 0?HxOverrides.substr(s,pos,null):HxOverrides.substr(s,pos,len));
-			if(b1) {
-				this.r.s = s;
-				this.r.m.index += pos;
-			}
-			return b1;
-		}
-	}
-	,split: function(s) {
-		var d = "#__delim__#";
-		return s.replace(this.r,d).split(d);
-	}
-	,replace: function(s,by) {
-		return s.replace(this.r,by);
-	}
-	,map: function(s,f) {
-		var offset = 0;
-		var buf = new StringBuf();
-		do {
-			if(offset >= s.length) break; else if(!this.matchSub(s,offset)) {
-				buf.add(HxOverrides.substr(s,offset,null));
-				break;
-			}
-			var p = this.matchedPos();
-			buf.add(HxOverrides.substr(s,offset,p.pos - offset));
-			buf.add(f(this));
-			if(p.len == 0) {
-				buf.add(HxOverrides.substr(s,p.pos,1));
-				offset = p.pos + 1;
-			} else offset = p.pos + p.len;
-		} while(this.r.global);
-		if(!this.r.global && offset > 0 && offset < s.length) buf.add(HxOverrides.substr(s,offset,null));
-		return buf.b;
+		var tmp;
+		if(this.r.m != null && n >= 0 && n < this.r.m.length) tmp = this.r.m[n]; else throw new js__$Boot_HaxeError("EReg::matched");
+		return tmp;
 	}
 	,__class__: EReg
 };
 var HxOverrides = function() { };
-HxOverrides.__name__ = ["HxOverrides"];
-HxOverrides.dateStr = function(date) {
-	var m = date.getMonth() + 1;
-	var d = date.getDate();
-	var h = date.getHours();
-	var mi = date.getMinutes();
-	var s = date.getSeconds();
-	return date.getFullYear() + "-" + (m < 10?"0" + m:"" + m) + "-" + (d < 10?"0" + d:"" + d) + " " + (h < 10?"0" + h:"" + h) + ":" + (mi < 10?"0" + mi:"" + mi) + ":" + (s < 10?"0" + s:"" + s);
-};
-HxOverrides.strDate = function(s) {
-	var _g = s.length;
-	switch(_g) {
-	case 8:
-		var k = s.split(":");
-		var d = new Date();
-		d.setTime(0);
-		d.setUTCHours(k[0]);
-		d.setUTCMinutes(k[1]);
-		d.setUTCSeconds(k[2]);
-		return d;
-	case 10:
-		var k1 = s.split("-");
-		return new Date(k1[0],k1[1] - 1,k1[2],0,0,0);
-	case 19:
-		var k2 = s.split(" ");
-		var y = k2[0].split("-");
-		var t = k2[1].split(":");
-		return new Date(y[0],y[1] - 1,y[2],t[0],t[1],t[2]);
-	default:
-		throw new js__$Boot_HaxeError("Invalid date format : " + s);
-	}
-};
+HxOverrides.__name__ = true;
 HxOverrides.cca = function(s,index) {
 	var x = s.charCodeAt(index);
 	if(x != x) return undefined;
@@ -532,84 +76,17 @@ HxOverrides.iter = function(a) {
 		return this.arr[this.cur++];
 	}};
 };
-var Lambda = function() { };
-Lambda.__name__ = ["Lambda"];
-Lambda.has = function(it,elt) {
-	var $it0 = $iterator(it)();
-	while( $it0.hasNext() ) {
-		var x = $it0.next();
-		if(x == elt) return true;
-	}
-	return false;
-};
 var Main = function() { };
-Main.__name__ = ["Main"];
+Main.__name__ = true;
 Main.main = function() {
 	var prop = new todomvc_AppProperties();
 	Doom.mount(new todomvc_App(prop,{ items : prop.filteredItems, remaining : prop.remaining, complete : prop.complete, filter : prop.filter}),dots_Query.first("section.todoapp"));
 };
-Math.__name__ = ["Math"];
-var Reflect = function() { };
-Reflect.__name__ = ["Reflect"];
-Reflect.field = function(o,field) {
-	try {
-		return o[field];
-	} catch( e ) {
-		haxe_CallStack.lastException = e;
-		if (e instanceof js__$Boot_HaxeError) e = e.val;
-		return null;
-	}
-};
-Reflect.setField = function(o,field,value) {
-	o[field] = value;
-};
-Reflect.callMethod = function(o,func,args) {
-	return func.apply(o,args);
-};
-Reflect.fields = function(o) {
-	var a = [];
-	if(o != null) {
-		var hasOwnProperty = Object.prototype.hasOwnProperty;
-		for( var f in o ) {
-		if(f != "__id__" && f != "hx__closures__" && hasOwnProperty.call(o,f)) a.push(f);
-		}
-	}
-	return a;
-};
-Reflect.isFunction = function(f) {
-	return typeof(f) == "function" && !(f.__name__ || f.__ename__);
-};
-Reflect.compare = function(a,b) {
-	if(a == b) return 0; else if(a > b) return 1; else return -1;
-};
-Reflect.compareMethods = function(f1,f2) {
-	if(f1 == f2) return true;
-	if(!Reflect.isFunction(f1) || !Reflect.isFunction(f2)) return false;
-	return f1.scope == f2.scope && f1.method == f2.method && f1.method != null;
-};
-Reflect.isObject = function(v) {
-	if(v == null) return false;
-	var t = typeof(v);
-	return t == "string" || t == "object" && v.__enum__ == null || t == "function" && (v.__name__ || v.__ename__) != null;
-};
-Reflect.isEnumValue = function(v) {
-	return v != null && v.__enum__ != null;
-};
-Reflect.deleteField = function(o,field) {
-	if(!Object.prototype.hasOwnProperty.call(o,field)) return false;
-	delete(o[field]);
-	return true;
-};
+Math.__name__ = true;
 var Std = function() { };
-Std.__name__ = ["Std"];
-Std.instance = function(value,c) {
-	if((value instanceof c)) return value; else return null;
-};
+Std.__name__ = true;
 Std.string = function(s) {
 	return js_Boot.__string_rec(s,"");
-};
-Std["int"] = function(x) {
-	return x | 0;
 };
 Std.parseInt = function(x) {
 	var v = parseInt(x,10);
@@ -617,33 +94,15 @@ Std.parseInt = function(x) {
 	if(isNaN(v)) return null;
 	return v;
 };
-Std.random = function(x) {
-	if(x <= 0) return 0; else return Math.floor(Math.random() * x);
-};
 var StringBuf = function() {
 	this.b = "";
 };
-StringBuf.__name__ = ["StringBuf"];
+StringBuf.__name__ = true;
 StringBuf.prototype = {
-	b: null
-	,add: function(x) {
-		this.b += Std.string(x);
-	}
-	,addSub: function(s,pos,len) {
-		if(len == null) this.b += HxOverrides.substr(s,pos,null); else this.b += HxOverrides.substr(s,pos,len);
-	}
-	,__class__: StringBuf
+	__class__: StringBuf
 };
 var StringTools = function() { };
-StringTools.__name__ = ["StringTools"];
-StringTools.startsWith = function(s,start) {
-	return s.length >= start.length && HxOverrides.substr(s,0,start.length) == start;
-};
-StringTools.endsWith = function(s,end) {
-	var elen = end.length;
-	var slen = s.length;
-	return slen >= elen && HxOverrides.substr(s,slen - elen,elen) == end;
-};
+StringTools.__name__ = true;
 StringTools.isSpace = function(s,pos) {
 	var c = HxOverrides.cca(s,pos);
 	return c > 8 && c < 14 || c == 32;
@@ -663,67 +122,8 @@ StringTools.rtrim = function(s) {
 StringTools.trim = function(s) {
 	return StringTools.ltrim(StringTools.rtrim(s));
 };
-StringTools.lpad = function(s,c,l) {
-	if(c.length <= 0) return s;
-	while(s.length < l) s = c + s;
-	return s;
-};
-StringTools.rpad = function(s,c,l) {
-	if(c.length <= 0) return s;
-	while(s.length < l) s = s + c;
-	return s;
-};
-StringTools.replace = function(s,sub,by) {
-	return s.split(sub).join(by);
-};
-StringTools.fastCodeAt = function(s,index) {
-	return s.charCodeAt(index);
-};
-var ValueType = { __ename__ : ["ValueType"], __constructs__ : ["TNull","TInt","TFloat","TBool","TObject","TFunction","TClass","TEnum","TUnknown"] };
-ValueType.TNull = ["TNull",0];
-ValueType.TNull.toString = $estr;
-ValueType.TNull.__enum__ = ValueType;
-ValueType.TInt = ["TInt",1];
-ValueType.TInt.toString = $estr;
-ValueType.TInt.__enum__ = ValueType;
-ValueType.TFloat = ["TFloat",2];
-ValueType.TFloat.toString = $estr;
-ValueType.TFloat.__enum__ = ValueType;
-ValueType.TBool = ["TBool",3];
-ValueType.TBool.toString = $estr;
-ValueType.TBool.__enum__ = ValueType;
-ValueType.TObject = ["TObject",4];
-ValueType.TObject.toString = $estr;
-ValueType.TObject.__enum__ = ValueType;
-ValueType.TFunction = ["TFunction",5];
-ValueType.TFunction.toString = $estr;
-ValueType.TFunction.__enum__ = ValueType;
-ValueType.TClass = function(c) { var $x = ["TClass",6,c]; $x.__enum__ = ValueType; $x.toString = $estr; return $x; };
-ValueType.TEnum = function(e) { var $x = ["TEnum",7,e]; $x.__enum__ = ValueType; $x.toString = $estr; return $x; };
-ValueType.TUnknown = ["TUnknown",8];
-ValueType.TUnknown.toString = $estr;
-ValueType.TUnknown.__enum__ = ValueType;
 var Type = function() { };
-Type.__name__ = ["Type"];
-Type.getClass = function(o) {
-	if(o == null) return null; else return js_Boot.getClass(o);
-};
-Type.getEnum = function(o) {
-	if(o == null) return null;
-	return o.__enum__;
-};
-Type.getSuperClass = function(c) {
-	return c.__super__;
-};
-Type.getClassName = function(c) {
-	var a = c.__name__;
-	if(a == null) return null;
-	return a.join(".");
-};
-Type.getEnumName = function(e) {
-	var a = e.__ename__;
-	return a.join(".");
-};
+Type.__name__ = true;
 Type.createInstance = function(cl,args) {
 	var _g = args.length;
 	switch(_g) {
@@ -750,43 +150,6 @@ Type.createInstance = function(cl,args) {
 	}
 	return null;
 };
-Type.createEmptyInstance = function(cl) {
-	function empty() {}; empty.prototype = cl.prototype;
-	return new empty();
-};
-Type.getInstanceFields = function(c) {
-	var a = [];
-	for(var i in c.prototype) a.push(i);
-	HxOverrides.remove(a,"__class__");
-	HxOverrides.remove(a,"__properties__");
-	return a;
-};
-Type["typeof"] = function(v) {
-	var _g = typeof(v);
-	switch(_g) {
-	case "boolean":
-		return ValueType.TBool;
-	case "string":
-		return ValueType.TClass(String);
-	case "number":
-		if(Math.ceil(v) == v % 2147483648.0) return ValueType.TInt;
-		return ValueType.TFloat;
-	case "object":
-		if(v == null) return ValueType.TNull;
-		var e = v.__enum__;
-		if(e != null) return ValueType.TEnum(e);
-		var c = js_Boot.getClass(v);
-		if(c != null) return ValueType.TClass(c);
-		return ValueType.TObject;
-	case "function":
-		if(v.__name__ || v.__ename__) return ValueType.TObject;
-		return ValueType.TFunction;
-	case "undefined":
-		return ValueType.TNull;
-	default:
-		return ValueType.TUnknown;
-	}
-};
 Type.enumEq = function(a,b) {
 	if(a == b) return true;
 	try {
@@ -806,97 +169,8 @@ Type.enumEq = function(a,b) {
 	}
 	return true;
 };
-var Xml = function(nodeType) {
-	this.nodeType = nodeType;
-	this.children = [];
-	this.attributeMap = new haxe_ds_StringMap();
-};
-Xml.__name__ = ["Xml"];
-Xml.parse = function(str) {
-	return haxe_xml_Parser.parse(str);
-};
-Xml.createElement = function(name) {
-	var xml = new Xml(Xml.Element);
-	if(xml.nodeType != Xml.Element) throw new js__$Boot_HaxeError("Bad node type, expected Element but found " + xml.nodeType);
-	xml.nodeName = name;
-	return xml;
-};
-Xml.createPCData = function(data) {
-	var xml = new Xml(Xml.PCData);
-	if(xml.nodeType == Xml.Document || xml.nodeType == Xml.Element) throw new js__$Boot_HaxeError("Bad node type, unexpected " + xml.nodeType);
-	xml.nodeValue = data;
-	return xml;
-};
-Xml.createCData = function(data) {
-	var xml = new Xml(Xml.CData);
-	if(xml.nodeType == Xml.Document || xml.nodeType == Xml.Element) throw new js__$Boot_HaxeError("Bad node type, unexpected " + xml.nodeType);
-	xml.nodeValue = data;
-	return xml;
-};
-Xml.createComment = function(data) {
-	var xml = new Xml(Xml.Comment);
-	if(xml.nodeType == Xml.Document || xml.nodeType == Xml.Element) throw new js__$Boot_HaxeError("Bad node type, unexpected " + xml.nodeType);
-	xml.nodeValue = data;
-	return xml;
-};
-Xml.createDocType = function(data) {
-	var xml = new Xml(Xml.DocType);
-	if(xml.nodeType == Xml.Document || xml.nodeType == Xml.Element) throw new js__$Boot_HaxeError("Bad node type, unexpected " + xml.nodeType);
-	xml.nodeValue = data;
-	return xml;
-};
-Xml.createProcessingInstruction = function(data) {
-	var xml = new Xml(Xml.ProcessingInstruction);
-	if(xml.nodeType == Xml.Document || xml.nodeType == Xml.Element) throw new js__$Boot_HaxeError("Bad node type, unexpected " + xml.nodeType);
-	xml.nodeValue = data;
-	return xml;
-};
-Xml.createDocument = function() {
-	return new Xml(Xml.Document);
-};
-Xml.prototype = {
-	nodeType: null
-	,nodeName: null
-	,nodeValue: null
-	,parent: null
-	,children: null
-	,attributeMap: null
-	,set: function(att,value) {
-		if(this.nodeType != Xml.Element) throw new js__$Boot_HaxeError("Bad node type, expected Element but found " + this.nodeType);
-		this.attributeMap.set(att,value);
-	}
-	,remove: function(att) {
-		if(this.nodeType != Xml.Element) throw new js__$Boot_HaxeError("Bad node type, expected Element but found " + this.nodeType);
-		this.attributeMap.remove(att);
-	}
-	,exists: function(att) {
-		if(this.nodeType != Xml.Element) throw new js__$Boot_HaxeError("Bad node type, expected Element but found " + this.nodeType);
-		return this.attributeMap.exists(att);
-	}
-	,addChild: function(x) {
-		if(this.nodeType != Xml.Document && this.nodeType != Xml.Element) throw new js__$Boot_HaxeError("Bad node type, expected Element or Document but found " + this.nodeType);
-		if(x.parent != null) x.parent.removeChild(x);
-		this.children.push(x);
-		x.parent = this;
-	}
-	,removeChild: function(x) {
-		if(this.nodeType != Xml.Document && this.nodeType != Xml.Element) throw new js__$Boot_HaxeError("Bad node type, expected Element or Document but found " + this.nodeType);
-		if(HxOverrides.remove(this.children,x)) {
-			x.parent = null;
-			return true;
-		}
-		return false;
-	}
-	,insertChild: function(x,pos) {
-		if(this.nodeType != Xml.Document && this.nodeType != Xml.Element) throw new js__$Boot_HaxeError("Bad node type, expected Element or Document but found " + this.nodeType);
-		if(x.parent != null) HxOverrides.remove(x.parent.children,x);
-		this.children.splice(pos,0,x);
-		x.parent = this;
-	}
-	,__class__: Xml
-};
 var doom__$AttributeValue_AttributeValue_$Impl_$ = {};
-doom__$AttributeValue_AttributeValue_$Impl_$.__name__ = ["doom","_AttributeValue","AttributeValue_Impl_"];
+doom__$AttributeValue_AttributeValue_$Impl_$.__name__ = true;
 doom__$AttributeValue_AttributeValue_$Impl_$.fromString = function(s) {
 	return doom_AttributeValueImpl.StringAttribute(s);
 };
@@ -921,20 +195,6 @@ doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler = function(f) {
 doom__$AttributeValue_AttributeValue_$Impl_$.fromEventHandler = function(f) {
 	return doom_AttributeValueImpl.EventAttribute(f);
 };
-doom__$AttributeValue_AttributeValue_$Impl_$.fromElementHandler = function(f) {
-	return doom_AttributeValueImpl.EventAttribute(function(e) {
-		e.preventDefault();
-		var input = e.target;
-		f(input);
-	});
-};
-doom__$AttributeValue_AttributeValue_$Impl_$.fromStringValueHandler = function(f) {
-	return doom_AttributeValueImpl.EventAttribute(function(e) {
-		e.preventDefault();
-		var value = dots_Dom.getValue(e.target);
-		f(value);
-	});
-};
 doom__$AttributeValue_AttributeValue_$Impl_$.fromBoolValueHandler = function(f) {
 	return doom_AttributeValueImpl.EventAttribute(function(e) {
 		e.preventDefault();
@@ -942,68 +202,52 @@ doom__$AttributeValue_AttributeValue_$Impl_$.fromBoolValueHandler = function(f) 
 		f(value);
 	});
 };
-doom__$AttributeValue_AttributeValue_$Impl_$.fromIntValueHandler = function(f) {
-	return doom__$AttributeValue_AttributeValue_$Impl_$.fromStringValueHandler(function(s) {
-		if(thx_Ints.canParse(s)) f(thx_Ints.parse(s));
-	});
-};
-doom__$AttributeValue_AttributeValue_$Impl_$.fromFloatValueHandler = function(f) {
-	return doom__$AttributeValue_AttributeValue_$Impl_$.fromStringValueHandler(function(s) {
-		if(thx_Floats.canParse(s)) f(thx_Floats.parse(s));
-	});
-};
 doom__$AttributeValue_AttributeValue_$Impl_$.equalsTo = function(this1,that) {
+	var tmp;
 	switch(this1[1]) {
 	case 0:
 		switch(that[1]) {
 		case 0:
-			var a = this1[2];
-			var b = that[2];
-			return a == b;
+			tmp = this1[2] == that[2];
+			break;
 		default:
-			return false;
+			tmp = false;
 		}
 		break;
 	case 1:
 		switch(that[1]) {
 		case 1:
-			var a1 = this1[2];
-			var b1 = that[2];
-			return a1 == b1;
+			tmp = this1[2] == that[2];
+			break;
 		default:
-			return false;
+			tmp = false;
 		}
 		break;
 	default:
-		return false;
+		tmp = false;
 	}
+	return tmp;
 };
 doom__$AttributeValue_AttributeValue_$Impl_$.notEqualsTo = function(this1,that) {
 	return !doom__$AttributeValue_AttributeValue_$Impl_$.equalsTo(this1,that);
 };
-var doom_AttributeValueImpl = { __ename__ : ["doom","AttributeValueImpl"], __constructs__ : ["BoolAttribute","StringAttribute","EventAttribute"] };
+var doom_AttributeValueImpl = { __ename__ : true, __constructs__ : ["BoolAttribute","StringAttribute","EventAttribute"] };
 doom_AttributeValueImpl.BoolAttribute = function(b) { var $x = ["BoolAttribute",0,b]; $x.__enum__ = doom_AttributeValueImpl; $x.toString = $estr; return $x; };
 doom_AttributeValueImpl.StringAttribute = function(s) { var $x = ["StringAttribute",1,s]; $x.__enum__ = doom_AttributeValueImpl; $x.toString = $estr; return $x; };
 doom_AttributeValueImpl.EventAttribute = function(f) { var $x = ["EventAttribute",2,f]; $x.__enum__ = doom_AttributeValueImpl; $x.toString = $estr; return $x; };
 var doom_IComponent = function() { };
-doom_IComponent.__name__ = ["doom","IComponent"];
+doom_IComponent.__name__ = true;
 doom_IComponent.prototype = {
-	element: null
-	,node: null
-	,init: null
-	,__class__: doom_IComponent
+	__class__: doom_IComponent
 };
 var doom_Component = function(state) {
 	this.state = state;
 	this.node = this.render();
 };
-doom_Component.__name__ = ["doom","Component"];
+doom_Component.__name__ = true;
 doom_Component.__interfaces__ = [doom_IComponent];
 doom_Component.prototype = {
-	element: null
-	,node: null
-	,state: null
-	,init: function() {
+	init: function() {
 		this.element = doom_HtmlNode.toHtml(this.node);
 	}
 	,updateNode: function(oldNode) {
@@ -1030,53 +274,23 @@ doom_Component.prototype = {
 	,shouldRender: function(oldState,newState) {
 		return true;
 	}
-	,toString: function() {
-		var cls = Type.getClassName(js_Boot.getClass(this)).split(".").pop();
-		return "" + cls + "(" + doom__$Node_Node_$Impl_$.toString(this.node) + ")";
-	}
 	,__class__: doom_Component
 };
-var doom__$EventHandler_EventHandler_$Impl_$ = {};
-doom__$EventHandler_EventHandler_$Impl_$.__name__ = ["doom","_EventHandler","EventHandler_Impl_"];
-doom__$EventHandler_EventHandler_$Impl_$.fromElementHandler = function(f) {
-	return function(e) {
-		f(e.target);
-	};
-};
 var thx__$Set_Set_$Impl_$ = {};
-thx__$Set_Set_$Impl_$.__name__ = ["thx","_Set","Set_Impl_"];
+thx__$Set_Set_$Impl_$.__name__ = true;
 thx__$Set_Set_$Impl_$.createString = function(it) {
 	var map = new haxe_ds_StringMap();
 	var set = map;
 	if(null != it) thx__$Set_Set_$Impl_$.pushMany(set,it);
 	return set;
 };
-thx__$Set_Set_$Impl_$.createInt = function(it) {
-	var map = new haxe_ds_IntMap();
-	var set = map;
-	if(null != it) thx__$Set_Set_$Impl_$.pushMany(set,it);
-	return set;
-};
-thx__$Set_Set_$Impl_$.createObject = function(it) {
-	var map = new haxe_ds_ObjectMap();
-	var set = map;
-	if(null != it) thx__$Set_Set_$Impl_$.pushMany(set,it);
-	return set;
-};
-thx__$Set_Set_$Impl_$.createEnum = function(arr) {
-	var map = new haxe_ds_EnumValueMap();
-	var set = map;
-	if(null != arr) thx__$Set_Set_$Impl_$.pushMany(set,arr);
-	return set;
-};
-thx__$Set_Set_$Impl_$._new = function(map) {
-	return map;
-};
 thx__$Set_Set_$Impl_$.add = function(this1,v) {
-	if(this1.exists(v)) return false; else {
+	var tmp;
+	if(this1.exists(v)) tmp = false; else {
 		this1.set(v,true);
-		return true;
+		tmp = true;
 	}
+	return tmp;
 };
 thx__$Set_Set_$Impl_$.copy = function(this1) {
 	var inst = thx__$Set_Set_$Impl_$.empty(this1);
@@ -1091,15 +305,6 @@ thx__$Set_Set_$Impl_$.empty = function(this1) {
 	var inst = Type.createInstance(this1 == null?null:js_Boot.getClass(this1),[]);
 	return inst;
 };
-thx__$Set_Set_$Impl_$.difference = function(this1,set) {
-	var result = thx__$Set_Set_$Impl_$.copy(this1);
-	var $it0 = $iterator(thx__$Set_Set_$Impl_$)(set);
-	while( $it0.hasNext() ) {
-		var item = $it0.next();
-		result.remove(item);
-	}
-	return result;
-};
 thx__$Set_Set_$Impl_$.filter = function(this1,predicate) {
 	return thx__$Set_Set_$Impl_$.reduce(this1,function(acc,v) {
 		if(predicate(v)) thx__$Set_Set_$Impl_$.add(acc,v);
@@ -1111,24 +316,6 @@ thx__$Set_Set_$Impl_$.map = function(this1,f) {
 		acc.push(f(v));
 		return acc;
 	},[]);
-};
-thx__$Set_Set_$Impl_$.exists = function(this1,v) {
-	return this1.exists(v);
-};
-thx__$Set_Set_$Impl_$.remove = function(this1,v) {
-	return this1.remove(v);
-};
-thx__$Set_Set_$Impl_$.intersection = function(this1,set) {
-	var result = thx__$Set_Set_$Impl_$.empty(this1);
-	var $it0 = $iterator(thx__$Set_Set_$Impl_$)(this1);
-	while( $it0.hasNext() ) {
-		var item = $it0.next();
-		if(set.exists(item)) result.set(item,true);
-	}
-	return result;
-};
-thx__$Set_Set_$Impl_$.push = function(this1,v) {
-	this1.set(v,true);
 };
 thx__$Set_Set_$Impl_$.pushMany = function(this1,values) {
 	var $it0 = $iterator(values)();
@@ -1148,66 +335,56 @@ thx__$Set_Set_$Impl_$.reduce = function(this1,handler,acc) {
 thx__$Set_Set_$Impl_$.iterator = function(this1) {
 	return this1.keys();
 };
-thx__$Set_Set_$Impl_$.union = function(this1,set) {
-	var newset = thx__$Set_Set_$Impl_$.copy(this1);
-	thx__$Set_Set_$Impl_$.pushMany(newset,thx__$Set_Set_$Impl_$.toArray(set));
-	return newset;
-};
-thx__$Set_Set_$Impl_$.toArray = function(this1) {
-	var arr = [];
-	var $it0 = this1.keys();
-	while( $it0.hasNext() ) {
-		var k = $it0.next();
-		arr.push(k);
-	}
-	return arr;
-};
-thx__$Set_Set_$Impl_$.toString = function(this1) {
-	return "{" + thx__$Set_Set_$Impl_$.toArray(this1).join(", ") + "}";
-};
-thx__$Set_Set_$Impl_$.get_length = function(this1) {
-	var l = 0;
-	var $it0 = this1.iterator();
-	while( $it0.hasNext() ) {
-		var i = $it0.next();
-		++l;
-	}
-	return l;
-};
 var doom_HtmlNode = function() { };
-doom_HtmlNode.__name__ = ["doom","HtmlNode"];
+doom_HtmlNode.__name__ = true;
 doom_HtmlNode.toHtml = function(node) {
-	{
-		var _g = node;
-		switch(_g[1]) {
-		case 0:
-			var children = _g[4];
-			var attributes = _g[3];
-			var name = _g[2];
-			return doom_HtmlNode.createElement(name,attributes,children);
-		case 1:
-			var text = _g[2];
-			return dots_Html.parse(text);
-		case 2:
-			var text1 = _g[2];
-			return window.document.createTextNode(text1);
-		case 3:
-			var text2 = _g[2];
-			return doom_HtmlNode.createComment(text2);
-		case 4:
-			var comp = _g[2];
-			comp.init();
-			return comp.element;
-		}
+	var tmp;
+	var _g = node;
+	switch(_g[1]) {
+	case 0:
+		var children = _g[4];
+		var attributes = _g[3];
+		var name = _g[2];
+		tmp = doom_HtmlNode.createElement(name,attributes,children);
+		break;
+	case 1:
+		var text = _g[2];
+		tmp = dots_Html.parse(text);
+		break;
+	case 2:
+		var text1 = _g[2];
+		tmp = window.document.createTextNode(text1);
+		break;
+	case 3:
+		var text2 = _g[2];
+		tmp = doom_HtmlNode.createComment(text2);
+		break;
+	case 4:
+		var comp = _g[2];
+		comp.init();
+		tmp = comp.element;
+		break;
 	}
+	return tmp;
 };
 doom_HtmlNode.createElement = function(name,attributes,children) {
-	var el = window.document.createElement(name);
+	var colonPos = name.indexOf(":");
+	var tmp;
+	if(colonPos > 0) {
+		var prefix = name.substring(0,colonPos);
+		var name1 = name.substring(colonPos + 1);
+		var tmp1;
+		var _this = Doom.namespaces;
+		if(__map_reserved[prefix] != null) tmp1 = _this.getReserved(prefix); else tmp1 = _this.h[prefix];
+		var ns = tmp1;
+		if(null == ns) throw new thx_Error("element prefix \"" + prefix + "\" is not associated to any namespace. Add the right namespace to Doom.namespaces.",null,{ fileName : "HtmlNode.hx", lineNumber : 37, className : "doom.HtmlNode", methodName : "createElement"});
+		tmp = window.document.createElementNS(ns,name1);
+	} else tmp = window.document.createElement(name);
+	var el = tmp;
 	var $it0 = attributes.keys();
 	while( $it0.hasNext() ) {
 		var key = $it0.next();
-		var value;
-		value = __map_reserved[key] != null?attributes.getReserved(key):attributes.h[key];
+		var value = __map_reserved[key] != null?attributes.getReserved(key):attributes.h[key];
 		switch(value[1]) {
 		case 1:
 			var s = value[2];
@@ -1253,11 +430,10 @@ doom_HtmlNode.trigger = function(el,name) {
 };
 doom_HtmlNode.addEvent = function(el,name,handler) {
 	el["on" + name] = handler;
-	if(doom_HtmlNode.customEvents.exists(name)) el.addEventListener(name,handler,false);
-};
-doom_HtmlNode.removeEvent = function(el,name) {
-	if(doom_HtmlNode.customEvents.exists(name)) el.removeEventListener(name,Reflect.field(el,"on" + name),false);
-	Reflect.deleteField(el,"on" + name);
+	var tmp;
+	var _this = doom_HtmlNode.customEvents;
+	if(__map_reserved[name] != null) tmp = _this.existsReserved(name); else tmp = _this.h.hasOwnProperty(name);
+	if(tmp) el.addEventListener(name,handler,false);
 };
 doom_HtmlNode.applyPatch = function(patch,node) {
 	{
@@ -1272,7 +448,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				node.appendChild(window.document.createTextNode(text));
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n,null,{ fileName : "HtmlNode.hx", lineNumber : 125, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n,null,{ fileName : "HtmlNode.hx", lineNumber : 135, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 1:
@@ -1283,7 +459,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				node.appendChild(dots_Html.parse(text1));
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n1,null,{ fileName : "HtmlNode.hx", lineNumber : 125, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n1,null,{ fileName : "HtmlNode.hx", lineNumber : 135, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 2:
@@ -1294,7 +470,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				node.appendChild(doom_HtmlNode.createComment(text2));
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n2,null,{ fileName : "HtmlNode.hx", lineNumber : 125, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n2,null,{ fileName : "HtmlNode.hx", lineNumber : 135, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 3:
@@ -1309,7 +485,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				doom_HtmlNode.trigger(el,"mount");
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n3,null,{ fileName : "HtmlNode.hx", lineNumber : 125, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n3,null,{ fileName : "HtmlNode.hx", lineNumber : 135, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 4:
@@ -1323,7 +499,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				node.removeAttribute(name1);
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n4,null,{ fileName : "HtmlNode.hx", lineNumber : 125, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n4,null,{ fileName : "HtmlNode.hx", lineNumber : 135, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 6:
@@ -1348,7 +524,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				}
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n5,null,{ fileName : "HtmlNode.hx", lineNumber : 125, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n5,null,{ fileName : "HtmlNode.hx", lineNumber : 135, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 7:
@@ -1387,7 +563,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				node.nodeValue = newcontent1;
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n6,null,{ fileName : "HtmlNode.hx", lineNumber : 125, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n6,null,{ fileName : "HtmlNode.hx", lineNumber : 135, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 12:
@@ -1400,108 +576,113 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				doom_HtmlNode.applyPatches(patches,n8);
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n7,null,{ fileName : "HtmlNode.hx", lineNumber : 125, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n7,null,{ fileName : "HtmlNode.hx", lineNumber : 135, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		}
 	}
 };
 var doom__$Node_Node_$Impl_$ = {};
-doom__$Node_Node_$Impl_$.__name__ = ["doom","_Node","Node_Impl_"];
+doom__$Node_Node_$Impl_$.__name__ = true;
 doom__$Node_Node_$Impl_$.el = function(name,attributes,children,child) {
 	if(null == attributes) attributes = new haxe_ds_StringMap();
 	if(null == children) children = [];
 	if(null != child) children.push(child);
 	return doom_NodeImpl.Element(name,attributes,children);
 };
-doom__$Node_Node_$Impl_$.comment = function(content) {
-	return doom_NodeImpl.Comment(content);
-};
-doom__$Node_Node_$Impl_$.text = function(content) {
-	return doom_NodeImpl.Text(content);
-};
-doom__$Node_Node_$Impl_$.raw = function(content) {
-	return doom_NodeImpl.Raw(content);
-};
-doom__$Node_Node_$Impl_$.comp = function(comp) {
-	return doom_NodeImpl.ComponentNode(comp);
-};
 doom__$Node_Node_$Impl_$.diffAttributes = function(a,b) {
 	var ka = thx__$Set_Set_$Impl_$.createString(thx_Iterators.toArray(a.keys()));
 	var kb = thx__$Set_Set_$Impl_$.createString(thx_Iterators.toArray(b.keys()));
-	var removed;
+	var tmp;
 	var result = thx__$Set_Set_$Impl_$.copy(ka);
 	var $it0 = $iterator(thx__$Set_Set_$Impl_$)(kb);
 	while( $it0.hasNext() ) {
 		var item = $it0.next();
 		result.remove(item);
 	}
-	removed = result;
-	var added;
+	tmp = result;
+	var removed = tmp;
+	var tmp1;
 	var result1 = thx__$Set_Set_$Impl_$.copy(kb);
 	var $it1 = $iterator(thx__$Set_Set_$Impl_$)(ka);
 	while( $it1.hasNext() ) {
 		var item1 = $it1.next();
 		result1.remove(item1);
 	}
-	added = result1;
-	var common;
+	tmp1 = result1;
+	var added = tmp1;
+	var tmp2;
 	var result2 = thx__$Set_Set_$Impl_$.empty(ka);
 	var $it2 = $iterator(thx__$Set_Set_$Impl_$)(ka);
 	while( $it2.hasNext() ) {
 		var item2 = $it2.next();
-		if(kb.exists(item2)) result2.set(item2,true);
+		var tmp6;
+		var _this = kb;
+		if(__map_reserved[item2] != null) tmp6 = _this.existsReserved(item2); else tmp6 = _this.h.hasOwnProperty(item2);
+		if(tmp6) {
+			var _this1 = result2;
+			if(__map_reserved[item2] != null) _this1.setReserved(item2,true); else _this1.h[item2] = true;
+		}
 	}
-	common = result2;
-	return ((function(_e) {
-		return function(f) {
-			return thx__$Set_Set_$Impl_$.map(_e,f);
-		};
-	})(removed))(function(_) {
-		return doom_Patch.RemoveAttribute(_);
-	}).concat(((function(_e1) {
-		return function(f1) {
-			return thx__$Set_Set_$Impl_$.map(_e1,f1);
-		};
-	})(((function(_e2) {
-		return function(predicate) {
-			return thx__$Set_Set_$Impl_$.filter(_e2,predicate);
-		};
-	})(common))(function(_1) {
-		return doom__$AttributeValue_AttributeValue_$Impl_$.notEqualsTo(__map_reserved[_1] != null?a.getReserved(_1):a.h[_1],__map_reserved[_1] != null?b.getReserved(_1):b.h[_1]);
-	})))(function(_2) {
+	tmp2 = result2;
+	var common = tmp2;
+	var tmp3;
+	var _e = removed;
+	tmp3 = function(f) {
+		return thx__$Set_Set_$Impl_$.map(_e,f);
+	};
+	var tmp4;
+	var tmp7;
+	var _e2 = common;
+	tmp7 = function(predicate) {
+		return thx__$Set_Set_$Impl_$.filter(_e2,predicate);
+	};
+	var _e1 = tmp7(function(_) {
+		return doom__$AttributeValue_AttributeValue_$Impl_$.notEqualsTo(__map_reserved[_] != null?a.getReserved(_):a.h[_],__map_reserved[_] != null?b.getReserved(_):b.h[_]);
+	});
+	tmp4 = function(f1) {
+		return thx__$Set_Set_$Impl_$.map(_e1,f1);
+	};
+	var tmp5;
+	var _e3 = added;
+	tmp5 = function(f2) {
+		return thx__$Set_Set_$Impl_$.map(_e3,f2);
+	};
+	return tmp3(function(_1) {
+		return doom_Patch.RemoveAttribute(_1);
+	}).concat(tmp4(function(_2) {
 		return doom_Patch.SetAttribute(_2,__map_reserved[_2] != null?b.getReserved(_2):b.h[_2]);
-	})).concat(((function(_e3) {
-		return function(f2) {
-			return thx__$Set_Set_$Impl_$.map(_e3,f2);
-		};
-	})(added))(function(_3) {
+	})).concat(tmp5(function(_3) {
 		return doom_Patch.SetAttribute(_3,__map_reserved[_3] != null?b.getReserved(_3):b.h[_3]);
 	}));
 };
 doom__$Node_Node_$Impl_$.diffAdd = function(node) {
+	var tmp;
 	switch(node[1]) {
 	case 0:
-		var c = node[4];
-		var a = node[3];
-		var n = node[2];
-		return [doom_Patch.AddElement(n,a,c)];
+		tmp = [doom_Patch.AddElement(node[2],node[3],node[4])];
+		break;
 	case 2:
-		var t = node[2];
-		return [doom_Patch.AddText(t)];
+		tmp = [doom_Patch.AddText(node[2])];
+		break;
 	case 1:
-		var t1 = node[2];
-		return [doom_Patch.AddRaw(t1)];
+		tmp = [doom_Patch.AddRaw(node[2])];
+		break;
 	case 3:
-		var t2 = node[2];
-		return [doom_Patch.AddComment(t2)];
+		tmp = [doom_Patch.AddComment(node[2])];
+		break;
 	case 4:
-		var comp = node[2];
-		return doom__$Node_Node_$Impl_$.diffAdd(comp.node);
+		tmp = doom__$Node_Node_$Impl_$.diffAdd(node[2].node);
+		break;
 	}
+	return tmp;
 };
 doom__$Node_Node_$Impl_$.diffNodes = function(a,b) {
-	var min = thx_Ints.min(a.length,b.length);
+	var tmp;
+	var a1 = a.length;
+	var b1 = b.length;
+	if(a1 < b1) tmp = a1; else tmp = b1;
+	var min = tmp;
 	var result = [];
 	var _g1 = min;
 	var _g = a.length;
@@ -1524,139 +705,117 @@ doom__$Node_Node_$Impl_$.diffNodes = function(a,b) {
 	return result;
 };
 doom__$Node_Node_$Impl_$.diff = function(this1,that) {
+	var tmp;
 	switch(this1[1]) {
 	case 4:
 		switch(that[1]) {
 		case 4:
-			var old = this1[2];
 			var comp = that[2];
-			comp.element = old.element;
-			return doom__$Node_Node_$Impl_$.diff(this1,comp.node);
+			comp.element = this1[2].element;
+			tmp = doom__$Node_Node_$Impl_$.diff(this1,comp.node);
+			break;
 		case 0:
-			var c2 = that[4];
-			var a2 = that[3];
-			var n2 = that[2];
-			return [doom_Patch.ReplaceWithElement(n2,a2,c2)];
+			tmp = [doom_Patch.ReplaceWithElement(that[2],that[3],that[4])];
+			break;
 		case 2:
-			var t = that[2];
-			return [doom_Patch.ReplaceWithText(t)];
+			tmp = [doom_Patch.ReplaceWithText(that[2])];
+			break;
 		case 1:
-			var t1 = that[2];
-			return [doom_Patch.ReplaceWithRaw(t1)];
+			tmp = [doom_Patch.ReplaceWithRaw(that[2])];
+			break;
 		case 3:
-			var t2 = that[2];
-			return [doom_Patch.ReplaceWithComment(t2)];
+			tmp = [doom_Patch.ReplaceWithComment(that[2])];
+			break;
 		}
 		break;
 	case 0:
 		switch(that[1]) {
 		case 4:
-			var comp1 = that[2];
-			return doom__$Node_Node_$Impl_$.diff(this1,comp1.node);
+			tmp = doom__$Node_Node_$Impl_$.diff(this1,that[2].node);
+			break;
 		case 0:
-			var n1 = this1[2];
-			var c1 = this1[4];
-			var a1 = this1[3];
-			var c21 = that[4];
-			var a21 = that[3];
-			var n21 = that[2];
-			if(n1 != n21) return [doom_Patch.ReplaceWithElement(n21,a21,c21)]; else {
-				var c11 = this1[4];
-				var a11 = this1[3];
-				var c22 = that[4];
-				var a22 = that[3];
-				return doom__$Node_Node_$Impl_$.diffAttributes(a11,a22).concat(doom__$Node_Node_$Impl_$.diffNodes(c11,c22));
-			}
+			var n2 = that[2];
+			if(this1[2] != n2) tmp = [doom_Patch.ReplaceWithElement(n2,that[3],that[4])]; else tmp = doom__$Node_Node_$Impl_$.diffAttributes(this1[3],that[3]).concat(doom__$Node_Node_$Impl_$.diffNodes(this1[4],that[4]));
 			break;
 		case 2:
-			var t3 = that[2];
-			return [doom_Patch.ReplaceWithText(t3)];
+			tmp = [doom_Patch.ReplaceWithText(that[2])];
+			break;
 		case 1:
-			var t4 = that[2];
-			return [doom_Patch.ReplaceWithRaw(t4)];
+			tmp = [doom_Patch.ReplaceWithRaw(that[2])];
+			break;
 		case 3:
-			var t5 = that[2];
-			return [doom_Patch.ReplaceWithComment(t5)];
+			tmp = [doom_Patch.ReplaceWithComment(that[2])];
+			break;
 		}
 		break;
 	case 2:
 		switch(that[1]) {
 		case 4:
-			var comp2 = that[2];
-			return doom__$Node_Node_$Impl_$.diff(this1,comp2.node);
+			tmp = doom__$Node_Node_$Impl_$.diff(this1,that[2].node);
+			break;
 		case 0:
-			var c23 = that[4];
-			var a23 = that[3];
-			var n22 = that[2];
-			return [doom_Patch.ReplaceWithElement(n22,a23,c23)];
+			tmp = [doom_Patch.ReplaceWithElement(that[2],that[3],that[4])];
+			break;
 		case 2:
-			var t11 = this1[2];
-			var t21 = that[2];
-			if(t11 != t21) return [doom_Patch.ContentChanged(t21)]; else return [];
+			var t2 = that[2];
+			if(this1[2] != t2) tmp = [doom_Patch.ContentChanged(t2)]; else tmp = [];
 			break;
 		case 1:
-			var t6 = that[2];
-			return [doom_Patch.ReplaceWithRaw(t6)];
+			tmp = [doom_Patch.ReplaceWithRaw(that[2])];
+			break;
 		case 3:
-			var t7 = that[2];
-			return [doom_Patch.ReplaceWithComment(t7)];
+			tmp = [doom_Patch.ReplaceWithComment(that[2])];
+			break;
 		}
 		break;
 	case 3:
 		switch(that[1]) {
 		case 4:
-			var comp3 = that[2];
-			return doom__$Node_Node_$Impl_$.diff(this1,comp3.node);
+			tmp = doom__$Node_Node_$Impl_$.diff(this1,that[2].node);
+			break;
 		case 0:
-			var c24 = that[4];
-			var a24 = that[3];
-			var n23 = that[2];
-			return [doom_Patch.ReplaceWithElement(n23,a24,c24)];
+			tmp = [doom_Patch.ReplaceWithElement(that[2],that[3],that[4])];
+			break;
 		case 3:
-			var t12 = this1[2];
-			var t22 = that[2];
-			if(t12 != t22) return [doom_Patch.ContentChanged(t22)]; else return [];
+			var t21 = that[2];
+			if(this1[2] != t21) tmp = [doom_Patch.ContentChanged(t21)]; else tmp = [];
 			break;
 		case 2:
-			var t8 = that[2];
-			return [doom_Patch.ReplaceWithText(t8)];
+			tmp = [doom_Patch.ReplaceWithText(that[2])];
+			break;
 		case 1:
-			var t9 = that[2];
-			return [doom_Patch.ReplaceWithRaw(t9)];
+			tmp = [doom_Patch.ReplaceWithRaw(that[2])];
+			break;
 		}
 		break;
 	default:
 		switch(that[1]) {
 		case 4:
-			var comp4 = that[2];
-			return doom__$Node_Node_$Impl_$.diff(this1,comp4.node);
+			tmp = doom__$Node_Node_$Impl_$.diff(this1,that[2].node);
+			break;
 		case 0:
-			var c25 = that[4];
-			var a25 = that[3];
-			var n24 = that[2];
-			return [doom_Patch.ReplaceWithElement(n24,a25,c25)];
+			tmp = [doom_Patch.ReplaceWithElement(that[2],that[3],that[4])];
+			break;
 		case 2:
-			var t10 = that[2];
-			return [doom_Patch.ReplaceWithText(t10)];
+			tmp = [doom_Patch.ReplaceWithText(that[2])];
+			break;
 		case 1:
-			var t13 = that[2];
-			return [doom_Patch.ReplaceWithRaw(t13)];
+			tmp = [doom_Patch.ReplaceWithRaw(that[2])];
+			break;
 		case 3:
-			var t14 = that[2];
-			return [doom_Patch.ReplaceWithComment(t14)];
+			tmp = [doom_Patch.ReplaceWithComment(that[2])];
+			break;
 		}
 	}
+	return tmp;
 };
-doom__$Node_Node_$Impl_$.toString = function(this1) {
-	return doom_XmlNode.toString(this1);
-};
-var doom_NodeImpl = { __ename__ : ["doom","NodeImpl"], __constructs__ : ["Element","Raw","Text","Comment","ComponentNode"] };
+var doom_NodeImpl = { __ename__ : true, __constructs__ : ["Element","Raw","Text","Comment","ComponentNode"] };
 doom_NodeImpl.Element = function(name,attributes,children) { var $x = ["Element",0,name,attributes,children]; $x.__enum__ = doom_NodeImpl; $x.toString = $estr; return $x; };
 doom_NodeImpl.Raw = function(text) { var $x = ["Raw",1,text]; $x.__enum__ = doom_NodeImpl; $x.toString = $estr; return $x; };
 doom_NodeImpl.Text = function(text) { var $x = ["Text",2,text]; $x.__enum__ = doom_NodeImpl; $x.toString = $estr; return $x; };
 doom_NodeImpl.Comment = function(text) { var $x = ["Comment",3,text]; $x.__enum__ = doom_NodeImpl; $x.toString = $estr; return $x; };
 doom_NodeImpl.ComponentNode = function(comp) { var $x = ["ComponentNode",4,comp]; $x.__enum__ = doom_NodeImpl; $x.toString = $estr; return $x; };
-var doom_Patch = { __ename__ : ["doom","Patch"], __constructs__ : ["AddText","AddRaw","AddComment","AddElement","Remove","RemoveAttribute","SetAttribute","ReplaceWithElement","ReplaceWithText","ReplaceWithRaw","ReplaceWithComment","ContentChanged","PatchChild"] };
+var doom_Patch = { __ename__ : true, __constructs__ : ["AddText","AddRaw","AddComment","AddElement","Remove","RemoveAttribute","SetAttribute","ReplaceWithElement","ReplaceWithText","ReplaceWithRaw","ReplaceWithComment","ContentChanged","PatchChild"] };
 doom_Patch.AddText = function(text) { var $x = ["AddText",0,text]; $x.__enum__ = doom_Patch; $x.toString = $estr; return $x; };
 doom_Patch.AddRaw = function(text) { var $x = ["AddRaw",1,text]; $x.__enum__ = doom_Patch; $x.toString = $estr; return $x; };
 doom_Patch.AddComment = function(text) { var $x = ["AddComment",2,text]; $x.__enum__ = doom_Patch; $x.toString = $estr; return $x; };
@@ -1672,76 +831,26 @@ doom_Patch.ReplaceWithRaw = function(text) { var $x = ["ReplaceWithRaw",9,text];
 doom_Patch.ReplaceWithComment = function(text) { var $x = ["ReplaceWithComment",10,text]; $x.__enum__ = doom_Patch; $x.toString = $estr; return $x; };
 doom_Patch.ContentChanged = function(newcontent) { var $x = ["ContentChanged",11,newcontent]; $x.__enum__ = doom_Patch; $x.toString = $estr; return $x; };
 doom_Patch.PatchChild = function(index,patches) { var $x = ["PatchChild",12,index,patches]; $x.__enum__ = doom_Patch; $x.toString = $estr; return $x; };
-var doom_Patches = function() { };
-doom_Patches.__name__ = ["doom","Patches"];
-doom_Patches.toString = function(patch) {
-	switch(patch[1]) {
-	case 3:
-		var children = patch[4];
-		var attributes = patch[3];
-		var name = patch[2];
-		var c = children.map(function(child) {
-			return "\n  " + doom__$Node_Node_$Impl_$.toString(child).split("\n").join("\n  ");
-		});
-		return "AddElement(" + name + ", " + thx_Maps.string(attributes) + ", " + Std.string(c) + ")";
-	case 7:
-		var children1 = patch[4];
-		var attributes1 = patch[3];
-		var name1 = patch[2];
-		var c1 = children1.map(function(child1) {
-			return "\n  " + doom__$Node_Node_$Impl_$.toString(child1).split("\n").join("\n  ");
-		});
-		return "ReplaceWithElement(" + name1 + ", " + thx_Maps.string(attributes1) + ", " + Std.string(c1) + ")";
-	case 12:
-		var patches = patch[3];
-		var index = patch[2];
-		var p = "  " + doom_PatchArray.toPrettyString(patches).split("\n").join("\n  ");
-		return "PatchChild(" + index + ", " + p + ")";
-	default:
-		return Std.string(patch);
-	}
-};
-var doom_PatchArray = function() { };
-doom_PatchArray.__name__ = ["doom","PatchArray"];
-doom_PatchArray.toPrettyString = function(patches) {
-	return "\n" + patches.map(doom_Patches.toString).join("\n");
-};
 var doom_PropertiesComponent = function(prop,state) {
 	this.prop = prop;
 	doom_Component.call(this,state);
 };
-doom_PropertiesComponent.__name__ = ["doom","PropertiesComponent"];
+doom_PropertiesComponent.__name__ = true;
 doom_PropertiesComponent.__super__ = doom_Component;
 doom_PropertiesComponent.prototype = $extend(doom_Component.prototype,{
-	prop: null
-	,__class__: doom_PropertiesComponent
+	__class__: doom_PropertiesComponent
 });
 var doom_StatelessComponent = function() {
 	this.node = this.render();
 };
-doom_StatelessComponent.__name__ = ["doom","StatelessComponent"];
+doom_StatelessComponent.__name__ = true;
 doom_StatelessComponent.__interfaces__ = [doom_IComponent];
 doom_StatelessComponent.prototype = {
-	element: null
-	,node: null
-	,init: function() {
+	init: function() {
 		this.element = doom_HtmlNode.toHtml(this.node);
-	}
-	,updateNode: function(oldNode) {
-		var newNode = this.render();
-		var patches = doom__$Node_Node_$Impl_$.diff(oldNode,newNode);
-		doom_HtmlNode.applyPatches(patches,this.element);
-		this.node = newNode;
 	}
 	,render: function() {
 		throw new thx_error_AbstractMethod({ fileName : "StatelessComponent.hx", lineNumber : 27, className : "doom.StatelessComponent", methodName : "render"});
-	}
-	,update: function() {
-		this.updateNode(this.node);
-	}
-	,toString: function() {
-		var cls = Type.getClassName(js_Boot.getClass(this)).split(".").pop();
-		return "" + cls + "(" + doom__$Node_Node_$Impl_$.toString(this.node) + ")";
 	}
 	,__class__: doom_StatelessComponent
 };
@@ -1749,388 +858,43 @@ var doom_PropertiesStatelessComponent = function(prop) {
 	this.prop = prop;
 	doom_StatelessComponent.call(this);
 };
-doom_PropertiesStatelessComponent.__name__ = ["doom","PropertiesStatelessComponent"];
+doom_PropertiesStatelessComponent.__name__ = true;
 doom_PropertiesStatelessComponent.__super__ = doom_StatelessComponent;
 doom_PropertiesStatelessComponent.prototype = $extend(doom_StatelessComponent.prototype,{
-	prop: null
-	,__class__: doom_PropertiesStatelessComponent
+	__class__: doom_PropertiesStatelessComponent
 });
-var doom_XmlNode = function() { };
-doom_XmlNode.__name__ = ["doom","XmlNode"];
-doom_XmlNode.toXml = function(node) {
-	{
-		var _g = node;
-		switch(_g[1]) {
-		case 0:
-			var children = _g[4];
-			var attributes = _g[3];
-			var name = _g[2];
-			return doom_XmlNode.createElement(name,attributes,children);
-		case 2:
-			var text = _g[2];
-			return Xml.createPCData(text);
-		case 1:
-			var text1 = _g[2];
-			return Xml.parse(text1);
-		case 3:
-			var text2 = _g[2];
-			return Xml.createComment(text2);
-		case 4:
-			var comp = _g[2];
-			return doom_XmlNode.toXml(comp.node);
-		}
-	}
-};
-doom_XmlNode.createElement = function(name,attributes,children) {
-	var xml = Xml.createElement(name);
-	var $it0 = attributes.keys();
-	while( $it0.hasNext() ) {
-		var key = $it0.next();
-		var v;
-		v = __map_reserved[key] != null?attributes.getReserved(key):attributes.h[key];
-		switch(v[1]) {
-		case 1:
-			var s = v[2];
-			xml.set(key,s);
-			break;
-		case 0:
-			var b = v[2];
-			if(b) xml.set(key,key); else {
-			}
-			break;
-		default:
-		}
-	}
-	var _g = 0;
-	while(_g < children.length) {
-		var child = children[_g];
-		++_g;
-		var n = doom_XmlNode.toXml(child);
-		if(null != n) xml.addChild(n);
-	}
-	return xml;
-};
-doom_XmlNode.applyPatches = function(patches,node) {
-	var _g = 0;
-	while(_g < patches.length) {
-		var patch = patches[_g];
-		++_g;
-		doom_XmlNode.applyPatch(patch,node);
-	}
-};
-doom_XmlNode.applyPatch = function(patch,node) {
-	{
-		var _g = node.nodeType;
-		var p = patch;
-		switch(patch[1]) {
-		case 0:
-			var n = _g;
-			switch(_g) {
-			case 0:
-				var text = patch[2];
-				node.addChild(Xml.createPCData(text));
-				break;
-			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n,null,{ fileName : "XmlNode.hx", lineNumber : 92, className : "doom.XmlNode", methodName : "applyPatch"});
-			}
-			break;
-		case 1:
-			var n1 = _g;
-			switch(_g) {
-			case 0:
-				var text1 = patch[2];
-				node.addChild(Xml.parse(text1));
-				break;
-			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n1,null,{ fileName : "XmlNode.hx", lineNumber : 92, className : "doom.XmlNode", methodName : "applyPatch"});
-			}
-			break;
-		case 2:
-			var n2 = _g;
-			switch(_g) {
-			case 0:
-				var text2 = patch[2];
-				node.addChild(Xml.createComment(text2));
-				break;
-			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n2,null,{ fileName : "XmlNode.hx", lineNumber : 92, className : "doom.XmlNode", methodName : "applyPatch"});
-			}
-			break;
-		case 3:
-			var n3 = _g;
-			switch(_g) {
-			case 0:
-				var name = patch[2];
-				var children = patch[4];
-				var attributes = patch[3];
-				node.addChild(doom_XmlNode.createElement(name,attributes,children));
-				break;
-			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n3,null,{ fileName : "XmlNode.hx", lineNumber : 92, className : "doom.XmlNode", methodName : "applyPatch"});
-			}
-			break;
-		case 4:
-			node.parent.removeChild(node);
-			break;
-		case 5:
-			var n4 = _g;
-			switch(_g) {
-			case 0:
-				var name1 = patch[2];
-				node.remove(name1);
-				break;
-			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n4,null,{ fileName : "XmlNode.hx", lineNumber : 92, className : "doom.XmlNode", methodName : "applyPatch"});
-			}
-			break;
-		case 6:
-			var n5 = _g;
-			switch(_g) {
-			case 0:
-				var name2 = patch[2];
-				var value = patch[3];
-				switch(value[1]) {
-				case 1:
-					var s = value[2];
-					if(s != null && s.length > 0) node.set(name2,s); else node.remove(name2);
-					break;
-				case 0:
-					var b = value[2];
-					if(b) node.set(name2,name2); else node.remove(name2);
-					break;
-				default:
-				}
-				break;
-			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n5,null,{ fileName : "XmlNode.hx", lineNumber : 92, className : "doom.XmlNode", methodName : "applyPatch"});
-			}
-			break;
-		case 7:
-			var children1 = patch[4];
-			var attributes1 = patch[3];
-			var name3 = patch[2];
-			var parent = node.parent;
-			var pos = thx_Iterators.indexOf((function($this) {
-				var $r;
-				if(parent.nodeType != Xml.Document && parent.nodeType != Xml.Element) throw new js__$Boot_HaxeError("Bad node type, expected Element or Document but found " + parent.nodeType);
-				$r = HxOverrides.iter(parent.children);
-				return $r;
-			}(this)),node);
-			parent.removeChild(node);
-			parent.insertChild(doom_XmlNode.createElement(name3,attributes1,children1),pos);
-			break;
-		case 8:
-			var text3 = patch[2];
-			var parent1 = node.parent;
-			var pos1 = thx_Iterators.indexOf((function($this) {
-				var $r;
-				if(parent1.nodeType != Xml.Document && parent1.nodeType != Xml.Element) throw new js__$Boot_HaxeError("Bad node type, expected Element or Document but found " + parent1.nodeType);
-				$r = HxOverrides.iter(parent1.children);
-				return $r;
-			}(this)),node);
-			parent1.removeChild(node);
-			parent1.insertChild(Xml.createPCData(text3),pos1);
-			break;
-		case 9:
-			var text4 = patch[2];
-			var parent2 = node.parent;
-			var pos2 = thx_Iterators.indexOf((function($this) {
-				var $r;
-				if(parent2.nodeType != Xml.Document && parent2.nodeType != Xml.Element) throw new js__$Boot_HaxeError("Bad node type, expected Element or Document but found " + parent2.nodeType);
-				$r = HxOverrides.iter(parent2.children);
-				return $r;
-			}(this)),node);
-			parent2.removeChild(node);
-			parent2.insertChild(Xml.parse(text4),pos2);
-			break;
-		case 10:
-			var text5 = patch[2];
-			var parent3 = node.parent;
-			var pos3 = thx_Iterators.indexOf((function($this) {
-				var $r;
-				if(parent3.nodeType != Xml.Document && parent3.nodeType != Xml.Element) throw new js__$Boot_HaxeError("Bad node type, expected Element or Document but found " + parent3.nodeType);
-				$r = HxOverrides.iter(parent3.children);
-				return $r;
-			}(this)),node);
-			parent3.removeChild(node);
-			parent3.insertChild(Xml.createComment(text5),pos3);
-			break;
-		case 11:
-			var n6 = _g;
-			switch(_g) {
-			case 2:
-				var newcontent = patch[2];
-				if(node.nodeType == Xml.Document || node.nodeType == Xml.Element) throw new js__$Boot_HaxeError("Bad node type, unexpected " + node.nodeType);
-				node.nodeValue = newcontent;
-				break;
-			case 3:
-				var newcontent1 = patch[2];
-				if(node.nodeType == Xml.Document || node.nodeType == Xml.Element) throw new js__$Boot_HaxeError("Bad node type, unexpected " + node.nodeType);
-				node.nodeValue = newcontent1;
-				break;
-			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n6,null,{ fileName : "XmlNode.hx", lineNumber : 92, className : "doom.XmlNode", methodName : "applyPatch"});
-			}
-			break;
-		case 12:
-			var n7 = _g;
-			switch(_g) {
-			case 0:
-				var index = patch[2];
-				var patches = patch[3];
-				var n8 = thx_Iterators.get((function($this) {
-					var $r;
-					if(node.nodeType != Xml.Document && node.nodeType != Xml.Element) throw new js__$Boot_HaxeError("Bad node type, expected Element or Document but found " + node.nodeType);
-					$r = HxOverrides.iter(node.children);
-					return $r;
-				}(this)),index);
-				doom_XmlNode.applyPatches(patches,n8);
-				break;
-			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n7,null,{ fileName : "XmlNode.hx", lineNumber : 92, className : "doom.XmlNode", methodName : "applyPatch"});
-			}
-			break;
-		}
-	}
-};
-doom_XmlNode.toString = function(node) {
-	{
-		var _g = node;
-		switch(_g[1]) {
-		case 0:
-			var children = _g[4];
-			var attributes = _g[3];
-			var name = _g[2];
-			var buf = "<" + name + doom_XmlNode.attributesToString(attributes);
-			if(children.length == 0) buf += "/>"; else {
-				buf += ">";
-				buf += children.map(function(_) {
-					return doom_XmlNode.toString(_);
-				}).join("");
-				buf += "</" + name + ">";
-			}
-			return buf;
-		case 2:
-			var text = _g[2];
-			return text;
-		case 1:
-			var text1 = _g[2];
-			return text1;
-		case 3:
-			var text2 = _g[2];
-			return "<!--" + text2 + "-->";
-		case 4:
-			var comp = _g[2];
-			return doom_XmlNode.toString(comp.node);
-		}
-	}
-};
-doom_XmlNode.attributesToString = function(attributes) {
-	var buf = "";
-	var $it0 = attributes.keys();
-	while( $it0.hasNext() ) {
-		var key = $it0.next();
-		var value;
-		value = __map_reserved[key] != null?attributes.getReserved(key):attributes.h[key];
-		switch(value[1]) {
-		case 1:
-			var s = value[2];
-			if(s != null && s.length > 0) buf += " " + key + "=\"" + StringTools.replace(s,"\"","&quot;") + "\""; else {
-			}
-			break;
-		case 0:
-			var b = value[2];
-			if(b) buf += " " + key + "=\"" + key + "\""; else {
-			}
-			break;
-		default:
-		}
-	}
-	return buf;
-};
-var dots_Dom = function() { };
-dots_Dom.__name__ = ["dots","Dom"];
-dots_Dom.addCss = function(css,container) {
-	if(null == container) container = window.document.head;
-	var style;
-	var _this = window.document;
-	style = _this.createElement("style");
-	style.type = "text/css";
-	style.appendChild(window.document.createTextNode(css));
-	container.appendChild(style);
-};
-dots_Dom.getValue = function(el) {
-	var _g = el.nodeName;
-	switch(_g) {
-	case "input":
-		var input = el;
-		return input.value;
-	case "textarea":
-		var textarea = el;
-		return textarea.value;
-	case "select":
-		var select = el;
-		var option = select.options.item(select.selectedIndex);
-		return option.value;
-	default:
-		return el.innerHTML;
-	}
-};
 var dots_Html = function() { };
-dots_Html.__name__ = ["dots","Html"];
+dots_Html.__name__ = true;
 dots_Html.parseNodes = function(html) {
 	if(!dots_Html.pattern.match(html)) throw new js__$Boot_HaxeError("Invalid pattern \"" + html + "\"");
-	var el;
+	var tmp;
 	var _g = dots_Html.pattern.matched(1).toLowerCase();
 	switch(_g) {
 	case "tbody":case "thead":
-		el = window.document.createElement("table");
+		tmp = window.document.createElement("table");
 		break;
 	case "td":case "th":
-		el = window.document.createElement("tr");
+		tmp = window.document.createElement("tr");
 		break;
 	case "tr":
-		el = window.document.createElement("tbody");
+		tmp = window.document.createElement("tbody");
 		break;
 	default:
-		el = window.document.createElement("div");
+		tmp = window.document.createElement("div");
 	}
+	var el = tmp;
 	el.innerHTML = html;
 	return el.childNodes;
-};
-dots_Html.parseArray = function(html) {
-	return dots_Html.nodeListToArray(dots_Html.parseNodes(html));
 };
 dots_Html.parse = function(html) {
 	return dots_Html.parseNodes(html)[0];
 };
-dots_Html.nodeListToArray = function(list) {
-	return Array.prototype.slice.call(list,0);
-};
-var dots_Keys = function() { };
-dots_Keys.__name__ = ["dots","Keys"];
 var dots_Query = function() { };
-dots_Query.__name__ = ["dots","Query"];
+dots_Query.__name__ = true;
 dots_Query.first = function(selector,ctx) {
 	return (ctx != null?ctx:dots_Query.doc).querySelector(selector);
 };
-dots_Query.list = function(selector,ctx) {
-	return (ctx != null?ctx:dots_Query.doc).querySelectorAll(selector);
-};
-dots_Query.all = function(selector,ctx) {
-	return dots_Html.nodeListToArray(dots_Query.list(selector,ctx));
-};
-dots_Query.getElementIndex = function(el) {
-	var index = 0;
-	while(null != (el = el.previousElementSibling)) index++;
-	return index;
-};
-dots_Query.childrenOf = function(children,parent) {
-	return children.filter(function(child) {
-		return child.parentElement == parent;
-	});
-};
-var haxe_StackItem = { __ename__ : ["haxe","StackItem"], __constructs__ : ["CFunction","Module","FilePos","Method","LocalFunction"] };
+var haxe_StackItem = { __ename__ : true, __constructs__ : ["CFunction","Module","FilePos","Method","LocalFunction"] };
 haxe_StackItem.CFunction = ["CFunction",0];
 haxe_StackItem.CFunction.toString = $estr;
 haxe_StackItem.CFunction.__enum__ = haxe_StackItem;
@@ -2139,7 +903,7 @@ haxe_StackItem.FilePos = function(s,file,line) { var $x = ["FilePos",2,s,file,li
 haxe_StackItem.Method = function(classname,method) { var $x = ["Method",3,classname,method]; $x.__enum__ = haxe_StackItem; $x.toString = $estr; return $x; };
 haxe_StackItem.LocalFunction = function(v) { var $x = ["LocalFunction",4,v]; $x.__enum__ = haxe_StackItem; $x.toString = $estr; return $x; };
 var haxe_CallStack = function() { };
-haxe_CallStack.__name__ = ["haxe","CallStack"];
+haxe_CallStack.__name__ = true;
 haxe_CallStack.getStack = function(e) {
 	if(e == null) return [];
 	var oldValue = Error.prepareStackTrace;
@@ -2201,7 +965,7 @@ haxe_CallStack.itemToString = function(b,s) {
 	case 1:
 		var m = s[2];
 		b.b += "module ";
-		if(m == null) b.b += "null"; else b.b += "" + m;
+		b.b += m == null?"null":"" + m;
 		break;
 	case 2:
 		var line = s[4];
@@ -2211,22 +975,22 @@ haxe_CallStack.itemToString = function(b,s) {
 			haxe_CallStack.itemToString(b,s1);
 			b.b += " (";
 		}
-		if(file == null) b.b += "null"; else b.b += "" + file;
+		b.b += file == null?"null":"" + file;
 		b.b += " line ";
-		if(line == null) b.b += "null"; else b.b += "" + line;
+		b.b += line == null?"null":"" + line;
 		if(s1 != null) b.b += ")";
 		break;
 	case 3:
 		var meth = s[3];
 		var cname = s[2];
-		if(cname == null) b.b += "null"; else b.b += "" + cname;
+		b.b += cname == null?"null":"" + cname;
 		b.b += ".";
-		if(meth == null) b.b += "null"; else b.b += "" + meth;
+		b.b += meth == null?"null":"" + meth;
 		break;
 	case 4:
 		var n = s[2];
 		b.b += "local function #";
-		if(n == null) b.b += "null"; else b.b += "" + n;
+		b.b += n == null?"null":"" + n;
 		break;
 	}
 };
@@ -2252,348 +1016,23 @@ haxe_CallStack.makeStack = function(s) {
 	} else return s;
 };
 var haxe_IMap = function() { };
-haxe_IMap.__name__ = ["haxe","IMap"];
+haxe_IMap.__name__ = true;
 haxe_IMap.prototype = {
-	get: null
-	,set: null
-	,exists: null
-	,remove: null
-	,keys: null
-	,iterator: null
-	,__class__: haxe_IMap
-};
-var haxe__$Int32_Int32_$Impl_$ = {};
-haxe__$Int32_Int32_$Impl_$.__name__ = ["haxe","_Int32","Int32_Impl_"];
-haxe__$Int32_Int32_$Impl_$.mul = function(a,b) {
-	return a * (b & 65535) + (a * (b >>> 16) << 16 | 0) | 0;
+	__class__: haxe_IMap
 };
 var haxe_Log = function() { };
-haxe_Log.__name__ = ["haxe","Log"];
+haxe_Log.__name__ = true;
 haxe_Log.trace = function(v,infos) {
 	js_Boot.__trace(v,infos);
-};
-var haxe_Utf8 = function() { };
-haxe_Utf8.__name__ = ["haxe","Utf8"];
-haxe_Utf8.compare = function(a,b) {
-	if(a > b) return 1; else if(a == b) return 0; else return -1;
-};
-haxe_Utf8.sub = function(s,pos,len) {
-	return HxOverrides.substr(s,pos,len);
-};
-var haxe_ds_BalancedTree = function() {
-};
-haxe_ds_BalancedTree.__name__ = ["haxe","ds","BalancedTree"];
-haxe_ds_BalancedTree.prototype = {
-	root: null
-	,set: function(key,value) {
-		this.root = this.setLoop(key,value,this.root);
-	}
-	,get: function(key) {
-		var node = this.root;
-		while(node != null) {
-			var c = this.compare(key,node.key);
-			if(c == 0) return node.value;
-			if(c < 0) node = node.left; else node = node.right;
-		}
-		return null;
-	}
-	,remove: function(key) {
-		try {
-			this.root = this.removeLoop(key,this.root);
-			return true;
-		} catch( e ) {
-			haxe_CallStack.lastException = e;
-			if (e instanceof js__$Boot_HaxeError) e = e.val;
-			if( js_Boot.__instanceof(e,String) ) {
-				return false;
-			} else throw(e);
-		}
-	}
-	,exists: function(key) {
-		var node = this.root;
-		while(node != null) {
-			var c = this.compare(key,node.key);
-			if(c == 0) return true; else if(c < 0) node = node.left; else node = node.right;
-		}
-		return false;
-	}
-	,iterator: function() {
-		var ret = [];
-		this.iteratorLoop(this.root,ret);
-		return HxOverrides.iter(ret);
-	}
-	,keys: function() {
-		var ret = [];
-		this.keysLoop(this.root,ret);
-		return HxOverrides.iter(ret);
-	}
-	,setLoop: function(k,v,node) {
-		if(node == null) return new haxe_ds_TreeNode(null,k,v,null);
-		var c = this.compare(k,node.key);
-		if(c == 0) return new haxe_ds_TreeNode(node.left,k,v,node.right,node == null?0:node._height); else if(c < 0) {
-			var nl = this.setLoop(k,v,node.left);
-			return this.balance(nl,node.key,node.value,node.right);
-		} else {
-			var nr = this.setLoop(k,v,node.right);
-			return this.balance(node.left,node.key,node.value,nr);
-		}
-	}
-	,removeLoop: function(k,node) {
-		if(node == null) throw new js__$Boot_HaxeError("Not_found");
-		var c = this.compare(k,node.key);
-		if(c == 0) return this.merge(node.left,node.right); else if(c < 0) return this.balance(this.removeLoop(k,node.left),node.key,node.value,node.right); else return this.balance(node.left,node.key,node.value,this.removeLoop(k,node.right));
-	}
-	,iteratorLoop: function(node,acc) {
-		if(node != null) {
-			this.iteratorLoop(node.left,acc);
-			acc.push(node.value);
-			this.iteratorLoop(node.right,acc);
-		}
-	}
-	,keysLoop: function(node,acc) {
-		if(node != null) {
-			this.keysLoop(node.left,acc);
-			acc.push(node.key);
-			this.keysLoop(node.right,acc);
-		}
-	}
-	,merge: function(t1,t2) {
-		if(t1 == null) return t2;
-		if(t2 == null) return t1;
-		var t = this.minBinding(t2);
-		return this.balance(t1,t.key,t.value,this.removeMinBinding(t2));
-	}
-	,minBinding: function(t) {
-		if(t == null) throw new js__$Boot_HaxeError("Not_found"); else if(t.left == null) return t; else return this.minBinding(t.left);
-	}
-	,removeMinBinding: function(t) {
-		if(t.left == null) return t.right; else return this.balance(this.removeMinBinding(t.left),t.key,t.value,t.right);
-	}
-	,balance: function(l,k,v,r) {
-		var hl;
-		if(l == null) hl = 0; else hl = l._height;
-		var hr;
-		if(r == null) hr = 0; else hr = r._height;
-		if(hl > hr + 2) {
-			if((function($this) {
-				var $r;
-				var _this = l.left;
-				$r = _this == null?0:_this._height;
-				return $r;
-			}(this)) >= (function($this) {
-				var $r;
-				var _this1 = l.right;
-				$r = _this1 == null?0:_this1._height;
-				return $r;
-			}(this))) return new haxe_ds_TreeNode(l.left,l.key,l.value,new haxe_ds_TreeNode(l.right,k,v,r)); else return new haxe_ds_TreeNode(new haxe_ds_TreeNode(l.left,l.key,l.value,l.right.left),l.right.key,l.right.value,new haxe_ds_TreeNode(l.right.right,k,v,r));
-		} else if(hr > hl + 2) {
-			if((function($this) {
-				var $r;
-				var _this2 = r.right;
-				$r = _this2 == null?0:_this2._height;
-				return $r;
-			}(this)) > (function($this) {
-				var $r;
-				var _this3 = r.left;
-				$r = _this3 == null?0:_this3._height;
-				return $r;
-			}(this))) return new haxe_ds_TreeNode(new haxe_ds_TreeNode(l,k,v,r.left),r.key,r.value,r.right); else return new haxe_ds_TreeNode(new haxe_ds_TreeNode(l,k,v,r.left.left),r.left.key,r.left.value,new haxe_ds_TreeNode(r.left.right,r.key,r.value,r.right));
-		} else return new haxe_ds_TreeNode(l,k,v,r,(hl > hr?hl:hr) + 1);
-	}
-	,compare: function(k1,k2) {
-		return Reflect.compare(k1,k2);
-	}
-	,__class__: haxe_ds_BalancedTree
-};
-var haxe_ds_TreeNode = function(l,k,v,r,h) {
-	if(h == null) h = -1;
-	this.left = l;
-	this.key = k;
-	this.value = v;
-	this.right = r;
-	if(h == -1) this._height = ((function($this) {
-		var $r;
-		var _this = $this.left;
-		$r = _this == null?0:_this._height;
-		return $r;
-	}(this)) > (function($this) {
-		var $r;
-		var _this1 = $this.right;
-		$r = _this1 == null?0:_this1._height;
-		return $r;
-	}(this))?(function($this) {
-		var $r;
-		var _this2 = $this.left;
-		$r = _this2 == null?0:_this2._height;
-		return $r;
-	}(this)):(function($this) {
-		var $r;
-		var _this3 = $this.right;
-		$r = _this3 == null?0:_this3._height;
-		return $r;
-	}(this))) + 1; else this._height = h;
-};
-haxe_ds_TreeNode.__name__ = ["haxe","ds","TreeNode"];
-haxe_ds_TreeNode.prototype = {
-	left: null
-	,right: null
-	,key: null
-	,value: null
-	,_height: null
-	,__class__: haxe_ds_TreeNode
-};
-var haxe_ds_EnumValueMap = function() {
-	haxe_ds_BalancedTree.call(this);
-};
-haxe_ds_EnumValueMap.__name__ = ["haxe","ds","EnumValueMap"];
-haxe_ds_EnumValueMap.__interfaces__ = [haxe_IMap];
-haxe_ds_EnumValueMap.__super__ = haxe_ds_BalancedTree;
-haxe_ds_EnumValueMap.prototype = $extend(haxe_ds_BalancedTree.prototype,{
-	compare: function(k1,k2) {
-		var d = k1[1] - k2[1];
-		if(d != 0) return d;
-		var p1 = k1.slice(2);
-		var p2 = k2.slice(2);
-		if(p1.length == 0 && p2.length == 0) return 0;
-		return this.compareArgs(p1,p2);
-	}
-	,compareArgs: function(a1,a2) {
-		var ld = a1.length - a2.length;
-		if(ld != 0) return ld;
-		var _g1 = 0;
-		var _g = a1.length;
-		while(_g1 < _g) {
-			var i = _g1++;
-			var d = this.compareArg(a1[i],a2[i]);
-			if(d != 0) return d;
-		}
-		return 0;
-	}
-	,compareArg: function(v1,v2) {
-		if(Reflect.isEnumValue(v1) && Reflect.isEnumValue(v2)) return this.compare(v1,v2); else if((v1 instanceof Array) && v1.__enum__ == null && ((v2 instanceof Array) && v2.__enum__ == null)) return this.compareArgs(v1,v2); else return Reflect.compare(v1,v2);
-	}
-	,__class__: haxe_ds_EnumValueMap
-});
-var haxe_ds_IntMap = function() {
-	this.h = { };
-};
-haxe_ds_IntMap.__name__ = ["haxe","ds","IntMap"];
-haxe_ds_IntMap.__interfaces__ = [haxe_IMap];
-haxe_ds_IntMap.prototype = {
-	h: null
-	,set: function(key,value) {
-		this.h[key] = value;
-	}
-	,get: function(key) {
-		return this.h[key];
-	}
-	,exists: function(key) {
-		return this.h.hasOwnProperty(key);
-	}
-	,remove: function(key) {
-		if(!this.h.hasOwnProperty(key)) return false;
-		delete(this.h[key]);
-		return true;
-	}
-	,keys: function() {
-		var a = [];
-		for( var key in this.h ) {
-		if(this.h.hasOwnProperty(key)) a.push(key | 0);
-		}
-		return HxOverrides.iter(a);
-	}
-	,iterator: function() {
-		return { ref : this.h, it : this.keys(), hasNext : function() {
-			return this.it.hasNext();
-		}, next : function() {
-			var i = this.it.next();
-			return this.ref[i];
-		}};
-	}
-	,__class__: haxe_ds_IntMap
-};
-var haxe_ds_ObjectMap = function() {
-	this.h = { };
-	this.h.__keys__ = { };
-};
-haxe_ds_ObjectMap.__name__ = ["haxe","ds","ObjectMap"];
-haxe_ds_ObjectMap.__interfaces__ = [haxe_IMap];
-haxe_ds_ObjectMap.prototype = {
-	h: null
-	,set: function(key,value) {
-		var id = key.__id__ || (key.__id__ = ++haxe_ds_ObjectMap.count);
-		this.h[id] = value;
-		this.h.__keys__[id] = key;
-	}
-	,get: function(key) {
-		return this.h[key.__id__];
-	}
-	,exists: function(key) {
-		return this.h.__keys__[key.__id__] != null;
-	}
-	,remove: function(key) {
-		var id = key.__id__;
-		if(this.h.__keys__[id] == null) return false;
-		delete(this.h[id]);
-		delete(this.h.__keys__[id]);
-		return true;
-	}
-	,keys: function() {
-		var a = [];
-		for( var key in this.h.__keys__ ) {
-		if(this.h.hasOwnProperty(key)) a.push(this.h.__keys__[key]);
-		}
-		return HxOverrides.iter(a);
-	}
-	,iterator: function() {
-		return { ref : this.h, it : this.keys(), hasNext : function() {
-			return this.it.hasNext();
-		}, next : function() {
-			var i = this.it.next();
-			return this.ref[i.__id__];
-		}};
-	}
-	,__class__: haxe_ds_ObjectMap
-};
-var haxe_ds_Option = { __ename__ : ["haxe","ds","Option"], __constructs__ : ["Some","None"] };
-haxe_ds_Option.Some = function(v) { var $x = ["Some",0,v]; $x.__enum__ = haxe_ds_Option; $x.toString = $estr; return $x; };
-haxe_ds_Option.None = ["None",1];
-haxe_ds_Option.None.toString = $estr;
-haxe_ds_Option.None.__enum__ = haxe_ds_Option;
-var haxe_ds__$StringMap_StringMapIterator = function(map,keys) {
-	this.map = map;
-	this.keys = keys;
-	this.index = 0;
-	this.count = keys.length;
-};
-haxe_ds__$StringMap_StringMapIterator.__name__ = ["haxe","ds","_StringMap","StringMapIterator"];
-haxe_ds__$StringMap_StringMapIterator.prototype = {
-	map: null
-	,keys: null
-	,index: null
-	,count: null
-	,hasNext: function() {
-		return this.index < this.count;
-	}
-	,next: function() {
-		return this.map.get(this.keys[this.index++]);
-	}
-	,__class__: haxe_ds__$StringMap_StringMapIterator
 };
 var haxe_ds_StringMap = function() {
 	this.h = { };
 };
-haxe_ds_StringMap.__name__ = ["haxe","ds","StringMap"];
+haxe_ds_StringMap.__name__ = true;
 haxe_ds_StringMap.__interfaces__ = [haxe_IMap];
 haxe_ds_StringMap.prototype = {
-	h: null
-	,rh: null
-	,set: function(key,value) {
+	set: function(key,value) {
 		if(__map_reserved[key] != null) this.setReserved(key,value); else this.h[key] = value;
-	}
-	,get: function(key) {
-		if(__map_reserved[key] != null) return this.getReserved(key);
-		return this.h[key];
 	}
 	,exists: function(key) {
 		if(__map_reserved[key] != null) return this.existsReserved(key);
@@ -2604,7 +1043,7 @@ haxe_ds_StringMap.prototype = {
 		this.rh["$" + key] = value;
 	}
 	,getReserved: function(key) {
-		if(this.rh == null) return null; else return this.rh["$" + key];
+		return this.rh == null?null:this.rh["$" + key];
 	}
 	,existsReserved: function(key) {
 		if(this.rh == null) return false;
@@ -2623,8 +1062,10 @@ haxe_ds_StringMap.prototype = {
 		}
 	}
 	,keys: function() {
+		var tmp;
 		var _this = this.arrayKeys();
-		return HxOverrides.iter(_this);
+		tmp = HxOverrides.iter(_this);
+		return tmp;
 	}
 	,arrayKeys: function() {
 		var out = [];
@@ -2638,331 +1079,7 @@ haxe_ds_StringMap.prototype = {
 		}
 		return out;
 	}
-	,iterator: function() {
-		return new haxe_ds__$StringMap_StringMapIterator(this,this.arrayKeys());
-	}
 	,__class__: haxe_ds_StringMap
-};
-var haxe_xml_Parser = function() { };
-haxe_xml_Parser.__name__ = ["haxe","xml","Parser"];
-haxe_xml_Parser.parse = function(str,strict) {
-	if(strict == null) strict = false;
-	var doc = Xml.createDocument();
-	haxe_xml_Parser.doParse(str,strict,0,doc);
-	return doc;
-};
-haxe_xml_Parser.doParse = function(str,strict,p,parent) {
-	if(p == null) p = 0;
-	var xml = null;
-	var state = 1;
-	var next = 1;
-	var aname = null;
-	var start = 0;
-	var nsubs = 0;
-	var nbrackets = 0;
-	var c = str.charCodeAt(p);
-	var buf = new StringBuf();
-	var escapeNext = 1;
-	var attrValQuote = -1;
-	while(!(c != c)) {
-		switch(state) {
-		case 0:
-			switch(c) {
-			case 10:case 13:case 9:case 32:
-				break;
-			default:
-				state = next;
-				continue;
-			}
-			break;
-		case 1:
-			switch(c) {
-			case 60:
-				state = 0;
-				next = 2;
-				break;
-			default:
-				start = p;
-				state = 13;
-				continue;
-			}
-			break;
-		case 13:
-			if(c == 60) {
-				buf.addSub(str,start,p - start);
-				var child = Xml.createPCData(buf.b);
-				buf = new StringBuf();
-				parent.addChild(child);
-				nsubs++;
-				state = 0;
-				next = 2;
-			} else if(c == 38) {
-				buf.addSub(str,start,p - start);
-				state = 18;
-				escapeNext = 13;
-				start = p + 1;
-			}
-			break;
-		case 17:
-			if(c == 93 && str.charCodeAt(p + 1) == 93 && str.charCodeAt(p + 2) == 62) {
-				var child1 = Xml.createCData(HxOverrides.substr(str,start,p - start));
-				parent.addChild(child1);
-				nsubs++;
-				p += 2;
-				state = 1;
-			}
-			break;
-		case 2:
-			switch(c) {
-			case 33:
-				if(str.charCodeAt(p + 1) == 91) {
-					p += 2;
-					if(HxOverrides.substr(str,p,6).toUpperCase() != "CDATA[") throw new js__$Boot_HaxeError("Expected <![CDATA[");
-					p += 5;
-					state = 17;
-					start = p + 1;
-				} else if(str.charCodeAt(p + 1) == 68 || str.charCodeAt(p + 1) == 100) {
-					if(HxOverrides.substr(str,p + 2,6).toUpperCase() != "OCTYPE") throw new js__$Boot_HaxeError("Expected <!DOCTYPE");
-					p += 8;
-					state = 16;
-					start = p + 1;
-				} else if(str.charCodeAt(p + 1) != 45 || str.charCodeAt(p + 2) != 45) throw new js__$Boot_HaxeError("Expected <!--"); else {
-					p += 2;
-					state = 15;
-					start = p + 1;
-				}
-				break;
-			case 63:
-				state = 14;
-				start = p;
-				break;
-			case 47:
-				if(parent == null) throw new js__$Boot_HaxeError("Expected node name");
-				start = p + 1;
-				state = 0;
-				next = 10;
-				break;
-			default:
-				state = 3;
-				start = p;
-				continue;
-			}
-			break;
-		case 3:
-			if(!(c >= 97 && c <= 122 || c >= 65 && c <= 90 || c >= 48 && c <= 57 || c == 58 || c == 46 || c == 95 || c == 45)) {
-				if(p == start) throw new js__$Boot_HaxeError("Expected node name");
-				xml = Xml.createElement(HxOverrides.substr(str,start,p - start));
-				parent.addChild(xml);
-				nsubs++;
-				state = 0;
-				next = 4;
-				continue;
-			}
-			break;
-		case 4:
-			switch(c) {
-			case 47:
-				state = 11;
-				break;
-			case 62:
-				state = 9;
-				break;
-			default:
-				state = 5;
-				start = p;
-				continue;
-			}
-			break;
-		case 5:
-			if(!(c >= 97 && c <= 122 || c >= 65 && c <= 90 || c >= 48 && c <= 57 || c == 58 || c == 46 || c == 95 || c == 45)) {
-				var tmp;
-				if(start == p) throw new js__$Boot_HaxeError("Expected attribute name");
-				tmp = HxOverrides.substr(str,start,p - start);
-				aname = tmp;
-				if(xml.exists(aname)) throw new js__$Boot_HaxeError("Duplicate attribute");
-				state = 0;
-				next = 6;
-				continue;
-			}
-			break;
-		case 6:
-			switch(c) {
-			case 61:
-				state = 0;
-				next = 7;
-				break;
-			default:
-				throw new js__$Boot_HaxeError("Expected =");
-			}
-			break;
-		case 7:
-			switch(c) {
-			case 34:case 39:
-				buf = new StringBuf();
-				state = 8;
-				start = p + 1;
-				attrValQuote = c;
-				break;
-			default:
-				throw new js__$Boot_HaxeError("Expected \"");
-			}
-			break;
-		case 8:
-			switch(c) {
-			case 38:
-				buf.addSub(str,start,p - start);
-				state = 18;
-				escapeNext = 8;
-				start = p + 1;
-				break;
-			case 62:
-				if(strict) throw new js__$Boot_HaxeError("Invalid unescaped " + String.fromCharCode(c) + " in attribute value"); else if(c == attrValQuote) {
-					buf.addSub(str,start,p - start);
-					var val = buf.b;
-					buf = new StringBuf();
-					xml.set(aname,val);
-					state = 0;
-					next = 4;
-				}
-				break;
-			case 60:
-				if(strict) throw new js__$Boot_HaxeError("Invalid unescaped " + String.fromCharCode(c) + " in attribute value"); else if(c == attrValQuote) {
-					buf.addSub(str,start,p - start);
-					var val1 = buf.b;
-					buf = new StringBuf();
-					xml.set(aname,val1);
-					state = 0;
-					next = 4;
-				}
-				break;
-			default:
-				if(c == attrValQuote) {
-					buf.addSub(str,start,p - start);
-					var val2 = buf.b;
-					buf = new StringBuf();
-					xml.set(aname,val2);
-					state = 0;
-					next = 4;
-				}
-			}
-			break;
-		case 9:
-			p = haxe_xml_Parser.doParse(str,strict,p,xml);
-			start = p;
-			state = 1;
-			break;
-		case 11:
-			switch(c) {
-			case 62:
-				state = 1;
-				break;
-			default:
-				throw new js__$Boot_HaxeError("Expected >");
-			}
-			break;
-		case 12:
-			switch(c) {
-			case 62:
-				if(nsubs == 0) parent.addChild(Xml.createPCData(""));
-				return p;
-			default:
-				throw new js__$Boot_HaxeError("Expected >");
-			}
-			break;
-		case 10:
-			if(!(c >= 97 && c <= 122 || c >= 65 && c <= 90 || c >= 48 && c <= 57 || c == 58 || c == 46 || c == 95 || c == 45)) {
-				if(start == p) throw new js__$Boot_HaxeError("Expected node name");
-				var v = HxOverrides.substr(str,start,p - start);
-				if(v != (function($this) {
-					var $r;
-					if(parent.nodeType != Xml.Element) throw new js__$Boot_HaxeError("Bad node type, expected Element but found " + parent.nodeType);
-					$r = parent.nodeName;
-					return $r;
-				}(this))) throw new js__$Boot_HaxeError("Expected </" + (function($this) {
-					var $r;
-					if(parent.nodeType != Xml.Element) throw "Bad node type, expected Element but found " + parent.nodeType;
-					$r = parent.nodeName;
-					return $r;
-				}(this)) + ">");
-				state = 0;
-				next = 12;
-				continue;
-			}
-			break;
-		case 15:
-			if(c == 45 && str.charCodeAt(p + 1) == 45 && str.charCodeAt(p + 2) == 62) {
-				var xml1 = Xml.createComment(HxOverrides.substr(str,start,p - start));
-				parent.addChild(xml1);
-				nsubs++;
-				p += 2;
-				state = 1;
-			}
-			break;
-		case 16:
-			if(c == 91) nbrackets++; else if(c == 93) nbrackets--; else if(c == 62 && nbrackets == 0) {
-				var xml2 = Xml.createDocType(HxOverrides.substr(str,start,p - start));
-				parent.addChild(xml2);
-				nsubs++;
-				state = 1;
-			}
-			break;
-		case 14:
-			if(c == 63 && str.charCodeAt(p + 1) == 62) {
-				p++;
-				var str1 = HxOverrides.substr(str,start + 1,p - start - 2);
-				var xml3 = Xml.createProcessingInstruction(str1);
-				parent.addChild(xml3);
-				nsubs++;
-				state = 1;
-			}
-			break;
-		case 18:
-			if(c == 59) {
-				var s = HxOverrides.substr(str,start,p - start);
-				if(s.charCodeAt(0) == 35) {
-					var c1;
-					if(s.charCodeAt(1) == 120) c1 = Std.parseInt("0" + HxOverrides.substr(s,1,s.length - 1)); else c1 = Std.parseInt(HxOverrides.substr(s,1,s.length - 1));
-					buf.b += String.fromCharCode(c1);
-				} else if(!haxe_xml_Parser.escapes.exists(s)) {
-					if(strict) throw new js__$Boot_HaxeError("Undefined entity: " + s);
-					buf.b += Std.string("&" + s + ";");
-				} else buf.add(haxe_xml_Parser.escapes.get(s));
-				start = p + 1;
-				state = escapeNext;
-			} else if(!(c >= 97 && c <= 122 || c >= 65 && c <= 90 || c >= 48 && c <= 57 || c == 58 || c == 46 || c == 95 || c == 45) && c != 35) {
-				if(strict) throw new js__$Boot_HaxeError("Invalid character in entity: " + String.fromCharCode(c));
-				buf.b += "&";
-				buf.addSub(str,start,p - start);
-				p--;
-				start = p + 1;
-				state = escapeNext;
-			}
-			break;
-		}
-		c = StringTools.fastCodeAt(str,++p);
-	}
-	if(state == 1) {
-		start = p;
-		state = 13;
-	}
-	if(state == 13) {
-		if(p != start || nsubs == 0) {
-			buf.addSub(str,start,p - start);
-			var xml4 = Xml.createPCData(buf.b);
-			parent.addChild(xml4);
-			nsubs++;
-		}
-		return p;
-	}
-	if(!strict && state == 18 && escapeNext == 13) {
-		buf.b += "&";
-		buf.addSub(str,start,p - start);
-		var xml5 = Xml.createPCData(buf.b);
-		parent.addChild(xml5);
-		nsubs++;
-		return p;
-	}
-	throw new js__$Boot_HaxeError("Unexpected end");
 };
 var js__$Boot_HaxeError = function(val) {
 	Error.call(this);
@@ -2970,20 +1087,18 @@ var js__$Boot_HaxeError = function(val) {
 	this.message = String(val);
 	if(Error.captureStackTrace) Error.captureStackTrace(this,js__$Boot_HaxeError);
 };
-js__$Boot_HaxeError.__name__ = ["js","_Boot","HaxeError"];
+js__$Boot_HaxeError.__name__ = true;
 js__$Boot_HaxeError.__super__ = Error;
 js__$Boot_HaxeError.prototype = $extend(Error.prototype,{
-	val: null
-	,__class__: js__$Boot_HaxeError
+	__class__: js__$Boot_HaxeError
 });
 var js_Boot = function() { };
-js_Boot.__name__ = ["js","Boot"];
+js_Boot.__name__ = true;
 js_Boot.__unhtml = function(s) {
 	return s.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;");
 };
 js_Boot.__trace = function(v,i) {
-	var msg;
-	if(i != null) msg = i.fileName + ":" + i.lineNumber + ": "; else msg = "";
+	var msg = i != null?i.fileName + ":" + i.lineNumber + ": ":"";
 	msg += js_Boot.__string_rec(v,"");
 	if(i != null && i.customParams != null) {
 		var _g = 0;
@@ -3075,79 +1190,21 @@ js_Boot.__string_rec = function(o,s) {
 		return String(o);
 	}
 };
-js_Boot.__interfLoop = function(cc,cl) {
-	if(cc == null) return false;
-	if(cc == cl) return true;
-	var intf = cc.__interfaces__;
-	if(intf != null) {
-		var _g1 = 0;
-		var _g = intf.length;
-		while(_g1 < _g) {
-			var i = _g1++;
-			var i1 = intf[i];
-			if(i1 == cl || js_Boot.__interfLoop(i1,cl)) return true;
-		}
-	}
-	return js_Boot.__interfLoop(cc.__super__,cl);
-};
-js_Boot.__instanceof = function(o,cl) {
-	if(cl == null) return false;
-	switch(cl) {
-	case Int:
-		return (o|0) === o;
-	case Float:
-		return typeof(o) == "number";
-	case Bool:
-		return typeof(o) == "boolean";
-	case String:
-		return typeof(o) == "string";
-	case Array:
-		return (o instanceof Array) && o.__enum__ == null;
-	case Dynamic:
-		return true;
-	default:
-		if(o != null) {
-			if(typeof(cl) == "function") {
-				if(o instanceof cl) return true;
-				if(js_Boot.__interfLoop(js_Boot.getClass(o),cl)) return true;
-			} else if(typeof(cl) == "object" && js_Boot.__isNativeObj(cl)) {
-				if(o instanceof cl) return true;
-			}
-		} else return false;
-		if(cl == Class && o.__name__ != null) return true;
-		if(cl == Enum && o.__ename__ != null) return true;
-		return o.__enum__ == cl;
-	}
-};
 js_Boot.__nativeClassName = function(o) {
 	var name = js_Boot.__toStr.call(o).slice(8,-1);
 	if(name == "Object" || name == "Function" || name == "Math" || name == "JSON") return null;
 	return name;
 };
-js_Boot.__isNativeObj = function(o) {
-	return js_Boot.__nativeClassName(o) != null;
-};
 js_Boot.__resolveNativeClass = function(name) {
 	return $global[name];
 };
 var thx_Arrays = function() { };
-thx_Arrays.__name__ = ["thx","Arrays"];
-thx_Arrays.after = function(array,element) {
-	return array.slice(HxOverrides.indexOf(array,element,0) + 1);
-};
+thx_Arrays.__name__ = true;
 thx_Arrays.each = function(arr,effect) {
 	var $it0 = HxOverrides.iter(arr);
 	while( $it0.hasNext() ) {
 		var element = $it0.next();
 		effect(element);
-	}
-};
-thx_Arrays.eachi = function(arr,effect) {
-	var _g1 = 0;
-	var _g = arr.length;
-	while(_g1 < _g) {
-		var i = _g1++;
-		effect(arr[i],i);
 	}
 };
 thx_Arrays.all = function(arr,predicate) {
@@ -3158,2025 +1215,47 @@ thx_Arrays.all = function(arr,predicate) {
 	}
 	return true;
 };
-thx_Arrays.any = function(arr,predicate) {
-	var $it0 = HxOverrides.iter(arr);
-	while( $it0.hasNext() ) {
-		var element = $it0.next();
-		if(predicate(element)) return true;
-	}
-	return false;
-};
-thx_Arrays.at = function(arr,indexes) {
-	return indexes.map(function(i) {
-		return arr[i];
-	});
-};
-thx_Arrays.before = function(array,element) {
-	return array.slice(0,HxOverrides.indexOf(array,element,0));
-};
-thx_Arrays.commonsFromStart = function(self,other,equality) {
-	if(null == equality) equality = thx_Functions.equality;
-	var count = 0;
-	var _g = 0;
-	var _g1 = thx_Arrays.zip(self,other);
-	while(_g < _g1.length) {
-		var pair = _g1[_g];
-		++_g;
-		if(equality(pair._0,pair._1)) count++; else break;
-	}
-	return self.slice(0,count);
-};
-thx_Arrays.compact = function(arr) {
-	return arr.filter(function(v) {
-		return null != v;
-	});
-};
-thx_Arrays.compare = function(a,b) {
-	var v;
-	if((v = a.length - b.length) != 0) return v;
-	var _g1 = 0;
-	var _g = a.length;
-	while(_g1 < _g) {
-		var i = _g1++;
-		if((v = thx_Dynamics.compare(a[i],b[i])) != 0) return v;
-	}
-	return 0;
-};
-thx_Arrays.contains = function(array,element,eq) {
-	if(null == eq) return HxOverrides.indexOf(array,element,0) >= 0; else {
-		var _g1 = 0;
-		var _g = array.length;
-		while(_g1 < _g) {
-			var i = _g1++;
-			if(eq(array[i],element)) return true;
-		}
-		return false;
-	}
-};
-thx_Arrays.containsAll = function(array,elements,eq) {
-	var $it0 = $iterator(elements)();
-	while( $it0.hasNext() ) {
-		var el = $it0.next();
-		if(!thx_Arrays.contains(array,el,eq)) return false;
-	}
-	return true;
-};
-thx_Arrays.containsAny = function(array,elements,eq) {
-	var $it0 = $iterator(elements)();
-	while( $it0.hasNext() ) {
-		var el = $it0.next();
-		if(thx_Arrays.contains(array,el,eq)) return true;
-	}
-	return false;
-};
-thx_Arrays.create = function(length,fillWith) {
-	var arr = new Array(length);
-	var _g = 0;
-	while(_g < length) {
-		var i = _g++;
-		arr[i] = fillWith;
-	}
-	return arr;
-};
-thx_Arrays.cross = function(a,b) {
-	var r = [];
-	var $it0 = HxOverrides.iter(a);
-	while( $it0.hasNext() ) {
-		var va = $it0.next();
-		var $it1 = HxOverrides.iter(b);
-		while( $it1.hasNext() ) {
-			var vb = $it1.next();
-			r.push([va,vb]);
-		}
-	}
-	return r;
-};
-thx_Arrays.crossMulti = function(array) {
-	var acopy = array.slice();
-	var result = acopy.shift().map(function(v) {
-		return [v];
-	});
-	while(acopy.length > 0) {
-		var array1 = acopy.shift();
-		var tresult = result;
-		result = [];
-		var $it0 = HxOverrides.iter(array1);
-		while( $it0.hasNext() ) {
-			var v1 = $it0.next();
-			var _g = 0;
-			while(_g < tresult.length) {
-				var ar = tresult[_g];
-				++_g;
-				var t = ar.slice();
-				t.push(v1);
-				result.push(t);
-			}
-		}
-	}
-	return result;
-};
-thx_Arrays.distinct = function(array,predicate) {
-	var result = [];
-	if(array.length <= 1) return thx__$ReadonlyArray_ReadonlyArray_$Impl_$.toArray(array);
-	if(null == predicate) predicate = thx_Functions.equality;
-	var $it0 = HxOverrides.iter(array);
-	while( $it0.hasNext() ) {
-		var v = $it0.next();
-		var v1 = [v];
-		var keep = !thx_Arrays.any(result,(function(v2) {
-			return function(r) {
-				return predicate(r,v2[0]);
-			};
-		})(v1));
-		if(keep) result.push(v1[0]);
-	}
-	return result;
-};
-thx_Arrays.eachPair = function(array,callback) {
-	var _g1 = 0;
-	var _g = array.length;
-	while(_g1 < _g) {
-		var i = _g1++;
-		var _g3 = i;
-		var _g2 = array.length;
-		while(_g3 < _g2) {
-			var j = _g3++;
-			if(!callback(array[i],array[j])) return;
-		}
-	}
-};
-thx_Arrays.equals = function(a,b,equality) {
-	if(a == null || b == null || a.length != b.length) return false;
-	if(null == equality) equality = thx_Functions.equality;
-	var _g1 = 0;
-	var _g = a.length;
-	while(_g1 < _g) {
-		var i = _g1++;
-		if(!equality(a[i],b[i])) return false;
-	}
-	return true;
-};
-thx_Arrays.extract = function(a,predicate) {
-	var _g1 = 0;
-	var _g = a.length;
-	while(_g1 < _g) {
-		var i = _g1++;
-		if(predicate(a[i])) return a.splice(i,1)[0];
-	}
-	return null;
-};
-thx_Arrays.filterNull = function(a) {
-	var arr = [];
-	var $it0 = HxOverrides.iter(a);
-	while( $it0.hasNext() ) {
-		var v = $it0.next();
-		if(null != v) arr.push(v);
-	}
-	return arr;
-};
-thx_Arrays.find = function(array,predicate) {
-	var $it0 = HxOverrides.iter(array);
-	while( $it0.hasNext() ) {
-		var element = $it0.next();
-		if(predicate(element)) return element;
-	}
-	return null;
-};
-thx_Arrays.findLast = function(array,predicate) {
-	var len = array.length;
-	var j;
-	var _g = 0;
-	while(_g < len) {
-		var i = _g++;
-		j = len - i - 1;
-		if(predicate(array[j])) return array[j];
-	}
-	return null;
-};
-thx_Arrays.first = function(array) {
-	return array[0];
-};
-thx_Arrays.flatMap = function(array,callback) {
-	return thx_Arrays.flatten(array.map(callback));
-};
-thx_Arrays.flatten = function(array) {
-	return Array.prototype.concat.apply([],array);
-};
-thx_Arrays.from = function(array,element) {
-	return array.slice(HxOverrides.indexOf(array,element,0));
-};
-thx_Arrays.groupByAppend = function(arr,resolver,map) {
-	arr.map(function(v) {
-		var key = resolver(v);
-		var arr1 = map.get(key);
-		if(null == arr1) {
-			arr1 = [v];
-			map.set(key,arr1);
-		} else arr1.push(v);
-	});
-	return map;
-};
-thx_Arrays.hasElements = function(array) {
-	return null != array && array.length > 0;
-};
-thx_Arrays.head = function(array) {
-	return array[0];
-};
-thx_Arrays.ifEmpty = function(array,alt) {
-	if(null != array && 0 != array.length) return array; else return alt;
-};
-thx_Arrays.initial = function(array) {
-	return array.slice(0,array.length - 1);
-};
-thx_Arrays.isEmpty = function(array) {
-	return null == array || array.length == 0;
-};
-thx_Arrays.last = function(array) {
-	return array[array.length - 1];
-};
-thx_Arrays.mapi = function(array,callback) {
-	return array.map(callback);
-};
-thx_Arrays.mapRight = function(array,callback) {
-	var i = array.length;
-	var result = [];
-	while(--i >= 0) result.push(callback(array[i]));
-	return result;
-};
-thx_Arrays.order = function(array,sort) {
-	var n = array.slice();
-	n.sort(sort);
-	return n;
-};
-thx_Arrays.pull = function(array,toRemove,equality) {
-	var $it0 = HxOverrides.iter(toRemove);
-	while( $it0.hasNext() ) {
-		var element = $it0.next();
-		thx_Arrays.removeAll(array,element,equality);
-	}
-};
-thx_Arrays.pushIf = function(array,condition,value) {
-	if(condition) array.push(value);
-	return array;
-};
-thx_Arrays.reduce = function(array,callback,initial) {
-	return array.reduce(callback,initial);
-};
-thx_Arrays.resize = function(array,length,fill) {
-	while(array.length < length) array.push(fill);
-	array.splice(length,array.length - length);
-	return array;
-};
-thx_Arrays.reducei = function(array,callback,initial) {
-	return array.reduce(callback,initial);
-};
-thx_Arrays.reduceRight = function(array,callback,initial) {
-	var i = array.length;
-	while(--i >= 0) initial = callback(initial,array[i]);
-	return initial;
-};
-thx_Arrays.removeAll = function(array,element,equality) {
-	if(null == equality) equality = thx_Functions.equality;
-	var i = array.length;
-	while(--i >= 0) if(equality(array[i],element)) array.splice(i,1);
-};
-thx_Arrays.rest = function(array) {
-	return array.slice(1);
-};
-thx_Arrays.sample = function(array,n) {
-	n = thx_Ints.min(n,array.length);
-	var copy = array.slice();
-	var result = [];
-	var _g = 0;
-	while(_g < n) {
-		var i = _g++;
-		result.push(copy.splice(Std.random(copy.length),1)[0]);
-	}
-	return result;
-};
-thx_Arrays.sampleOne = function(array) {
-	var index = Std.random(array.length);
-	return array[index];
-};
-thx_Arrays.string = function(arr) {
-	return "[" + arr.map(thx_Dynamics.string).join(", ") + "]";
-};
-thx_Arrays.shuffle = function(a) {
-	var t = thx_Ints.range(a.length);
-	var array = [];
-	while(t.length > 0) {
-		var pos = Std.random(t.length);
-		var index = t[pos];
-		t.splice(pos,1);
-		array.push(a[index]);
-	}
-	return array;
-};
-thx_Arrays.split = function(array,parts) {
-	var len = Math.ceil(array.length / parts);
-	return thx_Arrays.splitBy(array,len);
-};
-thx_Arrays.splitBy = function(array,len) {
-	var res = [];
-	len = thx_Ints.min(len,array.length);
-	var _g1 = 0;
-	var _g = Math.ceil(array.length / len);
-	while(_g1 < _g) {
-		var p = _g1++;
-		res.push(array.slice(p * len,(p + 1) * len));
-	}
-	return res;
-};
-thx_Arrays.splitByPad = function(arr,len,pad) {
-	var res = thx_Arrays.splitBy(arr,len);
-	while(res[res.length - 1].length < len) res[res.length - 1].push(pad);
-	return res;
-};
-thx_Arrays.take = function(arr,n) {
-	return arr.slice(0,n);
-};
-thx_Arrays.takeLast = function(arr,n) {
-	return arr.slice(arr.length - n);
-};
-thx_Arrays.traverseOption = function(arr,f) {
-	return thx_Arrays.reduce(arr,function(acc,t) {
-		return thx_Options.ap(f(t),thx_Options.map(acc,function(ux) {
-			return function(u) {
-				ux.push(u);
-				return ux;
-			};
-		}));
-	},haxe_ds_Option.Some([]));
-};
-thx_Arrays.traverseValidation = function(arr,f,s) {
-	return thx_Arrays.reduce(arr,function(acc,t) {
-		return thx__$Validation_Validation_$Impl_$.ap(f(t),thx__$Validation_Validation_$Impl_$.ap(acc,thx_Either.Right(function(ux) {
-			return function(u) {
-				ux.push(u);
-				return ux;
-			};
-		}),function(e1,e2) {
-			throw new js__$Boot_HaxeError("Unreachable");
-		}),s);
-	},thx_Either.Right([]));
-};
-thx_Arrays.rotate = function(arr) {
-	var result = [];
-	var _g1 = 0;
-	var _g = arr[0].length;
-	while(_g1 < _g) {
-		var i = _g1++;
-		var row = [];
-		result.push(row);
-		var _g3 = 0;
-		var _g2 = arr.length;
-		while(_g3 < _g2) {
-			var j = _g3++;
-			row.push(arr[j][i]);
-		}
-	}
-	return result;
-};
-thx_Arrays.unzip = function(array) {
-	var a1 = [];
-	var a2 = [];
-	array.map(function(t) {
-		a1.push(t._0);
-		a2.push(t._1);
-	});
-	return { _0 : a1, _1 : a2};
-};
-thx_Arrays.unzip3 = function(array) {
-	var a1 = [];
-	var a2 = [];
-	var a3 = [];
-	array.map(function(t) {
-		a1.push(t._0);
-		a2.push(t._1);
-		a3.push(t._2);
-	});
-	return { _0 : a1, _1 : a2, _2 : a3};
-};
-thx_Arrays.unzip4 = function(array) {
-	var a1 = [];
-	var a2 = [];
-	var a3 = [];
-	var a4 = [];
-	array.map(function(t) {
-		a1.push(t._0);
-		a2.push(t._1);
-		a3.push(t._2);
-		a4.push(t._3);
-	});
-	return { _0 : a1, _1 : a2, _2 : a3, _3 : a4};
-};
-thx_Arrays.unzip5 = function(array) {
-	var a1 = [];
-	var a2 = [];
-	var a3 = [];
-	var a4 = [];
-	var a5 = [];
-	array.map(function(t) {
-		a1.push(t._0);
-		a2.push(t._1);
-		a3.push(t._2);
-		a4.push(t._3);
-		a5.push(t._4);
-	});
-	return { _0 : a1, _1 : a2, _2 : a3, _3 : a4, _4 : a5};
-};
-thx_Arrays.zip = function(array1,array2) {
-	var length = thx_Ints.min(array1.length,array2.length);
-	var array = [];
-	var _g = 0;
-	while(_g < length) {
-		var i = _g++;
-		array.push({ _0 : array1[i], _1 : array2[i]});
-	}
-	return array;
-};
-thx_Arrays.zip3 = function(array1,array2,array3) {
-	var length = thx_ArrayInts.min([array1.length,array2.length,array3.length]);
-	var array = [];
-	var _g = 0;
-	while(_g < length) {
-		var i = _g++;
-		array.push({ _0 : array1[i], _1 : array2[i], _2 : array3[i]});
-	}
-	return array;
-};
-thx_Arrays.zip4 = function(array1,array2,array3,array4) {
-	var length = thx_ArrayInts.min([array1.length,array2.length,array3.length,array4.length]);
-	var array = [];
-	var _g = 0;
-	while(_g < length) {
-		var i = _g++;
-		array.push({ _0 : array1[i], _1 : array2[i], _2 : array3[i], _3 : array4[i]});
-	}
-	return array;
-};
-thx_Arrays.zip5 = function(array1,array2,array3,array4,array5) {
-	var length = thx_ArrayInts.min([array1.length,array2.length,array3.length,array4.length,array5.length]);
-	var array = [];
-	var _g = 0;
-	while(_g < length) {
-		var i = _g++;
-		array.push({ _0 : array1[i], _1 : array2[i], _2 : array3[i], _3 : array4[i], _4 : array5[i]});
-	}
-	return array;
-};
-var thx_ArrayFloats = function() { };
-thx_ArrayFloats.__name__ = ["thx","ArrayFloats"];
-thx_ArrayFloats.average = function(arr) {
-	return thx_ArrayFloats.sum(arr) / arr.length;
-};
-thx_ArrayFloats.compact = function(arr) {
-	return arr.filter(function(v) {
-		return null != v && isFinite(v);
-	});
-};
-thx_ArrayFloats.max = function(arr) {
-	if(arr.length == 0) return null; else return arr.reduce(function(max,v) {
-		if(v > max) return v; else return max;
-	},arr[0]);
-};
-thx_ArrayFloats.min = function(arr) {
-	if(arr.length == 0) return null; else return arr.reduce(function(min,v) {
-		if(v < min) return v; else return min;
-	},arr[0]);
-};
-thx_ArrayFloats.resize = function(array,length,fill) {
-	if(fill == null) fill = 0.0;
-	while(array.length < length) array.push(fill);
-	array.splice(length,array.length - length);
-	return array;
-};
-thx_ArrayFloats.standardDeviation = function(array) {
-	if(array.length < 2) return 0.0;
-	var mean = thx_ArrayFloats.average(array);
-	var variance = array.reduce(function(acc,val) {
-		return acc + Math.pow(val - mean,2);
-	},0) / (array.length - 1);
-	return Math.sqrt(variance);
-};
-thx_ArrayFloats.sum = function(arr) {
-	return arr.reduce(function(tot,v) {
-		return tot + v;
-	},0.0);
-};
-var thx_ArrayInts = function() { };
-thx_ArrayInts.__name__ = ["thx","ArrayInts"];
-thx_ArrayInts.average = function(arr) {
-	return thx_ArrayInts.sum(arr) / arr.length;
-};
-thx_ArrayInts.max = function(arr) {
-	if(arr.length == 0) return null; else return arr.reduce(function(max,v) {
-		if(v > max) return v; else return max;
-	},arr[0]);
-};
-thx_ArrayInts.min = function(arr) {
-	if(arr.length == 0) return null; else return arr.reduce(function(min,v) {
-		if(v < min) return v; else return min;
-	},arr[0]);
-};
-thx_ArrayInts.resize = function(array,length,fill) {
-	if(fill == null) fill = 0;
-	while(array.length < length) array.push(fill);
-	array.splice(length,array.length - length);
-	return array;
-};
-thx_ArrayInts.sum = function(arr) {
-	return arr.reduce(function(tot,v) {
-		return tot + v;
-	},0);
-};
-var thx_ArrayStrings = function() { };
-thx_ArrayStrings.__name__ = ["thx","ArrayStrings"];
-thx_ArrayStrings.compact = function(arr) {
-	return arr.filter(function(v) {
-		return !thx_Strings.isEmpty(v);
-	});
-};
-thx_ArrayStrings.max = function(arr) {
-	if(arr.length == 0) return null; else return arr.reduce(function(max,v) {
-		if(v > max) return v; else return max;
-	},arr[0]);
-};
-thx_ArrayStrings.min = function(arr) {
-	if(arr.length == 0) return null; else return arr.reduce(function(min,v) {
-		if(v < min) return v; else return min;
-	},arr[0]);
-};
-var thx_Bools = function() { };
-thx_Bools.__name__ = ["thx","Bools"];
-thx_Bools.compare = function(a,b) {
-	if(a == b) return 0; else if(a) return -1; else return 1;
-};
-thx_Bools.toInt = function(v) {
-	if(v) return 1; else return 0;
-};
-thx_Bools.canParse = function(v) {
-	var _g = v.toLowerCase();
-	if(_g == null) return true; else switch(_g) {
-	case "true":case "false":case "0":case "1":case "on":case "off":
-		return true;
-	default:
-		return false;
-	}
-};
-thx_Bools.parse = function(v) {
-	var _g = v.toLowerCase();
-	var v1 = _g;
-	if(_g == null) return false; else switch(_g) {
-	case "true":case "1":case "on":
-		return true;
-	case "false":case "0":case "off":
-		return false;
-	default:
-		throw new js__$Boot_HaxeError("unable to parse \"" + v1 + "\"");
-	}
-};
-thx_Bools.xor = function(a,b) {
-	return a != b;
-};
-thx_Bools.option = function(cond,a) {
-	if(cond) return haxe_ds_Option.Some(a); else return haxe_ds_Option.None;
-};
-var thx_Dates = function() { };
-thx_Dates.__name__ = ["thx","Dates"];
-thx_Dates.compare = function(a,b) {
-	return thx_Floats.compare(a.getTime(),b.getTime());
-};
-thx_Dates.create = function(year,month,day,hour,minute,second) {
-	if(second == null) second = 0;
-	if(minute == null) minute = 0;
-	if(hour == null) hour = 0;
-	if(day == null) day = 1;
-	if(month == null) month = 0;
-	minute += Math.floor(second / 60);
-	second = second % 60;
-	if(second < 0) second += 60;
-	hour += Math.floor(minute / 60);
-	minute = minute % 60;
-	if(minute < 0) minute += 60;
-	day += Math.floor(hour / 24);
-	hour = hour % 24;
-	if(hour < 0) hour += 24;
-	if(day == 0) {
-		month -= 1;
-		if(month < 0) {
-			month = 11;
-			year -= 1;
-		}
-		day = thx_Dates.daysInMonth(year,month);
-	}
-	year += Math.floor(month / 12);
-	month = month % 12;
-	if(month < 0) month += 12;
-	var days = thx_Dates.daysInMonth(year,month);
-	while(day > days) {
-		if(day > days) {
-			day -= days;
-			month++;
-		}
-		if(month > 11) {
-			month -= 12;
-			year++;
-		}
-		days = thx_Dates.daysInMonth(year,month);
-	}
-	return new Date(year,month,day,hour,minute,second);
-};
-thx_Dates.daysRange = function(start,end) {
-	if(thx_Dates.compare(end,start) < 0) return [];
-	var days = [];
-	while(!thx_Dates.sameDay(start,end)) {
-		days.push(start);
-		start = thx_Dates.jump(start,thx_TimePeriod.Day,1);
-	}
-	days.push(end);
-	return days;
-};
-thx_Dates.equals = function(self,other) {
-	return self.getTime() == other.getTime();
-};
-thx_Dates.nearEquals = function(self,other,units,period) {
-	if(units == null) units = 1;
-	if(null == period) period = thx_TimePeriod.Second;
-	if(units < 0) units = -units;
-	var min = thx_Dates.jump(self,period,-units);
-	var max = thx_Dates.jump(self,period,units);
-	return thx_Dates.compare(min,other) <= 0 && thx_Dates.compare(max,other) >= 0;
-};
-thx_Dates.greater = function(self,other) {
-	return thx_Dates.compare(self,other) > 0;
-};
-thx_Dates.more = function(self,other) {
-	return thx_Dates.compare(self,other) > 0;
-};
-thx_Dates.less = function(self,other) {
-	return thx_Dates.compare(self,other) < 0;
-};
-thx_Dates.greaterEquals = function(self,other) {
-	return thx_Dates.compare(self,other) >= 0;
-};
-thx_Dates.moreEqual = function(self,other) {
-	return thx_Dates.compare(self,other) >= 0;
-};
-thx_Dates.lessEquals = function(self,other) {
-	return thx_Dates.compare(self,other) <= 0;
-};
-thx_Dates.lessEqual = function(self,other) {
-	return thx_Dates.compare(self,other) <= 0;
-};
-thx_Dates.isLeapYear = function(year) {
-	if(year % 4 != 0) return false;
-	if(year % 100 == 0) return year % 400 == 0;
-	return true;
-};
-thx_Dates.isInLeapYear = function(d) {
-	return thx_Dates.isLeapYear(d.getFullYear());
-};
-thx_Dates.daysInMonth = function(year,month) {
-	switch(month) {
-	case 0:case 2:case 4:case 6:case 7:case 9:case 11:
-		return 31;
-	case 3:case 5:case 8:case 10:
-		return 30;
-	case 1:
-		if(thx_Dates.isLeapYear(year)) return 29; else return 28;
-		break;
-	default:
-		throw new js__$Boot_HaxeError("Invalid month \"" + month + "\".  Month should be a number, Jan=0, Dec=11");
-	}
-};
-thx_Dates.numDaysInMonth = function(month,year) {
-	return thx_Dates.daysInMonth(year,month);
-};
-thx_Dates.daysInThisMonth = function(d) {
-	return thx_Dates.daysInMonth(d.getFullYear(),d.getMonth());
-};
-thx_Dates.numDaysInThisMonth = function(d) {
-	return thx_Dates.daysInThisMonth(d);
-};
-thx_Dates.sameYear = function(self,other) {
-	return self.getFullYear() == other.getFullYear();
-};
-thx_Dates.sameMonth = function(self,other) {
-	return thx_Dates.sameYear(self,other) && self.getMonth() == other.getMonth();
-};
-thx_Dates.sameDay = function(self,other) {
-	return thx_Dates.sameMonth(self,other) && self.getDate() == other.getDate();
-};
-thx_Dates.sameHour = function(self,other) {
-	return thx_Dates.sameDay(self,other) && self.getHours() == other.getHours();
-};
-thx_Dates.sameMinute = function(self,other) {
-	return thx_Dates.sameHour(self,other) && self.getMinutes() == other.getMinutes();
-};
-thx_Dates.snapNext = function(date,period) {
-	{
-		var this1 = thx__$Timestamp_Timestamp_$Impl_$.snapNext(date.getTime(),period);
-		var d = new Date();
-		d.setTime(this1);
-		return d;
-	}
-};
-thx_Dates.snapPrev = function(date,period) {
-	{
-		var this1 = thx__$Timestamp_Timestamp_$Impl_$.snapPrev(date.getTime(),period);
-		var d = new Date();
-		d.setTime(this1);
-		return d;
-	}
-};
-thx_Dates.snapTo = function(date,period) {
-	{
-		var this1 = thx__$Timestamp_Timestamp_$Impl_$.snapTo(date.getTime(),period);
-		var d = new Date();
-		d.setTime(this1);
-		return d;
-	}
-};
-thx_Dates.jump = function(date,period,amount) {
-	var sec = date.getSeconds();
-	var min = date.getMinutes();
-	var hour = date.getHours();
-	var day = date.getDate();
-	var month = date.getMonth();
-	var year = date.getFullYear();
-	switch(period[1]) {
-	case 0:
-		sec += amount;
-		break;
-	case 1:
-		min += amount;
-		break;
-	case 2:
-		hour += amount;
-		break;
-	case 3:
-		day += amount;
-		break;
-	case 4:
-		day += amount * 7;
-		break;
-	case 5:
-		month += amount;
-		break;
-	case 6:
-		year += amount;
-		break;
-	}
-	return thx_Dates.create(year,month,day,hour,min,sec);
-};
-thx_Dates.max = function(self,other) {
-	if(self.getTime() > other.getTime()) return self; else return other;
-};
-thx_Dates.min = function(self,other) {
-	if(self.getTime() < other.getTime()) return self; else return other;
-};
-thx_Dates.snapToWeekDay = function(date,day,firstDayOfWk) {
-	if(firstDayOfWk == null) firstDayOfWk = 0;
-	var d = date.getDay();
-	var s = day;
-	if(s < firstDayOfWk) s = s + 7;
-	if(d < firstDayOfWk) d = d + 7;
-	return thx_Dates.jump(date,thx_TimePeriod.Day,s - d);
-};
-thx_Dates.snapNextWeekDay = function(date,day) {
-	var d = date.getDay();
-	var s = day;
-	if(s < d) s = s + 7;
-	return thx_Dates.jump(date,thx_TimePeriod.Day,s - d);
-};
-thx_Dates.snapPrevWeekDay = function(date,day) {
-	var d = date.getDay();
-	var s = day;
-	if(s > d) s = s - 7;
-	return thx_Dates.jump(date,thx_TimePeriod.Day,s - d);
-};
-thx_Dates.prevYear = function(d) {
-	return thx_Dates.jump(d,thx_TimePeriod.Year,-1);
-};
-thx_Dates.nextYear = function(d) {
-	return thx_Dates.jump(d,thx_TimePeriod.Year,1);
-};
-thx_Dates.prevMonth = function(d) {
-	return thx_Dates.jump(d,thx_TimePeriod.Month,-1);
-};
-thx_Dates.nextMonth = function(d) {
-	return thx_Dates.jump(d,thx_TimePeriod.Month,1);
-};
-thx_Dates.prevWeek = function(d) {
-	return thx_Dates.jump(d,thx_TimePeriod.Week,-1);
-};
-thx_Dates.nextWeek = function(d) {
-	return thx_Dates.jump(d,thx_TimePeriod.Week,1);
-};
-thx_Dates.prevDay = function(d) {
-	return thx_Dates.jump(d,thx_TimePeriod.Day,-1);
-};
-thx_Dates.nextDay = function(d) {
-	return thx_Dates.jump(d,thx_TimePeriod.Day,1);
-};
-thx_Dates.prevHour = function(d) {
-	return thx_Dates.jump(d,thx_TimePeriod.Hour,-1);
-};
-thx_Dates.nextHour = function(d) {
-	return thx_Dates.jump(d,thx_TimePeriod.Hour,1);
-};
-thx_Dates.prevMinute = function(d) {
-	return thx_Dates.jump(d,thx_TimePeriod.Minute,-1);
-};
-thx_Dates.nextMinute = function(d) {
-	return thx_Dates.jump(d,thx_TimePeriod.Minute,1);
-};
-thx_Dates.prevSecond = function(d) {
-	return thx_Dates.jump(d,thx_TimePeriod.Second,-1);
-};
-thx_Dates.nextSecond = function(d) {
-	return thx_Dates.jump(d,thx_TimePeriod.Second,1);
-};
-thx_Dates.withYear = function(date,year) {
-	return thx_Dates.create(year,date.getMonth(),date.getDate(),date.getHours(),date.getMinutes(),date.getSeconds());
-};
-thx_Dates.withMonth = function(date,month) {
-	return thx_Dates.create(date.getFullYear(),month,date.getDate(),date.getHours(),date.getMinutes(),date.getSeconds());
-};
-thx_Dates.withDay = function(date,day) {
-	return thx_Dates.create(date.getFullYear(),date.getMonth(),day,date.getHours(),date.getMinutes(),date.getSeconds());
-};
-thx_Dates.withHour = function(date,hour) {
-	return thx_Dates.create(date.getFullYear(),date.getMonth(),date.getDate(),hour,date.getMinutes(),date.getSeconds());
-};
-thx_Dates.withMinute = function(date,minute) {
-	return thx_Dates.create(date.getFullYear(),date.getMonth(),date.getDate(),date.getHours(),minute,date.getSeconds());
-};
-thx_Dates.withSecond = function(date,second) {
-	return thx_Dates.create(date.getFullYear(),date.getMonth(),date.getDate(),date.getHours(),date.getMinutes(),second);
-};
-var thx_Dynamics = function() { };
-thx_Dynamics.__name__ = ["thx","Dynamics"];
-thx_Dynamics.equals = function(a,b) {
-	if(!thx_Types.sameType(a,b)) return false;
-	if(a == b) return true;
-	{
-		var _g = Type["typeof"](a);
-		switch(_g[1]) {
-		case 2:case 0:case 1:case 3:
-			return false;
-		case 5:
-			return Reflect.compareMethods(a,b);
-		case 6:
-			var c = _g[2];
-			var ca = Type.getClassName(c);
-			var cb = Type.getClassName(b == null?null:js_Boot.getClass(b));
-			if(ca != cb) return false;
-			if(typeof(a) == "string") return false;
-			if((a instanceof Array) && a.__enum__ == null) {
-				var aa = a;
-				var ab = b;
-				if(aa.length != ab.length) return false;
-				var _g2 = 0;
-				var _g1 = aa.length;
-				while(_g2 < _g1) {
-					var i = _g2++;
-					if(!thx_Dynamics.equals(aa[i],ab[i])) return false;
-				}
-				return true;
-			}
-			if(js_Boot.__instanceof(a,Date)) return a.getTime() == b.getTime();
-			if(js_Boot.__instanceof(a,haxe_IMap)) {
-				var ha = a;
-				var hb = b;
-				var ka = thx_Iterators.toArray(ha.keys());
-				var kb = thx_Iterators.toArray(hb.keys());
-				if(ka.length != kb.length) return false;
-				var _g11 = 0;
-				while(_g11 < ka.length) {
-					var key = ka[_g11];
-					++_g11;
-					if(!hb.exists(key) || !thx_Dynamics.equals(ha.get(key),hb.get(key))) return false;
-				}
-				return true;
-			}
-			var t = false;
-			if((t = thx_Iterators.isIterator(a)) || thx_Iterables.isIterable(a)) {
-				var va;
-				if(t) va = thx_Iterators.toArray(a); else va = thx_Iterators.toArray($iterator(a)());
-				var vb;
-				if(t) vb = thx_Iterators.toArray(b); else vb = thx_Iterators.toArray($iterator(b)());
-				if(va.length != vb.length) return false;
-				var _g21 = 0;
-				var _g12 = va.length;
-				while(_g21 < _g12) {
-					var i1 = _g21++;
-					if(!thx_Dynamics.equals(va[i1],vb[i1])) return false;
-				}
-				return true;
-			}
-			var f = null;
-			if(Object.prototype.hasOwnProperty.call(a,"equals") && Reflect.isFunction(f = Reflect.field(a,"equals"))) return f.apply(a,[b]);
-			var fields = Type.getInstanceFields(a == null?null:js_Boot.getClass(a));
-			var _g13 = 0;
-			while(_g13 < fields.length) {
-				var field = fields[_g13];
-				++_g13;
-				var va1 = Reflect.field(a,field);
-				if(Reflect.isFunction(va1)) continue;
-				var vb1 = Reflect.field(b,field);
-				if(!thx_Dynamics.equals(va1,vb1)) return false;
-			}
-			return true;
-		case 7:
-			var e = _g[2];
-			var ea = Type.getEnumName(e);
-			var teb = Type.getEnum(b);
-			var eb = Type.getEnumName(teb);
-			if(ea != eb) return false;
-			if(a[1] != b[1]) return false;
-			var pa = a.slice(2);
-			var pb = b.slice(2);
-			var _g22 = 0;
-			var _g14 = pa.length;
-			while(_g22 < _g14) {
-				var i2 = _g22++;
-				if(!thx_Dynamics.equals(pa[i2],pb[i2])) return false;
-			}
-			return true;
-		case 4:
-			var fa = Reflect.fields(a);
-			var fb = Reflect.fields(b);
-			var _g15 = 0;
-			while(_g15 < fa.length) {
-				var field1 = fa[_g15];
-				++_g15;
-				HxOverrides.remove(fb,field1);
-				if(!Object.prototype.hasOwnProperty.call(b,field1)) return false;
-				var va2 = Reflect.field(a,field1);
-				if(Reflect.isFunction(va2)) continue;
-				var vb2 = Reflect.field(b,field1);
-				if(!thx_Dynamics.equals(va2,vb2)) return false;
-			}
-			if(fb.length > 0) return false;
-			var t1 = false;
-			if((t1 = thx_Iterators.isIterator(a)) || thx_Iterables.isIterable(a)) {
-				if(t1 && !thx_Iterators.isIterator(b)) return false;
-				if(!t1 && !thx_Iterables.isIterable(b)) return false;
-				var aa1;
-				if(t1) aa1 = thx_Iterators.toArray(a); else aa1 = thx_Iterators.toArray($iterator(a)());
-				var ab1;
-				if(t1) ab1 = thx_Iterators.toArray(b); else ab1 = thx_Iterators.toArray($iterator(b)());
-				if(aa1.length != ab1.length) return false;
-				var _g23 = 0;
-				var _g16 = aa1.length;
-				while(_g23 < _g16) {
-					var i3 = _g23++;
-					if(!thx_Dynamics.equals(aa1[i3],ab1[i3])) return false;
-				}
-				return true;
-			}
-			return true;
-		case 8:
-			throw new js__$Boot_HaxeError("Unable to compare two unknown types");
-			break;
-		}
-	}
-	throw new thx_Error("Unable to compare values: " + Std.string(a) + " and " + Std.string(b),null,{ fileName : "Dynamics.hx", lineNumber : 153, className : "thx.Dynamics", methodName : "equals"});
-};
-thx_Dynamics.clone = function(v,cloneInstances) {
-	if(cloneInstances == null) cloneInstances = false;
-	{
-		var _g = Type["typeof"](v);
-		switch(_g[1]) {
-		case 0:
-			return null;
-		case 1:case 2:case 3:case 7:case 8:case 5:
-			return v;
-		case 4:
-			return thx_Objects.copyTo(v,{ });
-		case 6:
-			var c = _g[2];
-			var name = Type.getClassName(c);
-			switch(name) {
-			case "Array":
-				return v.map(function(v1) {
-					return thx_Dynamics.clone(v1,cloneInstances);
-				});
-			case "String":case "Date":
-				return v;
-			default:
-				if(cloneInstances) {
-					var o = Type.createEmptyInstance(c);
-					var _g1 = 0;
-					var _g2 = Type.getInstanceFields(c);
-					while(_g1 < _g2.length) {
-						var field = _g2[_g1];
-						++_g1;
-						Reflect.setField(o,field,thx_Dynamics.clone(Reflect.field(v,field),cloneInstances));
-					}
-					return o;
-				} else return v;
-			}
-			break;
-		}
-	}
-};
-thx_Dynamics.compare = function(a,b) {
-	if(null == a && null == b) return 0;
-	if(null == a) return -1;
-	if(null == b) return 1;
-	if(!thx_Types.sameType(a,b)) return thx_Strings.compare(thx_Types.valueTypeToString(a),thx_Types.valueTypeToString(b));
-	{
-		var _g = Type["typeof"](a);
-		switch(_g[1]) {
-		case 1:
-			return thx_Ints.compare(a,b);
-		case 2:
-			return thx_Floats.compare(a,b);
-		case 3:
-			return thx_Bools.compare(a,b);
-		case 4:
-			return thx_Objects.compare(a,b);
-		case 6:
-			var c = _g[2];
-			var name = Type.getClassName(c);
-			switch(name) {
-			case "Array":
-				return thx_Arrays.compare(a,b);
-			case "String":
-				return thx_Strings.compare(a,b);
-			case "Date":
-				return thx_Dates.compare(a,b);
-			default:
-				if(Object.prototype.hasOwnProperty.call(a,"compare")) return Reflect.callMethod(a,Reflect.field(a,"compare"),[b]); else return haxe_Utf8.compare(Std.string(a),Std.string(b));
-			}
-			break;
-		case 7:
-			var e = _g[2];
-			return thx_Enums.compare(a,b);
-		default:
-			return 0;
-		}
-	}
-};
-thx_Dynamics.string = function(v) {
-	{
-		var _g = Type["typeof"](v);
-		switch(_g[1]) {
-		case 0:
-			return "null";
-		case 1:case 2:case 3:
-			return "" + Std.string(v);
-		case 4:
-			return thx_Objects.string(v);
-		case 6:
-			var c = _g[2];
-			var name = Type.getClassName(c);
-			switch(name) {
-			case "Array":
-				return thx_Arrays.string(v);
-			case "String":
-				return thx_Strings.quote(v);
-			case "Date":
-				return HxOverrides.dateStr(v);
-			default:
-				return Std.string(v);
-			}
-			break;
-		case 7:
-			var e = _g[2];
-			return thx_Enums.string(v);
-		case 8:
-			return "<unknown>";
-		case 5:
-			return "<function>";
-		}
-	}
-};
-var thx_DynamicsT = function() { };
-thx_DynamicsT.__name__ = ["thx","DynamicsT"];
-thx_DynamicsT.isEmpty = function(o) {
-	return Reflect.fields(o).length == 0;
-};
-thx_DynamicsT.exists = function(o,name) {
-	return Object.prototype.hasOwnProperty.call(o,name);
-};
-thx_DynamicsT.fields = function(o) {
-	return Reflect.fields(o);
-};
-thx_DynamicsT.merge = function(to,from,replacef) {
-	if(null == replacef) replacef = function(field,oldv,newv) {
-		return newv;
-	};
-	var _g = 0;
-	var _g1 = Reflect.fields(from);
-	while(_g < _g1.length) {
-		var field1 = _g1[_g];
-		++_g;
-		var newv1 = Reflect.field(from,field1);
-		if(Object.prototype.hasOwnProperty.call(to,field1)) Reflect.setField(to,field1,replacef(field1,Reflect.field(to,field1),newv1)); else to[field1] = newv1;
-	}
-	return to;
-};
-thx_DynamicsT.size = function(o) {
-	return Reflect.fields(o).length;
-};
-thx_DynamicsT.values = function(o) {
-	return Reflect.fields(o).map(function(key) {
-		return Reflect.field(o,key);
-	});
-};
-thx_DynamicsT.tuples = function(o) {
-	return Reflect.fields(o).map(function(key) {
-		var _1 = Reflect.field(o,key);
-		return { _0 : key, _1 : _1};
-	});
-};
-var thx_Either = { __ename__ : ["thx","Either"], __constructs__ : ["Left","Right"] };
+var thx_Either = { __ename__ : true, __constructs__ : ["Left","Right"] };
 thx_Either.Left = function(value) { var $x = ["Left",0,value]; $x.__enum__ = thx_Either; $x.toString = $estr; return $x; };
 thx_Either.Right = function(value) { var $x = ["Right",1,value]; $x.__enum__ = thx_Either; $x.toString = $estr; return $x; };
-var thx_Eithers = function() { };
-thx_Eithers.__name__ = ["thx","Eithers"];
-thx_Eithers.isLeft = function(either) {
-	switch(either[1]) {
-	case 0:
-		return true;
-	case 1:
-		return false;
-	}
-};
-thx_Eithers.isRight = function(either) {
-	switch(either[1]) {
-	case 0:
-		return false;
-	case 1:
-		return true;
-	}
-};
-thx_Eithers.toLeft = function(either) {
-	switch(either[1]) {
-	case 0:
-		var v = either[2];
-		return haxe_ds_Option.Some(v);
-	case 1:
-		return haxe_ds_Option.None;
-	}
-};
-thx_Eithers.toRight = function(either) {
-	switch(either[1]) {
-	case 0:
-		return haxe_ds_Option.None;
-	case 1:
-		var v = either[2];
-		return haxe_ds_Option.Some(v);
-	}
-};
-thx_Eithers.toLeftUnsafe = function(either) {
-	switch(either[1]) {
-	case 0:
-		var v = either[2];
-		return v;
-	case 1:
-		return null;
-	}
-};
-thx_Eithers.toRightUnsafe = function(either) {
-	switch(either[1]) {
-	case 0:
-		return null;
-	case 1:
-		var v = either[2];
-		return v;
-	}
-};
-thx_Eithers.map = function(either,f) {
-	switch(either[1]) {
-	case 0:
-		var v = either[2];
-		return thx_Either.Left(v);
-	case 1:
-		var v1 = either[2];
-		return thx_Either.Right(f(v1));
-	}
-};
-thx_Eithers.flatMap = function(either,f) {
-	switch(either[1]) {
-	case 0:
-		var v = either[2];
-		return thx_Either.Left(v);
-	case 1:
-		var v1 = either[2];
-		return f(v1);
-	}
-};
-thx_Eithers.leftMap = function(either,f) {
-	switch(either[1]) {
-	case 0:
-		var v = either[2];
-		return thx_Either.Left(f(v));
-	case 1:
-		var v1 = either[2];
-		return thx_Either.Right(v1);
-	}
-};
-var thx_Enums = function() { };
-thx_Enums.__name__ = ["thx","Enums"];
-thx_Enums.string = function(e) {
-	var cons = e[0];
-	var params = [];
-	var _g = 0;
-	var _g1 = e.slice(2);
-	while(_g < _g1.length) {
-		var param = _g1[_g];
-		++_g;
-		params.push(thx_Dynamics.string(param));
-	}
-	return cons + (params.length == 0?"":"(" + params.join(", ") + ")");
-};
-thx_Enums.compare = function(a,b) {
-	var v = a[1] - b[1];
-	if(v != 0) return v;
-	return thx_Arrays.compare(a.slice(2),b.slice(2));
-};
-thx_Enums.min = function(a,b) {
-	if(thx_Enums.compare(a,b) < 0) return a; else return b;
-};
-thx_Enums.max = function(a,b) {
-	if(thx_Enums.compare(a,b) > 0) return a; else return b;
-};
 var thx_Error = function(message,stack,pos) {
 	Error.call(this,message);
 	this.message = message;
 	if(null == stack) {
+		var tmp;
 		try {
-			stack = haxe_CallStack.exceptionStack();
+			tmp = haxe_CallStack.exceptionStack();
 		} catch( e ) {
 			haxe_CallStack.lastException = e;
 			if (e instanceof js__$Boot_HaxeError) e = e.val;
-			stack = [];
+			tmp = [];
 		}
-		if(stack.length == 0) try {
-			stack = haxe_CallStack.callStack();
-		} catch( e1 ) {
-			haxe_CallStack.lastException = e1;
-			if (e1 instanceof js__$Boot_HaxeError) e1 = e1.val;
-			stack = [];
+		stack = tmp;
+		if(stack.length == 0) {
+			var tmp1;
+			try {
+				tmp1 = haxe_CallStack.callStack();
+			} catch( e1 ) {
+				haxe_CallStack.lastException = e1;
+				if (e1 instanceof js__$Boot_HaxeError) e1 = e1.val;
+				tmp1 = [];
+			}
+			stack = tmp1;
 		}
 	}
 	this.stackItems = stack;
 	this.pos = pos;
 };
-thx_Error.__name__ = ["thx","Error"];
-thx_Error.fromDynamic = function(err,pos) {
-	if(js_Boot.__instanceof(err,thx_Error)) return err;
-	return new thx_error_ErrorWrapper("" + Std.string(err),err,null,pos);
-};
+thx_Error.__name__ = true;
 thx_Error.__super__ = Error;
 thx_Error.prototype = $extend(Error.prototype,{
-	pos: null
-	,stackItems: null
-	,toString: function() {
+	toString: function() {
 		return this.message + "\nfrom: " + this.pos.className + "." + this.pos.methodName + "() at " + this.pos.lineNumber + "\n\n" + haxe_CallStack.toString(this.stackItems);
 	}
 	,__class__: thx_Error
 });
-var thx_Floats = function() { };
-thx_Floats.__name__ = ["thx","Floats"];
-thx_Floats.angleDifference = function(a,b,turn) {
-	if(turn == null) turn = 360.0;
-	var r = (b - a) % turn;
-	if(r < 0) r += turn;
-	if(r > turn / 2) r -= turn;
-	return r;
-};
-thx_Floats.ceilTo = function(f,decimals) {
-	var p = Math.pow(10,decimals);
-	return Math.ceil(f * p) / p;
-};
-thx_Floats.canParse = function(s) {
-	return thx_Floats.pattern_parse.match(s);
-};
-thx_Floats.clamp = function(v,min,max) {
-	if(v < min) return min; else if(v > max) return max; else return v;
-};
-thx_Floats.clampSym = function(v,max) {
-	return thx_Floats.clamp(v,-max,max);
-};
-thx_Floats.compare = function(a,b) {
-	if(a < b) return -1; else if(a > b) return 1; else return 0;
-};
-thx_Floats.floorTo = function(f,decimals) {
-	var p = Math.pow(10,decimals);
-	return Math.floor(f * p) / p;
-};
-thx_Floats.interpolate = function(f,a,b) {
-	return (b - a) * f + a;
-};
-thx_Floats.interpolateAngle = function(f,a,b,turn) {
-	if(turn == null) turn = 360;
-	return thx_Floats.wrapCircular(thx_Floats.interpolate(f,a,a + thx_Floats.angleDifference(a,b,turn)),turn);
-};
-thx_Floats.interpolateAngleWidest = function(f,a,b,turn) {
-	if(turn == null) turn = 360;
-	return thx_Floats.wrapCircular(thx_Floats.interpolateAngle(f,a,b,turn) - turn / 2,turn);
-};
-thx_Floats.interpolateAngleCW = function(f,a,b,turn) {
-	if(turn == null) turn = 360;
-	a = thx_Floats.wrapCircular(a,turn);
-	b = thx_Floats.wrapCircular(b,turn);
-	if(b < a) b += turn;
-	return thx_Floats.wrapCircular(thx_Floats.interpolate(f,a,b),turn);
-};
-thx_Floats.interpolateAngleCCW = function(f,a,b,turn) {
-	if(turn == null) turn = 360;
-	a = thx_Floats.wrapCircular(a,turn);
-	b = thx_Floats.wrapCircular(b,turn);
-	if(b > a) b -= turn;
-	return thx_Floats.wrapCircular(thx_Floats.interpolate(f,a,b),turn);
-};
-thx_Floats.max = function(a,b) {
-	if(a > b) return a; else return b;
-};
-thx_Floats.min = function(a,b) {
-	if(a < b) return a; else return b;
-};
-thx_Floats.nearEquals = function(a,b,tollerance) {
-	if(tollerance == null) tollerance = 1e-9;
-	if(isFinite(a)) return Math.abs(a - b) <= tollerance;
-	if(isNaN(a)) return isNaN(b);
-	if(isNaN(b)) return false;
-	if(!isFinite(b)) return a > 0 == b > 0;
-	return false;
-};
-thx_Floats.nearEqualAngles = function(a,b,turn,tollerance) {
-	if(tollerance == null) tollerance = 1e-9;
-	if(turn == null) turn = 360.0;
-	return Math.abs(thx_Floats.angleDifference(a,b,turn)) <= tollerance;
-};
-thx_Floats.nearZero = function(n,tollerance) {
-	if(tollerance == null) tollerance = 1e-9;
-	return Math.abs(n) <= tollerance;
-};
-thx_Floats.normalize = function(v) {
-	if(v < 0) return 0; else if(v > 1) return 1; else return v;
-};
-thx_Floats.parse = function(s) {
-	if(s.substring(0,1) == "+") s = s.substring(1);
-	return parseFloat(s);
-};
-thx_Floats.root = function(base,index) {
-	return Math.pow(base,1 / index);
-};
-thx_Floats.roundTo = function(f,decimals) {
-	var p = Math.pow(10,decimals);
-	return Math.round(f * p) / p;
-};
-thx_Floats.sign = function(value) {
-	if(value < 0) return -1; else return 1;
-};
-thx_Floats.toString = function(v) {
-	return "" + v;
-};
-thx_Floats.toFloat = function(s) {
-	return thx_Floats.parse(s);
-};
-thx_Floats.trunc = function(value) {
-	if(value < 0.0) return Math.ceil(value); else return Math.floor(value);
-};
-thx_Floats.ftrunc = function(value) {
-	if(value < 0.0) return Math.ceil(value); else return Math.floor(value);
-};
-thx_Floats.wrap = function(v,min,max) {
-	var range = max - min + 1;
-	if(v < min) v += range * ((min - v) / range + 1);
-	return min + (v - min) % range;
-};
-thx_Floats.wrapCircular = function(v,max) {
-	v = v % max;
-	if(v < 0) v += max;
-	return v;
-};
-var thx_Functions0 = function() { };
-thx_Functions0.__name__ = ["thx","Functions0"];
-thx_Functions0.after = function(callback,n) {
-	return function() {
-		if(--n == 0) callback();
-	};
-};
-thx_Functions0.join = function(fa,fb) {
-	return function() {
-		fa();
-		fb();
-	};
-};
-thx_Functions0.once = function(f) {
-	return function() {
-		var t = f;
-		f = thx_Functions.noop;
-		t();
-	};
-};
-thx_Functions0.negate = function(callback) {
-	return function() {
-		return !callback();
-	};
-};
-thx_Functions0.times = function(n,callback) {
-	return function() {
-		return thx_Ints.range(n).map(function(_) {
-			return callback();
-		});
-	};
-};
-thx_Functions0.timesi = function(n,callback) {
-	return function() {
-		return thx_Ints.range(n).map(function(i) {
-			return callback(i);
-		});
-	};
-};
-var thx_Functions1 = function() { };
-thx_Functions1.__name__ = ["thx","Functions1"];
-thx_Functions1.compose = function(fa,fb) {
-	return function(v) {
-		return fa(fb(v));
-	};
-};
-thx_Functions1.join = function(fa,fb) {
-	return function(v) {
-		fa(v);
-		fb(v);
-	};
-};
-thx_Functions1.memoize = function(callback,resolver) {
-	if(null == resolver) resolver = function(v) {
-		return "" + Std.string(v);
-	};
-	var map = new haxe_ds_StringMap();
-	return function(v1) {
-		var key = resolver(v1);
-		if(__map_reserved[key] != null?map.existsReserved(key):map.h.hasOwnProperty(key)) return __map_reserved[key] != null?map.getReserved(key):map.h[key];
-		var result = callback(v1);
-		if(__map_reserved[key] != null) map.setReserved(key,result); else map.h[key] = result;
-		return result;
-	};
-};
-thx_Functions1.negate = function(callback) {
-	return function(v) {
-		return !callback(v);
-	};
-};
-thx_Functions1.noop = function(_) {
-};
-thx_Functions1.times = function(n,callback) {
-	return function(value) {
-		return thx_Ints.range(n).map(function(_) {
-			return callback(value);
-		});
-	};
-};
-thx_Functions1.timesi = function(n,callback) {
-	return function(value) {
-		return thx_Ints.range(n).map(function(i) {
-			return callback(value,i);
-		});
-	};
-};
-thx_Functions1.swapArguments = function(callback) {
-	return function(a2,a1) {
-		return callback(a1,a2);
-	};
-};
-var thx_Functions2 = function() { };
-thx_Functions2.__name__ = ["thx","Functions2"];
-thx_Functions2.memoize = function(callback,resolver) {
-	if(null == resolver) resolver = function(v1,v2) {
-		return "" + Std.string(v1) + ":" + Std.string(v2);
-	};
-	var map = new haxe_ds_StringMap();
-	return function(v11,v21) {
-		var key = resolver(v11,v21);
-		if(__map_reserved[key] != null?map.existsReserved(key):map.h.hasOwnProperty(key)) return __map_reserved[key] != null?map.getReserved(key):map.h[key];
-		var result = callback(v11,v21);
-		if(__map_reserved[key] != null) map.setReserved(key,result); else map.h[key] = result;
-		return result;
-	};
-};
-thx_Functions2.curry = function(f) {
-	return function(a) {
-		return function(b) {
-			return f(a,b);
-		};
-	};
-};
-thx_Functions2.negate = function(callback) {
-	return function(v1,v2) {
-		return !callback(v1,v2);
-	};
-};
-var thx_Functions3 = function() { };
-thx_Functions3.__name__ = ["thx","Functions3"];
-thx_Functions3.memoize = function(callback,resolver) {
-	if(null == resolver) resolver = function(v1,v2,v3) {
-		return "" + Std.string(v1) + ":" + Std.string(v2) + ":" + Std.string(v3);
-	};
-	var map = new haxe_ds_StringMap();
-	return function(v11,v21,v31) {
-		var key = resolver(v11,v21,v31);
-		if(__map_reserved[key] != null?map.existsReserved(key):map.h.hasOwnProperty(key)) return __map_reserved[key] != null?map.getReserved(key):map.h[key];
-		var result = callback(v11,v21,v31);
-		if(__map_reserved[key] != null) map.setReserved(key,result); else map.h[key] = result;
-		return result;
-	};
-};
-thx_Functions3.negate = function(callback) {
-	return function(v1,v2,v3) {
-		return !callback(v1,v2,v3);
-	};
-};
-thx_Functions3.curry = function(f) {
-	return function(a,b) {
-		return function(c) {
-			return f(a,b,c);
-		};
-	};
-};
-var thx_Functions4 = function() { };
-thx_Functions4.__name__ = ["thx","Functions4"];
-thx_Functions4.curry = function(f) {
-	return function(a,b,c) {
-		return function(d) {
-			return f(a,b,c,d);
-		};
-	};
-};
-var thx_Functions5 = function() { };
-thx_Functions5.__name__ = ["thx","Functions5"];
-thx_Functions5.curry = function(f) {
-	return function(a,b,c,d) {
-		return function(e) {
-			return f(a,b,c,d,e);
-		};
-	};
-};
-var thx_Functions6 = function() { };
-thx_Functions6.__name__ = ["thx","Functions6"];
-thx_Functions6.curry = function(f) {
-	return function(a,b,c,d,e) {
-		return function(f0) {
-			return f(a,b,c,d,e,f0);
-		};
-	};
-};
-var thx_Functions7 = function() { };
-thx_Functions7.__name__ = ["thx","Functions7"];
-thx_Functions7.curry = function(f) {
-	return function(a,b,c,d,e,f0) {
-		return function(g) {
-			return f(a,b,c,d,e,f0,g);
-		};
-	};
-};
-var thx_Functions8 = function() { };
-thx_Functions8.__name__ = ["thx","Functions8"];
-thx_Functions8.curry = function(f) {
-	return function(a,b,c,d,e,f0,g) {
-		return function(h) {
-			return f(a,b,c,d,e,f0,g,h);
-		};
-	};
-};
-var thx__$Functions_Reader_$Impl_$ = {};
-thx__$Functions_Reader_$Impl_$.__name__ = ["thx","_Functions","Reader_Impl_"];
-thx__$Functions_Reader_$Impl_$.flatMap = function(this1,f) {
-	return function(a) {
-		return (f(this1(a)))(a);
-	};
-};
-var thx_Functions = function() { };
-thx_Functions.__name__ = ["thx","Functions"];
-thx_Functions.constant = function(v) {
-	return function() {
-		return v;
-	};
-};
-thx_Functions.equality = function(a,b) {
-	return a == b;
-};
-thx_Functions.identity = function(value) {
-	return value;
-};
-thx_Functions.noop = function() {
-};
-var thx_OrderingImpl = { __ename__ : ["thx","OrderingImpl"], __constructs__ : ["LT","GT","EQ"] };
-thx_OrderingImpl.LT = ["LT",0];
-thx_OrderingImpl.LT.toString = $estr;
-thx_OrderingImpl.LT.__enum__ = thx_OrderingImpl;
-thx_OrderingImpl.GT = ["GT",1];
-thx_OrderingImpl.GT.toString = $estr;
-thx_OrderingImpl.GT.__enum__ = thx_OrderingImpl;
-thx_OrderingImpl.EQ = ["EQ",2];
-thx_OrderingImpl.EQ.toString = $estr;
-thx_OrderingImpl.EQ.__enum__ = thx_OrderingImpl;
-var thx_Ints = function() { };
-thx_Ints.__name__ = ["thx","Ints"];
-thx_Ints.abs = function(v) {
-	if(v < 0) return -v; else return v;
-};
-thx_Ints.canParse = function(s) {
-	return thx_Ints.pattern_parse.match(s);
-};
-thx_Ints.clamp = function(v,min,max) {
-	if(v < min) return min; else if(v > max) return max; else return v;
-};
-thx_Ints.clampSym = function(v,max) {
-	return thx_Ints.clamp(v,-max,max);
-};
-thx_Ints.compare = function(a,b) {
-	return a - b;
-};
-thx_Ints.gcd = function(m,n) {
-	if(m < 0) m = -m; else m = m;
-	if(n < 0) n = -n; else n = n;
-	if(n == 0) return m;
-	return thx_Ints.gcd(n,m % n);
-};
-thx_Ints.interpolate = function(f,a,b) {
-	return Math.round(a + (b - a) * f);
-};
-thx_Ints.isEven = function(v) {
-	return v % 2 == 0;
-};
-thx_Ints.isOdd = function(v) {
-	return v % 2 != 0;
-};
-thx_Ints.lpad = function(v,pad,len) {
-	if(pad == null) pad = "0";
-	var neg = false;
-	if(v < 0) {
-		neg = true;
-		v = -v;
-	}
-	return (neg?"-":"") + StringTools.lpad("" + v,pad,len);
-};
-thx_Ints.lcm = function(m,n) {
-	if(m < 0) m = -m; else m = m;
-	if(n < 0) n = -n; else n = n;
-	if(n == 0) return m;
-	return m * Std["int"](n / thx_Ints.gcd(m,n));
-};
-thx_Ints.rpad = function(v,pad,len) {
-	if(pad == null) pad = "0";
-	return StringTools.rpad("" + v,pad,len);
-};
-thx_Ints.max = function(a,b) {
-	if(a > b) return a; else return b;
-};
-thx_Ints.min = function(a,b) {
-	if(a < b) return a; else return b;
-};
-thx_Ints.parse = function(s,base) {
-	if(null == base) {
-		if(s.substring(0,2) == "0x") base = 16; else base = 10;
-	}
-	var v = parseInt(s,base);
-	if(isNaN(v)) return null; else return v;
-};
-thx_Ints.random = function(min,max) {
-	if(min == null) min = 0;
-	return Std.random(max + 1) + min;
-};
-thx_Ints.range = function(start,stop,step) {
-	if(step == null) step = 1;
-	if(null == stop) {
-		stop = start;
-		start = 0;
-	}
-	if((stop - start) / step == Infinity) throw new js__$Boot_HaxeError("infinite range");
-	var range = [];
-	var i = -1;
-	var j;
-	if(step < 0) while((j = start + step * ++i) > stop) range.push(j); else while((j = start + step * ++i) < stop) range.push(j);
-	return range;
-};
-thx_Ints.rangeIter = function(start,stop,step) {
-	if(step == null) step = 1;
-	return new thx_RangeIterator(start,stop,step);
-};
-thx_Ints.toString = function(value,base) {
-	return value.toString(base);
-};
-thx_Ints.toBase = function(value,base) {
-	return value.toString(base);
-};
-thx_Ints.toBool = function(v) {
-	return v != 0;
-};
-thx_Ints.toInt = function(s,base) {
-	return thx_Ints.parse(s,base);
-};
-thx_Ints.sign = function(value) {
-	if(value < 0) return -1; else return 1;
-};
-thx_Ints.wrapCircular = function(v,max) {
-	v = v % max;
-	if(v < 0) v += max;
-	return v;
-};
-var thx_RangeIterator = function(start,stop,step) {
-	if(step == null) step = 1;
-	this.current = start;
-	this.stop = stop;
-	this.step = step;
-};
-thx_RangeIterator.__name__ = ["thx","RangeIterator"];
-thx_RangeIterator.prototype = {
-	current: null
-	,stop: null
-	,step: null
-	,hasNext: function() {
-		return this.stop == null || this.step >= 0 && this.current < this.stop || this.step < 0 && this.current > this.stop;
-	}
-	,next: function() {
-		var result = this.current;
-		this.current += this.step;
-		return result;
-	}
-	,__class__: thx_RangeIterator
-};
-var thx_Iterables = function() { };
-thx_Iterables.__name__ = ["thx","Iterables"];
-thx_Iterables.all = function(it,predicate) {
-	return thx_Iterators.all($iterator(it)(),predicate);
-};
-thx_Iterables.any = function(it,predicate) {
-	return thx_Iterators.any($iterator(it)(),predicate);
-};
-thx_Iterables.eachPair = function(it,handler) {
-	thx_Iterators.eachPair($iterator(it)(),handler);
-	return;
-};
-thx_Iterables.equals = function(a,b,equality) {
-	return thx_Iterators.equals($iterator(a)(),$iterator(b)(),equality);
-};
-thx_Iterables.filter = function(it,predicate) {
-	return thx_Iterators.filter($iterator(it)(),predicate);
-};
-thx_Iterables.find = function(it,predicate) {
-	return thx_Iterators.find($iterator(it)(),predicate);
-};
-thx_Iterables.first = function(it) {
-	return thx_Iterators.first($iterator(it)());
-};
-thx_Iterables.get = function(it,index) {
-	return thx_Iterators.get($iterator(it)(),index);
-};
-thx_Iterables.last = function(it) {
-	return thx_Iterators.last($iterator(it)());
-};
-thx_Iterables.hasElements = function(it) {
-	return thx_Iterators.hasElements($iterator(it)());
-};
-thx_Iterables.indexOf = function(it,element) {
-	return thx_Iterators.indexOf($iterator(it)(),element);
-};
-thx_Iterables.isEmpty = function(it) {
-	return thx_Iterators.isEmpty($iterator(it)());
-};
-thx_Iterables.isIterable = function(v) {
-	var fields;
-	if(Reflect.isObject(v) && null == Type.getClass(v)) fields = Reflect.fields(v); else fields = Type.getInstanceFields(Type.getClass(v));
-	if(!Lambda.has(fields,"iterator")) return false;
-	return Reflect.isFunction(Reflect.field(v,"iterator"));
-};
-thx_Iterables.map = function(it,f) {
-	return thx_Iterators.map($iterator(it)(),f);
-};
-thx_Iterables.mapi = function(it,f) {
-	return thx_Iterators.mapi($iterator(it)(),f);
-};
-thx_Iterables.order = function(it,sort) {
-	return thx_Iterators.order($iterator(it)(),sort);
-};
-thx_Iterables.reduce = function(it,callback,initial) {
-	return thx_Iterators.reduce($iterator(it)(),callback,initial);
-};
-thx_Iterables.reducei = function(it,callback,initial) {
-	return thx_Iterators.reducei($iterator(it)(),callback,initial);
-};
-thx_Iterables.toArray = function(it) {
-	return thx_Iterators.toArray($iterator(it)());
-};
-thx_Iterables.minBy = function(it,f,ord) {
-	var found = haxe_ds_Option.None;
-	var $it0 = $iterator(it)();
-	while( $it0.hasNext() ) {
-		var a = $it0.next();
-		var a1 = [a];
-		if(thx_Options.any(found,(function(a2) {
-			return function(a0) {
-				return (function($this) {
-					var $r;
-					var a01 = f(a0);
-					var a11 = f(a2[0]);
-					$r = ord(a01,a11);
-					return $r;
-				}(this)) == thx_OrderingImpl.LT;
-			};
-		})(a1))) found = found; else found = haxe_ds_Option.Some(a1[0]);
-	}
-	return found;
-};
-thx_Iterables.maxBy = function(it,f,ord) {
-	return thx_Iterables.minBy(it,f,thx__$Ord_Ord_$Impl_$.inverse(ord));
-};
-thx_Iterables.min = function(it,ord) {
-	return thx_Iterables.minBy(it,thx_Functions.identity,ord);
-};
-thx_Iterables.max = function(it,ord) {
-	return thx_Iterables.min(it,thx__$Ord_Ord_$Impl_$.inverse(ord));
-};
-thx_Iterables.extremaBy = function(it,f,ord) {
-	var found = haxe_ds_Option.None;
-	var $it0 = $iterator(it)();
-	while( $it0.hasNext() ) {
-		var a = $it0.next();
-		switch(found[1]) {
-		case 1:
-			found = haxe_ds_Option.Some({ _0 : a, _1 : a});
-			break;
-		case 0:
-			var t = found[2];
-			if((function($this) {
-				var $r;
-				var a0 = f(a);
-				var a1 = f(t._0);
-				$r = ord(a0,a1);
-				return $r;
-			}(this)) == thx_OrderingImpl.LT) found = haxe_ds_Option.Some({ _0 : a, _1 : t._1}); else {
-				var t1 = found[2];
-				if((function($this) {
-					var $r;
-					var a01 = f(a);
-					var a11 = f(t1._1);
-					$r = ord(a01,a11);
-					return $r;
-				}(this)) == thx_OrderingImpl.GT) found = haxe_ds_Option.Some({ _0 : t1._0, _1 : a}); else found = found;
-			}
-			break;
-		default:
-			found = found;
-		}
-	}
-	return found;
-};
-thx_Iterables.extrema = function(it,ord) {
-	return thx_Iterables.extremaBy(it,thx_Functions.identity,ord);
-};
-thx_Iterables.unzip = function(it) {
-	return thx_Iterators.unzip($iterator(it)());
-};
-thx_Iterables.unzip3 = function(it) {
-	return thx_Iterators.unzip3($iterator(it)());
-};
-thx_Iterables.unzip4 = function(it) {
-	return thx_Iterators.unzip4($iterator(it)());
-};
-thx_Iterables.unzip5 = function(it) {
-	return thx_Iterators.unzip5($iterator(it)());
-};
-thx_Iterables.zip = function(it1,it2) {
-	return thx_Iterators.zip($iterator(it1)(),$iterator(it2)());
-};
-thx_Iterables.zip3 = function(it1,it2,it3) {
-	return thx_Iterators.zip3($iterator(it1)(),$iterator(it2)(),$iterator(it3)());
-};
-thx_Iterables.zip4 = function(it1,it2,it3,it4) {
-	return thx_Iterators.zip4($iterator(it1)(),$iterator(it2)(),$iterator(it3)(),$iterator(it4)());
-};
-thx_Iterables.zip5 = function(it1,it2,it3,it4,it5) {
-	return thx_Iterators.zip5($iterator(it1)(),$iterator(it2)(),$iterator(it3)(),$iterator(it4)(),$iterator(it5)());
-};
 var thx_Iterators = function() { };
-thx_Iterators.__name__ = ["thx","Iterators"];
-thx_Iterators.all = function(it,predicate) {
-	while( it.hasNext() ) {
-		var element = it.next();
-		if(!predicate(element)) return false;
-	}
-	return true;
-};
-thx_Iterators.any = function(it,predicate) {
-	while( it.hasNext() ) {
-		var element = it.next();
-		if(predicate(element)) return true;
-	}
-	return false;
-};
-thx_Iterators.equals = function(a,b,equality) {
-	if(null == equality) equality = thx_Functions.equality;
-	var ae;
-	var be;
-	var an;
-	var bn;
-	while(true) {
-		an = a.hasNext();
-		bn = b.hasNext();
-		if(!an && !bn) return true;
-		if(!an || !bn) return false;
-		if(!equality(a.next(),b.next())) return false;
-	}
-	return true;
-};
-thx_Iterators.get = function(it,index) {
-	var pos = 0;
-	while( it.hasNext() ) {
-		var i = it.next();
-		if(pos++ == index) return i;
-	}
-	return null;
-};
-thx_Iterators.eachPair = function(it,handler) {
-	thx_Arrays.eachPair(thx_Iterators.toArray(it),handler);
-};
-thx_Iterators.filter = function(it,predicate) {
-	return thx_Iterators.reduce(it,function(acc,element) {
-		if(predicate(element)) acc.push(element);
-		return acc;
-	},[]);
-};
-thx_Iterators.find = function(it,f) {
-	while( it.hasNext() ) {
-		var element = it.next();
-		if(f(element)) return element;
-	}
-	return null;
-};
-thx_Iterators.first = function(it) {
-	if(it.hasNext()) return it.next(); else return null;
-};
-thx_Iterators.hasElements = function(it) {
-	return it.hasNext();
-};
-thx_Iterators.indexOf = function(it,element) {
-	var pos = 0;
-	while( it.hasNext() ) {
-		var v = it.next();
-		if(element == v) return pos;
-		pos++;
-	}
-	return -1;
-};
-thx_Iterators.isEmpty = function(it) {
-	return !it.hasNext();
-};
-thx_Iterators.isIterator = function(v) {
-	var fields;
-	if(Reflect.isObject(v) && null == Type.getClass(v)) fields = Reflect.fields(v); else fields = Type.getInstanceFields(Type.getClass(v));
-	if(!Lambda.has(fields,"next") || !Lambda.has(fields,"hasNext")) return false;
-	return Reflect.isFunction(Reflect.field(v,"next")) && Reflect.isFunction(Reflect.field(v,"hasNext"));
-};
-thx_Iterators.last = function(it) {
-	var buf = null;
-	while(it.hasNext()) buf = it.next();
-	return buf;
-};
-thx_Iterators.map = function(it,f) {
-	var acc = [];
-	while( it.hasNext() ) {
-		var v = it.next();
-		acc.push(f(v));
-	}
-	return acc;
-};
-thx_Iterators.mapi = function(it,f) {
-	var acc = [];
-	var i = 0;
-	while( it.hasNext() ) {
-		var v = it.next();
-		acc.push(f(v,i++));
-	}
-	return acc;
-};
-thx_Iterators.order = function(it,sort) {
-	var n = thx_Iterators.toArray(it);
-	n.sort(sort);
-	return n;
-};
-thx_Iterators.reduce = function(it,callback,initial) {
-	thx_Iterators.map(it,function(v) {
-		initial = callback(initial,v);
-	});
-	return initial;
-};
-thx_Iterators.reducei = function(it,callback,initial) {
-	thx_Iterators.mapi(it,function(v,i) {
-		initial = callback(initial,v,i);
-	});
-	return initial;
-};
+thx_Iterators.__name__ = true;
 thx_Iterators.toArray = function(it) {
 	var elements = [];
 	while( it.hasNext() ) {
@@ -5185,854 +1264,10 @@ thx_Iterators.toArray = function(it) {
 	}
 	return elements;
 };
-thx_Iterators.unzip = function(it) {
-	var a1 = [];
-	var a2 = [];
-	thx_Iterators.map(it,function(t) {
-		a1.push(t._0);
-		a2.push(t._1);
-	});
-	return { _0 : a1, _1 : a2};
-};
-thx_Iterators.unzip3 = function(it) {
-	var a1 = [];
-	var a2 = [];
-	var a3 = [];
-	thx_Iterators.map(it,function(t) {
-		a1.push(t._0);
-		a2.push(t._1);
-		a3.push(t._2);
-	});
-	return { _0 : a1, _1 : a2, _2 : a3};
-};
-thx_Iterators.unzip4 = function(it) {
-	var a1 = [];
-	var a2 = [];
-	var a3 = [];
-	var a4 = [];
-	thx_Iterators.map(it,function(t) {
-		a1.push(t._0);
-		a2.push(t._1);
-		a3.push(t._2);
-		a4.push(t._3);
-	});
-	return { _0 : a1, _1 : a2, _2 : a3, _3 : a4};
-};
-thx_Iterators.unzip5 = function(it) {
-	var a1 = [];
-	var a2 = [];
-	var a3 = [];
-	var a4 = [];
-	var a5 = [];
-	thx_Iterators.map(it,function(t) {
-		a1.push(t._0);
-		a2.push(t._1);
-		a3.push(t._2);
-		a4.push(t._3);
-		a5.push(t._4);
-	});
-	return { _0 : a1, _1 : a2, _2 : a3, _3 : a4, _4 : a5};
-};
-thx_Iterators.zip = function(it1,it2) {
-	var array = [];
-	while(it1.hasNext() && it2.hasNext()) array.push((function($this) {
-		var $r;
-		var _0 = it1.next();
-		var _1 = it2.next();
-		$r = { _0 : _0, _1 : _1};
-		return $r;
-	}(this)));
-	return array;
-};
-thx_Iterators.zip3 = function(it1,it2,it3) {
-	var array = [];
-	while(it1.hasNext() && it2.hasNext() && it3.hasNext()) array.push((function($this) {
-		var $r;
-		var _0 = it1.next();
-		var _1 = it2.next();
-		var _2 = it3.next();
-		$r = { _0 : _0, _1 : _1, _2 : _2};
-		return $r;
-	}(this)));
-	return array;
-};
-thx_Iterators.zip4 = function(it1,it2,it3,it4) {
-	var array = [];
-	while(it1.hasNext() && it2.hasNext() && it3.hasNext() && it4.hasNext()) array.push((function($this) {
-		var $r;
-		var _0 = it1.next();
-		var _1 = it2.next();
-		var _2 = it3.next();
-		var _3 = it4.next();
-		$r = { _0 : _0, _1 : _1, _2 : _2, _3 : _3};
-		return $r;
-	}(this)));
-	return array;
-};
-thx_Iterators.zip5 = function(it1,it2,it3,it4,it5) {
-	var array = [];
-	while(it1.hasNext() && it2.hasNext() && it3.hasNext() && it4.hasNext() && it5.hasNext()) array.push((function($this) {
-		var $r;
-		var _0 = it1.next();
-		var _1 = it2.next();
-		var _2 = it3.next();
-		var _3 = it4.next();
-		var _4 = it5.next();
-		$r = { _0 : _0, _1 : _1, _2 : _2, _3 : _3, _4 : _4};
-		return $r;
-	}(this)));
-	return array;
-};
-var thx_Maps = function() { };
-thx_Maps.__name__ = ["thx","Maps"];
-thx_Maps.copyTo = function(src,dst) {
-	var $it0 = src.keys();
-	while( $it0.hasNext() ) {
-		var key = $it0.next();
-		dst.set(key,src.get(key));
-	}
-	return dst;
-};
-thx_Maps.tuples = function(map) {
-	return thx_Iterators.map(map.keys(),function(key) {
-		var _1 = map.get(key);
-		return { _0 : key, _1 : _1};
-	});
-};
-thx_Maps.mapValues = function(map,f,acc) {
-	return thx_Maps.reduce(map,function(m,t) {
-		var value = f(t._1);
-		m.set(t._0,value);
-		return m;
-	},acc);
-};
-thx_Maps.reduce = function(map,f,acc) {
-	return thx_Arrays.reduce(thx_Maps.tuples(map),f,acc);
-};
-thx_Maps.values = function(map) {
-	return thx_Iterators.map(map.keys(),function(key) {
-		return map.get(key);
-	});
-};
-thx_Maps.toObject = function(map) {
-	return thx_Arrays.reduce(thx_Maps.tuples(map),function(o,t) {
-		o[t._0] = t._1;
-		return o;
-	},{ });
-};
-thx_Maps.getAlt = function(map,key,alt) {
-	var v = map.get(key);
-	if(null == v) return alt; else return v;
-};
-thx_Maps.isMap = function(v) {
-	return js_Boot.__instanceof(v,haxe_IMap);
-};
-thx_Maps.string = function(m) {
-	return "[" + thx_Maps.tuples(m).map(function(t) {
-		return thx_Dynamics.string(t._0) + " => " + thx_Dynamics.string(t._1);
-	}).join(", ") + "]";
-};
-var thx__$Nel_Nel_$Impl_$ = {};
-thx__$Nel_Nel_$Impl_$.__name__ = ["thx","_Nel","Nel_Impl_"];
-thx__$Nel_Nel_$Impl_$.nel = function(hd,tl) {
-	{
-		var _g = thx__$Nel_Nel_$Impl_$.fromArray(tl);
-		switch(_g[1]) {
-		case 0:
-			var nel = _g[2];
-			return thx__$Nel_Nel_$Impl_$.cons(hd,nel);
-		case 1:
-			return thx__$Nel_Nel_$Impl_$.pure(hd);
-		}
-	}
-};
-thx__$Nel_Nel_$Impl_$.pure = function(a) {
-	return thx_NonEmptyList.Single(a);
-};
-thx__$Nel_Nel_$Impl_$.cons = function(a,nl) {
-	return thx_NonEmptyList.ConsNel(a,nl);
-};
-thx__$Nel_Nel_$Impl_$.fromArray = function(arr) {
-	if(arr.length == 0) return haxe_ds_Option.None; else {
-		var res = thx_NonEmptyList.Single(arr[arr.length - 1]);
-		var $it0 = thx_Ints.rangeIter(arr.length - 2,-1,-1);
-		while( $it0.hasNext() ) {
-			var i = $it0.next();
-			res = thx_NonEmptyList.ConsNel(arr[i],res);
-		}
-		return haxe_ds_Option.Some(res);
-	}
-};
-thx__$Nel_Nel_$Impl_$.map = function(this1,f) {
-	return thx__$Nel_Nel_$Impl_$.flatMap(this1,thx_Functions1.compose(thx__$Nel_Nel_$Impl_$.pure,f));
-};
-thx__$Nel_Nel_$Impl_$.flatMap = function(this1,f) {
-	switch(this1[1]) {
-	case 0:
-		var x = this1[2];
-		return f(x);
-	case 1:
-		var xs = this1[3];
-		var x1 = this1[2];
-		return thx__$Nel_Nel_$Impl_$.append(f(x1),thx__$Nel_Nel_$Impl_$.flatMap(xs,f));
-	}
-};
-thx__$Nel_Nel_$Impl_$.append = function(this1,nel) {
-	switch(this1[1]) {
-	case 0:
-		var x = this1[2];
-		return thx_NonEmptyList.ConsNel(x,nel);
-	case 1:
-		var xs = this1[3];
-		var x1 = this1[2];
-		return thx_NonEmptyList.ConsNel(x1,thx__$Nel_Nel_$Impl_$.append(xs,nel));
-	}
-};
-thx__$Nel_Nel_$Impl_$.semigroup = function() {
-	return function(nl,nr) {
-		return thx__$Nel_Nel_$Impl_$.append(nl,nr);
-	};
-};
-var thx_NonEmptyList = { __ename__ : ["thx","NonEmptyList"], __constructs__ : ["Single","ConsNel"] };
-thx_NonEmptyList.Single = function(x) { var $x = ["Single",0,x]; $x.__enum__ = thx_NonEmptyList; $x.toString = $estr; return $x; };
-thx_NonEmptyList.ConsNel = function(x,xs) { var $x = ["ConsNel",1,x,xs]; $x.__enum__ = thx_NonEmptyList; $x.toString = $estr; return $x; };
-var thx_Nil = { __ename__ : ["thx","Nil"], __constructs__ : ["nil"] };
-thx_Nil.nil = ["nil",0];
-thx_Nil.nil.toString = $estr;
-thx_Nil.nil.__enum__ = thx_Nil;
-var thx_Objects = function() { };
-thx_Objects.__name__ = ["thx","Objects"];
-thx_Objects.compare = function(a,b) {
-	var v;
-	var fields;
-	if((v = thx_Arrays.compare(fields = Reflect.fields(a),Reflect.fields(b))) != 0) return v;
-	var _g = 0;
-	while(_g < fields.length) {
-		var field = fields[_g];
-		++_g;
-		if((v = thx_Dynamics.compare(Reflect.field(a,field),Reflect.field(b,field))) != 0) return v;
-	}
-	return 0;
-};
-thx_Objects.isEmpty = function(o) {
-	return Reflect.fields(o).length == 0;
-};
-thx_Objects.exists = function(o,name) {
-	return Object.prototype.hasOwnProperty.call(o,name);
-};
-thx_Objects.fields = function(o) {
-	return Reflect.fields(o);
-};
-thx_Objects.combine = function(first,second) {
-	var to = { };
-	var _g = 0;
-	var _g1 = Reflect.fields(first);
-	while(_g < _g1.length) {
-		var field = _g1[_g];
-		++_g;
-		Reflect.setField(to,field,Reflect.field(first,field));
-	}
-	var _g2 = 0;
-	var _g11 = Reflect.fields(second);
-	while(_g2 < _g11.length) {
-		var field1 = _g11[_g2];
-		++_g2;
-		Reflect.setField(to,field1,Reflect.field(second,field1));
-	}
-	return to;
-};
-thx_Objects.assign = function(to,from,replacef) {
-	if(null == replacef) replacef = function(field,oldv,newv) {
-		return newv;
-	};
-	var _g = 0;
-	var _g1 = Reflect.fields(from);
-	while(_g < _g1.length) {
-		var field1 = _g1[_g];
-		++_g;
-		var newv1 = Reflect.field(from,field1);
-		if(Object.prototype.hasOwnProperty.call(to,field1)) Reflect.setField(to,field1,replacef(field1,Reflect.field(to,field1),newv1)); else to[field1] = newv1;
-	}
-	return to;
-};
-thx_Objects.copyTo = function(src,dst,cloneInstances) {
-	if(cloneInstances == null) cloneInstances = false;
-	var _g = 0;
-	var _g1 = Reflect.fields(src);
-	while(_g < _g1.length) {
-		var field = _g1[_g];
-		++_g;
-		var sv = thx_Dynamics.clone(Reflect.field(src,field),cloneInstances);
-		var dv = Reflect.field(dst,field);
-		if(Reflect.isObject(sv) && null == Type.getClass(sv) && (Reflect.isObject(dv) && null == Type.getClass(dv))) thx_Objects.copyTo(sv,dv); else dst[field] = sv;
-	}
-	return dst;
-};
-thx_Objects.clone = function(src,cloneInstances) {
-	if(cloneInstances == null) cloneInstances = false;
-	return thx_Dynamics.clone(src,cloneInstances);
-};
-thx_Objects.toMap = function(o) {
-	return thx_Arrays.reduce(thx_Objects.tuples(o),function(map,t) {
-		var value = t._1;
-		map.set(t._0,value);
-		return map;
-	},new haxe_ds_StringMap());
-};
-thx_Objects.size = function(o) {
-	return Reflect.fields(o).length;
-};
-thx_Objects.string = function(o) {
-	return "{" + Reflect.fields(o).map(function(key) {
-		return "" + key + " : " + thx_Objects.string(Reflect.field(o,key));
-	}).join(", ") + "}";
-};
-thx_Objects.values = function(o) {
-	return Reflect.fields(o).map(function(key) {
-		return Reflect.field(o,key);
-	});
-};
-thx_Objects.tuples = function(o) {
-	return Reflect.fields(o).map(function(key) {
-		var _1 = Reflect.field(o,key);
-		return { _0 : key, _1 : _1};
-	});
-};
-thx_Objects.hasPath = function(o,path) {
-	var paths = path.split(".");
-	var current = o;
-	var _g = 0;
-	while(_g < paths.length) {
-		var currentPath = paths[_g];
-		++_g;
-		if(thx_Strings.DIGITS.match(currentPath)) {
-			var index = Std.parseInt(currentPath);
-			var arr = Std.instance(current,Array);
-			if(null == arr || arr.length <= index) return false;
-			current = arr[index];
-		} else if(Object.prototype.hasOwnProperty.call(current,currentPath)) current = Reflect.field(current,currentPath); else return false;
-	}
-	return true;
-};
-thx_Objects.hasPathValue = function(o,path) {
-	return thx_Objects.getPath(o,path) != null;
-};
-thx_Objects.getPath = function(o,path) {
-	var paths = path.split(".");
-	var current = o;
-	var _g = 0;
-	while(_g < paths.length) {
-		var currentPath = paths[_g];
-		++_g;
-		if(thx_Strings.DIGITS.match(currentPath)) {
-			var index = Std.parseInt(currentPath);
-			var arr = Std.instance(current,Array);
-			if(null == arr) return null;
-			current = arr[index];
-		} else if(Object.prototype.hasOwnProperty.call(current,currentPath)) current = Reflect.field(current,currentPath); else return null;
-	}
-	return current;
-};
-thx_Objects.getPathOr = function(o,path,alt) {
-	var paths = path.split(".");
-	var current = o;
-	var _g = 0;
-	while(_g < paths.length) {
-		var currentPath = paths[_g];
-		++_g;
-		if(thx_Strings.DIGITS.match(currentPath)) {
-			var index = Std.parseInt(currentPath);
-			var arr = Std.instance(current,Array);
-			if(null == arr) return null;
-			current = arr[index];
-		} else if(Object.prototype.hasOwnProperty.call(current,currentPath)) current = Reflect.field(current,currentPath); else return alt;
-	}
-	return current;
-};
-thx_Objects.setPath = function(o,path,val) {
-	var paths = path.split(".");
-	var current = o;
-	var _g1 = 0;
-	var _g = paths.length - 1;
-	while(_g1 < _g) {
-		var i = _g1++;
-		var currentPath = paths[i];
-		var nextPath = paths[i + 1];
-		if(thx_Strings.DIGITS.match(currentPath)) {
-			var index = Std.parseInt(currentPath);
-			if(current[index] == null) {
-				if(thx_Strings.DIGITS.match(nextPath)) current[index] = []; else current[index] = { };
-			}
-			current = current[index];
-		} else {
-			if(!Object.prototype.hasOwnProperty.call(current,currentPath)) {
-				if(thx_Strings.DIGITS.match(nextPath)) current[currentPath] = []; else current[currentPath] = { };
-			}
-			current = Reflect.field(current,currentPath);
-		}
-	}
-	var p = paths[paths.length - 1];
-	if(thx_Strings.DIGITS.match(p)) {
-		var index1 = Std.parseInt(p);
-		current[index1] = val;
-	} else current[p] = val;
-	return o;
-};
-thx_Objects.removePath = function(o,path) {
-	var paths = path.split(".");
-	var target = paths.pop();
-	try {
-		var sub = paths.reduce(function(existing,nextPath) {
-			if(thx_Strings.DIGITS.match(nextPath)) {
-				var current = existing;
-				var index = Std.parseInt(nextPath);
-				return current[index];
-			} else return Reflect.field(existing,nextPath);
-		},o);
-		if(null != sub) Reflect.deleteField(sub,target);
-	} catch( e ) {
-		haxe_CallStack.lastException = e;
-		if (e instanceof js__$Boot_HaxeError) e = e.val;
-	}
-	return o;
-};
-var thx_Options = function() { };
-thx_Options.__name__ = ["thx","Options"];
-thx_Options.equals = function(a,b,eq) {
-	switch(a[1]) {
-	case 1:
-		switch(b[1]) {
-		case 1:
-			return true;
-		default:
-			return false;
-		}
-		break;
-	case 0:
-		switch(b[1]) {
-		case 0:
-			var a1 = a[2];
-			var b1 = b[2];
-			if(null == eq) eq = function(a2,b2) {
-				return a2 == b2;
-			};
-			return eq(a1,b1);
-		default:
-			return false;
-		}
-		break;
-	}
-};
-thx_Options.equalsValue = function(a,b,eq) {
-	return thx_Options.equals(a,null == b?haxe_ds_Option.None:haxe_ds_Option.Some(b),eq);
-};
-thx_Options.map = function(option,callback) {
-	switch(option[1]) {
-	case 1:
-		return haxe_ds_Option.None;
-	case 0:
-		var v = option[2];
-		return haxe_ds_Option.Some(callback(v));
-	}
-};
-thx_Options.ap = function(option,fopt) {
-	switch(option[1]) {
-	case 1:
-		return haxe_ds_Option.None;
-	case 0:
-		var v = option[2];
-		return thx_Options.map(fopt,function(f) {
-			return f(v);
-		});
-	}
-};
-thx_Options.flatMap = function(option,callback) {
-	switch(option[1]) {
-	case 1:
-		return haxe_ds_Option.None;
-	case 0:
-		var v = option[2];
-		return callback(v);
-	}
-};
-thx_Options.join = function(option) {
-	return thx_Options.flatMap(option,thx_Functions.identity);
-};
-thx_Options.foldLeft = function(option,b,f) {
-	switch(option[1]) {
-	case 1:
-		return b;
-	case 0:
-		var v = option[2];
-		return f(b,v);
-	}
-};
-thx_Options.toArray = function(option) {
-	switch(option[1]) {
-	case 1:
-		return [];
-	case 0:
-		var v = option[2];
-		return [v];
-	}
-};
-thx_Options.toBool = function(option) {
-	switch(option[1]) {
-	case 1:
-		return false;
-	case 0:
-		return true;
-	}
-};
-thx_Options.toOption = function(value) {
-	if(null == value) return haxe_ds_Option.None; else return haxe_ds_Option.Some(value);
-};
-thx_Options.get = function(option) {
-	switch(option[1]) {
-	case 1:
-		return null;
-	case 0:
-		var v = option[2];
-		return v;
-	}
-};
-thx_Options.getOrElse = function(option,alt) {
-	switch(option[1]) {
-	case 1:
-		return alt;
-	case 0:
-		var v = option[2];
-		return v;
-	}
-};
-thx_Options.orElse = function(option,alt) {
-	switch(option[1]) {
-	case 1:
-		return alt;
-	case 0:
-		return option;
-	}
-};
-thx_Options.all = function(option,f) {
-	switch(option[1]) {
-	case 1:
-		return true;
-	case 0:
-		var v = option[2];
-		return f(v);
-	}
-};
-thx_Options.any = function(option,f) {
-	switch(option[1]) {
-	case 1:
-		return false;
-	case 0:
-		var v = option[2];
-		return f(v);
-	}
-};
-var thx__$Ord_Ordering_$Impl_$ = {};
-thx__$Ord_Ordering_$Impl_$.__name__ = ["thx","_Ord","Ordering_Impl_"];
-thx__$Ord_Ordering_$Impl_$.fromInt = function(value) {
-	if(value < 0) return thx_OrderingImpl.LT; else if(value > 0) return thx_OrderingImpl.GT; else return thx_OrderingImpl.EQ;
-};
-thx__$Ord_Ordering_$Impl_$.fromFloat = function(value) {
-	if(value < 0) return thx_OrderingImpl.LT; else if(value > 0) return thx_OrderingImpl.GT; else return thx_OrderingImpl.EQ;
-};
-thx__$Ord_Ordering_$Impl_$.toInt = function(this1) {
-	switch(this1[1]) {
-	case 0:
-		return -1;
-	case 1:
-		return 1;
-	case 2:
-		return 0;
-	}
-};
-var thx__$Ord_Ord_$Impl_$ = {};
-thx__$Ord_Ord_$Impl_$.__name__ = ["thx","_Ord","Ord_Impl_"];
-thx__$Ord_Ord_$Impl_$.fromIntComparison = function(f) {
-	return function(a,b) {
-		return thx__$Ord_Ordering_$Impl_$.fromInt(f(a,b));
-	};
-};
-thx__$Ord_Ord_$Impl_$.order = function(this1,a0,a1) {
-	return this1(a0,a1);
-};
-thx__$Ord_Ord_$Impl_$.contramap = function(this1,f) {
-	return function(b0,b1) {
-		return this1(f(b0),f(b1));
-	};
-};
-thx__$Ord_Ord_$Impl_$.inverse = function(this1) {
-	return function(a0,a1) {
-		return this1(a1,a0);
-	};
-};
-thx__$Ord_Ord_$Impl_$.fromCompare = function(f) {
-	return function(a0,a1) {
-		var i = f(a0,a1);
-		if(i < 0) return thx_OrderingImpl.LT; else if(i == 0) return thx_OrderingImpl.EQ; else return thx_OrderingImpl.GT;
-	};
-};
-var thx__$ReadonlyArray_ReadonlyArray_$Impl_$ = {};
-thx__$ReadonlyArray_ReadonlyArray_$Impl_$.__name__ = ["thx","_ReadonlyArray","ReadonlyArray_Impl_"];
-thx__$ReadonlyArray_ReadonlyArray_$Impl_$.get = function(this1,index) {
-	return this1[index];
-};
-thx__$ReadonlyArray_ReadonlyArray_$Impl_$.toArray = function(this1) {
-	return this1.slice();
-};
-var thx__$Semigroup_Semigroup_$Impl_$ = {};
-thx__$Semigroup_Semigroup_$Impl_$.__name__ = ["thx","_Semigroup","Semigroup_Impl_"];
-thx__$Semigroup_Semigroup_$Impl_$.get_append = function(this1) {
-	return this1;
-};
 var thx_Strings = function() { };
-thx_Strings.__name__ = ["thx","Strings"];
-thx_Strings.after = function(value,searchFor) {
-	var pos = value.indexOf(searchFor);
-	if(pos < 0) return ""; else return value.substring(pos + searchFor.length);
-};
-thx_Strings.afterLast = function(value,searchFor) {
-	var pos = value.lastIndexOf(searchFor);
-	if(pos < 0) return ""; else return value.substring(pos + searchFor.length);
-};
-thx_Strings.capitalize = function(s) {
-	return HxOverrides.substr(s,0,1).toUpperCase() + HxOverrides.substr(s,1,s.length - 1);
-};
-thx_Strings.capitalizeWords = function(value,whiteSpaceOnly) {
-	if(whiteSpaceOnly == null) whiteSpaceOnly = false;
-	if(whiteSpaceOnly) return thx_Strings.UCWORDSWS.map(HxOverrides.substr(value,0,1).toUpperCase() + HxOverrides.substr(value,1,value.length - 1),thx_Strings.upperMatch); else return thx_Strings.UCWORDS.map(HxOverrides.substr(value,0,1).toUpperCase() + HxOverrides.substr(value,1,value.length - 1),thx_Strings.upperMatch);
-};
-thx_Strings.canonicalizeNewlines = function(value) {
-	return thx_Strings.CANONICALIZE_LINES.replace(value,"\n");
-};
-thx_Strings.caseInsensitiveCompare = function(a,b) {
-	return thx_Strings.compare(a.toLowerCase(),b.toLowerCase());
-};
-thx_Strings.caseInsensitiveEndsWith = function(s,end) {
-	return StringTools.endsWith(s.toLowerCase(),end.toLowerCase());
-};
-thx_Strings.caseInsensitiveEndsWithAny = function(s,values) {
-	return thx_Strings.endsWithAny(s.toLowerCase(),values.map(function(v) {
-		return v.toLowerCase();
-	}));
-};
-thx_Strings.caseInsensitiveStartsWith = function(s,start) {
-	return StringTools.startsWith(s.toLowerCase(),start.toLowerCase());
-};
-thx_Strings.caseInsensitiveStartsWithAny = function(s,values) {
-	return thx_Strings.startsWithAny(s.toLowerCase(),values.map(function(v) {
-		return v.toLowerCase();
-	}));
-};
-thx_Strings.collapse = function(value) {
-	return thx_Strings.WSG.replace(StringTools.trim(value)," ");
-};
-thx_Strings.compare = function(a,b) {
-	return haxe_Utf8.compare(a,b);
-};
-thx_Strings.contains = function(s,test) {
-	return s.indexOf(test) >= 0;
-};
-thx_Strings.count = function(s,test) {
-	return s.split(test).length - 1;
-};
-thx_Strings.containsAny = function(s,tests) {
-	return thx_Arrays.any(tests,(function(f,s1) {
-		return function(a1) {
-			return f(s1,a1);
-		};
-	})(thx_Strings.contains,s));
-};
-thx_Strings.dasherize = function(s) {
-	return StringTools.replace(s,"_","-");
-};
-thx_Strings.diffAt = function(a,b) {
-	var min = thx_Ints.min(a.length,b.length);
-	var _g = 0;
-	while(_g < min) {
-		var i = _g++;
-		if(a.substring(i,i + 1) != b.substring(i,i + 1)) return i;
-	}
-	return min;
-};
-thx_Strings.ellipsis = function(s,maxlen,symbol) {
-	if(symbol == null) symbol = "…";
-	if(maxlen == null) maxlen = 20;
-	var sl = s.length;
-	var symboll = symbol.length;
-	if(sl > maxlen) {
-		if(maxlen < symboll) return HxOverrides.substr(symbol,symboll - maxlen,maxlen); else return HxOverrides.substr(s,0,maxlen - symboll) + symbol;
-	} else return s;
-};
-thx_Strings.ellipsisMiddle = function(s,maxlen,symbol) {
-	if(symbol == null) symbol = "…";
-	if(maxlen == null) maxlen = 20;
-	var sl = s.length;
-	var symboll = symbol.length;
-	if(sl > maxlen) {
-		if(maxlen <= symboll) return thx_Strings.ellipsis(s,maxlen,symbol);
-		var hll = Math.ceil((maxlen - symboll) / 2);
-		var hlr = Math.floor((maxlen - symboll) / 2);
-		return HxOverrides.substr(s,0,hll) + symbol + HxOverrides.substr(s,sl - hlr,hlr);
-	} else return s;
-};
-thx_Strings.endsWithAny = function(s,values) {
-	return thx_Iterables.any(values,function(end) {
-		return StringTools.endsWith(s,end);
-	});
-};
-thx_Strings.filter = function(s,predicate) {
-	return s.split("").filter(predicate).join("");
-};
-thx_Strings.filterCharcode = function(s,predicate) {
-	return thx_Strings.toCharcodes(s).filter(predicate).map(function(i) {
-		return String.fromCharCode(i);
-	}).join("");
-};
-thx_Strings.from = function(value,searchFor) {
-	var pos = value.indexOf(searchFor);
-	if(pos < 0) return ""; else return value.substring(pos);
-};
-thx_Strings.hashCode = function(value) {
-	var code = 0;
-	var _g1 = 0;
-	var _g = value.length;
-	while(_g1 < _g) {
-		var i = _g1++;
-		var c = HxOverrides.cca(value,i);
-		code = (function($this) {
-			var $r;
-			var a = haxe__$Int32_Int32_$Impl_$.mul(thx_Strings.HASCODE_MUL,code);
-			$r = a + c | 0;
-			return $r;
-		}(this)) % thx_Strings.HASCODE_MAX;
-	}
-	return code;
-};
-thx_Strings.hasContent = function(value) {
-	return value != null && value.length > 0;
-};
-thx_Strings.humanize = function(s) {
-	return StringTools.replace(thx_Strings.underscore(s),"_"," ");
-};
-thx_Strings.isAlpha = function(s) {
-	return s.length > 0 && !thx_Strings.IS_ALPHA.match(s);
-};
-thx_Strings.isAlphaNum = function(value) {
-	return thx_Strings.ALPHANUM.match(value);
-};
-thx_Strings.isBreakingWhitespace = function(value) {
-	return !thx_Strings.IS_BREAKINGWHITESPACE.match(value);
-};
-thx_Strings.isLowerCase = function(value) {
-	return value.toLowerCase() == value;
-};
-thx_Strings.isUpperCase = function(value) {
-	return value.toUpperCase() == value;
-};
-thx_Strings.ifEmpty = function(value,alt) {
-	if(null != value && "" != value) return value; else return alt;
-};
-thx_Strings.isDigitsOnly = function(value) {
-	return thx_Strings.DIGITS.match(value);
-};
+thx_Strings.__name__ = true;
 thx_Strings.isEmpty = function(value) {
 	return value == null || value == "";
-};
-thx_Strings.lowerCaseFirst = function(value) {
-	return value.substring(0,1).toLowerCase() + value.substring(1);
-};
-thx_Strings.random = function(value,length) {
-	if(length == null) length = 1;
-	return haxe_Utf8.sub(value,Math.floor((value.length - length + 1) * Math.random()),length);
-};
-thx_Strings.iterator = function(s) {
-	var _this = s.split("");
-	return HxOverrides.iter(_this);
-};
-thx_Strings.map = function(value,callback) {
-	return value.split("").map(callback);
-};
-thx_Strings.remove = function(value,toremove) {
-	return StringTools.replace(value,toremove,"");
-};
-thx_Strings.removeAfter = function(value,toremove) {
-	if(StringTools.endsWith(value,toremove)) return value.substring(0,value.length - toremove.length); else return value;
-};
-thx_Strings.removeAt = function(value,index,length) {
-	return value.substring(0,index) + value.substring(index + length);
-};
-thx_Strings.removeBefore = function(value,toremove) {
-	if(StringTools.startsWith(value,toremove)) return value.substring(toremove.length); else return value;
-};
-thx_Strings.removeOne = function(value,toremove) {
-	var pos = value.indexOf(toremove);
-	if(pos < 0) return value;
-	return value.substring(0,pos) + value.substring(pos + toremove.length);
-};
-thx_Strings.repeat = function(s,times) {
-	return ((function($this) {
-		var $r;
-		var _g = [];
-		{
-			var _g1 = 0;
-			while(_g1 < times) {
-				var i = _g1++;
-				_g.push(s);
-			}
-		}
-		$r = _g;
-		return $r;
-	}(this))).join("");
-};
-thx_Strings.reverse = function(s) {
-	var arr = s.split("");
-	arr.reverse();
-	return arr.join("");
-};
-thx_Strings.quote = function(s) {
-	if(s.indexOf("\"") < 0) return "\"" + s + "\""; else if(s.indexOf("'") < 0) return "'" + s + "'"; else return "\"" + StringTools.replace(s,"\"","\\\"") + "\"";
-};
-thx_Strings.splitOnce = function(s,separator) {
-	var pos = s.indexOf(separator);
-	if(pos < 0) return [s];
-	return [s.substring(0,pos),s.substring(pos + separator.length)];
-};
-thx_Strings.startsWithAny = function(s,values) {
-	return thx_Iterables.any(values,function(start) {
-		return StringTools.startsWith(s,start);
-	});
-};
-thx_Strings.stripTags = function(s) {
-	return thx_Strings.STRIPTAGS.replace(s,"");
-};
-thx_Strings.surround = function(s,left,right) {
-	return "" + left + s + (null == right?left:right);
-};
-thx_Strings.toArray = function(s) {
-	return s.split("");
-};
-thx_Strings.toCharcodes = function(s) {
-	return thx_Strings.map(s,function(s1) {
-		return HxOverrides.cca(s1,0);
-	});
-};
-thx_Strings.toChunks = function(s,len) {
-	var chunks = [];
-	while(s.length > 0) {
-		chunks.push(HxOverrides.substr(s,0,len));
-		s = HxOverrides.substr(s,len,s.length - len);
-	}
-	return chunks;
-};
-thx_Strings.toLines = function(s) {
-	return thx_Strings.SPLIT_LINES.split(s);
-};
-thx_Strings.trimChars = function(value,charlist) {
-	return thx_Strings.trimCharsRight(thx_Strings.trimCharsLeft(value,charlist),charlist);
 };
 thx_Strings.trimCharsLeft = function(value,charlist) {
 	var pos = 0;
@@ -6040,726 +1275,38 @@ thx_Strings.trimCharsLeft = function(value,charlist) {
 	var _g = value.length;
 	while(_g1 < _g) {
 		var i = _g1++;
-		if(thx_Strings.contains(charlist,value.charAt(i))) pos++; else break;
+		var tmp;
+		var test = value.charAt(i);
+		tmp = charlist.indexOf(test) >= 0;
+		if(tmp) pos++; else break;
 	}
 	return value.substring(pos);
-};
-thx_Strings.trimCharsRight = function(value,charlist) {
-	var len = value.length;
-	var pos = len;
-	var i;
-	var _g = 0;
-	while(_g < len) {
-		var j = _g++;
-		i = len - j - 1;
-		if(thx_Strings.contains(charlist,value.charAt(i))) pos = i; else break;
-	}
-	return value.substring(0,pos);
-};
-thx_Strings.underscore = function(s) {
-	s = new EReg("::","g").replace(s,"/");
-	s = new EReg("([A-Z]+)([A-Z][a-z])","g").replace(s,"$1_$2");
-	s = new EReg("([a-z\\d])([A-Z])","g").replace(s,"$1_$2");
-	s = new EReg("-","g").replace(s,"_");
-	return s.toLowerCase();
-};
-thx_Strings.upperCaseFirst = function(value) {
-	return value.substring(0,1).toUpperCase() + value.substring(1);
-};
-thx_Strings.upTo = function(value,searchFor) {
-	var pos = value.indexOf(searchFor);
-	if(pos < 0) return value; else return value.substring(0,pos);
-};
-thx_Strings.wrapColumns = function(s,columns,indent,newline) {
-	if(newline == null) newline = "\n";
-	if(indent == null) indent = "";
-	if(columns == null) columns = 78;
-	return thx_Strings.SPLIT_LINES.split(s).map(function(part) {
-		return thx_Strings.wrapLine(StringTools.trim(thx_Strings.WSG.replace(part," ")),columns,indent,newline);
-	}).join(newline);
-};
-thx_Strings.upperMatch = function(re) {
-	return re.matched(0).toUpperCase();
-};
-thx_Strings.wrapLine = function(s,columns,indent,newline) {
-	var parts = [];
-	var pos = 0;
-	var len = s.length;
-	var ilen = indent.length;
-	columns -= ilen;
-	while(true) {
-		if(pos + columns >= len - ilen) {
-			parts.push(s.substring(pos));
-			break;
-		}
-		var i = 0;
-		while(!StringTools.isSpace(s,pos + columns - i) && i < columns) i++;
-		if(i == columns) {
-			i = 0;
-			while(!StringTools.isSpace(s,pos + columns + i) && pos + columns + i < len) i++;
-			parts.push(s.substring(pos,pos + columns + i));
-			pos += columns + i + 1;
-		} else {
-			parts.push(s.substring(pos,pos + columns - i));
-			pos += columns - i + 1;
-		}
-	}
-	return indent + parts.join(newline + indent);
-};
-thx_Strings.lpad = function(s,$char,length) {
-	var diff = length - s.length;
-	if(diff > 0) return thx_Strings.repeat($char,diff) + s; else return s;
-};
-thx_Strings.rpad = function(s,$char,length) {
-	var diff = length - s.length;
-	if(diff > 0) return s + thx_Strings.repeat($char,diff); else return s;
-};
-var thx_TimePeriod = { __ename__ : ["thx","TimePeriod"], __constructs__ : ["Second","Minute","Hour","Day","Week","Month","Year"] };
-thx_TimePeriod.Second = ["Second",0];
-thx_TimePeriod.Second.toString = $estr;
-thx_TimePeriod.Second.__enum__ = thx_TimePeriod;
-thx_TimePeriod.Minute = ["Minute",1];
-thx_TimePeriod.Minute.toString = $estr;
-thx_TimePeriod.Minute.__enum__ = thx_TimePeriod;
-thx_TimePeriod.Hour = ["Hour",2];
-thx_TimePeriod.Hour.toString = $estr;
-thx_TimePeriod.Hour.__enum__ = thx_TimePeriod;
-thx_TimePeriod.Day = ["Day",3];
-thx_TimePeriod.Day.toString = $estr;
-thx_TimePeriod.Day.__enum__ = thx_TimePeriod;
-thx_TimePeriod.Week = ["Week",4];
-thx_TimePeriod.Week.toString = $estr;
-thx_TimePeriod.Week.__enum__ = thx_TimePeriod;
-thx_TimePeriod.Month = ["Month",5];
-thx_TimePeriod.Month.toString = $estr;
-thx_TimePeriod.Month.__enum__ = thx_TimePeriod;
-thx_TimePeriod.Year = ["Year",6];
-thx_TimePeriod.Year.toString = $estr;
-thx_TimePeriod.Year.__enum__ = thx_TimePeriod;
-var thx__$Timestamp_Timestamp_$Impl_$ = {};
-thx__$Timestamp_Timestamp_$Impl_$.__name__ = ["thx","_Timestamp","Timestamp_Impl_"];
-thx__$Timestamp_Timestamp_$Impl_$.create = function(year,month,day,hour,minute,second) {
-	return thx_Dates.create(year,month,day,hour,minute,second).getTime();
-};
-thx__$Timestamp_Timestamp_$Impl_$.now = function() {
-	var d = new Date();
-	return d.getTime();
-};
-thx__$Timestamp_Timestamp_$Impl_$.fromDate = function(d) {
-	return d.getTime();
-};
-thx__$Timestamp_Timestamp_$Impl_$.fromString = function(s) {
-	return HxOverrides.strDate(s).getTime();
-};
-thx__$Timestamp_Timestamp_$Impl_$.toDate = function(this1) {
-	var d = new Date();
-	d.setTime(this1);
-	return d;
-};
-thx__$Timestamp_Timestamp_$Impl_$.toString = function(this1) {
-	var _this;
-	var d = new Date();
-	d.setTime(this1);
-	_this = d;
-	return HxOverrides.dateStr(_this);
-};
-thx__$Timestamp_Timestamp_$Impl_$.snapNext = function(this1,period) {
-	switch(period[1]) {
-	case 0:
-		return Math.ceil(this1 / 1000.0) * 1000.0;
-	case 1:
-		return Math.ceil(this1 / 60000.0) * 60000.0;
-	case 2:
-		return Math.ceil(this1 / 3600000.0) * 3600000.0;
-	case 3:
-		var d;
-		var d1 = new Date();
-		d1.setTime(this1);
-		d = d1;
-		var year = d.getFullYear();
-		var month = d.getMonth();
-		var day = d.getDate() + 1;
-		return thx_Dates.create(year,month,day,0,0,0).getTime();
-	case 4:
-		var d2;
-		var d3 = new Date();
-		d3.setTime(this1);
-		d2 = d3;
-		var wd = d2.getDay();
-		var year1 = d2.getFullYear();
-		var month1 = d2.getMonth();
-		var day1 = d2.getDate() + 7 - wd;
-		return thx_Dates.create(year1,month1,day1,0,0,0).getTime();
-	case 5:
-		var d4;
-		var d5 = new Date();
-		d5.setTime(this1);
-		d4 = d5;
-		var year2 = d4.getFullYear();
-		var month2 = d4.getMonth() + 1;
-		return thx_Dates.create(year2,month2,1,0,0,0).getTime();
-	case 6:
-		var d6;
-		var d7 = new Date();
-		d7.setTime(this1);
-		d6 = d7;
-		var year3 = d6.getFullYear() + 1;
-		return thx_Dates.create(year3,0,1,0,0,0).getTime();
-	}
-};
-thx__$Timestamp_Timestamp_$Impl_$.snapPrev = function(this1,period) {
-	switch(period[1]) {
-	case 0:
-		return Math.floor(this1 / 1000.0) * 1000.0;
-	case 1:
-		return Math.floor(this1 / 60000.0) * 60000.0;
-	case 2:
-		return Math.floor(this1 / 3600000.0) * 3600000.0;
-	case 3:
-		var d;
-		var d1 = new Date();
-		d1.setTime(this1);
-		d = d1;
-		var year = d.getFullYear();
-		var month = d.getMonth();
-		var day = d.getDate();
-		return thx_Dates.create(year,month,day,0,0,0).getTime();
-	case 4:
-		var d2;
-		var d3 = new Date();
-		d3.setTime(this1);
-		d2 = d3;
-		var wd = d2.getDay();
-		var year1 = d2.getFullYear();
-		var month1 = d2.getMonth();
-		var day1 = d2.getDate() - wd;
-		return thx_Dates.create(year1,month1,day1,0,0,0).getTime();
-	case 5:
-		var d4;
-		var d5 = new Date();
-		d5.setTime(this1);
-		d4 = d5;
-		var year2 = d4.getFullYear();
-		var month2 = d4.getMonth();
-		return thx_Dates.create(year2,month2,1,0,0,0).getTime();
-	case 6:
-		var d6;
-		var d7 = new Date();
-		d7.setTime(this1);
-		d6 = d7;
-		var year3 = d6.getFullYear();
-		return thx_Dates.create(year3,0,1,0,0,0).getTime();
-	}
-};
-thx__$Timestamp_Timestamp_$Impl_$.snapTo = function(this1,period) {
-	switch(period[1]) {
-	case 0:
-		return Math.round(this1 / 1000.0) * 1000.0;
-	case 1:
-		return Math.round(this1 / 60000.0) * 60000.0;
-	case 2:
-		return Math.round(this1 / 3600000.0) * 3600000.0;
-	case 3:
-		var d;
-		var d1 = new Date();
-		d1.setTime(this1);
-		d = d1;
-		var mod;
-		if(d.getHours() >= 12) mod = 1; else mod = 0;
-		var year = d.getFullYear();
-		var month = d.getMonth();
-		var day = d.getDate() + mod;
-		return thx_Dates.create(year,month,day,0,0,0).getTime();
-	case 4:
-		var d2;
-		var d3 = new Date();
-		d3.setTime(this1);
-		d2 = d3;
-		var wd = d2.getDay();
-		var mod1;
-		if(wd < 3) mod1 = -wd; else if(wd > 3) mod1 = 7 - wd; else if(d2.getHours() < 12) mod1 = -wd; else mod1 = 7 - wd;
-		var year1 = d2.getFullYear();
-		var month1 = d2.getMonth();
-		var day1 = d2.getDate() + mod1;
-		return thx_Dates.create(year1,month1,day1,0,0,0).getTime();
-	case 5:
-		var d4;
-		var d5 = new Date();
-		d5.setTime(this1);
-		d4 = d5;
-		var mod2;
-		if(d4.getDate() > Math.round(DateTools.getMonthDays(d4) / 2)) mod2 = 1; else mod2 = 0;
-		var year2 = d4.getFullYear();
-		var month2 = d4.getMonth() + mod2;
-		return thx_Dates.create(year2,month2,1,0,0,0).getTime();
-	case 6:
-		var d6;
-		var d7 = new Date();
-		d7.setTime(this1);
-		d6 = d7;
-		var mod3;
-		if(this1 > new Date(d6.getFullYear(),6,2,0,0,0).getTime()) mod3 = 1; else mod3 = 0;
-		var year3 = d6.getFullYear() + mod3;
-		return thx_Dates.create(year3,0,1,0,0,0).getTime();
-	}
-};
-thx__$Timestamp_Timestamp_$Impl_$.r = function(t,v) {
-	return Math.round(t / v) * v;
-};
-thx__$Timestamp_Timestamp_$Impl_$.f = function(t,v) {
-	return Math.floor(t / v) * v;
-};
-thx__$Timestamp_Timestamp_$Impl_$.c = function(t,v) {
-	return Math.ceil(t / v) * v;
-};
-var thx__$Tuple_Tuple0_$Impl_$ = {};
-thx__$Tuple_Tuple0_$Impl_$.__name__ = ["thx","_Tuple","Tuple0_Impl_"];
-thx__$Tuple_Tuple0_$Impl_$._new = function() {
-	return thx_Nil.nil;
-};
-thx__$Tuple_Tuple0_$Impl_$["with"] = function(this1,v) {
-	return v;
-};
-thx__$Tuple_Tuple0_$Impl_$.toString = function(this1) {
-	return "Tuple0()";
-};
-thx__$Tuple_Tuple0_$Impl_$.toNil = function(this1) {
-	return this1;
-};
-thx__$Tuple_Tuple0_$Impl_$.nilToTuple = function(v) {
-	return thx_Nil.nil;
-};
-var thx__$Tuple_Tuple1_$Impl_$ = {};
-thx__$Tuple_Tuple1_$Impl_$.__name__ = ["thx","_Tuple","Tuple1_Impl_"];
-thx__$Tuple_Tuple1_$Impl_$._new = function(_0) {
-	return _0;
-};
-thx__$Tuple_Tuple1_$Impl_$.get__0 = function(this1) {
-	return this1;
-};
-thx__$Tuple_Tuple1_$Impl_$["with"] = function(this1,v) {
-	return { _0 : this1, _1 : v};
-};
-thx__$Tuple_Tuple1_$Impl_$.toString = function(this1) {
-	return "Tuple1(" + Std.string(this1) + ")";
-};
-thx__$Tuple_Tuple1_$Impl_$.arrayToTuple = function(v) {
-	return v[0];
-};
-var thx__$Tuple_Tuple2_$Impl_$ = {};
-thx__$Tuple_Tuple2_$Impl_$.__name__ = ["thx","_Tuple","Tuple2_Impl_"];
-thx__$Tuple_Tuple2_$Impl_$.of = function(_0,_1) {
-	return { _0 : _0, _1 : _1};
-};
-thx__$Tuple_Tuple2_$Impl_$._new = function(_0,_1) {
-	return { _0 : _0, _1 : _1};
-};
-thx__$Tuple_Tuple2_$Impl_$.get_left = function(this1) {
-	return this1._0;
-};
-thx__$Tuple_Tuple2_$Impl_$.get_right = function(this1) {
-	return this1._1;
-};
-thx__$Tuple_Tuple2_$Impl_$.flip = function(this1) {
-	return { _0 : this1._1, _1 : this1._0};
-};
-thx__$Tuple_Tuple2_$Impl_$.dropLeft = function(this1) {
-	return this1._1;
-};
-thx__$Tuple_Tuple2_$Impl_$.dropRight = function(this1) {
-	return this1._0;
-};
-thx__$Tuple_Tuple2_$Impl_$["with"] = function(this1,v) {
-	return { _0 : this1._0, _1 : this1._1, _2 : v};
-};
-thx__$Tuple_Tuple2_$Impl_$.toString = function(this1) {
-	return "Tuple2(" + Std.string(this1._0) + "," + Std.string(this1._1) + ")";
-};
-thx__$Tuple_Tuple2_$Impl_$.map = function(this1,f) {
-	var _1 = f(this1._1);
-	return { _0 : this1._0, _1 : _1};
-};
-thx__$Tuple_Tuple2_$Impl_$.arrayToTuple2 = function(v) {
-	return { _0 : v[0], _1 : v[1]};
-};
-var thx__$Tuple_Tuple3_$Impl_$ = {};
-thx__$Tuple_Tuple3_$Impl_$.__name__ = ["thx","_Tuple","Tuple3_Impl_"];
-thx__$Tuple_Tuple3_$Impl_$._new = function(_0,_1,_2) {
-	return { _0 : _0, _1 : _1, _2 : _2};
-};
-thx__$Tuple_Tuple3_$Impl_$.flip = function(this1) {
-	return { _0 : this1._2, _1 : this1._1, _2 : this1._0};
-};
-thx__$Tuple_Tuple3_$Impl_$.dropLeft = function(this1) {
-	return { _0 : this1._1, _1 : this1._2};
-};
-thx__$Tuple_Tuple3_$Impl_$.dropRight = function(this1) {
-	return { _0 : this1._0, _1 : this1._1};
-};
-thx__$Tuple_Tuple3_$Impl_$["with"] = function(this1,v) {
-	return { _0 : this1._0, _1 : this1._1, _2 : this1._2, _3 : v};
-};
-thx__$Tuple_Tuple3_$Impl_$.toString = function(this1) {
-	return "Tuple3(" + Std.string(this1._0) + "," + Std.string(this1._1) + "," + Std.string(this1._2) + ")";
-};
-thx__$Tuple_Tuple3_$Impl_$.arrayToTuple3 = function(v) {
-	return { _0 : v[0], _1 : v[1], _2 : v[2]};
-};
-var thx__$Tuple_Tuple4_$Impl_$ = {};
-thx__$Tuple_Tuple4_$Impl_$.__name__ = ["thx","_Tuple","Tuple4_Impl_"];
-thx__$Tuple_Tuple4_$Impl_$._new = function(_0,_1,_2,_3) {
-	return { _0 : _0, _1 : _1, _2 : _2, _3 : _3};
-};
-thx__$Tuple_Tuple4_$Impl_$.flip = function(this1) {
-	return { _0 : this1._3, _1 : this1._2, _2 : this1._1, _3 : this1._0};
-};
-thx__$Tuple_Tuple4_$Impl_$.dropLeft = function(this1) {
-	return { _0 : this1._1, _1 : this1._2, _2 : this1._3};
-};
-thx__$Tuple_Tuple4_$Impl_$.dropRight = function(this1) {
-	return { _0 : this1._0, _1 : this1._1, _2 : this1._2};
-};
-thx__$Tuple_Tuple4_$Impl_$["with"] = function(this1,v) {
-	return { _0 : this1._0, _1 : this1._1, _2 : this1._2, _3 : this1._3, _4 : v};
-};
-thx__$Tuple_Tuple4_$Impl_$.toString = function(this1) {
-	return "Tuple4(" + Std.string(this1._0) + "," + Std.string(this1._1) + "," + Std.string(this1._2) + "," + Std.string(this1._3) + ")";
-};
-thx__$Tuple_Tuple4_$Impl_$.arrayToTuple4 = function(v) {
-	return { _0 : v[0], _1 : v[1], _2 : v[2], _3 : v[3]};
-};
-var thx__$Tuple_Tuple5_$Impl_$ = {};
-thx__$Tuple_Tuple5_$Impl_$.__name__ = ["thx","_Tuple","Tuple5_Impl_"];
-thx__$Tuple_Tuple5_$Impl_$._new = function(_0,_1,_2,_3,_4) {
-	return { _0 : _0, _1 : _1, _2 : _2, _3 : _3, _4 : _4};
-};
-thx__$Tuple_Tuple5_$Impl_$.flip = function(this1) {
-	return { _0 : this1._4, _1 : this1._3, _2 : this1._2, _3 : this1._1, _4 : this1._0};
-};
-thx__$Tuple_Tuple5_$Impl_$.dropLeft = function(this1) {
-	return { _0 : this1._1, _1 : this1._2, _2 : this1._3, _3 : this1._4};
-};
-thx__$Tuple_Tuple5_$Impl_$.dropRight = function(this1) {
-	return { _0 : this1._0, _1 : this1._1, _2 : this1._2, _3 : this1._3};
-};
-thx__$Tuple_Tuple5_$Impl_$["with"] = function(this1,v) {
-	return { _0 : this1._0, _1 : this1._1, _2 : this1._2, _3 : this1._3, _4 : this1._4, _5 : v};
-};
-thx__$Tuple_Tuple5_$Impl_$.toString = function(this1) {
-	return "Tuple5(" + Std.string(this1._0) + "," + Std.string(this1._1) + "," + Std.string(this1._2) + "," + Std.string(this1._3) + "," + Std.string(this1._4) + ")";
-};
-thx__$Tuple_Tuple5_$Impl_$.arrayToTuple5 = function(v) {
-	return { _0 : v[0], _1 : v[1], _2 : v[2], _3 : v[3], _4 : v[4]};
-};
-var thx__$Tuple_Tuple6_$Impl_$ = {};
-thx__$Tuple_Tuple6_$Impl_$.__name__ = ["thx","_Tuple","Tuple6_Impl_"];
-thx__$Tuple_Tuple6_$Impl_$._new = function(_0,_1,_2,_3,_4,_5) {
-	return { _0 : _0, _1 : _1, _2 : _2, _3 : _3, _4 : _4, _5 : _5};
-};
-thx__$Tuple_Tuple6_$Impl_$.flip = function(this1) {
-	return { _0 : this1._5, _1 : this1._4, _2 : this1._3, _3 : this1._2, _4 : this1._1, _5 : this1._0};
-};
-thx__$Tuple_Tuple6_$Impl_$.dropLeft = function(this1) {
-	return { _0 : this1._1, _1 : this1._2, _2 : this1._3, _3 : this1._4, _4 : this1._5};
-};
-thx__$Tuple_Tuple6_$Impl_$.dropRight = function(this1) {
-	return { _0 : this1._0, _1 : this1._1, _2 : this1._2, _3 : this1._3, _4 : this1._4};
-};
-thx__$Tuple_Tuple6_$Impl_$.toString = function(this1) {
-	return "Tuple6(" + Std.string(this1._0) + "," + Std.string(this1._1) + "," + Std.string(this1._2) + "," + Std.string(this1._3) + "," + Std.string(this1._4) + "," + Std.string(this1._5) + ")";
-};
-thx__$Tuple_Tuple6_$Impl_$.arrayToTuple6 = function(v) {
-	return { _0 : v[0], _1 : v[1], _2 : v[2], _3 : v[3], _4 : v[4], _5 : v[5]};
-};
-var thx_Types = function() { };
-thx_Types.__name__ = ["thx","Types"];
-thx_Types.isAnonymousObject = function(v) {
-	return Reflect.isObject(v) && null == Type.getClass(v);
-};
-thx_Types.isPrimitive = function(v) {
-	{
-		var _g = Type["typeof"](v);
-		switch(_g[1]) {
-		case 1:case 2:case 3:
-			return true;
-		case 0:case 5:case 7:case 4:case 8:
-			return false;
-		case 6:
-			var c = _g[2];
-			return Type.getClassName(c) == "String";
-		}
-	}
-};
-thx_Types.hasSuperClass = function(cls,sup) {
-	while(null != cls) {
-		if(cls == sup) return true;
-		cls = Type.getSuperClass(cls);
-	}
-	return false;
-};
-thx_Types.sameType = function(a,b) {
-	return thx_Types.toString(Type["typeof"](a)) == thx_Types.toString(Type["typeof"](b));
-};
-thx_Types.typeInheritance = function(type) {
-	switch(type[1]) {
-	case 1:
-		return ["Int"];
-	case 2:
-		return ["Float"];
-	case 3:
-		return ["Bool"];
-	case 4:
-		return ["{}"];
-	case 5:
-		return ["Function"];
-	case 6:
-		var c = type[2];
-		var classes = [];
-		while(null != c) {
-			classes.push(c);
-			c = Type.getSuperClass(c);
-		}
-		return classes.map(Type.getClassName);
-	case 7:
-		var e = type[2];
-		return [Type.getEnumName(e)];
-	default:
-		throw new js__$Boot_HaxeError("invalid type " + Std.string(type));
-	}
-};
-thx_Types.toString = function(type) {
-	switch(type[1]) {
-	case 0:
-		return "Null";
-	case 1:
-		return "Int";
-	case 2:
-		return "Float";
-	case 3:
-		return "Bool";
-	case 4:
-		return "{}";
-	case 5:
-		return "Function";
-	case 6:
-		var c = type[2];
-		return Type.getClassName(c);
-	case 7:
-		var e = type[2];
-		return Type.getEnumName(e);
-	default:
-		throw new js__$Boot_HaxeError("invalid type " + Std.string(type));
-	}
-};
-thx_Types.valueTypeInheritance = function(value) {
-	return thx_Types.typeInheritance(Type["typeof"](value));
-};
-thx_Types.valueTypeToString = function(value) {
-	return thx_Types.toString(Type["typeof"](value));
-};
-thx_Types.anyValueToString = function(value) {
-	if(js_Boot.__instanceof(value,ValueType)) return thx_Types.toString(value);
-	if(js_Boot.__instanceof(value,Class)) return Type.getClassName(value);
-	if(js_Boot.__instanceof(value,Enum)) return Type.getEnumName(value);
-	return thx_Types.valueTypeToString(value);
-};
-var thx__$Validation_Validation_$Impl_$ = {};
-thx__$Validation_Validation_$Impl_$.__name__ = ["thx","_Validation","Validation_Impl_"];
-thx__$Validation_Validation_$Impl_$.validation = function(e) {
-	return e;
-};
-thx__$Validation_Validation_$Impl_$.vnel = function(e) {
-	return e;
-};
-thx__$Validation_Validation_$Impl_$.pure = function(a) {
-	return thx_Either.Right(a);
-};
-thx__$Validation_Validation_$Impl_$.success = function(a) {
-	return thx_Either.Right(a);
-};
-thx__$Validation_Validation_$Impl_$.failure = function(e) {
-	return thx_Either.Left(e);
-};
-thx__$Validation_Validation_$Impl_$.nn = function(a,e) {
-	if(a == null) return thx_Either.Left(e); else return thx_Either.Right(a);
-};
-thx__$Validation_Validation_$Impl_$.successNel = function(a) {
-	return thx_Either.Right(a);
-};
-thx__$Validation_Validation_$Impl_$.failureNel = function(e) {
-	return thx_Either.Left(thx__$Nel_Nel_$Impl_$.pure(e));
-};
-thx__$Validation_Validation_$Impl_$.nnNel = function(a,e) {
-	if(a == null) return thx_Either.Left(thx__$Nel_Nel_$Impl_$.pure(e)); else return thx_Either.Right(a);
-};
-thx__$Validation_Validation_$Impl_$.get_either = function(this1) {
-	return this1;
-};
-thx__$Validation_Validation_$Impl_$.map = function(this1,f) {
-	return thx__$Validation_Validation_$Impl_$.ap(this1,thx_Either.Right(f),function(e1,e2) {
-		throw new js__$Boot_HaxeError("Unreachable");
-	});
-};
-thx__$Validation_Validation_$Impl_$.ap = function(this1,v,s) {
-	switch(this1[1]) {
-	case 0:
-		var e0 = this1[2];
-		{
-			var _g = v;
-			switch(_g[1]) {
-			case 0:
-				var e1 = _g[2];
-				return thx_Either.Left((thx__$Semigroup_Semigroup_$Impl_$.get_append(s))(e0,e1));
-			case 1:
-				var b = _g[2];
-				return thx_Either.Left(e0);
-			}
-		}
-		break;
-	case 1:
-		var a = this1[2];
-		{
-			var _g1 = v;
-			switch(_g1[1]) {
-			case 0:
-				var e = _g1[2];
-				return thx_Either.Left(e);
-			case 1:
-				var f = _g1[2];
-				return thx_Either.Right(f(a));
-			}
-		}
-		break;
-	}
-};
-thx__$Validation_Validation_$Impl_$.zip = function(this1,v,s) {
-	return thx__$Validation_Validation_$Impl_$.ap(this1,thx_Eithers.map(v,function(b) {
-		return (function(f,_1) {
-			return function(_0) {
-				return f(_0,_1);
-			};
-		})(thx__$Tuple_Tuple2_$Impl_$.of,b);
-	}),s);
-};
-thx__$Validation_Validation_$Impl_$.leftMap = function(this1,f) {
-	return thx_Eithers.leftMap(this1,f);
-};
-thx__$Validation_Validation_$Impl_$.flatMapV = function(this1,f) {
-	switch(this1[1]) {
-	case 0:
-		var a = this1[2];
-		return thx_Either.Left(a);
-	case 1:
-		var b = this1[2];
-		return f(b);
-	}
-};
-thx__$Validation_Validation_$Impl_$.val2 = function(f,v1,v2,s) {
-	return thx__$Validation_Validation_$Impl_$.ap(v2,(function($this) {
-		var $r;
-		var f1 = thx_Functions2.curry(f);
-		$r = thx__$Validation_Validation_$Impl_$.ap(v1,thx_Either.Right(f1),function(e1,e2) {
-			throw new js__$Boot_HaxeError("Unreachable");
-		});
-		return $r;
-	}(this)),s);
-};
-thx__$Validation_Validation_$Impl_$.val3 = function(f,v1,v2,v3,s) {
-	return thx__$Validation_Validation_$Impl_$.ap(v3,(function($this) {
-		var $r;
-		var f1 = thx_Functions3.curry(f);
-		$r = thx__$Validation_Validation_$Impl_$.ap(v2,(function($this) {
-			var $r;
-			var f2 = thx_Functions2.curry(f1);
-			$r = thx__$Validation_Validation_$Impl_$.ap(v1,thx_Either.Right(f2),function(e1,e2) {
-				throw new js__$Boot_HaxeError("Unreachable");
-			});
-			return $r;
-		}($this)),s);
-		return $r;
-	}(this)),s);
-};
-thx__$Validation_Validation_$Impl_$.val4 = function(f,v1,v2,v3,v4,s) {
-	return thx__$Validation_Validation_$Impl_$.ap(v4,(function($this) {
-		var $r;
-		var f1 = thx_Functions4.curry(f);
-		$r = thx__$Validation_Validation_$Impl_$.ap(v3,(function($this) {
-			var $r;
-			var f2 = thx_Functions3.curry(f1);
-			$r = thx__$Validation_Validation_$Impl_$.ap(v2,(function($this) {
-				var $r;
-				var f3 = thx_Functions2.curry(f2);
-				$r = thx__$Validation_Validation_$Impl_$.ap(v1,thx_Either.Right(f3),function(e1,e2) {
-					throw new js__$Boot_HaxeError("Unreachable");
-				});
-				return $r;
-			}($this)),s);
-			return $r;
-		}($this)),s);
-		return $r;
-	}(this)),s);
-};
-thx__$Validation_Validation_$Impl_$.val5 = function(f,v1,v2,v3,v4,v5,s) {
-	return thx__$Validation_Validation_$Impl_$.ap(v5,(function($this) {
-		var $r;
-		var f1 = thx_Functions5.curry(f);
-		$r = thx__$Validation_Validation_$Impl_$.ap(v4,(function($this) {
-			var $r;
-			var f2 = thx_Functions4.curry(f1);
-			$r = thx__$Validation_Validation_$Impl_$.ap(v3,(function($this) {
-				var $r;
-				var f3 = thx_Functions3.curry(f2);
-				$r = thx__$Validation_Validation_$Impl_$.ap(v2,(function($this) {
-					var $r;
-					var f4 = thx_Functions2.curry(f3);
-					$r = thx__$Validation_Validation_$Impl_$.ap(v1,thx_Either.Right(f4),function(e1,e2) {
-						throw new js__$Boot_HaxeError("Unreachable");
-					});
-					return $r;
-				}($this)),s);
-				return $r;
-			}($this)),s);
-			return $r;
-		}($this)),s);
-		return $r;
-	}(this)),s);
 };
 var thx_error_AbstractMethod = function(posInfo) {
 	thx_Error.call(this,"method " + posInfo.className + "." + posInfo.methodName + "() is abstract",null,posInfo);
 };
-thx_error_AbstractMethod.__name__ = ["thx","error","AbstractMethod"];
+thx_error_AbstractMethod.__name__ = true;
 thx_error_AbstractMethod.__super__ = thx_Error;
 thx_error_AbstractMethod.prototype = $extend(thx_Error.prototype,{
 	__class__: thx_error_AbstractMethod
 });
-var thx_error_ErrorWrapper = function(message,innerError,stack,pos) {
-	thx_Error.call(this,message,stack,pos);
-	this.innerError = innerError;
-};
-thx_error_ErrorWrapper.__name__ = ["thx","error","ErrorWrapper"];
-thx_error_ErrorWrapper.__super__ = thx_Error;
-thx_error_ErrorWrapper.prototype = $extend(thx_Error.prototype,{
-	innerError: null
-	,__class__: thx_error_ErrorWrapper
-});
 var todomvc_App = function(prop,state) {
 	doom_PropertiesComponent.call(this,prop,state);
 };
-todomvc_App.__name__ = ["todomvc","App"];
+todomvc_App.__name__ = true;
 todomvc_App.__super__ = doom_PropertiesComponent;
 todomvc_App.prototype = $extend(doom_PropertiesComponent.prototype,{
 	render: function() {
-		return Doom.DIV(null,[(function($this) {
-			var $r;
-			var comp = new todomvc_Header($this.prop);
-			$r = doom_NodeImpl.ComponentNode(comp);
-			return $r;
-		}(this)),(function($this) {
-			var $r;
-			var comp1 = new todomvc_Body($this.prop,$this.state);
-			$r = doom_NodeImpl.ComponentNode(comp1);
-			return $r;
-		}(this))],null);
+		var tmp;
+		var tmp1;
+		var comp = new todomvc_Header(this.prop);
+		tmp1 = doom_NodeImpl.ComponentNode(comp);
+		var tmp2;
+		var comp1 = new todomvc_Body(this.prop,this.state);
+		tmp2 = doom_NodeImpl.ComponentNode(comp1);
+		var children = [tmp1,tmp2];
+		tmp = doom__$Node_Node_$Impl_$.el("div",null,children,null);
+		return tmp;
 	}
 	,__class__: todomvc_App
 });
@@ -6771,15 +1318,9 @@ var todomvc_AppProperties = function() {
 	};
 	this.refresh();
 };
-todomvc_AppProperties.__name__ = ["todomvc","AppProperties"];
+todomvc_AppProperties.__name__ = true;
 todomvc_AppProperties.prototype = {
-	remaining: null
-	,complete: null
-	,filter: null
-	,filteredItems: null
-	,onUpdate: null
-	,allItems: null
-	,setFilter: function(filter) {
+	setFilter: function(filter) {
 		this.filter = filter;
 		this.setFilterIntHash(filter);
 		this.refresh();
@@ -6802,18 +1343,20 @@ todomvc_AppProperties.prototype = {
 		this.refresh();
 	}
 	,toggleCheck: function() {
-		var completed = ((function(_e) {
-			return function(predicate) {
-				return thx_Arrays.all(_e,predicate);
-			};
-		})(this.allItems))(function(_) {
+		var tmp;
+		var _e = this.allItems;
+		tmp = function(predicate) {
+			return thx_Arrays.all(_e,predicate);
+		};
+		var completed = tmp(function(_) {
 			return _.completed;
 		});
-		((function(_e1) {
-			return function(effect) {
-				thx_Arrays.each(_e1,effect);
-			};
-		})(this.allItems))(function(_1) {
+		var tmp1;
+		var _e1 = this.allItems;
+		tmp1 = function(effect) {
+			thx_Arrays.each(_e1,effect);
+		};
+		tmp1(function(_1) {
 			return _1.completed = !completed;
 		});
 		this.refresh();
@@ -6846,27 +1389,33 @@ todomvc_AppProperties.prototype = {
 	}
 	,getFilterFromHash: function() {
 		var hash = thx_Strings.trimCharsLeft(window.location.hash,"#");
+		var tmp;
 		switch(hash) {
 		case "/active":
-			return todomvc_Filter.Active;
+			tmp = todomvc_Filter.Active;
+			break;
 		case "/completed":
-			return todomvc_Filter.Completed;
+			tmp = todomvc_Filter.Completed;
+			break;
 		default:
-			return todomvc_Filter.All;
+			tmp = todomvc_Filter.All;
 		}
+		return tmp;
 	}
 	,setFilterIntHash: function(filter) {
+		var tmp;
 		switch(filter[1]) {
 		case 1:
-			window.location.hash = "/active";
+			tmp = "/active";
 			break;
 		case 2:
-			window.location.hash = "/completed";
+			tmp = "/completed";
 			break;
 		case 0:
-			window.location.hash = "";
+			tmp = "";
 			break;
 		}
+		window.location.hash = tmp;
 	}
 	,load: function() {
 		var v = window.localStorage.getItem("TodoMVC-Doom");
@@ -6881,25 +1430,33 @@ var todomvc_Body = function(prop,state) {
 		_g.update({ items : prop.filteredItems, remaining : prop.remaining, complete : prop.complete, filter : prop.filter});
 	};
 };
-todomvc_Body.__name__ = ["todomvc","Body"];
+todomvc_Body.__name__ = true;
 todomvc_Body.__super__ = doom_PropertiesComponent;
 todomvc_Body.prototype = $extend(doom_PropertiesComponent.prototype,{
 	render: function() {
-		if(this.state.complete == 0) return Doom.dummy("nothing to do yet"); else return Doom.DIV(null,[(function($this) {
-			var $r;
-			var comp = new todomvc_List($this.prop,{ items : $this.state.items, allCompleted : $this.state.remaining == 0});
-			$r = doom_NodeImpl.ComponentNode(comp);
-			return $r;
-		}(this)),(function($this) {
-			var $r;
-			var comp1 = new todomvc_Footer($this.prop,{ remaining : $this.state.remaining, filter : $this.state.filter, hasCompleted : $this.state.complete - $this.state.remaining > 0});
-			$r = doom_NodeImpl.ComponentNode(comp1);
-			return $r;
-		}(this))],null);
+		var tmp;
+		if(this.state.complete == 0) {
+			var tmp1;
+			var _g = new haxe_ds_StringMap();
+			var value = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("display:none");
+			if(__map_reserved.style != null) _g.setReserved("style",value); else _g.h["style"] = value;
+			tmp1 = _g;
+			tmp = doom__$Node_Node_$Impl_$.el("div",tmp1,[doom_NodeImpl.Comment(" " + "nothing to do yet" + " ")]);
+		} else {
+			var tmp2;
+			var comp = new todomvc_List(this.prop,{ items : this.state.items, allCompleted : this.state.remaining == 0});
+			tmp2 = doom_NodeImpl.ComponentNode(comp);
+			var tmp3;
+			var comp1 = new todomvc_Footer(this.prop,{ remaining : this.state.remaining, filter : this.state.filter, hasCompleted : this.state.complete - this.state.remaining > 0});
+			tmp3 = doom_NodeImpl.ComponentNode(comp1);
+			var children = [tmp2,tmp3];
+			tmp = doom__$Node_Node_$Impl_$.el("div",null,children,null);
+		}
+		return tmp;
 	}
 	,__class__: todomvc_Body
 });
-var todomvc_Filter = { __ename__ : ["todomvc","Filter"], __constructs__ : ["All","Active","Completed"] };
+var todomvc_Filter = { __ename__ : true, __constructs__ : ["All","Active","Completed"] };
 todomvc_Filter.All = ["All",0];
 todomvc_Filter.All.toString = $estr;
 todomvc_Filter.All.__enum__ = todomvc_Filter;
@@ -6912,143 +1469,130 @@ todomvc_Filter.Completed.__enum__ = todomvc_Filter;
 var todomvc_Footer = function(prop,state) {
 	doom_PropertiesComponent.call(this,prop,state);
 };
-todomvc_Footer.__name__ = ["todomvc","Footer"];
+todomvc_Footer.__name__ = true;
 todomvc_Footer.__super__ = doom_PropertiesComponent;
 todomvc_Footer.prototype = $extend(doom_PropertiesComponent.prototype,{
 	render: function() {
-		var footerContent = [Doom.SPAN((function($this) {
-			var $r;
-			var _g = new haxe_ds_StringMap();
-			{
-				var value = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("todo-count");
-				if(__map_reserved["class"] != null) _g.setReserved("class",value); else _g.h["class"] = value;
-			}
-			$r = _g;
-			return $r;
-		}(this)),this.getItemsLeftLabel(),null),Doom.UL((function($this) {
-			var $r;
-			var _g1 = new haxe_ds_StringMap();
-			{
-				var value1 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("filters");
-				if(__map_reserved["class"] != null) _g1.setReserved("class",value1); else _g1.h["class"] = value1;
-			}
-			$r = _g1;
-			return $r;
-		}(this)),[Doom.LI(null,null,Doom.A((function($this) {
-			var $r;
-			var _g7 = new haxe_ds_StringMap();
-			{
-				var value3 = doom__$AttributeValue_AttributeValue_$Impl_$.fromMap((function($this) {
-					var $r;
-					var _g6 = new haxe_ds_StringMap();
-					{
-						var value2 = $this.isFilter(todomvc_Filter.All);
-						if(__map_reserved.selected != null) _g6.setReserved("selected",value2); else _g6.h["selected"] = value2;
-					}
-					$r = _g6;
-					return $r;
-				}($this)));
-				if(__map_reserved["class"] != null) _g7.setReserved("class",value3); else _g7.h["class"] = value3;
-			}
-			{
-				var value4 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("#");
-				if(__map_reserved.href != null) _g7.setReserved("href",value4); else _g7.h["href"] = value4;
-			}
-			{
-				var value5 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler((function(f,a1) {
-					return function() {
-						f(a1);
-					};
-				})($bind($this,$this.handleClickFilter),todomvc_Filter.All));
-				if(__map_reserved.click != null) _g7.setReserved("click",value5); else _g7.h["click"] = value5;
-			}
-			$r = _g7;
-			return $r;
-		}(this)),null,doom_NodeImpl.Text("All"))),Doom.LI(null,null,Doom.A((function($this) {
-			var $r;
-			var _g13 = new haxe_ds_StringMap();
-			{
-				var value7 = doom__$AttributeValue_AttributeValue_$Impl_$.fromMap((function($this) {
-					var $r;
-					var _g12 = new haxe_ds_StringMap();
-					{
-						var value6 = $this.isFilter(todomvc_Filter.Active);
-						if(__map_reserved.selected != null) _g12.setReserved("selected",value6); else _g12.h["selected"] = value6;
-					}
-					$r = _g12;
-					return $r;
-				}($this)));
-				if(__map_reserved["class"] != null) _g13.setReserved("class",value7); else _g13.h["class"] = value7;
-			}
-			{
-				var value8 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("#/active");
-				if(__map_reserved.href != null) _g13.setReserved("href",value8); else _g13.h["href"] = value8;
-			}
-			{
-				var value9 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler((function(f1,a11) {
-					return function() {
-						f1(a11);
-					};
-				})($bind($this,$this.handleClickFilter),todomvc_Filter.Active));
-				if(__map_reserved.click != null) _g13.setReserved("click",value9); else _g13.h["click"] = value9;
-			}
-			$r = _g13;
-			return $r;
-		}(this)),null,doom_NodeImpl.Text("Active"))),Doom.LI(null,null,Doom.A((function($this) {
-			var $r;
-			var _g19 = new haxe_ds_StringMap();
-			{
-				var value11 = doom__$AttributeValue_AttributeValue_$Impl_$.fromMap((function($this) {
-					var $r;
-					var _g18 = new haxe_ds_StringMap();
-					{
-						var value10 = $this.isFilter(todomvc_Filter.Completed);
-						if(__map_reserved.selected != null) _g18.setReserved("selected",value10); else _g18.h["selected"] = value10;
-					}
-					$r = _g18;
-					return $r;
-				}($this)));
-				if(__map_reserved["class"] != null) _g19.setReserved("class",value11); else _g19.h["class"] = value11;
-			}
-			{
-				var value12 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("#/completed");
-				if(__map_reserved.href != null) _g19.setReserved("href",value12); else _g19.h["href"] = value12;
-			}
-			{
-				var value13 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler((function(f2,a12) {
-					return function() {
-						f2(a12);
-					};
-				})($bind($this,$this.handleClickFilter),todomvc_Filter.Completed));
-				if(__map_reserved.click != null) _g19.setReserved("click",value13); else _g19.h["click"] = value13;
-			}
-			$r = _g19;
-			return $r;
-		}(this)),null,doom_NodeImpl.Text("Completed")))],null)];
-		if(this.state.hasCompleted) footerContent.push(Doom.BUTTON((function($this) {
-			var $r;
+		var tmp;
+		var tmp3;
+		var _g = new haxe_ds_StringMap();
+		var value = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("todo-count");
+		if(__map_reserved["class"] != null) _g.setReserved("class",value); else _g.h["class"] = value;
+		tmp3 = _g;
+		var attributes = tmp3;
+		var children = this.getItemsLeftLabel();
+		tmp = doom__$Node_Node_$Impl_$.el("span",attributes,children,null);
+		var tmp1;
+		var tmp4;
+		var _g1 = new haxe_ds_StringMap();
+		var value1 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("filters");
+		if(__map_reserved["class"] != null) _g1.setReserved("class",value1); else _g1.h["class"] = value1;
+		tmp4 = _g1;
+		var attributes1 = tmp4;
+		var tmp5;
+		var tmp8;
+		var tmp9;
+		var _g7 = new haxe_ds_StringMap();
+		var tmp10;
+		var _g6 = new haxe_ds_StringMap();
+		var value3 = this.isFilter(todomvc_Filter.All);
+		if(__map_reserved.selected != null) _g6.setReserved("selected",value3); else _g6.h["selected"] = value3;
+		tmp10 = _g6;
+		var value2 = doom__$AttributeValue_AttributeValue_$Impl_$.fromMap(tmp10);
+		if(__map_reserved["class"] != null) _g7.setReserved("class",value2); else _g7.h["class"] = value2;
+		var value4 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("#");
+		if(__map_reserved.href != null) _g7.setReserved("href",value4); else _g7.h["href"] = value4;
+		var tmp11;
+		var f = $bind(this,this.handleClickFilter);
+		tmp11 = function() {
+			f(todomvc_Filter.All);
+		};
+		var value5 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler(tmp11);
+		if(__map_reserved.click != null) _g7.setReserved("click",value5); else _g7.h["click"] = value5;
+		tmp9 = _g7;
+		var attributes2 = tmp9;
+		var child1 = doom_NodeImpl.Text("All");
+		tmp8 = doom__$Node_Node_$Impl_$.el("a",attributes2,null,child1);
+		var child = tmp8;
+		tmp5 = doom__$Node_Node_$Impl_$.el("li",null,null,child);
+		var tmp6;
+		var tmp12;
+		var tmp13;
+		var _g13 = new haxe_ds_StringMap();
+		var tmp14;
+		var _g12 = new haxe_ds_StringMap();
+		var value7 = this.isFilter(todomvc_Filter.Active);
+		if(__map_reserved.selected != null) _g12.setReserved("selected",value7); else _g12.h["selected"] = value7;
+		tmp14 = _g12;
+		var value6 = doom__$AttributeValue_AttributeValue_$Impl_$.fromMap(tmp14);
+		if(__map_reserved["class"] != null) _g13.setReserved("class",value6); else _g13.h["class"] = value6;
+		var value8 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("#/active");
+		if(__map_reserved.href != null) _g13.setReserved("href",value8); else _g13.h["href"] = value8;
+		var tmp15;
+		var f1 = $bind(this,this.handleClickFilter);
+		tmp15 = function() {
+			f1(todomvc_Filter.Active);
+		};
+		var value9 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler(tmp15);
+		if(__map_reserved.click != null) _g13.setReserved("click",value9); else _g13.h["click"] = value9;
+		tmp13 = _g13;
+		var attributes3 = tmp13;
+		var child3 = doom_NodeImpl.Text("Active");
+		tmp12 = doom__$Node_Node_$Impl_$.el("a",attributes3,null,child3);
+		var child2 = tmp12;
+		tmp6 = doom__$Node_Node_$Impl_$.el("li",null,null,child2);
+		var tmp7;
+		var tmp16;
+		var tmp17;
+		var _g19 = new haxe_ds_StringMap();
+		var tmp18;
+		var _g18 = new haxe_ds_StringMap();
+		var value11 = this.isFilter(todomvc_Filter.Completed);
+		if(__map_reserved.selected != null) _g18.setReserved("selected",value11); else _g18.h["selected"] = value11;
+		tmp18 = _g18;
+		var value10 = doom__$AttributeValue_AttributeValue_$Impl_$.fromMap(tmp18);
+		if(__map_reserved["class"] != null) _g19.setReserved("class",value10); else _g19.h["class"] = value10;
+		var value12 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("#/completed");
+		if(__map_reserved.href != null) _g19.setReserved("href",value12); else _g19.h["href"] = value12;
+		var tmp19;
+		var f2 = $bind(this,this.handleClickFilter);
+		tmp19 = function() {
+			f2(todomvc_Filter.Completed);
+		};
+		var value13 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler(tmp19);
+		if(__map_reserved.click != null) _g19.setReserved("click",value13); else _g19.h["click"] = value13;
+		tmp17 = _g19;
+		var attributes4 = tmp17;
+		var child5 = doom_NodeImpl.Text("Completed");
+		tmp16 = doom__$Node_Node_$Impl_$.el("a",attributes4,null,child5);
+		var child4 = tmp16;
+		tmp7 = doom__$Node_Node_$Impl_$.el("li",null,null,child4);
+		var children1 = [tmp5,tmp6,tmp7];
+		tmp1 = doom__$Node_Node_$Impl_$.el("ul",attributes1,children1,null);
+		var footerContent = [tmp,tmp1];
+		if(this.state.hasCompleted) {
+			var tmp20;
+			var tmp21;
 			var _g20 = new haxe_ds_StringMap();
-			{
-				var value14 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("clear-completed");
-				if(__map_reserved["class"] != null) _g20.setReserved("class",value14); else _g20.h["class"] = value14;
-			}
-			{
-				var value15 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler($bind($this,$this.handleClear));
-				if(__map_reserved.click != null) _g20.setReserved("click",value15); else _g20.h["click"] = value15;
-			}
-			$r = _g20;
-			return $r;
-		}(this)),null,doom_NodeImpl.Text("Clear completed")));
-		return Doom.FOOTER((function($this) {
-			var $r;
-			var _g201 = new haxe_ds_StringMap();
-			{
-				var value16 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("footer");
-				if(__map_reserved["class"] != null) _g201.setReserved("class",value16); else _g201.h["class"] = value16;
-			}
-			$r = _g201;
-			return $r;
-		}(this)),footerContent,null);
+			var value14 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("clear-completed");
+			if(__map_reserved["class"] != null) _g20.setReserved("class",value14); else _g20.h["class"] = value14;
+			var value15 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler($bind(this,this.handleClear));
+			if(__map_reserved.click != null) _g20.setReserved("click",value15); else _g20.h["click"] = value15;
+			tmp21 = _g20;
+			var attributes5 = tmp21;
+			var child6 = doom_NodeImpl.Text("Clear completed");
+			tmp20 = doom__$Node_Node_$Impl_$.el("button",attributes5,null,child6);
+			footerContent.push(tmp20);
+		}
+		var tmp2;
+		var tmp22;
+		var _g201 = new haxe_ds_StringMap();
+		var value16 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("footer");
+		if(__map_reserved["class"] != null) _g201.setReserved("class",value16); else _g201.h["class"] = value16;
+		tmp22 = _g201;
+		var attributes6 = tmp22;
+		tmp2 = doom__$Node_Node_$Impl_$.el("footer",attributes6,footerContent,null);
+		return tmp2;
 	}
 	,handleClear: function() {
 		this.prop.clearCompleted();
@@ -7060,48 +1604,56 @@ todomvc_Footer.prototype = $extend(doom_PropertiesComponent.prototype,{
 		return Type.enumEq(this.state.filter,filter);
 	}
 	,getItemsLeftLabel: function() {
-		if(this.state.remaining == 1) return [Doom.STRONG(null,null,doom_NodeImpl.Text("1")),doom_NodeImpl.Text(" item left")]; else return [Doom.STRONG(null,null,doom_NodeImpl.Text("" + this.state.remaining)),doom_NodeImpl.Text(" items left")];
+		var tmp;
+		if(this.state.remaining == 1) {
+			var tmp1;
+			var child = doom_NodeImpl.Text("1");
+			tmp1 = doom__$Node_Node_$Impl_$.el("strong",null,null,child);
+			tmp = [tmp1,doom_NodeImpl.Text(" item left")];
+		} else {
+			var tmp2;
+			var child1 = doom_NodeImpl.Text("" + this.state.remaining);
+			tmp2 = doom__$Node_Node_$Impl_$.el("strong",null,null,child1);
+			tmp = [tmp2,doom_NodeImpl.Text(" items left")];
+		}
+		return tmp;
 	}
 	,__class__: todomvc_Footer
 });
 var todomvc_Header = function(prop) {
 	doom_PropertiesStatelessComponent.call(this,prop);
 };
-todomvc_Header.__name__ = ["todomvc","Header"];
+todomvc_Header.__name__ = true;
 todomvc_Header.__super__ = doom_PropertiesStatelessComponent;
 todomvc_Header.prototype = $extend(doom_PropertiesStatelessComponent.prototype,{
 	render: function() {
-		return Doom.HEADER((function($this) {
-			var $r;
-			var _g = new haxe_ds_StringMap();
-			{
-				var value = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("header");
-				if(__map_reserved["class"] != null) _g.setReserved("class",value); else _g.h["class"] = value;
-			}
-			$r = _g;
-			return $r;
-		}(this)),[Doom.H1(null,null,doom_NodeImpl.Text("todos")),Doom.INPUT((function($this) {
-			var $r;
-			var _g1 = new haxe_ds_StringMap();
-			{
-				var value1 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("new-todo");
-				if(__map_reserved["class"] != null) _g1.setReserved("class",value1); else _g1.h["class"] = value1;
-			}
-			{
-				var value2 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("What needs to be done?");
-				if(__map_reserved.placeholder != null) _g1.setReserved("placeholder",value2); else _g1.h["placeholder"] = value2;
-			}
-			{
-				var value3 = doom__$AttributeValue_AttributeValue_$Impl_$.fromBool(true);
-				if(__map_reserved.autofocus != null) _g1.setReserved("autofocus",value3); else _g1.h["autofocus"] = value3;
-			}
-			{
-				var value4 = doom__$AttributeValue_AttributeValue_$Impl_$.fromEventHandler($bind($this,$this.handleKeys));
-				if(__map_reserved.keydown != null) _g1.setReserved("keydown",value4); else _g1.h["keydown"] = value4;
-			}
-			$r = _g1;
-			return $r;
-		}(this)))],null);
+		var tmp;
+		var tmp1;
+		var _g = new haxe_ds_StringMap();
+		var value = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("header");
+		if(__map_reserved["class"] != null) _g.setReserved("class",value); else _g.h["class"] = value;
+		tmp1 = _g;
+		var attributes = tmp1;
+		var tmp2;
+		var child = doom_NodeImpl.Text("todos");
+		tmp2 = doom__$Node_Node_$Impl_$.el("h1",null,null,child);
+		var tmp3;
+		var tmp4;
+		var _g1 = new haxe_ds_StringMap();
+		var value1 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("new-todo");
+		if(__map_reserved["class"] != null) _g1.setReserved("class",value1); else _g1.h["class"] = value1;
+		var value2 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("What needs to be done?");
+		if(__map_reserved.placeholder != null) _g1.setReserved("placeholder",value2); else _g1.h["placeholder"] = value2;
+		var value3 = doom__$AttributeValue_AttributeValue_$Impl_$.fromBool(true);
+		if(__map_reserved.autofocus != null) _g1.setReserved("autofocus",value3); else _g1.h["autofocus"] = value3;
+		var value4 = doom__$AttributeValue_AttributeValue_$Impl_$.fromEventHandler($bind(this,this.handleKeys));
+		if(__map_reserved.keydown != null) _g1.setReserved("keydown",value4); else _g1.h["keydown"] = value4;
+		tmp4 = _g1;
+		var attributes1 = tmp4;
+		tmp3 = doom__$Node_Node_$Impl_$.el("input",attributes1,null,null);
+		var children = [tmp2,tmp3];
+		tmp = doom__$Node_Node_$Impl_$.el("header",attributes,children,null);
+		return tmp;
 	}
 	,handleKeys: function(e) {
 		if(13 == e.which) {
@@ -7122,95 +1674,79 @@ todomvc_Header.prototype = $extend(doom_PropertiesStatelessComponent.prototype,{
 var todomvc_Item = function(prop,state) {
 	doom_PropertiesComponent.call(this,prop,state);
 };
-todomvc_Item.__name__ = ["todomvc","Item"];
+todomvc_Item.__name__ = true;
 todomvc_Item.__super__ = doom_PropertiesComponent;
 todomvc_Item.prototype = $extend(doom_PropertiesComponent.prototype,{
 	render: function() {
-		return Doom.LI((function($this) {
-			var $r;
-			var _g1 = new haxe_ds_StringMap();
-			{
-				var value = doom__$AttributeValue_AttributeValue_$Impl_$.fromMap((function($this) {
-					var $r;
-					var _g = new haxe_ds_StringMap();
-					_g.set("completed",$this.state.item.completed);
-					_g.set("editing",$this.state.editing);
-					$r = _g;
-					return $r;
-				}($this)));
-				if(__map_reserved["class"] != null) _g1.setReserved("class",value); else _g1.h["class"] = value;
-			}
-			{
-				var value1 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler($bind($this,$this.handleDblClick));
-				if(__map_reserved.dblclick != null) _g1.setReserved("dblclick",value1); else _g1.h["dblclick"] = value1;
-			}
-			$r = _g1;
-			return $r;
-		}(this)),[Doom.DIV((function($this) {
-			var $r;
-			var _g2 = new haxe_ds_StringMap();
-			{
-				var value2 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("view");
-				if(__map_reserved["class"] != null) _g2.setReserved("class",value2); else _g2.h["class"] = value2;
-			}
-			$r = _g2;
-			return $r;
-		}(this)),[Doom.INPUT((function($this) {
-			var $r;
-			var _g3 = new haxe_ds_StringMap();
-			{
-				var value3 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("toggle");
-				if(__map_reserved["class"] != null) _g3.setReserved("class",value3); else _g3.h["class"] = value3;
-			}
-			{
-				var value4 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("checkbox");
-				if(__map_reserved.type != null) _g3.setReserved("type",value4); else _g3.h["type"] = value4;
-			}
-			{
-				var value5 = doom__$AttributeValue_AttributeValue_$Impl_$.fromBool($this.state.item.completed);
-				if(__map_reserved.checked != null) _g3.setReserved("checked",value5); else _g3.h["checked"] = value5;
-			}
-			{
-				var value6 = doom__$AttributeValue_AttributeValue_$Impl_$.fromBoolValueHandler($bind($this,$this.handleChecked));
-				if(__map_reserved.change != null) _g3.setReserved("change",value6); else _g3.h["change"] = value6;
-			}
-			$r = _g3;
-			return $r;
-		}(this))),Doom.LABEL(null,null,doom_NodeImpl.Text(this.state.item.label)),Doom.BUTTON((function($this) {
-			var $r;
-			var _g4 = new haxe_ds_StringMap();
-			{
-				var value7 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("destroy");
-				if(__map_reserved["class"] != null) _g4.setReserved("class",value7); else _g4.h["class"] = value7;
-			}
-			{
-				var value8 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler($bind($this,$this.handleRemove));
-				if(__map_reserved.click != null) _g4.setReserved("click",value8); else _g4.h["click"] = value8;
-			}
-			$r = _g4;
-			return $r;
-		}(this)),null,null)],null),Doom.INPUT((function($this) {
-			var $r;
-			var _g5 = new haxe_ds_StringMap();
-			{
-				var value9 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("edit");
-				if(__map_reserved["class"] != null) _g5.setReserved("class",value9); else _g5.h["class"] = value9;
-			}
-			{
-				var value10 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString($this.state.item.label);
-				if(__map_reserved.value != null) _g5.setReserved("value",value10); else _g5.h["value"] = value10;
-			}
-			{
-				var value11 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler($bind($this,$this.handleBlur));
-				if(__map_reserved.blur != null) _g5.setReserved("blur",value11); else _g5.h["blur"] = value11;
-			}
-			{
-				var value12 = doom__$AttributeValue_AttributeValue_$Impl_$.fromEventHandler($bind($this,$this.handleKeydown));
-				if(__map_reserved.keyup != null) _g5.setReserved("keyup",value12); else _g5.h["keyup"] = value12;
-			}
-			$r = _g5;
-			return $r;
-		}(this)))],null);
+		var tmp;
+		var tmp1;
+		var _g1 = new haxe_ds_StringMap();
+		var tmp4;
+		var _g = new haxe_ds_StringMap();
+		var value1 = this.state.item.completed;
+		if(__map_reserved.completed != null) _g.setReserved("completed",value1); else _g.h["completed"] = value1;
+		var value2 = this.state.editing;
+		if(__map_reserved.editing != null) _g.setReserved("editing",value2); else _g.h["editing"] = value2;
+		tmp4 = _g;
+		var value = doom__$AttributeValue_AttributeValue_$Impl_$.fromMap(tmp4);
+		if(__map_reserved["class"] != null) _g1.setReserved("class",value); else _g1.h["class"] = value;
+		var value3 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler($bind(this,this.handleDblClick));
+		if(__map_reserved.dblclick != null) _g1.setReserved("dblclick",value3); else _g1.h["dblclick"] = value3;
+		tmp1 = _g1;
+		var attributes = tmp1;
+		var tmp2;
+		var tmp5;
+		var _g2 = new haxe_ds_StringMap();
+		var value4 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("view");
+		if(__map_reserved["class"] != null) _g2.setReserved("class",value4); else _g2.h["class"] = value4;
+		tmp5 = _g2;
+		var attributes1 = tmp5;
+		var tmp6;
+		var tmp9;
+		var _g3 = new haxe_ds_StringMap();
+		var value5 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("toggle");
+		if(__map_reserved["class"] != null) _g3.setReserved("class",value5); else _g3.h["class"] = value5;
+		var value6 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("checkbox");
+		if(__map_reserved.type != null) _g3.setReserved("type",value6); else _g3.h["type"] = value6;
+		var value7 = doom__$AttributeValue_AttributeValue_$Impl_$.fromBool(this.state.item.completed);
+		if(__map_reserved.checked != null) _g3.setReserved("checked",value7); else _g3.h["checked"] = value7;
+		var value8 = doom__$AttributeValue_AttributeValue_$Impl_$.fromBoolValueHandler($bind(this,this.handleChecked));
+		if(__map_reserved.change != null) _g3.setReserved("change",value8); else _g3.h["change"] = value8;
+		tmp9 = _g3;
+		var attributes2 = tmp9;
+		tmp6 = doom__$Node_Node_$Impl_$.el("input",attributes2,null,null);
+		var tmp7;
+		var child = doom_NodeImpl.Text(this.state.item.label);
+		tmp7 = doom__$Node_Node_$Impl_$.el("label",null,null,child);
+		var tmp8;
+		var tmp10;
+		var _g4 = new haxe_ds_StringMap();
+		var value9 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("destroy");
+		if(__map_reserved["class"] != null) _g4.setReserved("class",value9); else _g4.h["class"] = value9;
+		var value10 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler($bind(this,this.handleRemove));
+		if(__map_reserved.click != null) _g4.setReserved("click",value10); else _g4.h["click"] = value10;
+		tmp10 = _g4;
+		var attributes3 = tmp10;
+		tmp8 = doom__$Node_Node_$Impl_$.el("button",attributes3,null,null);
+		var children1 = [tmp6,tmp7,tmp8];
+		tmp2 = doom__$Node_Node_$Impl_$.el("div",attributes1,children1,null);
+		var tmp3;
+		var tmp11;
+		var _g5 = new haxe_ds_StringMap();
+		var value11 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("edit");
+		if(__map_reserved["class"] != null) _g5.setReserved("class",value11); else _g5.h["class"] = value11;
+		var value12 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString(this.state.item.label);
+		if(__map_reserved.value != null) _g5.setReserved("value",value12); else _g5.h["value"] = value12;
+		var value13 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler($bind(this,this.handleBlur));
+		if(__map_reserved.blur != null) _g5.setReserved("blur",value13); else _g5.h["blur"] = value13;
+		var value14 = doom__$AttributeValue_AttributeValue_$Impl_$.fromEventHandler($bind(this,this.handleKeydown));
+		if(__map_reserved.keyup != null) _g5.setReserved("keyup",value14); else _g5.h["keyup"] = value14;
+		tmp11 = _g5;
+		var attributes4 = tmp11;
+		tmp3 = doom__$Node_Node_$Impl_$.el("input",attributes4,null,null);
+		var children = [tmp2,tmp3];
+		tmp = doom__$Node_Node_$Impl_$.el("li",attributes,children,null);
+		return tmp;
 	}
 	,handleChecked: function(checked) {
 		this.state.item.completed = checked;
@@ -7251,74 +1787,63 @@ todomvc_Item.prototype = $extend(doom_PropertiesComponent.prototype,{
 var todomvc_List = function(prop,state) {
 	doom_PropertiesComponent.call(this,prop,state);
 };
-todomvc_List.__name__ = ["todomvc","List"];
+todomvc_List.__name__ = true;
 todomvc_List.__super__ = doom_PropertiesComponent;
 todomvc_List.prototype = $extend(doom_PropertiesComponent.prototype,{
 	render: function() {
-		return Doom.SECTION((function($this) {
-			var $r;
-			var _g = new haxe_ds_StringMap();
-			{
-				var value = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("main");
-				if(__map_reserved["class"] != null) _g.setReserved("class",value); else _g.h["class"] = value;
-			}
-			$r = _g;
-			return $r;
-		}(this)),[Doom.INPUT((function($this) {
-			var $r;
-			var _g1 = new haxe_ds_StringMap();
-			{
-				var value1 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("toggle-all");
-				if(__map_reserved["class"] != null) _g1.setReserved("class",value1); else _g1.h["class"] = value1;
-			}
-			{
-				var value2 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("checkbox");
-				if(__map_reserved.type != null) _g1.setReserved("type",value2); else _g1.h["type"] = value2;
-			}
-			{
-				var value3 = doom__$AttributeValue_AttributeValue_$Impl_$.fromBool($this.state.allCompleted);
-				if(__map_reserved.checked != null) _g1.setReserved("checked",value3); else _g1.h["checked"] = value3;
-			}
-			{
-				var value4 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler(($_=$this.prop,$bind($_,$_.toggleCheck)));
-				if(__map_reserved.change != null) _g1.setReserved("change",value4); else _g1.h["change"] = value4;
-			}
-			$r = _g1;
-			return $r;
-		}(this))),Doom.LABEL((function($this) {
-			var $r;
-			var _g2 = new haxe_ds_StringMap();
-			{
-				var value5 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("toggle-all");
-				if(__map_reserved["for"] != null) _g2.setReserved("for",value5); else _g2.h["for"] = value5;
-			}
-			$r = _g2;
-			return $r;
-		}(this)),null,doom_NodeImpl.Text("Mark all as complete")),Doom.UL((function($this) {
-			var $r;
-			var _g3 = new haxe_ds_StringMap();
-			{
-				var value6 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("todo-list");
-				if(__map_reserved["class"] != null) _g3.setReserved("class",value6); else _g3.h["class"] = value6;
-			}
-			$r = _g3;
-			return $r;
-		}(this)),(function($this) {
-			var $r;
-			var _g4 = [];
-			var $it0 = HxOverrides.iter($this.state.items);
-			while( $it0.hasNext() ) {
-				var item = $it0.next();
-				_g4.push((function($this) {
-					var $r;
-					var comp = new todomvc_Item($this.prop,{ item : item, editing : false});
-					$r = doom_NodeImpl.ComponentNode(comp);
-					return $r;
-				}($this)));
-			}
-			$r = _g4;
-			return $r;
-		}(this)),null)],null);
+		var tmp;
+		var tmp1;
+		var _g = new haxe_ds_StringMap();
+		var value = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("main");
+		if(__map_reserved["class"] != null) _g.setReserved("class",value); else _g.h["class"] = value;
+		tmp1 = _g;
+		var attributes = tmp1;
+		var tmp2;
+		var tmp5;
+		var _g1 = new haxe_ds_StringMap();
+		var value1 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("toggle-all");
+		if(__map_reserved["class"] != null) _g1.setReserved("class",value1); else _g1.h["class"] = value1;
+		var value2 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("checkbox");
+		if(__map_reserved.type != null) _g1.setReserved("type",value2); else _g1.h["type"] = value2;
+		var value3 = doom__$AttributeValue_AttributeValue_$Impl_$.fromBool(this.state.allCompleted);
+		if(__map_reserved.checked != null) _g1.setReserved("checked",value3); else _g1.h["checked"] = value3;
+		var value4 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler(($_=this.prop,$bind($_,$_.toggleCheck)));
+		if(__map_reserved.change != null) _g1.setReserved("change",value4); else _g1.h["change"] = value4;
+		tmp5 = _g1;
+		var attributes1 = tmp5;
+		tmp2 = doom__$Node_Node_$Impl_$.el("input",attributes1,null,null);
+		var tmp3;
+		var tmp6;
+		var _g2 = new haxe_ds_StringMap();
+		var value5 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("toggle-all");
+		if(__map_reserved["for"] != null) _g2.setReserved("for",value5); else _g2.h["for"] = value5;
+		tmp6 = _g2;
+		var attributes2 = tmp6;
+		var child = doom_NodeImpl.Text("Mark all as complete");
+		tmp3 = doom__$Node_Node_$Impl_$.el("label",attributes2,null,child);
+		var tmp4;
+		var tmp7;
+		var _g3 = new haxe_ds_StringMap();
+		var value6 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("todo-list");
+		if(__map_reserved["class"] != null) _g3.setReserved("class",value6); else _g3.h["class"] = value6;
+		tmp7 = _g3;
+		var attributes3 = tmp7;
+		var tmp8;
+		var _g4 = [];
+		var $it0 = HxOverrides.iter(this.state.items);
+		while( $it0.hasNext() ) {
+			var item = $it0.next();
+			var tmp9;
+			var comp = new todomvc_Item(this.prop,{ item : item, editing : false});
+			tmp9 = doom_NodeImpl.ComponentNode(comp);
+			_g4.push(tmp9);
+		}
+		tmp8 = _g4;
+		var children1 = tmp8;
+		tmp4 = doom__$Node_Node_$Impl_$.el("ul",attributes3,children1,null);
+		var children = [tmp2,tmp3,tmp4];
+		tmp = doom__$Node_Node_$Impl_$.el("section",attributes,children,null);
+		return tmp;
 	}
 	,__class__: todomvc_List
 });
@@ -7329,28 +1854,8 @@ if(Array.prototype.indexOf) HxOverrides.indexOf = function(a,o,i) {
 	return Array.prototype.indexOf.call(a,o,i);
 };
 String.prototype.__class__ = String;
-String.__name__ = ["String"];
-Array.__name__ = ["Array"];
-Date.prototype.__class__ = Date;
-Date.__name__ = ["Date"];
-var Int = { __name__ : ["Int"]};
-var Dynamic = { __name__ : ["Dynamic"]};
-var Float = Number;
-Float.__name__ = ["Float"];
-var Bool = Boolean;
-Bool.__ename__ = ["Bool"];
-var Class = { __name__ : ["Class"]};
-var Enum = { };
-if(Array.prototype.map == null) Array.prototype.map = function(f) {
-	var a = [];
-	var _g1 = 0;
-	var _g = this.length;
-	while(_g1 < _g) {
-		var i = _g1++;
-		a[i] = f(this[i]);
-	}
-	return a;
-};
+String.__name__ = true;
+Array.__name__ = true;
 if(Array.prototype.filter == null) Array.prototype.filter = function(f1) {
 	var a1 = [];
 	var _g11 = 0;
@@ -7396,150 +1901,17 @@ var __map_reserved = {}
         };
       }
     ;
-DateTools.DAYS_OF_MONTH = [31,28,31,30,31,30,31,31,30,31,30,31];
-Xml.Element = 0;
-Xml.PCData = 1;
-Xml.CData = 2;
-Xml.Comment = 3;
-Xml.DocType = 4;
-Xml.ProcessingInstruction = 5;
-Xml.Document = 6;
-doom_HtmlNode.customEvents = thx__$Set_Set_$Impl_$.createString(["create","mount"]);
-dots_Html.pattern = new EReg("[<]([^> ]+)","");
-dots_Keys.BACKSPACE = 8;
-dots_Keys.TAB = 9;
-dots_Keys.ENTER = 13;
-dots_Keys.SHIFT = 16;
-dots_Keys.CTRL = 17;
-dots_Keys.ALT = 18;
-dots_Keys.BREAK = 19;
-dots_Keys.CAPS_LOCK = 20;
-dots_Keys.ESCAPE = 27;
-dots_Keys.SPACE = 32;
-dots_Keys.PAGE_UP = 33;
-dots_Keys.PAGE_DOWN = 34;
-dots_Keys.END = 35;
-dots_Keys.HOME = 36;
-dots_Keys.LEFT_ARROW = 37;
-dots_Keys.UP_ARROW = 38;
-dots_Keys.RIGHT_ARROW = 39;
-dots_Keys.DOWN_ARROW = 40;
-dots_Keys.INSERT = 45;
-dots_Keys.DELETE = 46;
-dots_Keys.N0 = 48;
-dots_Keys.N1 = 49;
-dots_Keys.N2 = 50;
-dots_Keys.N3 = 51;
-dots_Keys.N4 = 52;
-dots_Keys.N5 = 53;
-dots_Keys.N6 = 54;
-dots_Keys.N7 = 55;
-dots_Keys.N8 = 56;
-dots_Keys.N9 = 57;
-dots_Keys.A = 65;
-dots_Keys.B = 66;
-dots_Keys.C = 67;
-dots_Keys.D = 68;
-dots_Keys.E = 69;
-dots_Keys.F = 70;
-dots_Keys.G = 71;
-dots_Keys.H = 72;
-dots_Keys.I = 73;
-dots_Keys.J = 74;
-dots_Keys.K = 75;
-dots_Keys.L = 76;
-dots_Keys.M = 77;
-dots_Keys.N = 78;
-dots_Keys.O = 79;
-dots_Keys.P = 80;
-dots_Keys.Q = 81;
-dots_Keys.R = 82;
-dots_Keys.S = 83;
-dots_Keys.T = 84;
-dots_Keys.U = 85;
-dots_Keys.V = 86;
-dots_Keys.W = 87;
-dots_Keys.X = 88;
-dots_Keys.Y = 89;
-dots_Keys.Z = 90;
-dots_Keys.LEFT_WINDOW_KEY = 91;
-dots_Keys.RIGHT_WINDOW_KEY = 92;
-dots_Keys.SELECT_KEY = 93;
-dots_Keys.NUMPAD_0 = 96;
-dots_Keys.NUMPAD_1 = 97;
-dots_Keys.NUMPAD_2 = 98;
-dots_Keys.NUMPAD_3 = 99;
-dots_Keys.NUMPAD_4 = 100;
-dots_Keys.NUMPAD_5 = 101;
-dots_Keys.NUMPAD_6 = 102;
-dots_Keys.NUMPAD_7 = 103;
-dots_Keys.NUMPAD_8 = 104;
-dots_Keys.NUMPAD_9 = 105;
-dots_Keys.MULTIPLY = 106;
-dots_Keys.ADD = 107;
-dots_Keys.SUBTRACT = 109;
-dots_Keys.DECIMAL_POINT = 110;
-dots_Keys.DIVIDE = 111;
-dots_Keys.F1 = 112;
-dots_Keys.F2 = 113;
-dots_Keys.F3 = 114;
-dots_Keys.F4 = 115;
-dots_Keys.F5 = 116;
-dots_Keys.F6 = 117;
-dots_Keys.F7 = 118;
-dots_Keys.F8 = 119;
-dots_Keys.F9 = 120;
-dots_Keys.F10 = 121;
-dots_Keys.F11 = 122;
-dots_Keys.F12 = 123;
-dots_Keys.NUM_LOCK = 144;
-dots_Keys.SCROLL_LOCK = 145;
-dots_Keys.SEMI_COLON = 186;
-dots_Keys.EQUAL_SIGN = 187;
-dots_Keys.COMMA = 188;
-dots_Keys.DASH = 189;
-dots_Keys.PERIOD = 190;
-dots_Keys.FORWARD_SLASH = 191;
-dots_Keys.GRAVE_ACCENT = 192;
-dots_Keys.OPEN_BRACKET = 219;
-dots_Keys.BACK_SLASH = 220;
-dots_Keys.CLOSE_BRAKET = 221;
-dots_Keys.SINGLE_QUOTE = 222;
-dots_Query.doc = document;
-haxe_ds_ObjectMap.count = 0;
-haxe_xml_Parser.escapes = (function($this) {
+Doom.namespaces = (function($this) {
 	var $r;
-	var h = new haxe_ds_StringMap();
-	if(__map_reserved.lt != null) h.setReserved("lt","<"); else h.h["lt"] = "<";
-	if(__map_reserved.gt != null) h.setReserved("gt",">"); else h.h["gt"] = ">";
-	if(__map_reserved.amp != null) h.setReserved("amp","&"); else h.h["amp"] = "&";
-	if(__map_reserved.quot != null) h.setReserved("quot","\""); else h.h["quot"] = "\"";
-	if(__map_reserved.apos != null) h.setReserved("apos","'"); else h.h["apos"] = "'";
-	$r = h;
+	var _g = new haxe_ds_StringMap();
+	if(__map_reserved.svg != null) _g.setReserved("svg","http://www.w3.org/2000/svg"); else _g.h["svg"] = "http://www.w3.org/2000/svg";
+	$r = _g;
 	return $r;
 }(this));
+doom_HtmlNode.customEvents = thx__$Set_Set_$Impl_$.createString(["create","mount"]);
+dots_Html.pattern = new EReg("[<]([^> ]+)","");
+dots_Query.doc = document;
 js_Boot.__toStr = {}.toString;
-thx_Floats.TOLERANCE = 10e-5;
-thx_Floats.EPSILON = 1e-9;
-thx_Floats.pattern_parse = new EReg("^(\\+|-)?\\d+(\\.\\d+)?(e-?\\d+)?$","");
-thx_Ints.pattern_parse = new EReg("^[ \t\r\n]*[+-]?(\\d+|0x[0-9A-F]+)","i");
-thx_Ints.BASE = "0123456789abcdefghijklmnopqrstuvwxyz";
-thx_Ints.order = function(i0,i1) {
-	if(i0 > i1) return thx_OrderingImpl.GT; else if(i0 == i1) return thx_OrderingImpl.EQ; else return thx_OrderingImpl.LT;
-};
-thx_Strings.HASCODE_MAX = 2147483647;
-thx_Strings.HASCODE_MUL = 31;
-thx_Strings.UCWORDS = new EReg("[^a-zA-Z]([a-z])","g");
-thx_Strings.IS_BREAKINGWHITESPACE = new EReg("[^\t\n\r ]","");
-thx_Strings.IS_ALPHA = new EReg("[^a-zA-Z]","");
-thx_Strings.UCWORDSWS = new EReg("[ \t\r\n][a-z]","g");
-thx_Strings.ALPHANUM = new EReg("^[a-z0-9]+$","i");
-thx_Strings.DIGITS = new EReg("^[0-9]+$","");
-thx_Strings.STRIPTAGS = new EReg("</?[a-z]+[^>]*>","gi");
-thx_Strings.WSG = new EReg("[ \t\r\n]+","g");
-thx_Strings.SPLIT_LINES = new EReg("\r\n|\n\r|\n|\r","g");
-thx_Strings.CANONICALIZE_LINES = new EReg("\r\n|\n\r|\r","g");
-todomvc_AppProperties.STORAGE_KEY = "TodoMVC-Doom";
 Main.main();
 })(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : typeof global != "undefined" ? global : typeof self != "undefined" ? self : this);
 

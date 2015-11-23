@@ -6,3 +6,5 @@
 -main Main
 -D html
 -debug
+-dce full
+-D analyzer

@@ -19,7 +19,6 @@ class AppProperties {
 
   public function new() {
     filter = getFilterFromHash();
-    trace(filter, window.location.hash);
     allItems = load();
     onUpdate = function() {};
     refresh();
