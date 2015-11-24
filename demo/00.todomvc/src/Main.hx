@@ -1,6 +1,6 @@
 import dots.Query;
-import todomvc.AppProperties;
-import todomvc.App;
+import todomvc.view.AppProperties;
+import todomvc.view.App;
 
 class Main {
   static function main() {

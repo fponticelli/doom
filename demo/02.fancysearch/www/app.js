@@ -6922,6 +6922,9 @@ thx__$QueryString_QueryStringValue_$Impl_$.toString = function(this1) {
 };
 var thx__$ReadonlyArray_ReadonlyArray_$Impl_$ = {};
 thx__$ReadonlyArray_ReadonlyArray_$Impl_$.__name__ = ["thx","_ReadonlyArray","ReadonlyArray_Impl_"];
+thx__$ReadonlyArray_ReadonlyArray_$Impl_$.empty = function() {
+	return [];
+};
 thx__$ReadonlyArray_ReadonlyArray_$Impl_$.get = function(this1,index) {
 	return this1[index];
 };

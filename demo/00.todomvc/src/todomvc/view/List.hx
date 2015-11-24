@@ -1,4 +1,4 @@
-package todomvc;
+package todomvc.view;
 
 import Doom.*;
 import doom.PropertiesComponent;
@@ -15,8 +15,8 @@ class List extends PropertiesComponent<AppProperties, ListState> {
       ]),
       LABEL(["for" => "toggle-all"], "Mark all as complete"),
       UL(["class" => "todo-list"], [
-        for(item in state.items)
-          new Item(prop, { item : item, editing : false })
+        for(i in 0...state.items.length)
+          new Item(prop, { item : state.items[i], index : i, editing : false })
       ])
     ]);
 }

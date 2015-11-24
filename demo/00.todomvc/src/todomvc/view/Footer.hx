@@ -1,5 +1,6 @@
-package todomvc;
+package todomvc.view;
 
+import todomvc.data.VisibilityFilter;
 import doom.PropertiesComponent;
 import Doom.*;
 import doom.Node;
@@ -15,24 +16,24 @@ class Footer extends PropertiesComponent<FooterProp, FooterState> {
         UL(["class" => "filters"], [
           LI(A([
             "class" => [
-              "selected" => isFilter(All)
+              "selected" => isFilter(ShowAll)
             ],
             "href" => "#",
-            "click" => handleClickFilter.bind(All)
+            "click" => handleClickFilter.bind(ShowAll)
           ], "All")),
           LI(A([
             "class" => [
-              "selected" => isFilter(Active)
+              "selected" => isFilter(ShowActive)
             ],
             "href" => "#/active",
-            "click" => handleClickFilter.bind(Active)
+            "click" => handleClickFilter.bind(ShowActive)
           ], "Active")),
           LI(A([
             "class" => [
-              "selected" => isFilter(Completed)
+              "selected" => isFilter(ShowCompleted)
             ],
             "href" => "#/completed",
-            "click" => handleClickFilter.bind(Completed)
+            "click" => handleClickFilter.bind(ShowCompleted)
           ], "Completed"))
         ])
       ];
@@ -50,10 +51,10 @@ class Footer extends PropertiesComponent<FooterProp, FooterState> {
   function handleClear()
     prop.clearCompleted();
 
-  function handleClickFilter(filter : Filter)
+  function handleClickFilter(filter : VisibilityFilter)
     prop.setFilter(filter);
 
-  function isFilter(filter : Filter)
+  function isFilter(filter : VisibilityFilter)
     return Type.enumEq(state.filter, filter);
 
   function getItemsLeftLabel() : Array<Node>
@@ -61,12 +62,12 @@ class Footer extends PropertiesComponent<FooterProp, FooterState> {
 }
 
 typedef FooterProp = {
-  public function setFilter(filter : Filter) : Void;
+  public function setFilter(filter : VisibilityFilter) : Void;
   public function clearCompleted() : Void;
 }
 
 typedef FooterState = {
   remaining : Int,
-  filter : Filter,
+  filter : VisibilityFilter,
   hasCompleted : Bool
 }

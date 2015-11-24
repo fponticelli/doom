@@ -1,4 +1,4 @@
-package todomvc;
+package todomvc.view;
 
 typedef ItemData = {
   label : String,

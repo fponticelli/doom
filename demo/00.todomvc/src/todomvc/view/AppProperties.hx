@@ -1,5 +1,6 @@
-package todomvc;
+package todomvc.view;
 
+import todomvc.data.VisibilityFilter;
 import haxe.Json;
 import js.Browser.*;
 import thx.ReadonlyArray;
@@ -12,7 +13,7 @@ class AppProperties {
 
   public var remaining(default, null) : Int;
   public var complete(default, null) : Int;
-  public var filter(default, null) : Filter;
+  public var filter(default, null) : VisibilityFilter;
   public var filteredItems(default, null) : ReadonlyArray<ItemData>;
   public var onUpdate : Void -> Void;
   var allItems : Array<ItemData>;
@@ -24,7 +25,7 @@ class AppProperties {
     refresh();
   }
 
-  public function setFilter(filter : Filter) {
+  public function setFilter(filter : VisibilityFilter) {
     this.filter = filter;
     setFilterIntHash(filter);
     refresh();
@@ -36,8 +37,8 @@ class AppProperties {
     refresh();
   }
 
-  public function remove(item : ItemData) {
-    allItems.remove(item);
+  public function remove(index : Int) {
+    allItems.splice(index, 1);
     save();
     refresh();
   }
@@ -56,11 +57,11 @@ class AppProperties {
 
   public function refresh() {
     switch filter {
-      case All:
+      case ShowAll:
         filteredItems = allItems.copy();
-      case Active:
+      case ShowActive:
         filteredItems = allItems.filter.fn(!_.completed);
-      case Completed:
+      case ShowCompleted:
         filteredItems = allItems.filter.fn(_.completed);
     }
     remaining = allItems.filter.fn(!_.completed).length;
@@ -72,20 +73,20 @@ class AppProperties {
     window.localStorage.setItem(STORAGE_KEY, Json.stringify(allItems));
   }
 
-  public function getFilterFromHash() : Filter {
+  public function getFilterFromHash() : VisibilityFilter {
     var hash = window.location.hash.trimCharsLeft("#");
     return switch hash {
-      case "/active": Active;
-      case "/completed": Completed;
-      case _: All;
+      case "/active": ShowActive;
+      case "/completed": ShowCompleted;
+      case _: ShowAll;
     };
   }
 
-  public function setFilterIntHash(filter : Filter) {
+  public function setFilterIntHash(filter : VisibilityFilter) {
     window.location.hash = switch filter {
-      case Active : "/active";
-      case Completed : "/completed";
-      case All: "";
+      case ShowActive : "/active";
+      case ShowCompleted : "/completed";
+      case ShowAll: "";
     };
   }
 

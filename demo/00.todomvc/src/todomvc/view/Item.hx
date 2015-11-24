@@ -1,4 +1,4 @@
-package todomvc;
+package todomvc.view;
 
 import Doom.*;
 import doom.PropertiesComponent;
@@ -43,7 +43,7 @@ class Item extends PropertiesComponent<ItemProperties, ItemState> {
   }
 
   function handleRemove() {
-    prop.remove(state.item);
+    prop.remove(state.index);
   }
 
   function handleDblClick() {
@@ -81,12 +81,13 @@ class Item extends PropertiesComponent<ItemProperties, ItemState> {
 }
 
 typedef ItemProperties = {
-  public function remove(item : ItemData) : Void;
+  public function remove(index : Int) : Void;
   public function refresh() : Void;
   public function save() : Void;
 }
 
 typedef ItemState = {
+  index : Int,
   item : ItemData,
   editing : Bool
 }
