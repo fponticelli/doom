@@ -1,5 +1,4 @@
 import dots.Query;
-import todomvc.view.AppProperties;
 import todomvc.view.App;
 import todomvc.data.VisibilityFilter;
 import todomvc.data.Reducers.*;
@@ -11,22 +10,22 @@ using thx.Strings;
 class Main {
   static inline var STORAGE_KEY : String = "TodoMVC-Doom";
   static function main() {
-    var store = new Store(todoApp, {
+    var store = new Store(function(state, action) {
+      trace(action);
+      return todoApp(state, action);
+    }, {
       visibilityFilter : getFilterFromHash(),
       todos : getTodosFromLocalStorage()
     });
+
     // save changes to local storage
     store.subscribe(function() {
       window.localStorage.setItem(STORAGE_KEY, Json.stringify(store.getState().todos));
     });
-    var prop = new AppProperties();
+
+    // init app
     Doom.mount(
-      new App(prop, {
-        items     : prop.filteredItems,
-        remaining : prop.remaining,
-        complete  : prop.complete,
-        filter    : prop.filter
-      }),
+      new App(store),
       Query.first("section.todoapp")
     );
   }

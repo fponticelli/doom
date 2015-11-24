@@ -62,8 +62,8 @@ class Footer extends PropertiesComponent<FooterProp, FooterState> {
 }
 
 typedef FooterProp = {
-  public function setFilter(filter : VisibilityFilter) : Void;
-  public function clearCompleted() : Void;
+  function setFilter(filter : VisibilityFilter) : Void;
+  function clearCompleted() : Void;
 }
 
 typedef FooterState = {

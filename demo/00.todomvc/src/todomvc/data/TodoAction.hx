@@ -2,9 +2,10 @@ package todomvc.data;
 
 enum TodoAction {
   Add(text : String);
-  Complete(index : Int);
+  Toggle(index : Int);
+  Remove(index : Int);
   SetVisibilityFilter(filter : VisibilityFilter);
   UpdateText(index : Int, text : String);
   ClearCompleted;
-  ToggleCheck;
+  ToggleAll;
 }

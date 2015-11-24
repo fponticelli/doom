@@ -21,12 +21,12 @@ class Item extends PropertiesComponent<ItemProperties, ItemState> {
           "class"   => "toggle",
           "type"    => "checkbox",
           "checked" => state.item.completed,
-          "change"  => handleChecked
+          "change"  => prop.toggle
         ]),
         LABEL(state.item.text),
         BUTTON([
           "class" => "destroy",
-          "click" => handleRemove
+          "click" => prop.remove
         ])
       ]),
       INPUT([
@@ -36,16 +36,6 @@ class Item extends PropertiesComponent<ItemProperties, ItemState> {
         "keyup" => handleKeydown,
       ])
     ]);
-
-  function handleChecked(checked : Bool) {
-    state.item.completed = checked;
-    prop.save();
-    prop.refresh();
-  }
-
-  function handleRemove() {
-    prop.remove(state.index);
-  }
 
   function handleDblClick() {
     state.editing = true;
@@ -58,11 +48,9 @@ class Item extends PropertiesComponent<ItemProperties, ItemState> {
     state.editing = false;
     var value = getInputValueAndTrim();
     if(value.isEmpty()) {
-      handleRemove();
+      prop.remove();
     } else {
-      state.item.text = value;
-      prop.save();
-      update(state);
+      prop.updateText(value);
     }
   }
 
@@ -82,13 +70,12 @@ class Item extends PropertiesComponent<ItemProperties, ItemState> {
 }
 
 typedef ItemProperties = {
-  public function remove(index : Int) : Void;
-  public function refresh() : Void;
-  public function save() : Void;
+  public function remove() : Void;
+  public function toggle() : Void;
+  public function updateText(text : String) : Void;
 }
 
 typedef ItemState = {
-  index : Int,
   item : TodoItem,
   editing : Bool
 }

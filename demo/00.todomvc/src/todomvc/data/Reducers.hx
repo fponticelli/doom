@@ -13,10 +13,13 @@ class Reducers {
   public static function todos(state : ReadonlyArray<TodoItem>, action : TodoAction) return switch action {
     case Add(text):
       state.concat([{ text : text, completed : false }]);
-    case Complete(index):
+    case Toggle(index):
       var old = state[index];
       state.slice(0, index)
-        .concat([{ text : old.text, completed : true }])
+        .concat([{ text : old.text, completed : !old.completed }])
+        .concat(state.slice(index + 1));
+    case Remove(index):
+      state.slice(0, index)
         .concat(state.slice(index + 1));
     case UpdateText(index, text):
       var old = state[index];
@@ -25,8 +28,8 @@ class Reducers {
         .concat(state.slice(index + 1));
     case ClearCompleted:
       state.filter.fn(!_.completed);
-    case ToggleCheck:
-      var completed = state.all.fn(_.completed);
+    case ToggleAll:
+      var completed = !state.all.fn(_.completed);
       state.map.fn({ text : _.text, completed : completed });
     case _:
       state;
