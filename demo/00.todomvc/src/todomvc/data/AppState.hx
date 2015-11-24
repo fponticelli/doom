@@ -1,4 +1,4 @@
-package todomvc
+package todomvc.data;
 
 import thx.ReadonlyArray;
 

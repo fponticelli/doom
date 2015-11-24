@@ -28,7 +28,7 @@ class AppProperties {
 
   public function setFilter(filter : VisibilityFilter) {
     this.filter = filter;
-    setFilterIntHash(filter);
+    assignFilterToHash(filter);
     refresh();
   }
 
@@ -83,7 +83,7 @@ class AppProperties {
     };
   }
 
-  public function setFilterIntHash(filter : VisibilityFilter) {
+  public function assignFilterToHash(filter : VisibilityFilter) {
     window.location.hash = switch filter {
       case ShowActive : "/active";
       case ShowCompleted : "/completed";

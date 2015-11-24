@@ -51,6 +51,24 @@ HxOverrides.substr = function(s,pos,len) {
 	}
 	return s.substr(pos,len);
 };
+HxOverrides.indexOf = function(a,obj,i) {
+	var len = a.length;
+	if(i < 0) {
+		i += len;
+		if(i < 0) i = 0;
+	}
+	while(i < len) {
+		if(a[i] === obj) return i;
+		i++;
+	}
+	return -1;
+};
+HxOverrides.remove = function(a,obj) {
+	var i = HxOverrides.indexOf(a,obj,0);
+	if(i == -1) return false;
+	a.splice(i,1);
+	return true;
+};
 HxOverrides.iter = function(a) {
 	return { cur : 0, arr : a, hasNext : function() {
 		return this.cur < this.arr.length;
@@ -61,8 +79,31 @@ HxOverrides.iter = function(a) {
 var Main = function() { };
 Main.__name__ = true;
 Main.main = function() {
+	var store = new lies_Store(todomvc_data_Reducers.todoApp,{ visibilityFilter : Main.getFilterFromHash(), todos : Main.getTodosFromLocalStorage()});
+	store.subscribe(function() {
+		window.localStorage.setItem("TodoMVC-Doom",JSON.stringify(store.getState().todos));
+	});
 	var prop = new todomvc_view_AppProperties();
 	Doom.mount(new todomvc_view_App(prop,{ items : prop.filteredItems, remaining : prop.remaining, complete : prop.complete, filter : prop.filter}),dots_Query.first("section.todoapp"));
+};
+Main.getFilterFromHash = function() {
+	var hash = thx_Strings.trimCharsLeft(window.location.hash,"#");
+	var tmp;
+	switch(hash) {
+	case "/active":
+		tmp = todomvc_data_VisibilityFilter.ShowActive;
+		break;
+	case "/completed":
+		tmp = todomvc_data_VisibilityFilter.ShowCompleted;
+		break;
+	default:
+		tmp = todomvc_data_VisibilityFilter.ShowAll;
+	}
+	return tmp;
+};
+Main.getTodosFromLocalStorage = function() {
+	var v = window.localStorage.getItem("TodoMVC-Doom");
+	if(v != null && v.length > 0) return JSON.parse(v); else return [];
 };
 Math.__name__ = true;
 var Std = function() { };
@@ -1160,6 +1201,26 @@ js_Boot.__nativeClassName = function(o) {
 js_Boot.__resolveNativeClass = function(name) {
 	return $global[name];
 };
+var lies_Store = function(reducer,initialState) {
+	this.currentState = initialState;
+	this.reducer = reducer;
+	this.listeners = [];
+};
+lies_Store.__name__ = true;
+lies_Store.prototype = {
+	getState: function() {
+		return this.currentState;
+	}
+	,subscribe: function(listener) {
+		var _g = this;
+		HxOverrides.remove(this.listeners,listener);
+		this.listeners.push(listener);
+		return function() {
+			HxOverrides.remove(_g.listeners,listener);
+		};
+	}
+	,__class__: lies_Store
+};
 var thx_Arrays = function() { };
 thx_Arrays.__name__ = true;
 thx_Arrays.each = function(arr,effect) {
@@ -1268,6 +1329,72 @@ thx_error_AbstractMethod.__super__ = thx_Error;
 thx_error_AbstractMethod.prototype = $extend(thx_Error.prototype,{
 	__class__: thx_error_AbstractMethod
 });
+var todomvc_data_Reducers = function() { };
+todomvc_data_Reducers.__name__ = true;
+todomvc_data_Reducers.todoApp = function(state,action) {
+	return { visibilityFilter : todomvc_data_Reducers.visibilityFilter(state.visibilityFilter,action), todos : todomvc_data_Reducers.todos(state.todos,action)};
+};
+todomvc_data_Reducers.todos = function(state,action) {
+	var tmp;
+	switch(action[1]) {
+	case 0:
+		tmp = state.concat([{ text : action[2], completed : false}]);
+		break;
+	case 1:
+		var index = action[2];
+		var old = state[index];
+		tmp = state.slice(0,index).concat([{ text : old.text, completed : true}]).concat(state.slice(index + 1));
+		break;
+	case 3:
+		var index1 = action[2];
+		var old1 = state[index1];
+		tmp = state.slice(0,index1).concat([{ text : action[3], completed : old1.completed}]).concat(state.slice(index1 + 1));
+		break;
+	case 4:
+		tmp = state.filter(function(_) {
+			return !_.completed;
+		});
+		break;
+	case 5:
+		var tmp1;
+		var _e = state;
+		tmp1 = function(predicate) {
+			return thx_Arrays.all(_e,predicate);
+		};
+		var completed = tmp1(function(_1) {
+			return _1.completed;
+		});
+		tmp = state.map(function(_2) {
+			return { text : _2.text, completed : completed};
+		});
+		break;
+	default:
+		tmp = state;
+	}
+	return tmp;
+};
+todomvc_data_Reducers.visibilityFilter = function(state,action) {
+	var tmp;
+	switch(action[1]) {
+	case 2:
+		tmp = action[2];
+		break;
+	default:
+		tmp = state;
+	}
+	return tmp;
+};
+var todomvc_data_TodoAction = { __ename__ : true, __constructs__ : ["Add","Complete","SetVisibilityFilter","UpdateText","ClearCompleted","ToggleCheck"] };
+todomvc_data_TodoAction.Add = function(text) { var $x = ["Add",0,text]; $x.__enum__ = todomvc_data_TodoAction; $x.toString = $estr; return $x; };
+todomvc_data_TodoAction.Complete = function(index) { var $x = ["Complete",1,index]; $x.__enum__ = todomvc_data_TodoAction; $x.toString = $estr; return $x; };
+todomvc_data_TodoAction.SetVisibilityFilter = function(filter) { var $x = ["SetVisibilityFilter",2,filter]; $x.__enum__ = todomvc_data_TodoAction; $x.toString = $estr; return $x; };
+todomvc_data_TodoAction.UpdateText = function(index,text) { var $x = ["UpdateText",3,index,text]; $x.__enum__ = todomvc_data_TodoAction; $x.toString = $estr; return $x; };
+todomvc_data_TodoAction.ClearCompleted = ["ClearCompleted",4];
+todomvc_data_TodoAction.ClearCompleted.toString = $estr;
+todomvc_data_TodoAction.ClearCompleted.__enum__ = todomvc_data_TodoAction;
+todomvc_data_TodoAction.ToggleCheck = ["ToggleCheck",5];
+todomvc_data_TodoAction.ToggleCheck.toString = $estr;
+todomvc_data_TodoAction.ToggleCheck.__enum__ = todomvc_data_TodoAction;
 var todomvc_data_VisibilityFilter = { __ename__ : true, __constructs__ : ["ShowAll","ShowCompleted","ShowActive"] };
 todomvc_data_VisibilityFilter.ShowAll = ["ShowAll",0];
 todomvc_data_VisibilityFilter.ShowAll.toString = $estr;
@@ -1309,7 +1436,7 @@ todomvc_view_AppProperties.__name__ = true;
 todomvc_view_AppProperties.prototype = {
 	setFilter: function(filter) {
 		this.filter = filter;
-		this.setFilterIntHash(filter);
+		this.assignFilterToHash(filter);
 		this.refresh();
 	}
 	,add: function(text) {
@@ -1389,7 +1516,7 @@ todomvc_view_AppProperties.prototype = {
 		}
 		return tmp;
 	}
-	,setFilterIntHash: function(filter) {
+	,assignFilterToHash: function(filter) {
 		var tmp;
 		switch(filter[1]) {
 		case 2:
@@ -1828,11 +1955,24 @@ todomvc_view_List.prototype = $extend(doom_PropertiesComponent.prototype,{
 function $iterator(o) { if( o instanceof Array ) return function() { return HxOverrides.iter(o); }; return typeof(o.iterator) == 'function' ? $bind(o,o.iterator) : o.iterator; }
 var $_, $fid = 0;
 function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $fid++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = function(){ return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; o.hx__closures__[m.__id__] = f; } return f; }
+if(Array.prototype.indexOf) HxOverrides.indexOf = function(a,o,i) {
+	return Array.prototype.indexOf.call(a,o,i);
+};
 String.prototype.__class__ = String;
 String.__name__ = true;
 Array.__name__ = true;
 Date.prototype.__class__ = Date;
 Date.__name__ = ["Date"];
+if(Array.prototype.map == null) Array.prototype.map = function(f) {
+	var a = [];
+	var _g1 = 0;
+	var _g = this.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		a[i] = f(this[i]);
+	}
+	return a;
+};
 if(Array.prototype.filter == null) Array.prototype.filter = function(f1) {
 	var a1 = [];
 	var _g11 = 0;

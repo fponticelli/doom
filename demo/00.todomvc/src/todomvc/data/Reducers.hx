@@ -24,9 +24,9 @@ class Reducers {
         .concat([{ text : text, completed : old.completed }])
         .concat(state.slice(index + 1));
     case ClearCompleted:
-      state.ToggleCheck.fn(!_.completed);
+      state.filter.fn(!_.completed);
     case ToggleCheck:
-      var completed = allItems.all.fn(_.completed);
+      var completed = state.all.fn(_.completed);
       state.map.fn({ text : _.text, completed : completed });
     case _:
       state;
