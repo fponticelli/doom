@@ -1443,6 +1443,26 @@ thx_Iterators.toArray = function(it) {
 };
 var thx_Objects = function() { };
 thx_Objects.__name__ = ["thx","Objects"];
+thx_Objects.combine = function(first,second) {
+	var to = { };
+	var _g = 0;
+	var _g1 = Reflect.fields(first);
+	while(_g < _g1.length) {
+		var field = _g1[_g];
+		++_g;
+		var value = Reflect.field(first,field);
+		to[field] = value;
+	}
+	var _g2 = 0;
+	var _g11 = Reflect.fields(second);
+	while(_g2 < _g11.length) {
+		var field1 = _g11[_g2];
+		++_g2;
+		var value1 = Reflect.field(second,field1);
+		to[field1] = value1;
+	}
+	return to;
+};
 thx_Objects.string = function(o) {
 	return "{" + Reflect.fields(o).map(function(key) {
 		return "" + key + " : " + thx_Objects.string(Reflect.field(o,key));
@@ -1507,7 +1527,7 @@ todomvc_data_Reducers.todos = function(state,action) {
 	case 1:
 		var index = action[2];
 		var old = state[index];
-		tmp = state.slice(0,index).concat([{ text : old.text, completed : !old.completed}]).concat(state.slice(index + 1));
+		tmp = state.slice(0,index).concat([thx_Objects.combine(state[index],{ completed : !old.completed})]).concat(state.slice(index + 1));
 		break;
 	case 2:
 		var index1 = action[2];
@@ -1515,8 +1535,7 @@ todomvc_data_Reducers.todos = function(state,action) {
 		break;
 	case 4:
 		var index2 = action[2];
-		var old1 = state[index2];
-		tmp = state.slice(0,index2).concat([{ text : action[3], completed : old1.completed}]).concat(state.slice(index2 + 1));
+		tmp = state.slice(0,index2).concat([thx_Objects.combine(state[index2],{ text : action[3]})]).concat(state.slice(index2 + 1));
 		break;
 	case 5:
 		tmp = state.filter(function(_) {
