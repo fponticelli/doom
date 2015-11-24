@@ -4,8 +4,7 @@ import Doom.*;
 import doom.PropertiesComponent;
 import thx.ReadonlyArray;
 import todomvc.data.AppState;
-import todomvc.data.VisibilityFilter;
-using todomvc.util.Filters;
+using todomvc.data.VisibilityFilter;
 
 class Body extends PropertiesComponent<BodyProperties, AppState> {
   override function render()

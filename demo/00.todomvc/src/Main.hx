@@ -11,7 +11,7 @@ class Main {
   static inline var STORAGE_KEY : String = "TodoMVC-Doom";
   static function main() {
     var store = new Store(function(state, action) {
-      trace(action);
+      trace(thx.Enums.string(action));
       return todoApp(state, action);
     }, {
       visibilityFilter : getFilterFromHash(),
@@ -21,6 +21,15 @@ class Main {
     // save changes to local storage
     store.subscribe(function() {
       window.localStorage.setItem(STORAGE_KEY, Json.stringify(store.getState().todos));
+    });
+
+    // set filter in hash
+    store.subscribe(function() {
+      window.location.hash = switch store.getState().visibilityFilter {
+        case ShowActive: "/active";
+        case ShowCompleted: "/completed";
+        case _: "";
+      };
     });
 
     // init app
