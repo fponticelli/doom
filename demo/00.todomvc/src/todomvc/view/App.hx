@@ -2,8 +2,8 @@ package todomvc.view;
 
 import Doom.*;
 import doom.PropertiesStatelessComponent;
-import thx.ReadonlyArray;
 import lies.Store;
+import thx.ReadonlyArray;
 import todomvc.data.AppState;
 import todomvc.data.TodoAction;
 import todomvc.data.VisibilityFilter;

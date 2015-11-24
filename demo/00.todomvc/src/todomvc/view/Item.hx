@@ -3,7 +3,6 @@ package todomvc.view;
 import Doom.*;
 import doom.PropertiesComponent;
 import js.html.KeyboardEvent;
-import js.html.InputElement;
 import todomvc.data.TodoItem;
 using thx.Strings;
 

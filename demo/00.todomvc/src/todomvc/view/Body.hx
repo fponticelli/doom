@@ -2,7 +2,6 @@ package todomvc.view;
 
 import Doom.*;
 import doom.PropertiesComponent;
-import thx.ReadonlyArray;
 import todomvc.data.AppState;
 using todomvc.data.VisibilityFilter;
 
