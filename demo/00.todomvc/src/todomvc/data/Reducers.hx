@@ -1,5 +1,7 @@
 package todomvc.data;
 
+using thx.Arrays;
+using thx.Functions;
 import thx.ReadonlyArray;
 
 class Reducers {
@@ -16,6 +18,16 @@ class Reducers {
       state.slice(0, index)
         .concat([{ text : old.text, completed : true }])
         .concat(state.slice(index + 1));
+    case UpdateText(index, text):
+      var old = state[index];
+      state.slice(0, index)
+        .concat([{ text : text, completed : old.completed }])
+        .concat(state.slice(index + 1));
+    case ClearCompleted:
+      state.ToggleCheck.fn(!_.completed);
+    case ToggleCheck:
+      var completed = allItems.all.fn(_.completed);
+      state.map.fn({ text : _.text, completed : completed });
     case _:
       state;
   }
