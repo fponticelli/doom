@@ -3,6 +3,7 @@ package todomvc.view;
 import Doom.*;
 import doom.PropertiesComponent;
 import thx.ReadonlyArray;
+import todomvc.data.TodoItem;
 
 class List extends PropertiesComponent<AppProperties, ListState> {
   override function render()
@@ -22,6 +23,6 @@ class List extends PropertiesComponent<AppProperties, ListState> {
 }
 
 typedef ListState = {
-  items : ReadonlyArray<ItemData>,
+  items : ReadonlyArray<TodoItem>,
   allCompleted : Bool
 }

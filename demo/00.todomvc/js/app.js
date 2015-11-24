@@ -1312,8 +1312,8 @@ todomvc_view_AppProperties.prototype = {
 		this.setFilterIntHash(filter);
 		this.refresh();
 	}
-	,add: function(label) {
-		this.allItems.push({ label : label, completed : false});
+	,add: function(text) {
+		this.allItems.push({ text : text, completed : false});
 		this.save();
 		this.refresh();
 	}
@@ -1693,7 +1693,7 @@ todomvc_view_Item.prototype = $extend(doom_PropertiesComponent.prototype,{
 		var attributes2 = tmp9;
 		tmp6 = doom__$Node_Node_$Impl_$.el("input",attributes2,null,null);
 		var tmp7;
-		var child = doom_NodeImpl.Text(this.state.item.label);
+		var child = doom_NodeImpl.Text(this.state.item.text);
 		tmp7 = doom__$Node_Node_$Impl_$.el("label",null,null,child);
 		var tmp8;
 		var tmp10;
@@ -1712,7 +1712,7 @@ todomvc_view_Item.prototype = $extend(doom_PropertiesComponent.prototype,{
 		var _g5 = new haxe_ds_StringMap();
 		var value11 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("edit");
 		if(__map_reserved["class"] != null) _g5.setReserved("class",value11); else _g5.h["class"] = value11;
-		var value12 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString(this.state.item.label);
+		var value12 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString(this.state.item.text);
 		if(__map_reserved.value != null) _g5.setReserved("value",value12); else _g5.h["value"] = value12;
 		var value13 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler($bind(this,this.handleBlur));
 		if(__map_reserved.blur != null) _g5.setReserved("blur",value13); else _g5.h["blur"] = value13;
@@ -1743,7 +1743,7 @@ todomvc_view_Item.prototype = $extend(doom_PropertiesComponent.prototype,{
 		this.state.editing = false;
 		var value = this.getInputValueAndTrim();
 		if(thx_Strings.isEmpty(value)) this.handleRemove(); else {
-			this.state.item.label = value;
+			this.state.item.text = value;
 			this.prop.save();
 			this.update(this.state);
 		}

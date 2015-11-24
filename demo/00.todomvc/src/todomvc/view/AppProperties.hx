@@ -1,6 +1,7 @@
 package todomvc.view;
 
 import todomvc.data.VisibilityFilter;
+import todomvc.data.TodoItem;
 import haxe.Json;
 import js.Browser.*;
 import thx.ReadonlyArray;
@@ -14,9 +15,9 @@ class AppProperties {
   public var remaining(default, null) : Int;
   public var complete(default, null) : Int;
   public var filter(default, null) : VisibilityFilter;
-  public var filteredItems(default, null) : ReadonlyArray<ItemData>;
+  public var filteredItems(default, null) : ReadonlyArray<TodoItem>;
   public var onUpdate : Void -> Void;
-  var allItems : Array<ItemData>;
+  var allItems : Array<TodoItem>;
 
   public function new() {
     filter = getFilterFromHash();
@@ -31,8 +32,8 @@ class AppProperties {
     refresh();
   }
 
-  public function add(label : String) {
-    allItems.push({ label : label, completed : false});
+  public function add(text : String) {
+    allItems.push({ text : text, completed : false});
     save();
     refresh();
   }

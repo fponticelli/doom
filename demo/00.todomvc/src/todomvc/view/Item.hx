@@ -4,6 +4,7 @@ import Doom.*;
 import doom.PropertiesComponent;
 import js.html.KeyboardEvent;
 import js.html.InputElement;
+import todomvc.data.TodoItem;
 using thx.Strings;
 
 class Item extends PropertiesComponent<ItemProperties, ItemState> {
@@ -22,7 +23,7 @@ class Item extends PropertiesComponent<ItemProperties, ItemState> {
           "checked" => state.item.completed,
           "change"  => handleChecked
         ]),
-        LABEL(state.item.label),
+        LABEL(state.item.text),
         BUTTON([
           "class" => "destroy",
           "click" => handleRemove
@@ -30,7 +31,7 @@ class Item extends PropertiesComponent<ItemProperties, ItemState> {
       ]),
       INPUT([
         "class" => "edit",
-        "value" => state.item.label,
+        "value" => state.item.text,
         "blur"  => handleBlur,
         "keyup" => handleKeydown,
       ])
@@ -59,7 +60,7 @@ class Item extends PropertiesComponent<ItemProperties, ItemState> {
     if(value.isEmpty()) {
       handleRemove();
     } else {
-      state.item.label = value;
+      state.item.text = value;
       prop.save();
       update(state);
     }
@@ -88,6 +89,6 @@ typedef ItemProperties = {
 
 typedef ItemState = {
   index : Int,
-  item : ItemData,
+  item : TodoItem,
   editing : Bool
 }
