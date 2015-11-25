@@ -1,5 +1,7 @@
 import dots.Query;
 import todomvc.view.App;
+import todomvc.data.AppState;
+import todomvc.data.TodoAction;
 import todomvc.data.VisibilityFilter;
 import todomvc.data.Reducers.*;
 import lies.Store;
@@ -10,26 +12,28 @@ using thx.Strings;
 class Main {
   static inline var STORAGE_KEY : String = "TodoMVC-Doom";
   static function main() {
-    var store = new Store(function(state, action) {
-      trace(thx.Enums.string(action));
-      return todoApp(state, action);
-    }, {
+    var store = Store.create(todoApp, {
       visibilityFilter : getFilterFromHash(),
       todos : getTodosFromLocalStorage()
     });
 
     // save changes to local storage
-    store.subscribe(function() {
-      window.localStorage.setItem(STORAGE_KEY, Json.stringify(store.getState().todos));
+    store.subscribe(function(state : AppState) {
+      window.localStorage.setItem(STORAGE_KEY, Json.stringify(state.todos));
     });
 
     // set filter in hash
-    store.subscribe(function() {
-      window.location.hash = switch store.getState().visibilityFilter {
+    store.subscribe(function(state : AppState) {
+      window.location.hash = switch state.visibilityFilter {
         case ShowActive: "/active";
         case ShowCompleted: "/completed";
         case _: "";
       };
+    });
+
+    // log to console
+    store.subscribe(function(action : TodoAction) {
+      console.log(thx.Enums.string(action));
     });
 
     // init app

@@ -4,6 +4,7 @@
 -lib dots
 -lib lies
 -lib thx.core
+-lib thx.promise
 -main Main
 -D html
 -debug

@@ -26,9 +26,9 @@ class App extends PropertiesStatelessComponent<Store<AppState, TodoAction>> {
             prop.dispatch(ToggleAll),
           updateText : function(index : Int, text : String)
             prop.dispatch(UpdateText(index, text)),
-        }, prop.getState());
+        }, prop.state);
     prop.subscribe(function() {
-      body.update(prop.getState());
+      body.update(prop.state);
     });
     return DIV([header, body]);
   }

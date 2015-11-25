@@ -87,28 +87,48 @@ HxOverrides.iter = function(a) {
 var Main = function() { };
 Main.__name__ = ["Main"];
 Main.main = function() {
-	var store = new lies_Store(function(state,action) {
-		console.log(thx_Enums.string(action));
-		return todomvc_data_Reducers.todoApp(state,action);
-	},{ visibilityFilter : Main.getFilterFromHash(), todos : Main.getTodosFromLocalStorage()});
-	store.subscribe(function() {
-		window.localStorage.setItem("TodoMVC-Doom",JSON.stringify(store.getState().todos));
-	});
-	store.subscribe(function() {
+	var store = lies_Store.create(function(state,action) {
 		var tmp;
-		var _g = store.getState().visibilityFilter;
+		var _0 = todomvc_data_Reducers.todoApp(state,action);
+		tmp = { _0 : _0, _1 : []};
+		return tmp;
+	},{ visibilityFilter : Main.getFilterFromHash(), todos : Main.getTodosFromLocalStorage()});
+	var tmp1;
+	var f = function(state1) {
+		window.localStorage.setItem("TodoMVC-Doom",JSON.stringify(state1.todos));
+	};
+	tmp1 = function(state2,_,_1) {
+		f(state2);
+	};
+	store.subscribe(tmp1);
+	var tmp2;
+	var f1 = function(state3) {
+		var tmp4;
+		var _g = state3.visibilityFilter;
 		switch(_g[1]) {
 		case 2:
-			tmp = "/active";
+			tmp4 = "/active";
 			break;
 		case 1:
-			tmp = "/completed";
+			tmp4 = "/completed";
 			break;
 		default:
-			tmp = "";
+			tmp4 = "";
 		}
-		window.location.hash = tmp;
-	});
+		window.location.hash = tmp4;
+	};
+	tmp2 = function(state4,_2,_3) {
+		f1(state4);
+	};
+	store.subscribe(tmp2);
+	var tmp3;
+	var f2 = function(action1) {
+		window.console.log(thx_Enums.string(action1));
+	};
+	tmp3 = function(_4,_5,action2) {
+		f2(action2);
+	};
+	store.subscribe(tmp3);
 	Doom.mount(new todomvc_view_App(store),dots_Query.first("section.todoapp"));
 };
 Main.getFilterFromHash = function() {
@@ -1143,6 +1163,11 @@ haxe_IMap.__name__ = ["haxe","IMap"];
 haxe_IMap.prototype = {
 	__class__: haxe_IMap
 };
+var haxe_ds_Option = { __ename__ : true, __constructs__ : ["Some","None"] };
+haxe_ds_Option.Some = function(v) { var $x = ["Some",0,v]; $x.__enum__ = haxe_ds_Option; $x.toString = $estr; return $x; };
+haxe_ds_Option.None = ["None",1];
+haxe_ds_Option.None.toString = $estr;
+haxe_ds_Option.None.__enum__ = haxe_ds_Option;
 var haxe_ds_StringMap = function() {
 	this.h = { };
 };
@@ -1299,26 +1324,36 @@ js_Boot.__resolveNativeClass = function(name) {
 	return $global[name];
 };
 var lies_Store = function(reducer,initialState) {
-	this.currentState = initialState;
+	this.state = initialState;
 	this.reducer = reducer;
 	this.listeners = [];
 };
 lies_Store.__name__ = ["lies","Store"];
+lies_Store.create = function(reducer,initialState) {
+	return new lies_Store(reducer,initialState);
+};
 lies_Store.prototype = {
-	getState: function() {
-		return this.currentState;
+	dispatch: function(action) {
+		if(null == action) throw new thx_Error("cannot dispatch a null action",null,{ fileName : "Store.hx", lineNumber : 20, className : "lies.Store", methodName : "dispatch"});
+		var oldState = this.state;
+		var value = this.reducer(oldState,action);
+		this.state = value._0;
+		this.invokeListeners(this.state,oldState,action);
+		var _g = 0;
+		var _g1 = value._1;
+		while(_g < _g1.length) {
+			var future = _g1[_g];
+			++_g;
+			future.then($bind(this,this.dispatch));
+		}
 	}
-	,dispatch: function(action) {
-		this.currentState = this.reducer(this.currentState,action);
-		this.invokeListeners();
-	}
-	,invokeListeners: function() {
+	,invokeListeners: function(currentState,oldState,action) {
 		var _g = 0;
 		var _g1 = this.listeners.slice();
 		while(_g < _g1.length) {
 			var listener = _g1[_g];
 			++_g;
-			listener();
+			listener(currentState,oldState,action);
 		}
 	}
 	,subscribe: function(listener) {
@@ -1513,6 +1548,30 @@ thx_error_AbstractMethod.__super__ = thx_Error;
 thx_error_AbstractMethod.prototype = $extend(thx_Error.prototype,{
 	__class__: thx_error_AbstractMethod
 });
+var thx_promise_Future = function() { };
+thx_promise_Future.__name__ = ["thx","promise","Future"];
+thx_promise_Future.prototype = {
+	then: function(handler) {
+		this.handlers.push(handler);
+		this.update();
+		return this;
+	}
+	,update: function() {
+		{
+			var _g = this.state;
+			switch(_g[1]) {
+			case 1:
+				break;
+			case 0:
+				var index = -1;
+				while(++index < this.handlers.length) this.handlers[index](_g[2]);
+				this.handlers = [];
+				break;
+			}
+		}
+	}
+	,__class__: thx_promise_Future
+};
 var todomvc_data_Reducers = function() { };
 todomvc_data_Reducers.__name__ = ["todomvc","data","Reducers"];
 todomvc_data_Reducers.todoApp = function(state,action) {
@@ -1637,14 +1696,19 @@ todomvc_view_App.prototype = $extend(doom_PropertiesStatelessComponent.prototype
 			_g.prop.dispatch(todomvc_data_TodoAction.ToggleAll);
 		}, updateText : function(index2,text1) {
 			_g.prop.dispatch(todomvc_data_TodoAction.UpdateText(index2,text1));
-		}},this.prop.getState());
-		this.prop.subscribe(function() {
-			body.update(_g.prop.getState());
-		});
+		}},this.prop.state);
 		var tmp;
+		var f = function() {
+			body.update(_g.prop.state);
+		};
+		tmp = function(_,_1,_2) {
+			f();
+		};
+		this.prop.subscribe(tmp);
+		var tmp1;
 		var children = [doom_NodeImpl.ComponentNode(header),doom_NodeImpl.ComponentNode(body)];
-		tmp = doom__$Node_Node_$Impl_$.el("div",null,children,null);
-		return tmp;
+		tmp1 = doom__$Node_Node_$Impl_$.el("div",null,children,null);
+		return tmp1;
 	}
 	,__class__: todomvc_view_App
 });
