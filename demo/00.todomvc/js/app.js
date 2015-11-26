@@ -517,7 +517,7 @@ doom_HtmlNode.createElement = function(name,attributes,children) {
 		var _this = Doom.namespaces;
 		if(__map_reserved[prefix] != null) tmp1 = _this.getReserved(prefix); else tmp1 = _this.h[prefix];
 		var ns = tmp1;
-		if(null == ns) throw new thx_Error("element prefix \"" + prefix + "\" is not associated to any namespace. Add the right namespace to Doom.namespaces.",null,{ fileName : "HtmlNode.hx", lineNumber : 37, className : "doom.HtmlNode", methodName : "createElement"});
+		if(null == ns) throw new thx_Error("element prefix \"" + prefix + "\" is not associated to any namespace. Add the right namespace to Doom.namespaces.",null,{ fileName : "HtmlNode.hx", lineNumber : 36, className : "doom.HtmlNode", methodName : "createElement"});
 		tmp = window.document.createElementNS(ns,name1);
 	} else tmp = window.document.createElement(name);
 	var el = tmp;
@@ -591,7 +591,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				node.appendChild(window.document.createTextNode(text));
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n,null,{ fileName : "HtmlNode.hx", lineNumber : 136, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n,null,{ fileName : "HtmlNode.hx", lineNumber : 135, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 1:
@@ -602,7 +602,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				node.appendChild(dots_Html.parse(text1));
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n1,null,{ fileName : "HtmlNode.hx", lineNumber : 136, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n1,null,{ fileName : "HtmlNode.hx", lineNumber : 135, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 2:
@@ -613,7 +613,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				node.appendChild(doom_HtmlNode.createComment(text2));
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n2,null,{ fileName : "HtmlNode.hx", lineNumber : 136, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n2,null,{ fileName : "HtmlNode.hx", lineNumber : 135, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 3:
@@ -628,7 +628,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				doom_HtmlNode.trigger(el,"mount");
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n3,null,{ fileName : "HtmlNode.hx", lineNumber : 136, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n3,null,{ fileName : "HtmlNode.hx", lineNumber : 135, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 4:
@@ -642,7 +642,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				node.removeAttribute(name1);
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n4,null,{ fileName : "HtmlNode.hx", lineNumber : 136, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n4,null,{ fileName : "HtmlNode.hx", lineNumber : 135, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 6:
@@ -667,7 +667,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				}
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n5,null,{ fileName : "HtmlNode.hx", lineNumber : 136, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n5,null,{ fileName : "HtmlNode.hx", lineNumber : 135, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 7:
@@ -706,7 +706,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				node.nodeValue = newcontent1;
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n6,null,{ fileName : "HtmlNode.hx", lineNumber : 136, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n6,null,{ fileName : "HtmlNode.hx", lineNumber : 135, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 12:
@@ -719,7 +719,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				doom_HtmlNode.applyPatches(patches,n8);
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n7,null,{ fileName : "HtmlNode.hx", lineNumber : 136, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n7,null,{ fileName : "HtmlNode.hx", lineNumber : 135, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		}
@@ -993,7 +993,7 @@ doom_StatelessComponent.prototype = {
 		this.element = doom_HtmlNode.toHtml(this.node);
 	}
 	,render: function() {
-		throw new thx_error_AbstractMethod({ fileName : "StatelessComponent.hx", lineNumber : 27, className : "doom.StatelessComponent", methodName : "render"});
+		throw new thx_error_AbstractMethod({ fileName : "StatelessComponent.hx", lineNumber : 28, className : "doom.StatelessComponent", methodName : "render"});
 	}
 	,__class__: doom_StatelessComponent
 };

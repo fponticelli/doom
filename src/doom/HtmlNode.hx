@@ -1,4 +1,3 @@
-#if (js && html)
 package doom;
 
 import js.html.*;
@@ -136,4 +135,3 @@ class HtmlNode {
       throw new thx.Error('cannot apply patch $p on $n');
   };
 }
-#end
