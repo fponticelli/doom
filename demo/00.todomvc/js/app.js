@@ -316,6 +316,79 @@ Type.enumEq = function(a,b) {
 	}
 	return true;
 };
+var doom_IComponent = function() { };
+doom_IComponent.__name__ = ["doom","IComponent"];
+doom_IComponent.prototype = {
+	__class__: doom_IComponent
+};
+var doom_Component = function(state) {
+	this.state = state;
+	this.node = this.render();
+};
+doom_Component.__name__ = ["doom","Component"];
+doom_Component.__interfaces__ = [doom_IComponent];
+doom_Component.prototype = {
+	init: function() {
+		this.element = doom_HtmlNode.toHtml(this.node);
+	}
+	,updateNode: function(oldNode) {
+		var newNode = this.render();
+		switch(newNode[1]) {
+		case 0:
+			break;
+		default:
+			throw new thx_Error("Component can (and must) return only element nodes",null,{ fileName : "Component.hx", lineNumber : 25, className : "doom.Component", methodName : "updateNode"});
+		}
+		var patches = doom__$Node_Node_$Impl_$.diff(oldNode,newNode);
+		doom_HtmlNode.applyPatches(patches,this.element);
+		this.node = newNode;
+	}
+	,render: function() {
+		throw new thx_error_AbstractMethod({ fileName : "Component.hx", lineNumber : 33, className : "doom.Component", methodName : "render"});
+	}
+	,update: function(newState) {
+		var oldState = this.state;
+		this.state = newState;
+		if(!this.shouldRender(oldState,newState)) return;
+		this.updateNode(this.node);
+	}
+	,shouldRender: function(oldState,newState) {
+		return true;
+	}
+	,__class__: doom_Component
+};
+var doom_ApiComponent = function(api,state) {
+	this.api = api;
+	doom_Component.call(this,state);
+};
+doom_ApiComponent.__name__ = ["doom","ApiComponent"];
+doom_ApiComponent.__super__ = doom_Component;
+doom_ApiComponent.prototype = $extend(doom_Component.prototype,{
+	__class__: doom_ApiComponent
+});
+var doom_StatelessComponent = function() {
+	this.node = this.render();
+};
+doom_StatelessComponent.__name__ = ["doom","StatelessComponent"];
+doom_StatelessComponent.__interfaces__ = [doom_IComponent];
+doom_StatelessComponent.prototype = {
+	init: function() {
+		this.element = doom_HtmlNode.toHtml(this.node);
+	}
+	,render: function() {
+		throw new thx_error_AbstractMethod({ fileName : "StatelessComponent.hx", lineNumber : 27, className : "doom.StatelessComponent", methodName : "render"});
+	}
+	,__class__: doom_StatelessComponent
+};
+var doom_ApiStatelessComponent = function(api) {
+	this.api = api;
+	doom_StatelessComponent.call(this);
+};
+doom_ApiStatelessComponent.__name__ = ["doom","ApiStatelessComponent"];
+doom_ApiStatelessComponent.__super__ = doom_StatelessComponent;
+doom_ApiStatelessComponent.prototype = $extend(doom_StatelessComponent.prototype,{
+	__class__: doom_ApiStatelessComponent
+});
 var doom__$AttributeValue_AttributeValue_$Impl_$ = {};
 doom__$AttributeValue_AttributeValue_$Impl_$.__name__ = ["doom","_AttributeValue","AttributeValue_Impl_"];
 doom__$AttributeValue_AttributeValue_$Impl_$.fromString = function(s) {
@@ -375,47 +448,6 @@ var doom_AttributeValueImpl = { __ename__ : true, __constructs__ : ["BoolAttribu
 doom_AttributeValueImpl.BoolAttribute = function(b) { var $x = ["BoolAttribute",0,b]; $x.__enum__ = doom_AttributeValueImpl; $x.toString = $estr; return $x; };
 doom_AttributeValueImpl.StringAttribute = function(s) { var $x = ["StringAttribute",1,s]; $x.__enum__ = doom_AttributeValueImpl; $x.toString = $estr; return $x; };
 doom_AttributeValueImpl.EventAttribute = function(f) { var $x = ["EventAttribute",2,f]; $x.__enum__ = doom_AttributeValueImpl; $x.toString = $estr; return $x; };
-var doom_IComponent = function() { };
-doom_IComponent.__name__ = ["doom","IComponent"];
-doom_IComponent.prototype = {
-	__class__: doom_IComponent
-};
-var doom_Component = function(state) {
-	this.state = state;
-	this.node = this.render();
-};
-doom_Component.__name__ = ["doom","Component"];
-doom_Component.__interfaces__ = [doom_IComponent];
-doom_Component.prototype = {
-	init: function() {
-		this.element = doom_HtmlNode.toHtml(this.node);
-	}
-	,updateNode: function(oldNode) {
-		var newNode = this.render();
-		switch(newNode[1]) {
-		case 0:
-			break;
-		default:
-			throw new thx_Error("Component can (and must) return only element nodes",null,{ fileName : "Component.hx", lineNumber : 25, className : "doom.Component", methodName : "updateNode"});
-		}
-		var patches = doom__$Node_Node_$Impl_$.diff(oldNode,newNode);
-		doom_HtmlNode.applyPatches(patches,this.element);
-		this.node = newNode;
-	}
-	,render: function() {
-		throw new thx_error_AbstractMethod({ fileName : "Component.hx", lineNumber : 33, className : "doom.Component", methodName : "render"});
-	}
-	,update: function(newState) {
-		var oldState = this.state;
-		this.state = newState;
-		if(!this.shouldRender(oldState,newState)) return;
-		this.updateNode(this.node);
-	}
-	,shouldRender: function(oldState,newState) {
-		return true;
-	}
-	,__class__: doom_Component
-};
 var thx__$Set_Set_$Impl_$ = {};
 thx__$Set_Set_$Impl_$.__name__ = ["thx","_Set","Set_Impl_"];
 thx__$Set_Set_$Impl_$.createString = function(it) {
@@ -974,38 +1006,6 @@ doom_Patch.ReplaceWithRaw = function(text) { var $x = ["ReplaceWithRaw",9,text];
 doom_Patch.ReplaceWithComment = function(text) { var $x = ["ReplaceWithComment",10,text]; $x.__enum__ = doom_Patch; $x.toString = $estr; return $x; };
 doom_Patch.ContentChanged = function(newcontent) { var $x = ["ContentChanged",11,newcontent]; $x.__enum__ = doom_Patch; $x.toString = $estr; return $x; };
 doom_Patch.PatchChild = function(index,patches) { var $x = ["PatchChild",12,index,patches]; $x.__enum__ = doom_Patch; $x.toString = $estr; return $x; };
-var doom_PropertiesComponent = function(prop,state) {
-	this.prop = prop;
-	doom_Component.call(this,state);
-};
-doom_PropertiesComponent.__name__ = ["doom","PropertiesComponent"];
-doom_PropertiesComponent.__super__ = doom_Component;
-doom_PropertiesComponent.prototype = $extend(doom_Component.prototype,{
-	__class__: doom_PropertiesComponent
-});
-var doom_StatelessComponent = function() {
-	this.node = this.render();
-};
-doom_StatelessComponent.__name__ = ["doom","StatelessComponent"];
-doom_StatelessComponent.__interfaces__ = [doom_IComponent];
-doom_StatelessComponent.prototype = {
-	init: function() {
-		this.element = doom_HtmlNode.toHtml(this.node);
-	}
-	,render: function() {
-		throw new thx_error_AbstractMethod({ fileName : "StatelessComponent.hx", lineNumber : 28, className : "doom.StatelessComponent", methodName : "render"});
-	}
-	,__class__: doom_StatelessComponent
-};
-var doom_PropertiesStatelessComponent = function(prop) {
-	this.prop = prop;
-	doom_StatelessComponent.call(this);
-};
-doom_PropertiesStatelessComponent.__name__ = ["doom","PropertiesStatelessComponent"];
-doom_PropertiesStatelessComponent.__super__ = doom_StatelessComponent;
-doom_PropertiesStatelessComponent.prototype = $extend(doom_StatelessComponent.prototype,{
-	__class__: doom_PropertiesStatelessComponent
-});
 var dots_Html = function() { };
 dots_Html.__name__ = ["dots","Html"];
 dots_Html.parseNodes = function(html) {
@@ -1673,38 +1673,38 @@ todomvc_data_VisibilityFilters.filterVisibility = function(arr,filter) {
 	}
 	return tmp;
 };
-var todomvc_view_App = function(prop) {
-	doom_PropertiesStatelessComponent.call(this,prop);
+var todomvc_view_App = function(api) {
+	doom_ApiStatelessComponent.call(this,api);
 };
 todomvc_view_App.__name__ = ["todomvc","view","App"];
-todomvc_view_App.__super__ = doom_PropertiesStatelessComponent;
-todomvc_view_App.prototype = $extend(doom_PropertiesStatelessComponent.prototype,{
+todomvc_view_App.__super__ = doom_ApiStatelessComponent;
+todomvc_view_App.prototype = $extend(doom_ApiStatelessComponent.prototype,{
 	render: function() {
 		var _g = this;
 		var header = new todomvc_view_Header({ add : function(text) {
-			_g.prop.dispatch(todomvc_data_TodoAction.Add(text));
+			_g.api.dispatch(todomvc_data_TodoAction.Add(text));
 		}});
 		var body = new todomvc_view_Body({ setFilter : function(filter) {
-			_g.prop.dispatch(todomvc_data_TodoAction.SetVisibilityFilter(filter));
+			_g.api.dispatch(todomvc_data_TodoAction.SetVisibilityFilter(filter));
 		}, clearCompleted : function() {
-			_g.prop.dispatch(todomvc_data_TodoAction.ClearCompleted);
+			_g.api.dispatch(todomvc_data_TodoAction.ClearCompleted);
 		}, remove : function(index) {
-			_g.prop.dispatch(todomvc_data_TodoAction.Remove(index));
+			_g.api.dispatch(todomvc_data_TodoAction.Remove(index));
 		}, toggle : function(index1) {
-			_g.prop.dispatch(todomvc_data_TodoAction.Toggle(index1));
+			_g.api.dispatch(todomvc_data_TodoAction.Toggle(index1));
 		}, toggleAll : function() {
-			_g.prop.dispatch(todomvc_data_TodoAction.ToggleAll);
+			_g.api.dispatch(todomvc_data_TodoAction.ToggleAll);
 		}, updateText : function(index2,text1) {
-			_g.prop.dispatch(todomvc_data_TodoAction.UpdateText(index2,text1));
-		}},this.prop.state);
+			_g.api.dispatch(todomvc_data_TodoAction.UpdateText(index2,text1));
+		}},this.api.state);
 		var tmp;
 		var f = function() {
-			body.update(_g.prop.state);
+			body.update(_g.api.state);
 		};
 		tmp = function(_,_1,_2) {
 			f();
 		};
-		this.prop.subscribe(tmp);
+		this.api.subscribe(tmp);
 		var tmp1;
 		var children = [doom_NodeImpl.ComponentNode(header),doom_NodeImpl.ComponentNode(body)];
 		tmp1 = doom__$Node_Node_$Impl_$.el("div",null,children,null);
@@ -1712,12 +1712,12 @@ todomvc_view_App.prototype = $extend(doom_PropertiesStatelessComponent.prototype
 	}
 	,__class__: todomvc_view_App
 });
-var todomvc_view_Body = function(prop,state) {
-	doom_PropertiesComponent.call(this,prop,state);
+var todomvc_view_Body = function(api,state) {
+	doom_ApiComponent.call(this,api,state);
 };
 todomvc_view_Body.__name__ = ["todomvc","view","Body"];
-todomvc_view_Body.__super__ = doom_PropertiesComponent;
-todomvc_view_Body.prototype = $extend(doom_PropertiesComponent.prototype,{
+todomvc_view_Body.__super__ = doom_ApiComponent;
+todomvc_view_Body.prototype = $extend(doom_ApiComponent.prototype,{
 	render: function() {
 		var tmp;
 		if(this.state.todos.length == 0) {
@@ -1732,10 +1732,10 @@ todomvc_view_Body.prototype = $extend(doom_PropertiesComponent.prototype,{
 			var completed = todomvc_data_VisibilityFilters.filterVisibility(this.state.todos,todomvc_data_VisibilityFilter.ShowCompleted).length;
 			var remaining = all - completed;
 			var tmp2;
-			var comp = new todomvc_view_List(this.prop,{ items : todomvc_data_VisibilityFilters.filterVisibility(this.state.todos,this.state.visibilityFilter), allCompleted : completed == 0});
+			var comp = new todomvc_view_List(this.api,{ items : todomvc_data_VisibilityFilters.filterVisibility(this.state.todos,this.state.visibilityFilter), allCompleted : completed == 0});
 			tmp2 = doom_NodeImpl.ComponentNode(comp);
 			var tmp3;
-			var comp1 = new todomvc_view_Footer(this.prop,{ remaining : remaining, filter : this.state.visibilityFilter, hasCompleted : completed > 0});
+			var comp1 = new todomvc_view_Footer(this.api,{ remaining : remaining, filter : this.state.visibilityFilter, hasCompleted : completed > 0});
 			tmp3 = doom_NodeImpl.ComponentNode(comp1);
 			var children = [tmp2,tmp3];
 			tmp = doom__$Node_Node_$Impl_$.el("div",null,children,null);
@@ -1744,12 +1744,12 @@ todomvc_view_Body.prototype = $extend(doom_PropertiesComponent.prototype,{
 	}
 	,__class__: todomvc_view_Body
 });
-var todomvc_view_Footer = function(prop,state) {
-	doom_PropertiesComponent.call(this,prop,state);
+var todomvc_view_Footer = function(api,state) {
+	doom_ApiComponent.call(this,api,state);
 };
 todomvc_view_Footer.__name__ = ["todomvc","view","Footer"];
-todomvc_view_Footer.__super__ = doom_PropertiesComponent;
-todomvc_view_Footer.prototype = $extend(doom_PropertiesComponent.prototype,{
+todomvc_view_Footer.__super__ = doom_ApiComponent;
+todomvc_view_Footer.prototype = $extend(doom_ApiComponent.prototype,{
 	render: function() {
 		var tmp;
 		var tmp3;
@@ -1873,10 +1873,10 @@ todomvc_view_Footer.prototype = $extend(doom_PropertiesComponent.prototype,{
 		return tmp2;
 	}
 	,handleClear: function() {
-		this.prop.clearCompleted();
+		this.api.clearCompleted();
 	}
 	,handleClickFilter: function(filter) {
-		this.prop.setFilter(filter);
+		this.api.setFilter(filter);
 	}
 	,isFilter: function(filter) {
 		return Type.enumEq(this.state.filter,filter);
@@ -1898,12 +1898,12 @@ todomvc_view_Footer.prototype = $extend(doom_PropertiesComponent.prototype,{
 	}
 	,__class__: todomvc_view_Footer
 });
-var todomvc_view_Header = function(prop) {
-	doom_PropertiesStatelessComponent.call(this,prop);
+var todomvc_view_Header = function(api) {
+	doom_ApiStatelessComponent.call(this,api);
 };
 todomvc_view_Header.__name__ = ["todomvc","view","Header"];
-todomvc_view_Header.__super__ = doom_PropertiesStatelessComponent;
-todomvc_view_Header.prototype = $extend(doom_PropertiesStatelessComponent.prototype,{
+todomvc_view_Header.__super__ = doom_ApiStatelessComponent;
+todomvc_view_Header.prototype = $extend(doom_ApiStatelessComponent.prototype,{
 	render: function() {
 		var tmp;
 		var tmp1;
@@ -1938,7 +1938,7 @@ todomvc_view_Header.prototype = $extend(doom_PropertiesStatelessComponent.protot
 			e.preventDefault();
 			var value = this.getInputValueAndEmpty();
 			if(thx_Strings.isEmpty(value)) return;
-			this.prop.add(value);
+			this.api.add(value);
 		}
 	}
 	,getInputValueAndEmpty: function() {
@@ -1949,12 +1949,12 @@ todomvc_view_Header.prototype = $extend(doom_PropertiesStatelessComponent.protot
 	}
 	,__class__: todomvc_view_Header
 });
-var todomvc_view_Item = function(prop,state) {
-	doom_PropertiesComponent.call(this,prop,state);
+var todomvc_view_Item = function(api,state) {
+	doom_ApiComponent.call(this,api,state);
 };
 todomvc_view_Item.__name__ = ["todomvc","view","Item"];
-todomvc_view_Item.__super__ = doom_PropertiesComponent;
-todomvc_view_Item.prototype = $extend(doom_PropertiesComponent.prototype,{
+todomvc_view_Item.__super__ = doom_ApiComponent;
+todomvc_view_Item.prototype = $extend(doom_ApiComponent.prototype,{
 	render: function() {
 		var tmp;
 		var tmp1;
@@ -1988,7 +1988,7 @@ todomvc_view_Item.prototype = $extend(doom_PropertiesComponent.prototype,{
 		if(__map_reserved.type != null) _g3.setReserved("type",value6); else _g3.h["type"] = value6;
 		var value7 = doom__$AttributeValue_AttributeValue_$Impl_$.fromBool(this.state.item.completed);
 		if(__map_reserved.checked != null) _g3.setReserved("checked",value7); else _g3.h["checked"] = value7;
-		var value8 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler(($_=this.prop,$bind($_,$_.toggle)));
+		var value8 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler(($_=this.api,$bind($_,$_.toggle)));
 		if(__map_reserved.change != null) _g3.setReserved("change",value8); else _g3.h["change"] = value8;
 		tmp9 = _g3;
 		var attributes2 = tmp9;
@@ -2001,7 +2001,7 @@ todomvc_view_Item.prototype = $extend(doom_PropertiesComponent.prototype,{
 		var _g4 = new haxe_ds_StringMap();
 		var value9 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("destroy");
 		if(__map_reserved["class"] != null) _g4.setReserved("class",value9); else _g4.h["class"] = value9;
-		var value10 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler(($_=this.prop,$bind($_,$_.remove)));
+		var value10 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler(($_=this.api,$bind($_,$_.remove)));
 		if(__map_reserved.click != null) _g4.setReserved("click",value10); else _g4.h["click"] = value10;
 		tmp10 = _g4;
 		var attributes3 = tmp10;
@@ -2035,7 +2035,7 @@ todomvc_view_Item.prototype = $extend(doom_PropertiesComponent.prototype,{
 		if(!this.state.editing) return;
 		this.state.editing = false;
 		var value = this.getInputValueAndTrim();
-		if(thx_Strings.isEmpty(value)) this.prop.remove(); else this.prop.updateText(value);
+		if(thx_Strings.isEmpty(value)) this.api.remove(); else this.api.updateText(value);
 	}
 	,handleKeydown: function(e) {
 		if(e.which != 13) return;
@@ -2050,12 +2050,12 @@ todomvc_view_Item.prototype = $extend(doom_PropertiesComponent.prototype,{
 	}
 	,__class__: todomvc_view_Item
 });
-var todomvc_view_List = function(prop,state) {
-	doom_PropertiesComponent.call(this,prop,state);
+var todomvc_view_List = function(api,state) {
+	doom_ApiComponent.call(this,api,state);
 };
 todomvc_view_List.__name__ = ["todomvc","view","List"];
-todomvc_view_List.__super__ = doom_PropertiesComponent;
-todomvc_view_List.prototype = $extend(doom_PropertiesComponent.prototype,{
+todomvc_view_List.__super__ = doom_ApiComponent;
+todomvc_view_List.prototype = $extend(doom_ApiComponent.prototype,{
 	render: function() {
 		var tmp;
 		var tmp1;
@@ -2073,7 +2073,7 @@ todomvc_view_List.prototype = $extend(doom_PropertiesComponent.prototype,{
 		if(__map_reserved.type != null) _g1.setReserved("type",value2); else _g1.h["type"] = value2;
 		var value3 = doom__$AttributeValue_AttributeValue_$Impl_$.fromBool(this.state.allCompleted);
 		if(__map_reserved.checked != null) _g1.setReserved("checked",value3); else _g1.h["checked"] = value3;
-		var value4 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler(($_=this.prop,$bind($_,$_.toggleAll)));
+		var value4 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler(($_=this.api,$bind($_,$_.toggleAll)));
 		if(__map_reserved.change != null) _g1.setReserved("change",value4); else _g1.h["change"] = value4;
 		tmp5 = _g1;
 		var attributes1 = tmp5;
@@ -2102,7 +2102,7 @@ todomvc_view_List.prototype = $extend(doom_PropertiesComponent.prototype,{
 			var i = _g6++;
 			var tmp9;
 			var tmp10;
-			var f = [($_=this.prop,$bind($_,$_.remove))];
+			var f = [($_=this.api,$bind($_,$_.remove))];
 			var a1 = [i];
 			tmp10 = (function(a11,f1) {
 				return function() {
@@ -2110,7 +2110,7 @@ todomvc_view_List.prototype = $extend(doom_PropertiesComponent.prototype,{
 				};
 			})(a1,f);
 			var tmp11;
-			var f2 = [($_=this.prop,$bind($_,$_.toggle))];
+			var f2 = [($_=this.api,$bind($_,$_.toggle))];
 			var a12 = [i];
 			tmp11 = (function(a13,f3) {
 				return function() {
@@ -2118,7 +2118,7 @@ todomvc_view_List.prototype = $extend(doom_PropertiesComponent.prototype,{
 				};
 			})(a12,f2);
 			var tmp12;
-			var f4 = [($_=this.prop,$bind($_,$_.updateText))];
+			var f4 = [($_=this.api,$bind($_,$_.updateText))];
 			var a14 = [i];
 			tmp12 = (function(a15,f5) {
 				return function(a2) {

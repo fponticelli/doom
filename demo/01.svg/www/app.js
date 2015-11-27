@@ -1137,7 +1137,7 @@ doom_HtmlNode.createElement = function(name,attributes,children) {
 		var prefix = name.substring(0,colonPos);
 		var name1 = name.substring(colonPos + 1);
 		var ns = Doom.namespaces.get(prefix);
-		if(null == ns) throw new thx_Error("element prefix \"" + prefix + "\" is not associated to any namespace. Add the right namespace to Doom.namespaces.",null,{ fileName : "HtmlNode.hx", lineNumber : 37, className : "doom.HtmlNode", methodName : "createElement"});
+		if(null == ns) throw new thx_Error("element prefix \"" + prefix + "\" is not associated to any namespace. Add the right namespace to Doom.namespaces.",null,{ fileName : "HtmlNode.hx", lineNumber : 36, className : "doom.HtmlNode", methodName : "createElement"});
 		el = window.document.createElementNS(ns,name1);
 	} else el = window.document.createElement(name);
 	var $it0 = attributes.keys();
@@ -1164,6 +1164,9 @@ doom_HtmlNode.createElement = function(name,attributes,children) {
 		}
 	}
 	doom_HtmlNode.trigger(el,"create");
+	thx_Timer.immediate(function() {
+		doom_HtmlNode.trigger(el,"mount");
+	});
 	var _g = 0;
 	while(_g < children.length) {
 		var child = children[_g];
@@ -1452,7 +1455,7 @@ doom__$Node_Node_$Impl_$.diffNodes = function(a,b) {
 	var _g = a.length;
 	while(_g1 < _g) {
 		var i = _g1++;
-		result.push(doom_Patch.PatchChild(i,[doom_Patch.Remove]));
+		result.push(doom_Patch.PatchChild(a.length - i - 1,[doom_Patch.Remove]));
 	}
 	var _g11 = min;
 	var _g2 = b.length;
@@ -3505,7 +3508,7 @@ thx_Arrays.crossMulti = function(array) {
 };
 thx_Arrays.distinct = function(array,predicate) {
 	var result = [];
-	if(array.length <= 1) return thx__$ReadonlyArray_ReadonlyArray_$Impl_$.toArray(array);
+	if(array.length <= 1) return array.slice();
 	if(null == predicate) predicate = thx_Functions.equality;
 	var $it0 = HxOverrides.iter(array);
 	while( $it0.hasNext() ) {
@@ -3765,6 +3768,18 @@ thx_Arrays.rotate = function(arr) {
 	}
 	return result;
 };
+thx_Arrays.sliding2 = function(arr,f) {
+	if(arr.length < 2) return []; else {
+		var result = [];
+		var _g1 = 0;
+		var _g = arr.length - 1;
+		while(_g1 < _g) {
+			var i = _g1++;
+			result.push(f(arr[i],arr[i + 1]));
+		}
+		return result;
+	}
+};
 thx_Arrays.unzip = function(array) {
 	var a1 = [];
 	var a2 = [];
@@ -3822,6 +3837,19 @@ thx_Arrays.zip = function(array1,array2) {
 		array.push({ _0 : array1[i], _1 : array2[i]});
 	}
 	return array;
+};
+thx_Arrays.withPrepend = function(arr,el) {
+	return [el].concat(arr);
+};
+thx_Arrays["with"] = function(arr,el) {
+	return arr.concat([el]);
+};
+thx_Arrays.withSlice = function(arr,other,start,length) {
+	if(length == null) length = 0;
+	return arr.slice(0,start).concat(other).concat(arr.slice(start + length));
+};
+thx_Arrays.withInsert = function(arr,el,pos) {
+	return arr.slice(0,pos).concat([el]).concat(arr.slice(pos));
 };
 thx_Arrays.zip3 = function(array1,array2,array3) {
 	var length = thx_ArrayInts.min([array1.length,array2.length,array3.length]);
@@ -4985,11 +5013,6 @@ thx__$Functions_Reader_$Impl_$.flatMap = function(this1,f) {
 };
 var thx_Functions = function() { };
 thx_Functions.__name__ = ["thx","Functions"];
-thx_Functions.constant = function(v) {
-	return function() {
-		return v;
-	};
-};
 thx_Functions.equality = function(a,b) {
 	return a == b;
 };
@@ -5560,6 +5583,17 @@ thx_Maps.string = function(m) {
 		return thx_Dynamics.string(t._0) + " => " + thx_Dynamics.string(t._1);
 	}).join(", ") + "]";
 };
+var thx__$Monoid_Monoid_$Impl_$ = {};
+thx__$Monoid_Monoid_$Impl_$.__name__ = ["thx","_Monoid","Monoid_Impl_"];
+thx__$Monoid_Monoid_$Impl_$.get_semigroup = function(this1) {
+	return this1.append;
+};
+thx__$Monoid_Monoid_$Impl_$.get_zero = function(this1) {
+	return this1.zero;
+};
+thx__$Monoid_Monoid_$Impl_$.append = function(this1,a0,a1) {
+	return this1.append(a0,a1);
+};
 var thx__$Nel_Nel_$Impl_$ = {};
 thx__$Nel_Nel_$Impl_$.__name__ = ["thx","_Nel","Nel_Impl_"];
 thx__$Nel_Nel_$Impl_$.nel = function(hd,tl) {
@@ -5826,6 +5860,9 @@ thx_Objects.removePath = function(o,path) {
 };
 var thx_Options = function() { };
 thx_Options.__name__ = ["thx","Options"];
+thx_Options.ofValue = function(value) {
+	if(null == value) return haxe_ds_Option.None; else return haxe_ds_Option.Some(value);
+};
 thx_Options.equals = function(a,b,eq) {
 	switch(a[1]) {
 	case 1:
@@ -6005,11 +6042,17 @@ thx__$Ord_Ord_$Impl_$.fromCompare = function(f) {
 };
 var thx__$ReadonlyArray_ReadonlyArray_$Impl_$ = {};
 thx__$ReadonlyArray_ReadonlyArray_$Impl_$.__name__ = ["thx","_ReadonlyArray","ReadonlyArray_Impl_"];
+thx__$ReadonlyArray_ReadonlyArray_$Impl_$.empty = function() {
+	return [];
+};
 thx__$ReadonlyArray_ReadonlyArray_$Impl_$.get = function(this1,index) {
 	return this1[index];
 };
 thx__$ReadonlyArray_ReadonlyArray_$Impl_$.toArray = function(this1) {
 	return this1.slice();
+};
+thx__$ReadonlyArray_ReadonlyArray_$Impl_$.unsafe = function(this1) {
+	return this1;
 };
 var thx__$Semigroup_Semigroup_$Impl_$ = {};
 thx__$Semigroup_Semigroup_$Impl_$.__name__ = ["thx","_Semigroup","Semigroup_Impl_"];
@@ -6364,6 +6407,102 @@ thx_TimePeriod.Month.__enum__ = thx_TimePeriod;
 thx_TimePeriod.Year = ["Year",6];
 thx_TimePeriod.Year.toString = $estr;
 thx_TimePeriod.Year.__enum__ = thx_TimePeriod;
+var thx_Timer = function() { };
+thx_Timer.__name__ = ["thx","Timer"];
+thx_Timer.debounce = function(callback,delayms,leading) {
+	if(leading == null) leading = false;
+	var cancel = thx_Functions.noop;
+	var poll = function() {
+		cancel();
+		cancel = thx_Timer.delay(callback,delayms);
+	};
+	return function() {
+		if(leading) {
+			leading = false;
+			callback();
+		}
+		poll();
+	};
+};
+thx_Timer.throttle = function(callback,delayms,leading) {
+	if(leading == null) leading = false;
+	var waiting = false;
+	var poll = function() {
+		waiting = true;
+		thx_Timer.delay(callback,delayms);
+	};
+	return function() {
+		if(leading) {
+			leading = false;
+			callback();
+			return;
+		}
+		if(waiting) return;
+		poll();
+	};
+};
+thx_Timer.repeat = function(callback,delayms) {
+	return (function(f,id) {
+		return function() {
+			f(id);
+		};
+	})(thx_Timer.clear,setInterval(callback,delayms));
+};
+thx_Timer.delay = function(callback,delayms) {
+	return (function(f,id) {
+		return function() {
+			f(id);
+		};
+	})(thx_Timer.clear,setTimeout(callback,delayms));
+};
+thx_Timer.frame = function(callback) {
+	var cancelled = false;
+	var f = thx_Functions.noop;
+	var current = performance.now();
+	var next;
+	f = function() {
+		if(cancelled) return;
+		next = performance.now();
+		callback(next - current);
+		current = next;
+		requestAnimationFrame(f);
+	};
+	requestAnimationFrame(f);
+	return function() {
+		cancelled = true;
+	};
+};
+thx_Timer.nextFrame = function(callback) {
+	var id = requestAnimationFrame(callback);
+	return function() {
+		cancelAnimationFrame(id);
+	};
+};
+thx_Timer.immediate = function(callback) {
+	return (function(f,id) {
+		return function() {
+			f(id);
+		};
+	})(thx_Timer.clear,setImmediate(callback));
+};
+thx_Timer.clear = function(id) {
+	clearTimeout(id);
+	return;
+};
+thx_Timer.time = function() {
+	return performance.now();
+};
+thx_Timer.resolution = function() {
+	if(null != thx_Timer._resolution) return thx_Timer._resolution;
+	var start = performance.now();
+	var end;
+	var loop = 0.0;
+	do {
+		loop++;
+		end = performance.now();
+	} while(end - start == 0);
+	return thx_Timer._resolution = end - start;
+};
 var thx__$Timestamp_Timestamp_$Impl_$ = {};
 thx__$Timestamp_Timestamp_$Impl_$.__name__ = ["thx","_Timestamp","Timestamp_Impl_"];
 thx__$Timestamp_Timestamp_$Impl_$.create = function(year,month,day,hour,minute,second) {
@@ -6632,6 +6771,10 @@ thx__$Tuple_Tuple3_$Impl_$.toString = function(this1) {
 };
 thx__$Tuple_Tuple3_$Impl_$.arrayToTuple3 = function(v) {
 	return { _0 : v[0], _1 : v[1], _2 : v[2]};
+};
+thx__$Tuple_Tuple3_$Impl_$.map = function(this1,f) {
+	var _2 = f(this1._2);
+	return { _0 : this1._0, _1 : this1._1, _2 : _2};
 };
 var thx__$Tuple_Tuple4_$Impl_$ = {};
 thx__$Tuple_Tuple4_$Impl_$.__name__ = ["thx","_Tuple","Tuple4_Impl_"];
@@ -7044,6 +7187,39 @@ var __map_reserved = {}
         };
       }
     ;
+var scope = ("undefined" !== typeof window && window) || ("undefined" !== typeof global && global) || this;
+if(!scope.setImmediate) scope.setImmediate = function(callback) {
+	scope.setTimeout(callback,0);
+};
+var lastTime = 0;
+var vendors = ["webkit","moz"];
+var x = 0;
+while(x < vendors.length && !scope.requestAnimationFrame) {
+	scope.requestAnimationFrame = scope[vendors[x] + "RequestAnimationFrame"];
+	scope.cancelAnimationFrame = scope[vendors[x] + "CancelAnimationFrame"] || scope[vendors[x] + "CancelRequestAnimationFrame"];
+	x++;
+}
+if(!scope.requestAnimationFrame) scope.requestAnimationFrame = function(callback1) {
+	var currTime = new Date().getTime();
+	var timeToCall = Math.max(0,16 - (currTime - lastTime));
+	var id = scope.setTimeout(function() {
+		callback1(currTime + timeToCall);
+	},timeToCall);
+	lastTime = currTime + timeToCall;
+	return id;
+};
+if(!scope.cancelAnimationFrame) scope.cancelAnimationFrame = function(id1) {
+	scope.clearTimeout(id1);
+};
+if(typeof(scope.performance) == "undefined") scope.performance = { };
+if(typeof(scope.performance.now) == "undefined") {
+	var nowOffset = new Date().getTime();
+	if(scope.performance.timing && scope.performance.timing.navigationStart) nowOffset = scope.performance.timing.navigationStart;
+	var now = function() {
+		return new Date() - nowOffset;
+	};
+	scope.performance.now = now;
+}
 DateTools.DAYS_OF_MONTH = [31,28,31,30,31,30,31,31,30,31,30,31];
 Doom.namespaces = (function($this) {
 	var $r;
@@ -7083,8 +7259,14 @@ thx_Ints.BASE = "0123456789abcdefghijklmnopqrstuvwxyz";
 thx_Ints.order = function(i0,i1) {
 	if(i0 > i1) return thx_OrderingImpl.GT; else if(i0 == i1) return thx_OrderingImpl.EQ; else return thx_OrderingImpl.LT;
 };
+thx_Ints.monoid = { zero : 0, append : function(a,b) {
+	return a + b;
+}};
 thx_Strings.HASCODE_MAX = 2147483647;
 thx_Strings.HASCODE_MUL = 31;
+thx_Strings.monoid = { zero : "", append : function(a,b) {
+	return a + b;
+}};
 thx_Strings.UCWORDS = new EReg("[^a-zA-Z]([a-z])","g");
 thx_Strings.IS_BREAKINGWHITESPACE = new EReg("[^\t\n\r ]","");
 thx_Strings.IS_ALPHA = new EReg("[^a-zA-Z]","");
@@ -7095,6 +7277,7 @@ thx_Strings.STRIPTAGS = new EReg("</?[a-z]+[^>]*>","gi");
 thx_Strings.WSG = new EReg("[ \t\r\n]+","g");
 thx_Strings.SPLIT_LINES = new EReg("\r\n|\n\r|\n|\r","g");
 thx_Strings.CANONICALIZE_LINES = new EReg("\r\n|\n\r|\r","g");
+thx_Timer.FRAME_RATE = Math.round(16.6666666666666679);
 Main.main();
 })(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : typeof global != "undefined" ? global : typeof self != "undefined" ? self : this);
 

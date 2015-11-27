@@ -1,13 +1,13 @@
 package fs;
 
 import Doom.*;
-import doom.PropertiesComponent;
+import doom.ApiComponent;
 import haxe.ds.Option;
 
-class CookingComponent extends PropertiesComponent<String, String> {
+class CookingComponent extends ApiComponent<String, String> {
   override function render() {
     return TR([
-            TH(prop),
+            TH(api),
             TD([state, " min."])
           ]);
   }

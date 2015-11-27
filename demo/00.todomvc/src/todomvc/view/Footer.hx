@@ -1,11 +1,11 @@
 package todomvc.view;
 
 import todomvc.data.VisibilityFilter;
-import doom.PropertiesComponent;
+import doom.ApiComponent;
 import Doom.*;
 import doom.Node;
 
-class Footer extends PropertiesComponent<FooterProp, FooterState> {
+class Footer extends ApiComponent<FooterApi, FooterState> {
   override function render() {
     var footerContent = [
         SPAN([
@@ -49,10 +49,10 @@ class Footer extends PropertiesComponent<FooterProp, FooterState> {
   }
 
   function handleClear()
-    prop.clearCompleted();
+    api.clearCompleted();
 
   function handleClickFilter(filter : VisibilityFilter)
-    prop.setFilter(filter);
+    api.setFilter(filter);
 
   function isFilter(filter : VisibilityFilter)
     return Type.enumEq(state.filter, filter);
@@ -61,7 +61,7 @@ class Footer extends PropertiesComponent<FooterProp, FooterState> {
     return state.remaining == 1 ? [STRONG("1"), " item left"] : [STRONG('${state.remaining}'), " items left"];
 }
 
-typedef FooterProp = {
+typedef FooterApi = {
   function setFilter(filter : VisibilityFilter) : Void;
   function clearCompleted() : Void;
 }

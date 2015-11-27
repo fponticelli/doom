@@ -1,15 +1,15 @@
 package fs;
 
 import Doom.*;
-import doom.PropertiesComponent;
+import doom.ApiComponent;
 
-class App extends PropertiesComponent<AppProperties, AppState> {
-  public function new(prop : AppProperties, state : AppState) {
-    super(prop, state);
-    prop.onUpdate = function() {
-      update(prop.state);
+class App extends ApiComponent<AppApi, AppState> {
+  public function new(api : AppApi, state : AppState) {
+    super(api, state);
+    api.onUpdate = function() {
+      update(api.state);
     };
-    thx.Timer.immediate(prop.load);
+    thx.Timer.immediate(api.load);
   }
 
   override function render() {

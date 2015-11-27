@@ -1,11 +1,11 @@
 package fs;
 
 import Doom.*;
-import doom.PropertiesStatelessComponent;
+import doom.ApiStatelessComponent;
 import fancy.Search;
 import fancy.search.util.Types;
 
-class FancySearchComponent extends PropertiesStatelessComponent<FancySearchOptions> {
+class FancySearchComponent extends ApiStatelessComponent<FancySearchOptions> {
   override function render() {
     return INPUT([
       "class" => "fancy-search-component fancify",
@@ -16,6 +16,6 @@ class FancySearchComponent extends PropertiesStatelessComponent<FancySearchOptio
   }
 
   function handleMount(el : js.html.InputElement) {
-    var fancy = new Search(cast el, prop);
+    var fancy = new Search(cast el, api);
   }
 }

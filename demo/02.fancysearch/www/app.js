@@ -554,8 +554,8 @@ Lambda.has = function(it,elt) {
 var Main = function() { };
 Main.__name__ = ["Main"];
 Main.main = function() {
-	var properties = new fs_AppProperties("vegetables.json");
-	Doom.mount(new fs_App(properties,properties.state),dots_Query.first("section.fs"));
+	var api = new fs_AppApi("vegetables.json");
+	Doom.mount(new fs_App(api,api.state),dots_Query.first("section.fs"));
 };
 Math.__name__ = ["Math"];
 var Reflect = function() { };
@@ -885,6 +885,106 @@ Xml.prototype = {
 	}
 	,__class__: Xml
 };
+var doom_IComponent = function() { };
+doom_IComponent.__name__ = ["doom","IComponent"];
+doom_IComponent.prototype = {
+	element: null
+	,node: null
+	,init: null
+	,__class__: doom_IComponent
+};
+var doom_Component = function(state) {
+	this.state = state;
+	this.node = this.render();
+};
+doom_Component.__name__ = ["doom","Component"];
+doom_Component.__interfaces__ = [doom_IComponent];
+doom_Component.prototype = {
+	element: null
+	,node: null
+	,state: null
+	,init: function() {
+		this.element = doom_HtmlNode.toHtml(this.node);
+	}
+	,updateNode: function(oldNode) {
+		var newNode = this.render();
+		switch(newNode[1]) {
+		case 0:
+			break;
+		default:
+			throw new thx_Error("Component can (and must) return only element nodes",null,{ fileName : "Component.hx", lineNumber : 25, className : "doom.Component", methodName : "updateNode"});
+		}
+		var patches = doom__$Node_Node_$Impl_$.diff(oldNode,newNode);
+		doom_HtmlNode.applyPatches(patches,this.element);
+		this.node = newNode;
+	}
+	,render: function() {
+		throw new thx_error_AbstractMethod({ fileName : "Component.hx", lineNumber : 33, className : "doom.Component", methodName : "render"});
+	}
+	,update: function(newState) {
+		var oldState = this.state;
+		this.state = newState;
+		if(!this.shouldRender(oldState,newState)) return;
+		this.updateNode(this.node);
+	}
+	,shouldRender: function(oldState,newState) {
+		return true;
+	}
+	,toString: function() {
+		var cls = Type.getClassName(js_Boot.getClass(this)).split(".").pop();
+		return "" + cls + "(" + doom__$Node_Node_$Impl_$.toString(this.node) + ")";
+	}
+	,__class__: doom_Component
+};
+var doom_ApiComponent = function(api,state) {
+	this.api = api;
+	doom_Component.call(this,state);
+};
+doom_ApiComponent.__name__ = ["doom","ApiComponent"];
+doom_ApiComponent.__super__ = doom_Component;
+doom_ApiComponent.prototype = $extend(doom_Component.prototype,{
+	api: null
+	,__class__: doom_ApiComponent
+});
+var doom_StatelessComponent = function() {
+	this.node = this.render();
+};
+doom_StatelessComponent.__name__ = ["doom","StatelessComponent"];
+doom_StatelessComponent.__interfaces__ = [doom_IComponent];
+doom_StatelessComponent.prototype = {
+	element: null
+	,node: null
+	,init: function() {
+		this.element = doom_HtmlNode.toHtml(this.node);
+	}
+	,updateNode: function(oldNode) {
+		var newNode = this.render();
+		var patches = doom__$Node_Node_$Impl_$.diff(oldNode,newNode);
+		doom_HtmlNode.applyPatches(patches,this.element);
+		this.node = newNode;
+	}
+	,render: function() {
+		throw new thx_error_AbstractMethod({ fileName : "StatelessComponent.hx", lineNumber : 27, className : "doom.StatelessComponent", methodName : "render"});
+	}
+	,update: function() {
+		this.updateNode(this.node);
+	}
+	,toString: function() {
+		var cls = Type.getClassName(js_Boot.getClass(this)).split(".").pop();
+		return "" + cls + "(" + doom__$Node_Node_$Impl_$.toString(this.node) + ")";
+	}
+	,__class__: doom_StatelessComponent
+};
+var doom_ApiStatelessComponent = function(api) {
+	this.api = api;
+	doom_StatelessComponent.call(this);
+};
+doom_ApiStatelessComponent.__name__ = ["doom","ApiStatelessComponent"];
+doom_ApiStatelessComponent.__super__ = doom_StatelessComponent;
+doom_ApiStatelessComponent.prototype = $extend(doom_StatelessComponent.prototype,{
+	api: null
+	,__class__: doom_ApiStatelessComponent
+});
 var doom__$AttributeValue_AttributeValue_$Impl_$ = {};
 doom__$AttributeValue_AttributeValue_$Impl_$.__name__ = ["doom","_AttributeValue","AttributeValue_Impl_"];
 doom__$AttributeValue_AttributeValue_$Impl_$.fromString = function(s) {
@@ -975,57 +1075,6 @@ var doom_AttributeValueImpl = { __ename__ : ["doom","AttributeValueImpl"], __con
 doom_AttributeValueImpl.BoolAttribute = function(b) { var $x = ["BoolAttribute",0,b]; $x.__enum__ = doom_AttributeValueImpl; $x.toString = $estr; return $x; };
 doom_AttributeValueImpl.StringAttribute = function(s) { var $x = ["StringAttribute",1,s]; $x.__enum__ = doom_AttributeValueImpl; $x.toString = $estr; return $x; };
 doom_AttributeValueImpl.EventAttribute = function(f) { var $x = ["EventAttribute",2,f]; $x.__enum__ = doom_AttributeValueImpl; $x.toString = $estr; return $x; };
-var doom_IComponent = function() { };
-doom_IComponent.__name__ = ["doom","IComponent"];
-doom_IComponent.prototype = {
-	element: null
-	,node: null
-	,init: null
-	,__class__: doom_IComponent
-};
-var doom_Component = function(state) {
-	this.state = state;
-	this.node = this.render();
-};
-doom_Component.__name__ = ["doom","Component"];
-doom_Component.__interfaces__ = [doom_IComponent];
-doom_Component.prototype = {
-	element: null
-	,node: null
-	,state: null
-	,init: function() {
-		this.element = doom_HtmlNode.toHtml(this.node);
-	}
-	,updateNode: function(oldNode) {
-		var newNode = this.render();
-		switch(newNode[1]) {
-		case 0:
-			break;
-		default:
-			throw new thx_Error("Component can (and must) return only element nodes",null,{ fileName : "Component.hx", lineNumber : 25, className : "doom.Component", methodName : "updateNode"});
-		}
-		var patches = doom__$Node_Node_$Impl_$.diff(oldNode,newNode);
-		doom_HtmlNode.applyPatches(patches,this.element);
-		this.node = newNode;
-	}
-	,render: function() {
-		throw new thx_error_AbstractMethod({ fileName : "Component.hx", lineNumber : 33, className : "doom.Component", methodName : "render"});
-	}
-	,update: function(newState) {
-		var oldState = this.state;
-		this.state = newState;
-		if(!this.shouldRender(oldState,newState)) return;
-		this.updateNode(this.node);
-	}
-	,shouldRender: function(oldState,newState) {
-		return true;
-	}
-	,toString: function() {
-		var cls = Type.getClassName(js_Boot.getClass(this)).split(".").pop();
-		return "" + cls + "(" + doom__$Node_Node_$Impl_$.toString(this.node) + ")";
-	}
-	,__class__: doom_Component
-};
 var doom__$EventHandler_EventHandler_$Impl_$ = {};
 doom__$EventHandler_EventHandler_$Impl_$.__name__ = ["doom","_EventHandler","EventHandler_Impl_"];
 doom__$EventHandler_EventHandler_$Impl_$.fromElementHandler = function(f) {
@@ -1198,7 +1247,7 @@ doom_HtmlNode.createElement = function(name,attributes,children) {
 		var prefix = name.substring(0,colonPos);
 		var name1 = name.substring(colonPos + 1);
 		var ns = Doom.namespaces.get(prefix);
-		if(null == ns) throw new thx_Error("element prefix \"" + prefix + "\" is not associated to any namespace. Add the right namespace to Doom.namespaces.",null,{ fileName : "HtmlNode.hx", lineNumber : 37, className : "doom.HtmlNode", methodName : "createElement"});
+		if(null == ns) throw new thx_Error("element prefix \"" + prefix + "\" is not associated to any namespace. Add the right namespace to Doom.namespaces.",null,{ fileName : "HtmlNode.hx", lineNumber : 36, className : "doom.HtmlNode", methodName : "createElement"});
 		el = window.document.createElementNS(ns,name1);
 	} else el = window.document.createElement(name);
 	var $it0 = attributes.keys();
@@ -1273,7 +1322,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				node.appendChild(window.document.createTextNode(text));
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n,null,{ fileName : "HtmlNode.hx", lineNumber : 136, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n,null,{ fileName : "HtmlNode.hx", lineNumber : 135, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 1:
@@ -1284,7 +1333,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				node.appendChild(dots_Html.parse(text1));
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n1,null,{ fileName : "HtmlNode.hx", lineNumber : 136, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n1,null,{ fileName : "HtmlNode.hx", lineNumber : 135, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 2:
@@ -1295,7 +1344,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				node.appendChild(doom_HtmlNode.createComment(text2));
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n2,null,{ fileName : "HtmlNode.hx", lineNumber : 136, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n2,null,{ fileName : "HtmlNode.hx", lineNumber : 135, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 3:
@@ -1310,7 +1359,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				doom_HtmlNode.trigger(el,"mount");
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n3,null,{ fileName : "HtmlNode.hx", lineNumber : 136, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n3,null,{ fileName : "HtmlNode.hx", lineNumber : 135, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 4:
@@ -1324,7 +1373,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				node.removeAttribute(name1);
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n4,null,{ fileName : "HtmlNode.hx", lineNumber : 136, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n4,null,{ fileName : "HtmlNode.hx", lineNumber : 135, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 6:
@@ -1349,7 +1398,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				}
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n5,null,{ fileName : "HtmlNode.hx", lineNumber : 136, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n5,null,{ fileName : "HtmlNode.hx", lineNumber : 135, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 7:
@@ -1388,7 +1437,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				node.nodeValue = newcontent1;
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n6,null,{ fileName : "HtmlNode.hx", lineNumber : 136, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n6,null,{ fileName : "HtmlNode.hx", lineNumber : 135, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		case 12:
@@ -1401,7 +1450,7 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 				doom_HtmlNode.applyPatches(patches,n8);
 				break;
 			default:
-				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n7,null,{ fileName : "HtmlNode.hx", lineNumber : 136, className : "doom.HtmlNode", methodName : "applyPatch"});
+				throw new thx_Error("cannot apply patch " + Std.string(p) + " on " + n7,null,{ fileName : "HtmlNode.hx", lineNumber : 135, className : "doom.HtmlNode", methodName : "applyPatch"});
 			}
 			break;
 		}
@@ -1707,55 +1756,6 @@ doom_PatchArray.__name__ = ["doom","PatchArray"];
 doom_PatchArray.toPrettyString = function(patches) {
 	return "\n" + patches.map(doom_Patches.toString).join("\n");
 };
-var doom_PropertiesComponent = function(prop,state) {
-	this.prop = prop;
-	doom_Component.call(this,state);
-};
-doom_PropertiesComponent.__name__ = ["doom","PropertiesComponent"];
-doom_PropertiesComponent.__super__ = doom_Component;
-doom_PropertiesComponent.prototype = $extend(doom_Component.prototype,{
-	prop: null
-	,__class__: doom_PropertiesComponent
-});
-var doom_StatelessComponent = function() {
-	this.node = this.render();
-};
-doom_StatelessComponent.__name__ = ["doom","StatelessComponent"];
-doom_StatelessComponent.__interfaces__ = [doom_IComponent];
-doom_StatelessComponent.prototype = {
-	element: null
-	,node: null
-	,init: function() {
-		this.element = doom_HtmlNode.toHtml(this.node);
-	}
-	,updateNode: function(oldNode) {
-		var newNode = this.render();
-		var patches = doom__$Node_Node_$Impl_$.diff(oldNode,newNode);
-		doom_HtmlNode.applyPatches(patches,this.element);
-		this.node = newNode;
-	}
-	,render: function() {
-		throw new thx_error_AbstractMethod({ fileName : "StatelessComponent.hx", lineNumber : 27, className : "doom.StatelessComponent", methodName : "render"});
-	}
-	,update: function() {
-		this.updateNode(this.node);
-	}
-	,toString: function() {
-		var cls = Type.getClassName(js_Boot.getClass(this)).split(".").pop();
-		return "" + cls + "(" + doom__$Node_Node_$Impl_$.toString(this.node) + ")";
-	}
-	,__class__: doom_StatelessComponent
-};
-var doom_PropertiesStatelessComponent = function(prop) {
-	this.prop = prop;
-	doom_StatelessComponent.call(this);
-};
-doom_PropertiesStatelessComponent.__name__ = ["doom","PropertiesStatelessComponent"];
-doom_PropertiesStatelessComponent.__super__ = doom_StatelessComponent;
-doom_PropertiesStatelessComponent.prototype = $extend(doom_StatelessComponent.prototype,{
-	prop: null
-	,__class__: doom_PropertiesStatelessComponent
-});
 var doom_XmlNode = function() { };
 doom_XmlNode.__name__ = ["doom","XmlNode"];
 doom_XmlNode.toXml = function(node) {
@@ -2455,17 +2455,17 @@ fancy_search_util_LiteralPosition.First.__enum__ = fancy_search_util_LiteralPosi
 fancy_search_util_LiteralPosition.Last = ["Last",1];
 fancy_search_util_LiteralPosition.Last.toString = $estr;
 fancy_search_util_LiteralPosition.Last.__enum__ = fancy_search_util_LiteralPosition;
-var fs_App = function(prop,state) {
+var fs_App = function(api,state) {
 	var _g = this;
-	doom_PropertiesComponent.call(this,prop,state);
-	prop.onUpdate = function() {
-		_g.update(prop.state);
+	doom_ApiComponent.call(this,api,state);
+	api.onUpdate = function() {
+		_g.update(api.state);
 	};
-	thx_Timer.immediate($bind(prop,prop.load));
+	thx_Timer.immediate($bind(api,api.load));
 };
 fs_App.__name__ = ["fs","App"];
-fs_App.__super__ = doom_PropertiesComponent;
-fs_App.prototype = $extend(doom_PropertiesComponent.prototype,{
+fs_App.__super__ = doom_ApiComponent;
+fs_App.prototype = $extend(doom_ApiComponent.prototype,{
 	render: function() {
 		return Doom.DIV((function($this) {
 			var $r;
@@ -2480,14 +2480,14 @@ fs_App.prototype = $extend(doom_PropertiesComponent.prototype,{
 	}
 	,__class__: fs_App
 });
-var fs_AppProperties = function(path) {
+var fs_AppApi = function(path) {
 	this.path = path;
 	this.onUpdate = function() {
 	};
 	this.state = fs_AppState.Loading;
 };
-fs_AppProperties.__name__ = ["fs","AppProperties"];
-fs_AppProperties.prototype = {
+fs_AppApi.__name__ = ["fs","AppApi"];
+fs_AppApi.prototype = {
 	path: null
 	,state: null
 	,onUpdate: null
@@ -2501,7 +2501,7 @@ fs_AppProperties.prototype = {
 			_g.state = fs_AppState.Error(err.toString());
 		}),this.onUpdate);
 	}
-	,__class__: fs_AppProperties
+	,__class__: fs_AppApi
 };
 var fs_AppState = { __ename__ : ["fs","AppState"], __constructs__ : ["Loading","Error","Data"] };
 fs_AppState.Loading = ["Loading",0];
@@ -2509,23 +2509,23 @@ fs_AppState.Loading.toString = $estr;
 fs_AppState.Loading.__enum__ = fs_AppState;
 fs_AppState.Error = function(msg) { var $x = ["Error",1,msg]; $x.__enum__ = fs_AppState; $x.toString = $estr; return $x; };
 fs_AppState.Data = function(data) { var $x = ["Data",2,data]; $x.__enum__ = fs_AppState; $x.toString = $estr; return $x; };
-var fs_CookingComponent = function(prop,state) {
-	doom_PropertiesComponent.call(this,prop,state);
+var fs_CookingComponent = function(api,state) {
+	doom_ApiComponent.call(this,api,state);
 };
 fs_CookingComponent.__name__ = ["fs","CookingComponent"];
-fs_CookingComponent.__super__ = doom_PropertiesComponent;
-fs_CookingComponent.prototype = $extend(doom_PropertiesComponent.prototype,{
+fs_CookingComponent.__super__ = doom_ApiComponent;
+fs_CookingComponent.prototype = $extend(doom_ApiComponent.prototype,{
 	render: function() {
-		return Doom.TR(null,[Doom.TH(null,null,doom_NodeImpl.Text(this.prop)),Doom.TD(null,[doom_NodeImpl.Text(this.state),doom_NodeImpl.Text(" min.")],null)],null);
+		return Doom.TR(null,[Doom.TH(null,null,doom_NodeImpl.Text(this.api)),Doom.TD(null,[doom_NodeImpl.Text(this.state),doom_NodeImpl.Text(" min.")],null)],null);
 	}
 	,__class__: fs_CookingComponent
 });
-var fs_FancySearchComponent = function(prop) {
-	doom_PropertiesStatelessComponent.call(this,prop);
+var fs_FancySearchComponent = function(api) {
+	doom_ApiStatelessComponent.call(this,api);
 };
 fs_FancySearchComponent.__name__ = ["fs","FancySearchComponent"];
-fs_FancySearchComponent.__super__ = doom_PropertiesStatelessComponent;
-fs_FancySearchComponent.prototype = $extend(doom_PropertiesStatelessComponent.prototype,{
+fs_FancySearchComponent.__super__ = doom_ApiStatelessComponent;
+fs_FancySearchComponent.prototype = $extend(doom_ApiStatelessComponent.prototype,{
 	render: function() {
 		return Doom.INPUT((function($this) {
 			var $r;
@@ -2551,7 +2551,7 @@ fs_FancySearchComponent.prototype = $extend(doom_PropertiesStatelessComponent.pr
 		}(this)));
 	}
 	,handleMount: function(el) {
-		var fancy1 = new fancy_Search(el,this.prop);
+		var fancy1 = new fancy_Search(el,this.api);
 	}
 	,__class__: fs_FancySearchComponent
 });
@@ -2563,7 +2563,7 @@ fs_SearchItem.__super__ = doom_Component;
 fs_SearchItem.prototype = $extend(doom_Component.prototype,{
 	render: function() {
 		var _g3 = this;
-		var prop_listener = function(s) {
+		var api_listener = function(s) {
 		};
 		var veggieComp = new fs_VeggieComponent(haxe_ds_Option.None);
 		{
@@ -4126,7 +4126,7 @@ thx_Arrays.crossMulti = function(array) {
 };
 thx_Arrays.distinct = function(array,predicate) {
 	var result = [];
-	if(array.length <= 1) return thx__$ReadonlyArray_ReadonlyArray_$Impl_$.toArray(array);
+	if(array.length <= 1) return array.slice();
 	if(null == predicate) predicate = thx_Functions.equality;
 	var $it0 = HxOverrides.iter(array);
 	while( $it0.hasNext() ) {
@@ -4386,6 +4386,18 @@ thx_Arrays.rotate = function(arr) {
 	}
 	return result;
 };
+thx_Arrays.sliding2 = function(arr,f) {
+	if(arr.length < 2) return []; else {
+		var result = [];
+		var _g1 = 0;
+		var _g = arr.length - 1;
+		while(_g1 < _g) {
+			var i = _g1++;
+			result.push(f(arr[i],arr[i + 1]));
+		}
+		return result;
+	}
+};
 thx_Arrays.unzip = function(array) {
 	var a1 = [];
 	var a2 = [];
@@ -4443,6 +4455,19 @@ thx_Arrays.zip = function(array1,array2) {
 		array.push({ _0 : array1[i], _1 : array2[i]});
 	}
 	return array;
+};
+thx_Arrays.withPrepend = function(arr,el) {
+	return [el].concat(arr);
+};
+thx_Arrays["with"] = function(arr,el) {
+	return arr.concat([el]);
+};
+thx_Arrays.withSlice = function(arr,other,start,length) {
+	if(length == null) length = 0;
+	return arr.slice(0,start).concat(other).concat(arr.slice(start + length));
+};
+thx_Arrays.withInsert = function(arr,el,pos) {
+	return arr.slice(0,pos).concat([el]).concat(arr.slice(pos));
 };
 thx_Arrays.zip3 = function(array1,array2,array3) {
 	var length = thx_ArrayInts.min([array1.length,array2.length,array3.length]);
@@ -5606,11 +5631,6 @@ thx__$Functions_Reader_$Impl_$.flatMap = function(this1,f) {
 };
 var thx_Functions = function() { };
 thx_Functions.__name__ = ["thx","Functions"];
-thx_Functions.constant = function(v) {
-	return function() {
-		return v;
-	};
-};
 thx_Functions.equality = function(a,b) {
 	return a == b;
 };
@@ -6180,6 +6200,17 @@ thx_Maps.string = function(m) {
 	return "[" + thx_Maps.tuples(m).map(function(t) {
 		return thx_Dynamics.string(t._0) + " => " + thx_Dynamics.string(t._1);
 	}).join(", ") + "]";
+};
+var thx__$Monoid_Monoid_$Impl_$ = {};
+thx__$Monoid_Monoid_$Impl_$.__name__ = ["thx","_Monoid","Monoid_Impl_"];
+thx__$Monoid_Monoid_$Impl_$.get_semigroup = function(this1) {
+	return this1.append;
+};
+thx__$Monoid_Monoid_$Impl_$.get_zero = function(this1) {
+	return this1.zero;
+};
+thx__$Monoid_Monoid_$Impl_$.append = function(this1,a0,a1) {
+	return this1.append(a0,a1);
 };
 var thx__$Nel_Nel_$Impl_$ = {};
 thx__$Nel_Nel_$Impl_$.__name__ = ["thx","_Nel","Nel_Impl_"];
@@ -6930,6 +6961,9 @@ thx__$ReadonlyArray_ReadonlyArray_$Impl_$.get = function(this1,index) {
 };
 thx__$ReadonlyArray_ReadonlyArray_$Impl_$.toArray = function(this1) {
 	return this1.slice();
+};
+thx__$ReadonlyArray_ReadonlyArray_$Impl_$.unsafe = function(this1) {
+	return this1;
 };
 var thx__$Result_Result_$Impl_$ = {};
 thx__$Result_Result_$Impl_$.__name__ = ["thx","_Result","Result_Impl_"];
@@ -7702,6 +7736,10 @@ thx__$Tuple_Tuple3_$Impl_$.toString = function(this1) {
 };
 thx__$Tuple_Tuple3_$Impl_$.arrayToTuple3 = function(v) {
 	return { _0 : v[0], _1 : v[1], _2 : v[2]};
+};
+thx__$Tuple_Tuple3_$Impl_$.map = function(this1,f) {
+	var _2 = f(this1._2);
+	return { _0 : this1._0, _1 : this1._1, _2 : _2};
 };
 var thx__$Tuple_Tuple4_$Impl_$ = {};
 thx__$Tuple_Tuple4_$Impl_$.__name__ = ["thx","_Tuple","Tuple4_Impl_"];
@@ -10988,10 +11026,16 @@ thx_Ints.BASE = "0123456789abcdefghijklmnopqrstuvwxyz";
 thx_Ints.order = function(i0,i1) {
 	if(i0 > i1) return thx_OrderingImpl.GT; else if(i0 == i1) return thx_OrderingImpl.EQ; else return thx_OrderingImpl.LT;
 };
+thx_Ints.monoid = { zero : 0, append : function(a,b) {
+	return a + b;
+}};
 thx__$QueryString_QueryString_$Impl_$.separator = "&";
 thx__$QueryString_QueryString_$Impl_$.assignment = "=";
 thx_Strings.HASCODE_MAX = 2147483647;
 thx_Strings.HASCODE_MUL = 31;
+thx_Strings.monoid = { zero : "", append : function(a,b) {
+	return a + b;
+}};
 thx_Strings.UCWORDS = new EReg("[^a-zA-Z]([a-z])","g");
 thx_Strings.IS_BREAKINGWHITESPACE = new EReg("[^\t\n\r ]","");
 thx_Strings.IS_ALPHA = new EReg("[^a-zA-Z]","");

@@ -3,9 +3,9 @@ import fs.App;
 
 class Main {
   static function main() {
-    var properties = new fs.AppProperties("vegetables.json");
+    var api = new fs.AppApi("vegetables.json");
     Doom.mount(
-      new App(properties, properties.state),
+      new App(api, api.state),
       Query.first("section.fs")
     );
   }

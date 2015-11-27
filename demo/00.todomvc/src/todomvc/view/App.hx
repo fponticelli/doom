@@ -1,34 +1,34 @@
 package todomvc.view;
 
 import Doom.*;
-import doom.PropertiesStatelessComponent;
+import doom.ApiStatelessComponent;
 import lies.Store;
 import thx.ReadonlyArray;
 import todomvc.data.AppState;
 import todomvc.data.TodoAction;
 import todomvc.data.VisibilityFilter;
 
-class App extends PropertiesStatelessComponent<Store<AppState, TodoAction>> {
+class App extends ApiStatelessComponent<Store<AppState, TodoAction>> {
   override function render() {
     var header = new Header({
-          add : function(text) prop.dispatch(Add(text))
+          add : function(text) api.dispatch(Add(text))
         }),
         body = new Body({
           setFilter : function(filter : VisibilityFilter)
-            prop.dispatch(SetVisibilityFilter(filter)),
+            api.dispatch(SetVisibilityFilter(filter)),
           clearCompleted : function()
-            prop.dispatch(ClearCompleted),
+            api.dispatch(ClearCompleted),
           remove : function(index : Int)
-            prop.dispatch(Remove(index)),
+            api.dispatch(Remove(index)),
           toggle : function(index : Int)
-            prop.dispatch(Toggle(index)),
+            api.dispatch(Toggle(index)),
           toggleAll : function()
-            prop.dispatch(ToggleAll),
+            api.dispatch(ToggleAll),
           updateText : function(index : Int, text : String)
-            prop.dispatch(UpdateText(index, text)),
-        }, prop.state);
-    prop.subscribe(function() {
-      body.update(prop.state);
+            api.dispatch(UpdateText(index, text)),
+        }, api.state);
+    api.subscribe(function() {
+      body.update(api.state);
     });
     return DIV([header, body]);
   }

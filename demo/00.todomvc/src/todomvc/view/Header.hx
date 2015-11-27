@@ -1,12 +1,12 @@
 package todomvc.view;
 
-import doom.PropertiesStatelessComponent;
+import doom.ApiStatelessComponent;
 import dots.Keys;
 import Doom.*;
 import js.html.*;
 using thx.Strings;
 
-class Header extends PropertiesStatelessComponent<AddItem> {
+class Header extends ApiStatelessComponent<AddItemApi> {
   override function render()
     return HEADER([
         "class" => "header"
@@ -25,7 +25,7 @@ class Header extends PropertiesStatelessComponent<AddItem> {
       e.preventDefault();
       var value = getInputValueAndEmpty();
       if(value.isEmpty()) return;
-      prop.add(value);
+      api.add(value);
     }
   }
 
@@ -37,6 +37,6 @@ class Header extends PropertiesStatelessComponent<AddItem> {
   }
 }
 
-typedef AddItem = {
+typedef AddItemApi = {
   public function add(label : String) : Void;
 }

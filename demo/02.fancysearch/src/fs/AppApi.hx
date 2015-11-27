@@ -2,7 +2,7 @@ package fs;
 
 import thx.load.Loader;
 
-class AppProperties {
+class AppApi {
   var path : String;
 
   public var state(default, null) : AppState;

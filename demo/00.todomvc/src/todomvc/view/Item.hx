@@ -1,12 +1,12 @@
 package todomvc.view;
 
 import Doom.*;
-import doom.PropertiesComponent;
+import doom.ApiComponent;
 import js.html.KeyboardEvent;
 import todomvc.data.TodoItem;
 using thx.Strings;
 
-class Item extends PropertiesComponent<ItemProperties, ItemState> {
+class Item extends ApiComponent<ItemApi, ItemState> {
   override function render()
     return LI([
         "class" => [
@@ -20,12 +20,12 @@ class Item extends PropertiesComponent<ItemProperties, ItemState> {
           "class"   => "toggle",
           "type"    => "checkbox",
           "checked" => state.item.completed,
-          "change"  => prop.toggle
+          "change"  => api.toggle
         ]),
         LABEL(state.item.text),
         BUTTON([
           "class" => "destroy",
-          "click" => prop.remove
+          "click" => api.remove
         ])
       ]),
       INPUT([
@@ -47,9 +47,9 @@ class Item extends PropertiesComponent<ItemProperties, ItemState> {
     state.editing = false;
     var value = getInputValueAndTrim();
     if(value.isEmpty()) {
-      prop.remove();
+      api.remove();
     } else {
-      prop.updateText(value);
+      api.updateText(value);
     }
   }
 
@@ -68,7 +68,7 @@ class Item extends PropertiesComponent<ItemProperties, ItemState> {
   }
 }
 
-typedef ItemProperties = {
+typedef ItemApi = {
   public function remove() : Void;
   public function toggle() : Void;
   public function updateText(text : String) : Void;

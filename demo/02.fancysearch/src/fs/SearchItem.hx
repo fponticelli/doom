@@ -11,7 +11,7 @@ import thx.ReadonlyArray;
 
 class SearchItem extends Component<AppState> {
   override function render() {
-    var prop = {
+    var api = {
             listener : function(s : String) {}
           },
         veggieComp = new VeggieComponent(None);
