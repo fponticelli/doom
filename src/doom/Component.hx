@@ -2,6 +2,7 @@ package doom;
 
 import js.html.Element;
 using doom.Patch;
+using thx.Strings;
 
 class Component<State> implements IComponent {
   public var element : Element;
@@ -45,6 +46,6 @@ class Component<State> implements IComponent {
 
   public function toString() {
     var cls = Type.getClassName(Type.getClass(this)).split(".").pop();
-    return '$cls(${node.toString()})';
+    return '$cls(${node.toString().ellipsisMiddle(40, "...")})';
   }
 }
