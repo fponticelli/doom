@@ -119,9 +119,9 @@ class HtmlNode {
     case [ReplaceWithText(text), _]:
       var parent = node.parentNode;
       parent.replaceChild(document.createTextNode(text), node);
-    case [ReplaceWithRaw(text), _]:
+    case [ReplaceWithRaw(raw), _]:
       var parent = node.parentNode;
-      parent.replaceChild(document.createTextNode(text), node);
+      parent.replaceChild(dots.Html.parse(raw), node);
     case [ReplaceWithComment(text), _]:
       var parent = node.parentNode;
       parent.replaceChild(createComment(text), node);
