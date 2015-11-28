@@ -23,7 +23,8 @@ class Component<State> implements IComponent {
     var newNode = render();
     switch newNode {
       case doom.Node.NodeImpl.Element(_): // do nothing
-      case _: throw new thx.Error('Component can (and must) return only element nodes');
+      case doom.Node.NodeImpl.ComponentNode(_):
+      case _: throw new thx.Error('Component ${toString()} must return only element nodes');
     }
     var patches = oldNode.diff(newNode);
     HtmlNode.applyPatches(patches, element);
