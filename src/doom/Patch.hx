@@ -20,7 +20,7 @@ enum Patch {
     attributes : Map<String, AttributeValue>,
     children : Array<Node>);
   ReplaceWithText(text : String);
-  ReplaceWithRaw(text : String);
+  ReplaceWithRaw(raw : String);
   ReplaceWithComment(text : String);
   ContentChanged(newcontent : String);
   PatchChild(index : Int, patches : Array<Patch>);
