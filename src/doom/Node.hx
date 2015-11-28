@@ -85,7 +85,7 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
     return switch [this, that] {
       case [ComponentNode(old), ComponentNode(comp)]:
         comp.element = old.element;
-        diff(comp.node);
+        old.node.diff(comp.node);
       case [_, ComponentNode(comp)]:
         diff(comp.node);
       case [Element(n1, a1, c1), Element(n2, a2, c2)] if(n1 != n2):
