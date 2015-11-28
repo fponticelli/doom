@@ -72,11 +72,11 @@ class XmlNode {
           pos = parent.iterator().indexOf(node);
       parent.removeChild(node);
       parent.insertChild(Xml.createPCData(text), pos);
-    case [ReplaceWithRaw(text), _]:
+    case [ReplaceWithRaw(raw), _]:
       var parent = node.parent,
           pos = parent.iterator().indexOf(node);
       parent.removeChild(node);
-      parent.insertChild(Xml.parse(text), pos);
+      parent.insertChild(Xml.parse(raw), pos);
     case [ReplaceWithComment(text), _]:
       var parent = node.parent,
           pos = parent.iterator().indexOf(node);
