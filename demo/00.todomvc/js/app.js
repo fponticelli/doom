@@ -336,15 +336,17 @@ doom_Component.prototype = {
 		switch(newNode[1]) {
 		case 0:
 			break;
+		case 4:
+			break;
 		default:
-			throw new thx_Error("Component can (and must) return only element nodes",null,{ fileName : "Component.hx", lineNumber : 25, className : "doom.Component", methodName : "updateNode"});
+			throw new thx_Error("Component " + this.toString() + " must return only element nodes",null,{ fileName : "Component.hx", lineNumber : 27, className : "doom.Component", methodName : "updateNode"});
 		}
 		var patches = doom__$Node_Node_$Impl_$.diff(oldNode,newNode);
 		doom_HtmlNode.applyPatches(patches,this.element);
 		this.node = newNode;
 	}
 	,render: function() {
-		throw new thx_error_AbstractMethod({ fileName : "Component.hx", lineNumber : 33, className : "doom.Component", methodName : "render"});
+		throw new thx_error_AbstractMethod({ fileName : "Component.hx", lineNumber : 35, className : "doom.Component", methodName : "render"});
 	}
 	,update: function(newState) {
 		var oldState = this.state;
@@ -354,6 +356,10 @@ doom_Component.prototype = {
 	}
 	,shouldRender: function(oldState,newState) {
 		return true;
+	}
+	,toString: function() {
+		var cls = Type.getClassName(js_Boot.getClass(this)).split(".").pop();
+		return "" + cls + "(" + thx_Strings.ellipsisMiddle(doom__$Node_Node_$Impl_$.toString(this.node),40,"...") + ")";
 	}
 	,__class__: doom_Component
 };
@@ -717,14 +723,14 @@ doom_HtmlNode.applyPatch = function(patch,node) {
 			parent1.replaceChild(window.document.createTextNode(text3),node);
 			break;
 		case 9:
-			var text4 = patch[2];
+			var raw = patch[2];
 			var parent2 = node.parentNode;
-			parent2.replaceChild(window.document.createTextNode(text4),node);
+			parent2.replaceChild(dots_Html.parse(raw),node);
 			break;
 		case 10:
-			var text5 = patch[2];
+			var text4 = patch[2];
 			var parent3 = node.parentNode;
-			parent3.replaceChild(doom_HtmlNode.createComment(text5),node);
+			parent3.replaceChild(doom_HtmlNode.createComment(text4),node);
 			break;
 		case 11:
 			var n6 = _g;
@@ -863,7 +869,7 @@ doom__$Node_Node_$Impl_$.diffNodes = function(a,b) {
 	var _g = a.length;
 	while(_g1 < _g) {
 		var i = _g1++;
-		result.push(doom_Patch.PatchChild(a.length - i - 1,[doom_Patch.Remove]));
+		result.push(doom_Patch.PatchChild(a.length - i,[doom_Patch.Remove]));
 	}
 	var _g11 = min;
 	var _g2 = b.length;
@@ -885,9 +891,10 @@ doom__$Node_Node_$Impl_$.diff = function(this1,that) {
 	case 4:
 		switch(that[1]) {
 		case 4:
+			var old = this1[2];
 			var comp = that[2];
-			comp.element = this1[2].element;
-			tmp = doom__$Node_Node_$Impl_$.diff(this1,comp.node);
+			comp.element = old.element;
+			tmp = doom__$Node_Node_$Impl_$.diff(old.node,comp.node);
 			break;
 		case 0:
 			tmp = [doom_Patch.ReplaceWithElement(that[2],that[3],that[4])];
@@ -984,6 +991,9 @@ doom__$Node_Node_$Impl_$.diff = function(this1,that) {
 	}
 	return tmp;
 };
+doom__$Node_Node_$Impl_$.toString = function(this1) {
+	return doom_XmlNode.toString(this1);
+};
 var doom_NodeImpl = { __ename__ : true, __constructs__ : ["Element","Raw","Text","Comment","ComponentNode"] };
 doom_NodeImpl.Element = function(name,attributes,children) { var $x = ["Element",0,name,attributes,children]; $x.__enum__ = doom_NodeImpl; $x.toString = $estr; return $x; };
 doom_NodeImpl.Raw = function(text) { var $x = ["Raw",1,text]; $x.__enum__ = doom_NodeImpl; $x.toString = $estr; return $x; };
@@ -1002,10 +1012,66 @@ doom_Patch.RemoveAttribute = function(name) { var $x = ["RemoveAttribute",5,name
 doom_Patch.SetAttribute = function(name,value) { var $x = ["SetAttribute",6,name,value]; $x.__enum__ = doom_Patch; $x.toString = $estr; return $x; };
 doom_Patch.ReplaceWithElement = function(name,attributes,children) { var $x = ["ReplaceWithElement",7,name,attributes,children]; $x.__enum__ = doom_Patch; $x.toString = $estr; return $x; };
 doom_Patch.ReplaceWithText = function(text) { var $x = ["ReplaceWithText",8,text]; $x.__enum__ = doom_Patch; $x.toString = $estr; return $x; };
-doom_Patch.ReplaceWithRaw = function(text) { var $x = ["ReplaceWithRaw",9,text]; $x.__enum__ = doom_Patch; $x.toString = $estr; return $x; };
+doom_Patch.ReplaceWithRaw = function(raw) { var $x = ["ReplaceWithRaw",9,raw]; $x.__enum__ = doom_Patch; $x.toString = $estr; return $x; };
 doom_Patch.ReplaceWithComment = function(text) { var $x = ["ReplaceWithComment",10,text]; $x.__enum__ = doom_Patch; $x.toString = $estr; return $x; };
 doom_Patch.ContentChanged = function(newcontent) { var $x = ["ContentChanged",11,newcontent]; $x.__enum__ = doom_Patch; $x.toString = $estr; return $x; };
 doom_Patch.PatchChild = function(index,patches) { var $x = ["PatchChild",12,index,patches]; $x.__enum__ = doom_Patch; $x.toString = $estr; return $x; };
+var doom_XmlNode = function() { };
+doom_XmlNode.__name__ = ["doom","XmlNode"];
+doom_XmlNode.toString = function(node) {
+	var tmp;
+	var _g = node;
+	switch(_g[1]) {
+	case 0:
+		var children = _g[4];
+		var name = _g[2];
+		var buf = "<" + name + doom_XmlNode.attributesToString(_g[3]);
+		if(children.length == 0) buf += "/>"; else {
+			buf += ">";
+			buf += children.map(function(_) {
+				return doom_XmlNode.toString(_);
+			}).join("");
+			buf += "</" + name + ">";
+		}
+		tmp = buf;
+		break;
+	case 2:
+		tmp = _g[2];
+		break;
+	case 1:
+		tmp = _g[2];
+		break;
+	case 3:
+		tmp = "<!--" + _g[2] + "-->";
+		break;
+	case 4:
+		tmp = doom_XmlNode.toString(_g[2].node);
+		break;
+	}
+	return tmp;
+};
+doom_XmlNode.attributesToString = function(attributes) {
+	var buf = "";
+	var $it0 = attributes.keys();
+	while( $it0.hasNext() ) {
+		var key = $it0.next();
+		var value = __map_reserved[key] != null?attributes.getReserved(key):attributes.h[key];
+		switch(value[1]) {
+		case 1:
+			var s = value[2];
+			if(s != null && s.length > 0) buf += " " + key + "=\"" + StringTools.replace(s,"\"","&quot;") + "\""; else {
+			}
+			break;
+		case 0:
+			var b = value[2];
+			if(b) buf += " " + key + "=\"" + key + "\""; else {
+			}
+			break;
+		default:
+		}
+	}
+	return buf;
+};
 var dots_Html = function() { };
 dots_Html.__name__ = ["dots","Html"];
 dots_Html.parseNodes = function(html) {
@@ -1505,6 +1571,27 @@ thx_Objects.string = function(o) {
 };
 var thx_Strings = function() { };
 thx_Strings.__name__ = ["thx","Strings"];
+thx_Strings.ellipsis = function(s,maxlen,symbol) {
+	if(symbol == null) symbol = "…";
+	if(maxlen == null) maxlen = 20;
+	var sl = s.length;
+	var symboll = symbol.length;
+	if(sl > maxlen) {
+		if(maxlen < symboll) return HxOverrides.substr(symbol,symboll - maxlen,maxlen); else return HxOverrides.substr(s,0,maxlen - symboll) + symbol;
+	} else return s;
+};
+thx_Strings.ellipsisMiddle = function(s,maxlen,symbol) {
+	if(symbol == null) symbol = "…";
+	if(maxlen == null) maxlen = 20;
+	var sl = s.length;
+	var symboll = symbol.length;
+	if(sl > maxlen) {
+		if(maxlen <= symboll) return thx_Strings.ellipsis(s,maxlen,symbol);
+		var hll = Math.ceil((maxlen - symboll) / 2);
+		var hlr = Math.floor((maxlen - symboll) / 2);
+		return HxOverrides.substr(s,0,hll) + symbol + HxOverrides.substr(s,sl - hlr,hlr);
+	} else return s;
+};
 thx_Strings.isEmpty = function(value) {
 	return value == null || value == "";
 };

@@ -68,7 +68,7 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
     var min = a.length.min(b.length),
         result : Array<Patch> = [];
     for(i in min...a.length) {
-      result.push(PatchChild(a.length - i - 1, [Remove]));
+      result.push(PatchChild(a.length - i, [Remove]));
     }
     for(i in min...b.length) {
       result = result.concat(diffAdd(b[i]));
