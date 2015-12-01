@@ -18,14 +18,14 @@ class App extends ApiStatelessComponent<Store<AppState, TodoAction>> {
             api.dispatch(SetVisibilityFilter(filter)),
           clearCompleted : function()
             api.dispatch(ClearCompleted),
-          remove : function(index : Int)
-            api.dispatch(Remove(index)),
-          toggle : function(index : Int)
-            api.dispatch(Toggle(index)),
+          remove : function(id : String)
+            api.dispatch(Remove(id)),
+          toggle : function(id : String)
+            api.dispatch(Toggle(id)),
           toggleAll : function()
             api.dispatch(ToggleAll),
-          updateText : function(index : Int, text : String)
-            api.dispatch(UpdateText(index, text)),
+          updateText : function(id : String, text : String)
+            api.dispatch(UpdateText(id, text)),
         }, api.state);
     api.subscribe(function() {
       body.update(api.state);

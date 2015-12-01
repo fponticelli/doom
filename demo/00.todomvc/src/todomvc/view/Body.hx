@@ -30,8 +30,8 @@ class Body extends ApiComponent<BodyApi, AppState> {
 typedef BodyApi = {
   function setFilter(filter : VisibilityFilter) : Void;
   function clearCompleted() : Void;
-  function remove(index : Int) : Void;
-  function updateText(index : Int, text : String) : Void;
-  function toggle(index : Int) : Void;
+  function remove(id : String) : Void;
+  function updateText(id : String, text : String) : Void;
+  function toggle(id : String) : Void;
   function toggleAll() : Void;
 }

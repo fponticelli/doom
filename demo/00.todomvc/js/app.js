@@ -1442,6 +1442,15 @@ thx_Arrays.all = function(arr,predicate) {
 	}
 	return true;
 };
+thx_Arrays.findIndex = function(array,predicate) {
+	var _g1 = 0;
+	var _g = array.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		if(predicate(array[i])) return i;
+	}
+	return -1;
+};
 thx_Arrays.string = function(arr) {
 	return "[" + arr.map(thx_Dynamics.string).join(", ") + "]";
 };
@@ -1627,6 +1636,43 @@ thx_Timer.clear = function(id) {
 	clearTimeout(id);
 	return;
 };
+var thx_Uuid = function() { };
+thx_Uuid.__name__ = ["thx","Uuid"];
+thx_Uuid.create = function() {
+	var s = [];
+	var _g = 0;
+	while(_g < 8) {
+		var i = _g++;
+		s[i] = "0123456789ABCDEF".charAt(Math.floor(Math.random() * 16));
+	}
+	s[8] = "-";
+	var _g1 = 9;
+	while(_g1 < 13) {
+		var i1 = _g1++;
+		s[i1] = "0123456789ABCDEF".charAt(Math.floor(Math.random() * 16));
+	}
+	s[13] = "-";
+	s[14] = "4";
+	var _g2 = 15;
+	while(_g2 < 18) {
+		var i2 = _g2++;
+		s[i2] = "0123456789ABCDEF".charAt(Math.floor(Math.random() * 16));
+	}
+	s[18] = "-";
+	s[19] = "89AB".charAt(Math.floor(Math.random() * 16) & 3);
+	var _g3 = 20;
+	while(_g3 < 23) {
+		var i3 = _g3++;
+		s[i3] = "0123456789ABCDEF".charAt(Math.floor(Math.random() * 16));
+	}
+	s[23] = "-";
+	var _g4 = 24;
+	while(_g4 < 36) {
+		var i4 = _g4++;
+		s[i4] = "0123456789ABCDEF".charAt(Math.floor(Math.random() * 16));
+	}
+	return s.join("");
+};
 var thx_error_AbstractMethod = function(posInfo) {
 	thx_Error.call(this,"method " + posInfo.className + "." + posInfo.methodName + "() is abstract",null,posInfo);
 };
@@ -1668,19 +1714,18 @@ todomvc_data_Reducers.todos = function(state,action) {
 	var tmp;
 	switch(action[1]) {
 	case 0:
-		tmp = state.concat([{ text : action[2], completed : false}]);
+		tmp = state.concat([{ id : thx_Uuid.create(), text : action[2], completed : false}]);
 		break;
 	case 1:
-		var index = action[2];
-		var old = state[index];
-		tmp = state.slice(0,index).concat([thx_Objects.combine(state[index],{ completed : !old.completed})]).concat(state.slice(index + 1));
+		var index = todomvc_data_Reducers.getIndex(state,action[2]);
+		tmp = state.slice(0,index).concat([thx_Objects.combine(state[index],{ completed : !state[index].completed})]).concat(state.slice(index + 1));
 		break;
 	case 2:
-		var index1 = action[2];
+		var index1 = todomvc_data_Reducers.getIndex(state,action[2]);
 		tmp = state.slice(0,index1).concat(state.slice(index1 + 1));
 		break;
 	case 4:
-		var index2 = action[2];
+		var index2 = todomvc_data_Reducers.getIndex(state,action[2]);
 		tmp = state.slice(0,index2).concat([thx_Objects.combine(state[index2],{ text : action[3]})]).concat(state.slice(index2 + 1));
 		break;
 	case 5:
@@ -1698,13 +1743,18 @@ todomvc_data_Reducers.todos = function(state,action) {
 			return _1.completed;
 		});
 		tmp = state.map(function(_2) {
-			return { text : _2.text, completed : completed};
+			return { id : _2.id, text : _2.text, completed : completed};
 		});
 		break;
 	default:
 		tmp = state;
 	}
 	return tmp;
+};
+todomvc_data_Reducers.getIndex = function(items,id) {
+	return thx_Arrays.findIndex(items,function(item) {
+		return item.id == id;
+	});
 };
 todomvc_data_Reducers.visibilityFilter = function(state,action) {
 	var tmp;
@@ -1719,10 +1769,10 @@ todomvc_data_Reducers.visibilityFilter = function(state,action) {
 };
 var todomvc_data_TodoAction = { __ename__ : true, __constructs__ : ["Add","Toggle","Remove","SetVisibilityFilter","UpdateText","ClearCompleted","ToggleAll"] };
 todomvc_data_TodoAction.Add = function(text) { var $x = ["Add",0,text]; $x.__enum__ = todomvc_data_TodoAction; $x.toString = $estr; return $x; };
-todomvc_data_TodoAction.Toggle = function(index) { var $x = ["Toggle",1,index]; $x.__enum__ = todomvc_data_TodoAction; $x.toString = $estr; return $x; };
-todomvc_data_TodoAction.Remove = function(index) { var $x = ["Remove",2,index]; $x.__enum__ = todomvc_data_TodoAction; $x.toString = $estr; return $x; };
+todomvc_data_TodoAction.Toggle = function(id) { var $x = ["Toggle",1,id]; $x.__enum__ = todomvc_data_TodoAction; $x.toString = $estr; return $x; };
+todomvc_data_TodoAction.Remove = function(id) { var $x = ["Remove",2,id]; $x.__enum__ = todomvc_data_TodoAction; $x.toString = $estr; return $x; };
 todomvc_data_TodoAction.SetVisibilityFilter = function(filter) { var $x = ["SetVisibilityFilter",3,filter]; $x.__enum__ = todomvc_data_TodoAction; $x.toString = $estr; return $x; };
-todomvc_data_TodoAction.UpdateText = function(index,text) { var $x = ["UpdateText",4,index,text]; $x.__enum__ = todomvc_data_TodoAction; $x.toString = $estr; return $x; };
+todomvc_data_TodoAction.UpdateText = function(id,text) { var $x = ["UpdateText",4,id,text]; $x.__enum__ = todomvc_data_TodoAction; $x.toString = $estr; return $x; };
 todomvc_data_TodoAction.ClearCompleted = ["ClearCompleted",5];
 todomvc_data_TodoAction.ClearCompleted.toString = $estr;
 todomvc_data_TodoAction.ClearCompleted.__enum__ = todomvc_data_TodoAction;
@@ -1775,14 +1825,14 @@ todomvc_view_App.prototype = $extend(doom_ApiStatelessComponent.prototype,{
 			_g.api.dispatch(todomvc_data_TodoAction.SetVisibilityFilter(filter));
 		}, clearCompleted : function() {
 			_g.api.dispatch(todomvc_data_TodoAction.ClearCompleted);
-		}, remove : function(index) {
-			_g.api.dispatch(todomvc_data_TodoAction.Remove(index));
-		}, toggle : function(index1) {
-			_g.api.dispatch(todomvc_data_TodoAction.Toggle(index1));
+		}, remove : function(id) {
+			_g.api.dispatch(todomvc_data_TodoAction.Remove(id));
+		}, toggle : function(id1) {
+			_g.api.dispatch(todomvc_data_TodoAction.Toggle(id1));
 		}, toggleAll : function() {
 			_g.api.dispatch(todomvc_data_TodoAction.ToggleAll);
-		}, updateText : function(index2,text1) {
-			_g.api.dispatch(todomvc_data_TodoAction.UpdateText(index2,text1));
+		}, updateText : function(id2,text1) {
+			_g.api.dispatch(todomvc_data_TodoAction.UpdateText(id2,text1));
 		}},this.api.state);
 		var tmp;
 		var f = function() {
@@ -2183,36 +2233,35 @@ todomvc_view_List.prototype = $extend(doom_ApiComponent.prototype,{
 		var attributes3 = tmp7;
 		var tmp8;
 		var _g4 = [];
-		var _g6 = 0;
-		var _g5 = this.state.items.length;
-		while(_g6 < _g5) {
-			var i = _g6++;
+		var $it0 = HxOverrides.iter(this.state.items);
+		while( $it0.hasNext() ) {
+			var item = $it0.next();
 			var tmp9;
 			var tmp10;
 			var f = [($_=this.api,$bind($_,$_.remove))];
-			var a1 = [i];
-			tmp10 = (function(a11,f1) {
+			var id = [item.id];
+			tmp10 = (function(id1,f1) {
 				return function() {
-					f1[0](a11[0]);
+					f1[0](id1[0]);
 				};
-			})(a1,f);
+			})(id,f);
 			var tmp11;
 			var f2 = [($_=this.api,$bind($_,$_.toggle))];
-			var a12 = [i];
-			tmp11 = (function(a13,f3) {
+			var id2 = [item.id];
+			tmp11 = (function(id3,f3) {
 				return function() {
-					f3[0](a13[0]);
+					f3[0](id3[0]);
 				};
-			})(a12,f2);
+			})(id2,f2);
 			var tmp12;
 			var f4 = [($_=this.api,$bind($_,$_.updateText))];
-			var a14 = [i];
-			tmp12 = (function(a15,f5) {
-				return function(a2) {
-					f5[0](a15[0],a2);
+			var id4 = [item.id];
+			tmp12 = (function(id5,f5) {
+				return function(a1) {
+					f5[0](id5[0],a1);
 				};
-			})(a14,f4);
-			var comp = new todomvc_view_Item({ remove : tmp10, toggle : tmp11, updateText : tmp12},{ item : this.state.items[i], editing : false});
+			})(id4,f4);
+			var comp = new todomvc_view_Item({ remove : tmp10, toggle : tmp11, updateText : tmp12},{ item : item, editing : false});
 			tmp9 = doom_NodeImpl.ComponentNode(comp);
 			_g4.push(tmp9);
 		}

@@ -17,13 +17,13 @@ class List extends ApiComponent<ListApi, ListState> {
       ]),
       LABEL(["for" => "toggle-all"], "Mark all as complete"),
       UL(["class" => "todo-list"], [
-        for(i in 0...state.items.length)
+        for(item in state.items)
           new Item({
-            remove : api.remove.bind(i),
-            toggle : api.toggle.bind(i),
-            updateText : api.updateText.bind(i, _)
+            remove : api.remove.bind(item.id),
+            toggle : api.toggle.bind(item.id),
+            updateText : api.updateText.bind(item.id, _)
           }, {
-            item : state.items[i],
+            item : item,
             editing : false
           })
       ])
@@ -36,9 +36,9 @@ typedef ListApi = {
   function setFilter(filter : VisibilityFilter) : Void;
   function clearCompleted() : Void;
   function toggleAll() : Void;
-  function remove(index : Int) : Void;
-  function updateText(index : Int, text : String) : Void;
-  function toggle(index : Int) : Void;
+  function remove(id : String) : Void;
+  function updateText(id : String, text : String) : Void;
+  function toggle(id : String) : Void;
 }
 
 typedef ListState = {

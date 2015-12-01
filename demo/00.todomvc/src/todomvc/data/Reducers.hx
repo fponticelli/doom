@@ -4,6 +4,7 @@ using thx.Arrays;
 using thx.Functions;
 using thx.Objects;
 import thx.ReadonlyArray;
+import thx.Uuid;
 
 class Reducers {
   public static function todoApp(state : AppState, action : TodoAction) return {
@@ -14,16 +15,18 @@ class Reducers {
   public static function todos(state : ReadonlyArray<TodoItem>, action : TodoAction) return switch action {
     case Add(text):
       state
-        .concat([{ text : text, completed : false }]);
-    case Toggle(index):
-      var old = state[index];
+        .concat([{ id : Uuid.create(), text : text, completed : false }]);
+    case Toggle(id):
+      var index = getIndex(state, id);
       state.slice(0, index)
-        .concat([state[index].merge({ completed : !old.completed })])
+        .concat([state[index].merge({ completed : !state[index].completed })])
         .concat(state.slice(index + 1));
-    case Remove(index):
+    case Remove(id):
+      var index = getIndex(state, id);
       state.slice(0, index)
         .concat(state.slice(index + 1));
-    case UpdateText(index, text):
+    case UpdateText(id, text):
+      var index = getIndex(state, id);
       state.slice(0, index)
         .concat([state[index].merge({ text : text })])
         .concat(state.slice(index + 1));
@@ -31,10 +34,13 @@ class Reducers {
       state.filter.fn(!_.completed);
     case ToggleAll:
       var completed = !state.all.fn(_.completed);
-      state.map.fn({ text : _.text, completed : completed });
+      state.map.fn({ id : _.id, text : _.text, completed : completed });
     case _:
       state;
   }
+
+  static function getIndex(items : ReadonlyArray<TodoItem>, id : String) : Int
+    return items.findIndex(function(item) return item.id == id);
 
   public static function visibilityFilter(state : VisibilityFilter, action : TodoAction) return switch action {
     case SetVisibilityFilter(filter):
