@@ -4,7 +4,7 @@ import Doom.*;
 import doom.Component;
 import haxe.ds.Option;
 
-class VeggieComponent extends Component<Option<Veggie>> {
+class VeggieComponent extends Component<{}, Option<Veggie>> {
   override function render() {
     return switch state {
       case Some(item):

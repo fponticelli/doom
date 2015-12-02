@@ -9,12 +9,12 @@ using thx.Arrays;
 import thx.Options;
 import thx.ReadonlyArray;
 
-class SearchItem extends Component<AppState> {
+class SearchItem extends Component<{}, AppState> {
   override function render() {
     var api = {
             listener : function(s : String) {}
           },
-        veggieComp = new VeggieComponent(None);
+        veggieComp = new VeggieComponent({}, None);
 
     return switch state {
       case Loading:
@@ -22,7 +22,8 @@ class SearchItem extends Component<AppState> {
       case Data(data):
         SECTION(["class" => "container"], [
           HEADER(DIV(["class" => "fancy"],
-            new FancySearchComponent({
+            new FancySearchComponent(
+              {}, {
               suggestionOptions : {
                 suggestions : data.map(function(v) return v.vegetable),
                 onChooseSelection : function(_, s) updateVeggie(veggieComp, s, data)

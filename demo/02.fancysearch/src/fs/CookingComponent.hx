@@ -1,10 +1,10 @@
 package fs;
 
 import Doom.*;
-import doom.ApiComponent;
+import doom.Component;
 import haxe.ds.Option;
 
-class CookingComponent extends ApiComponent<String, String> {
+class CookingComponent extends Component<String, String> {
   override function render() {
     return TR([
             TH(api),

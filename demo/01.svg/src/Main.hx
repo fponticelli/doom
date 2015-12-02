@@ -4,7 +4,7 @@ import svg.SvgApp;
 class Main {
   static function main() {
     Doom.mount(
-      new SvgApp(),
+      new SvgApp({}, {}),
       Query.first("section.svg")
     );
   }

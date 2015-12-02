@@ -1,11 +1,11 @@
 package fs;
 
 import Doom.*;
-import doom.ApiStatelessComponent;
+import doom.Component;
 import fancy.Search;
 import fancy.search.util.Types;
 
-class FancySearchComponent extends ApiStatelessComponent<FancySearchOptions> {
+class FancySearchComponent extends Component<FancySearchOptions, {}> {
   override function render() {
     return INPUT([
       "class" => "fancy-search-component fancify",

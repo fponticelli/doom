@@ -1,9 +1,9 @@
 package fs;
 
 import Doom.*;
-import doom.ApiComponent;
+import doom.Component;
 
-class App extends ApiComponent<AppApi, AppState> {
+class App extends Component<AppApi, AppState> {
   public function new(api : AppApi, state : AppState) {
     super(api, state);
     api.onUpdate = function() {
@@ -15,7 +15,7 @@ class App extends ApiComponent<AppApi, AppState> {
   override function render() {
     return DIV(["class" => "fancy-container"], [
       H1("veggies cooking time"),
-      comp(new SearchItem(state))
+      comp(new SearchItem({}, state))
     ]);
   }
 }
