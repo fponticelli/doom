@@ -7,4 +7,5 @@ interface IComponent {
   public var node : Node;
 
   public function init() : Void;
+  public function toString() : String;
 }
