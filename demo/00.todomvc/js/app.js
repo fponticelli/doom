@@ -859,7 +859,7 @@ doom__$Node_Node_$Impl_$.diffNodes = function(a,b) {
 	var _g = a.length;
 	while(_g1 < _g) {
 		var i = _g1++;
-		result.push(doom_Patch.PatchChild(a.length - i,[doom_Patch.Remove]));
+		result.push(doom_Patch.PatchChild(b.length - i,[doom_Patch.Remove]));
 	}
 	var _g11 = min;
 	var _g2 = b.length;
