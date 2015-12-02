@@ -48,8 +48,10 @@ class Item extends ApiComponent<ItemApi, ItemState> {
     var value = getInputValueAndTrim();
     if(value.isEmpty()) {
       api.remove();
-    } else {
+    } else if(value != state.item.text) {
       api.updateText(value);
+    } else {
+      update({ item : state.item, editing : false });
     }
   }
 

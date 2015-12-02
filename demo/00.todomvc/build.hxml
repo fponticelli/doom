@@ -7,6 +7,6 @@
 -lib thx.promise
 -main Main
 -D html
--debug
+#-debug
 -dce full
 -D analyzer
