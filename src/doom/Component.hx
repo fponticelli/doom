@@ -15,7 +15,8 @@ class Component<State> implements IComponent {
   }
 
   public function init() {
-    // TODO should this be js.html.Node
+    if(null != element)
+      throw new thx.Error('${toString()} has been initialized already');
     element = cast HtmlNode.toHtml(node);
   }
 
