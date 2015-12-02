@@ -96,6 +96,11 @@ class HtmlNode {
       var el = createElement(name, attributes, children);
       node.appendChild(el);
       trigger(el, "mount");
+    case [AddComponent(comp), DomNode.ELEMENT_NODE]:
+      if(null == comp.element)
+        comp.init();
+      node.appendChild(comp.element);
+      trigger(comp.element, "mount");
     case [Remove, _]:
       node.parentNode.removeChild(node);
     case [RemoveAttribute(name), DomNode.ELEMENT_NODE]:
@@ -116,6 +121,12 @@ class HtmlNode {
           el = createElement(name, attributes, children);
       parent.replaceChild(el, node);
       trigger(el, "mount");
+    case [ReplaceWithComponent(comp), _]:
+      var parent = node.parentNode;
+      if(null == comp.element)
+        comp.init();
+      parent.replaceChild(comp.element, node);
+      trigger(comp.element, "mount");
     case [ReplaceWithText(text), _]:
       var parent = node.parentNode;
       parent.replaceChild(document.createTextNode(text), node);

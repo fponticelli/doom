@@ -61,7 +61,7 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
       case Comment(t):
         [AddComment(t)];
       case ComponentNode(comp):
-        diffAdd(comp.node);
+        [AddComponent(comp)];
     };
 
   public static function diffNodes(a : Array<Node>, b : Array<Node>) : Array<Patch> {
@@ -84,10 +84,9 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
   public function diff(that : Node) : Array<Patch> {
     return switch [this, that] {
       case [ComponentNode(old), ComponentNode(comp)]:
-        comp.element = old.element;
-        old.node.diff(comp.node);
+        [ReplaceWithComponent(comp)];
       case [_, ComponentNode(comp)]:
-        diff(comp.node);
+        [ReplaceWithComponent(comp)];
       case [Element(n1, a1, c1), Element(n2, a2, c2)] if(n1 != n2):
         [ReplaceWithElement(n2, a2, c2)];
       case [Element(_, a1, c1), Element(_, a2, c2)]:

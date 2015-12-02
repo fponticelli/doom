@@ -48,6 +48,8 @@ class XmlNode {
       node.addChild(Xml.createComment(text));
     case [AddElement(name, attributes, children), Element]:
       node.addChild(createElement(name, attributes, children));
+    case [AddComponent(comp), Element]:
+      throw 'not implemented';
     case [Remove, _]:
       node.parent.removeChild(node);
     case [RemoveAttribute(name), Element]:
@@ -67,6 +69,8 @@ class XmlNode {
           pos = parent.iterator().indexOf(node);
       parent.removeChild(node);
       parent.insertChild(createElement(name, attributes, children), pos);
+    case [ReplaceWithComponent(comp), Element]:
+      throw 'not implemented';
     case [ReplaceWithText(text), _]:
       var parent = node.parent,
           pos = parent.iterator().indexOf(node);

@@ -12,6 +12,7 @@ enum Patch {
     name : String,
     attributes : Map<String, AttributeValue>,
     children : Array<Node>);
+  AddComponent(comp : IComponent);
   Remove;
   RemoveAttribute(name : String);
   SetAttribute(name : String, value : AttributeValue);
@@ -22,6 +23,7 @@ enum Patch {
   ReplaceWithText(text : String);
   ReplaceWithRaw(raw : String);
   ReplaceWithComment(text : String);
+  ReplaceWithComponent(comp : IComponent);
   ContentChanged(newcontent : String);
   PatchChild(index : Int, patches : Array<Patch>);
 }
@@ -34,6 +36,10 @@ class Patches {
     case ReplaceWithElement(name, attributes, children):
       var c = children.map(function(child) return "\n  " + child.toString().split("\n").join("\n  "));
       return 'ReplaceWithElement($name, ${attributes.string()}, $c)';
+    case AddComponent(comp):
+      return 'AddComponent(${comp.toString()})';
+    case ReplaceWithComponent(comp):
+      return 'ReplaceWithComponent(${comp.toString()})';
     case PatchChild(index, patches):
       var p = "  " + PatchArray.toPrettyString(patches).split("\n").join("\n  ");
       return 'PatchChild($index, $p)';
