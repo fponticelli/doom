@@ -4,12 +4,14 @@ import js.html.Element;
 using doom.Patch;
 using thx.Strings;
 
-class Component<State> implements IComponent {
+class Component<Api, State> implements IComponent {
   public var element : Element;
   public var node : Node;
+  public var api : Api;
   public var state : State;
 
-  public function new(state : State) {
+  public function new(api : Api, state : State) {
+    this.api = api;
     this.state = state;
     this.node = render();
   }
