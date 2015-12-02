@@ -1,12 +1,12 @@
 package todomvc.view;
 
 import Doom.*;
-import doom.ApiComponent;
+import doom.Component;
 import thx.ReadonlyArray;
 import todomvc.data.TodoItem;
 import todomvc.data.VisibilityFilter;
 
-class List extends ApiComponent<ListApi, ListState> {
+class List extends Component<ListApi, ListState> {
   override function render()
     return SECTION(["class" => "main"], [
       INPUT([

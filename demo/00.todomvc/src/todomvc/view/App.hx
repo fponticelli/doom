@@ -1,18 +1,18 @@
 package todomvc.view;
 
 import Doom.*;
-import doom.ApiStatelessComponent;
+import doom.Component;
 import lies.Store;
 import thx.ReadonlyArray;
 import todomvc.data.AppState;
 import todomvc.data.TodoAction;
 import todomvc.data.VisibilityFilter;
 
-class App extends ApiStatelessComponent<Store<AppState, TodoAction>> {
+class App extends Component<Store<AppState, TodoAction>, {}> {
   override function render() {
     var header = new Header({
           add : function(text) api.dispatch(Add(text))
-        }),
+        }, {}),
         body = new Body({
           setFilter : function(filter : VisibilityFilter)
             api.dispatch(SetVisibilityFilter(filter)),

@@ -129,7 +129,7 @@ Main.main = function() {
 		f2(action2);
 	};
 	store.subscribe(tmp3);
-	Doom.mount(new todomvc_view_App(store),dots_Query.first("section.todoapp"));
+	Doom.mount(new todomvc_view_App(store,{ }),dots_Query.first("section.todoapp"));
 };
 Main.getFilterFromHash = function() {
 	var hash = thx_Strings.trimCharsLeft(window.location.hash,"#");
@@ -316,86 +316,6 @@ Type.enumEq = function(a,b) {
 	}
 	return true;
 };
-var doom_IComponent = function() { };
-doom_IComponent.__name__ = ["doom","IComponent"];
-doom_IComponent.prototype = {
-	__class__: doom_IComponent
-};
-var doom_Component = function(state) {
-	this.state = state;
-	this.node = this.render();
-};
-doom_Component.__name__ = ["doom","Component"];
-doom_Component.__interfaces__ = [doom_IComponent];
-doom_Component.prototype = {
-	init: function() {
-		if(null != this.element) throw new thx_Error("" + this.toString() + " has been initialized already",null,{ fileName : "Component.hx", lineNumber : 19, className : "doom.Component", methodName : "init"});
-		this.element = doom_HtmlNode.toHtml(this.node);
-	}
-	,updateNode: function(oldNode) {
-		var newNode = this.render();
-		switch(newNode[1]) {
-		case 0:
-			break;
-		case 4:
-			break;
-		default:
-			throw new thx_Error("Component " + this.toString() + " must return only element nodes",null,{ fileName : "Component.hx", lineNumber : 28, className : "doom.Component", methodName : "updateNode"});
-		}
-		var patches = doom__$Node_Node_$Impl_$.diff(oldNode,newNode);
-		doom_HtmlNode.applyPatches(patches,this.element);
-		this.node = newNode;
-	}
-	,render: function() {
-		throw new thx_error_AbstractMethod({ fileName : "Component.hx", lineNumber : 36, className : "doom.Component", methodName : "render"});
-	}
-	,update: function(newState) {
-		var oldState = this.state;
-		this.state = newState;
-		if(!this.shouldRender(oldState,newState)) return;
-		this.updateNode(this.node);
-	}
-	,shouldRender: function(oldState,newState) {
-		return true;
-	}
-	,toString: function() {
-		var cls = Type.getClassName(js_Boot.getClass(this)).split(".").pop();
-		return "" + cls + "(" + thx_Strings.ellipsisMiddle(doom__$Node_Node_$Impl_$.toString(this.node),40,"...") + ")";
-	}
-	,__class__: doom_Component
-};
-var doom_ApiComponent = function(api,state) {
-	this.api = api;
-	doom_Component.call(this,state);
-};
-doom_ApiComponent.__name__ = ["doom","ApiComponent"];
-doom_ApiComponent.__super__ = doom_Component;
-doom_ApiComponent.prototype = $extend(doom_Component.prototype,{
-	__class__: doom_ApiComponent
-});
-var doom_StatelessComponent = function() {
-	this.node = this.render();
-};
-doom_StatelessComponent.__name__ = ["doom","StatelessComponent"];
-doom_StatelessComponent.__interfaces__ = [doom_IComponent];
-doom_StatelessComponent.prototype = {
-	init: function() {
-		this.element = doom_HtmlNode.toHtml(this.node);
-	}
-	,render: function() {
-		throw new thx_error_AbstractMethod({ fileName : "StatelessComponent.hx", lineNumber : 27, className : "doom.StatelessComponent", methodName : "render"});
-	}
-	,__class__: doom_StatelessComponent
-};
-var doom_ApiStatelessComponent = function(api) {
-	this.api = api;
-	doom_StatelessComponent.call(this);
-};
-doom_ApiStatelessComponent.__name__ = ["doom","ApiStatelessComponent"];
-doom_ApiStatelessComponent.__super__ = doom_StatelessComponent;
-doom_ApiStatelessComponent.prototype = $extend(doom_StatelessComponent.prototype,{
-	__class__: doom_ApiStatelessComponent
-});
 var doom__$AttributeValue_AttributeValue_$Impl_$ = {};
 doom__$AttributeValue_AttributeValue_$Impl_$.__name__ = ["doom","_AttributeValue","AttributeValue_Impl_"];
 doom__$AttributeValue_AttributeValue_$Impl_$.fromString = function(s) {
@@ -455,6 +375,55 @@ var doom_AttributeValueImpl = { __ename__ : true, __constructs__ : ["BoolAttribu
 doom_AttributeValueImpl.BoolAttribute = function(b) { var $x = ["BoolAttribute",0,b]; $x.__enum__ = doom_AttributeValueImpl; $x.toString = $estr; return $x; };
 doom_AttributeValueImpl.StringAttribute = function(s) { var $x = ["StringAttribute",1,s]; $x.__enum__ = doom_AttributeValueImpl; $x.toString = $estr; return $x; };
 doom_AttributeValueImpl.EventAttribute = function(f) { var $x = ["EventAttribute",2,f]; $x.__enum__ = doom_AttributeValueImpl; $x.toString = $estr; return $x; };
+var doom_IComponent = function() { };
+doom_IComponent.__name__ = ["doom","IComponent"];
+doom_IComponent.prototype = {
+	__class__: doom_IComponent
+};
+var doom_Component = function(api,state) {
+	this.api = api;
+	this.state = state;
+	this.node = this.render();
+};
+doom_Component.__name__ = ["doom","Component"];
+doom_Component.__interfaces__ = [doom_IComponent];
+doom_Component.prototype = {
+	init: function() {
+		if(null != this.element) throw new thx_Error("" + this.toString() + " has been initialized already",null,{ fileName : "Component.hx", lineNumber : 21, className : "doom.Component", methodName : "init"});
+		this.element = doom_HtmlNode.toHtml(this.node);
+	}
+	,updateNode: function(oldNode) {
+		var newNode = this.render();
+		switch(newNode[1]) {
+		case 0:
+			break;
+		case 4:
+			break;
+		default:
+			throw new thx_Error("Component " + this.toString() + " must return only element nodes",null,{ fileName : "Component.hx", lineNumber : 30, className : "doom.Component", methodName : "updateNode"});
+		}
+		var patches = doom__$Node_Node_$Impl_$.diff(oldNode,newNode);
+		doom_HtmlNode.applyPatches(patches,this.element);
+		this.node = newNode;
+	}
+	,render: function() {
+		throw new thx_error_AbstractMethod({ fileName : "Component.hx", lineNumber : 38, className : "doom.Component", methodName : "render"});
+	}
+	,update: function(newState) {
+		var oldState = this.state;
+		this.state = newState;
+		if(!this.shouldRender(oldState,newState)) return;
+		this.updateNode(this.node);
+	}
+	,shouldRender: function(oldState,newState) {
+		return true;
+	}
+	,toString: function() {
+		var cls = Type.getClassName(js_Boot.getClass(this)).split(".").pop();
+		return "" + cls + "(" + thx_Strings.ellipsisMiddle(doom__$Node_Node_$Impl_$.toString(this.node),40,"...") + ")";
+	}
+	,__class__: doom_Component
+};
 var thx__$Set_Set_$Impl_$ = {};
 thx__$Set_Set_$Impl_$.__name__ = ["thx","_Set","Set_Impl_"];
 thx__$Set_Set_$Impl_$.createString = function(it) {
@@ -1904,17 +1873,17 @@ todomvc_data_VisibilityFilters.filterVisibility = function(arr,filter) {
 	}
 	return tmp;
 };
-var todomvc_view_App = function(api) {
-	doom_ApiStatelessComponent.call(this,api);
+var todomvc_view_App = function(api,state) {
+	doom_Component.call(this,api,state);
 };
 todomvc_view_App.__name__ = ["todomvc","view","App"];
-todomvc_view_App.__super__ = doom_ApiStatelessComponent;
-todomvc_view_App.prototype = $extend(doom_ApiStatelessComponent.prototype,{
+todomvc_view_App.__super__ = doom_Component;
+todomvc_view_App.prototype = $extend(doom_Component.prototype,{
 	render: function() {
 		var _g = this;
 		var header = new todomvc_view_Header({ add : function(text) {
 			_g.api.dispatch(todomvc_data_TodoAction.Add(text));
-		}});
+		}},{ });
 		var body = new todomvc_view_Body({ setFilter : function(filter) {
 			_g.api.dispatch(todomvc_data_TodoAction.SetVisibilityFilter(filter));
 		}, clearCompleted : function() {
@@ -1944,11 +1913,11 @@ todomvc_view_App.prototype = $extend(doom_ApiStatelessComponent.prototype,{
 	,__class__: todomvc_view_App
 });
 var todomvc_view_Body = function(api,state) {
-	doom_ApiComponent.call(this,api,state);
+	doom_Component.call(this,api,state);
 };
 todomvc_view_Body.__name__ = ["todomvc","view","Body"];
-todomvc_view_Body.__super__ = doom_ApiComponent;
-todomvc_view_Body.prototype = $extend(doom_ApiComponent.prototype,{
+todomvc_view_Body.__super__ = doom_Component;
+todomvc_view_Body.prototype = $extend(doom_Component.prototype,{
 	render: function() {
 		var tmp;
 		if(this.state.todos.length == 0) {
@@ -1976,11 +1945,11 @@ todomvc_view_Body.prototype = $extend(doom_ApiComponent.prototype,{
 	,__class__: todomvc_view_Body
 });
 var todomvc_view_Footer = function(api,state) {
-	doom_ApiComponent.call(this,api,state);
+	doom_Component.call(this,api,state);
 };
 todomvc_view_Footer.__name__ = ["todomvc","view","Footer"];
-todomvc_view_Footer.__super__ = doom_ApiComponent;
-todomvc_view_Footer.prototype = $extend(doom_ApiComponent.prototype,{
+todomvc_view_Footer.__super__ = doom_Component;
+todomvc_view_Footer.prototype = $extend(doom_Component.prototype,{
 	render: function() {
 		var tmp;
 		var tmp3;
@@ -2129,12 +2098,12 @@ todomvc_view_Footer.prototype = $extend(doom_ApiComponent.prototype,{
 	}
 	,__class__: todomvc_view_Footer
 });
-var todomvc_view_Header = function(api) {
-	doom_ApiStatelessComponent.call(this,api);
+var todomvc_view_Header = function(api,state) {
+	doom_Component.call(this,api,state);
 };
 todomvc_view_Header.__name__ = ["todomvc","view","Header"];
-todomvc_view_Header.__super__ = doom_ApiStatelessComponent;
-todomvc_view_Header.prototype = $extend(doom_ApiStatelessComponent.prototype,{
+todomvc_view_Header.__super__ = doom_Component;
+todomvc_view_Header.prototype = $extend(doom_Component.prototype,{
 	render: function() {
 		var tmp;
 		var tmp1;
@@ -2181,11 +2150,11 @@ todomvc_view_Header.prototype = $extend(doom_ApiStatelessComponent.prototype,{
 	,__class__: todomvc_view_Header
 });
 var todomvc_view_Item = function(api,state) {
-	doom_ApiComponent.call(this,api,state);
+	doom_Component.call(this,api,state);
 };
 todomvc_view_Item.__name__ = ["todomvc","view","Item"];
-todomvc_view_Item.__super__ = doom_ApiComponent;
-todomvc_view_Item.prototype = $extend(doom_ApiComponent.prototype,{
+todomvc_view_Item.__super__ = doom_Component;
+todomvc_view_Item.prototype = $extend(doom_Component.prototype,{
 	render: function() {
 		var tmp;
 		var tmp1;
@@ -2282,11 +2251,11 @@ todomvc_view_Item.prototype = $extend(doom_ApiComponent.prototype,{
 	,__class__: todomvc_view_Item
 });
 var todomvc_view_List = function(api,state) {
-	doom_ApiComponent.call(this,api,state);
+	doom_Component.call(this,api,state);
 };
 todomvc_view_List.__name__ = ["todomvc","view","List"];
-todomvc_view_List.__super__ = doom_ApiComponent;
-todomvc_view_List.prototype = $extend(doom_ApiComponent.prototype,{
+todomvc_view_List.__super__ = doom_Component;
+todomvc_view_List.prototype = $extend(doom_Component.prototype,{
 	render: function() {
 		var tmp;
 		var tmp1;

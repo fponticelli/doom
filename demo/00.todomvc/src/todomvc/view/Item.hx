@@ -1,12 +1,12 @@
 package todomvc.view;
 
 import Doom.*;
-import doom.ApiComponent;
+import doom.Component;
 import js.html.KeyboardEvent;
 import todomvc.data.TodoItem;
 using thx.Strings;
 
-class Item extends ApiComponent<ItemApi, ItemState> {
+class Item extends Component<ItemApi, ItemState> {
   override function render()
     return LI([
         "class" => [

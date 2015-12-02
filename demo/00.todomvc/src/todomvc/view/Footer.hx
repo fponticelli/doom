@@ -1,11 +1,11 @@
 package todomvc.view;
 
 import todomvc.data.VisibilityFilter;
-import doom.ApiComponent;
+import doom.Component;
 import Doom.*;
 import doom.Node;
 
-class Footer extends ApiComponent<FooterApi, FooterState> {
+class Footer extends Component<FooterApi, FooterState> {
   override function render() {
     var footerContent = [
         SPAN([

@@ -1,12 +1,12 @@
 package todomvc.view;
 
-import doom.ApiStatelessComponent;
+import doom.Component;
 import dots.Keys;
 import Doom.*;
 import js.html.*;
 using thx.Strings;
 
-class Header extends ApiStatelessComponent<AddItemApi> {
+class Header extends Component<AddItemApi, {}> {
   override function render()
     return HEADER([
         "class" => "header"

@@ -1,11 +1,11 @@
 package todomvc.view;
 
 import Doom.*;
-import doom.ApiComponent;
+import doom.Component;
 import todomvc.data.AppState;
 using todomvc.data.VisibilityFilter;
 
-class Body extends ApiComponent<BodyApi, AppState> {
+class Body extends Component<BodyApi, AppState> {
   override function render()
     return if(state.todos.length == 0) {
       dummy("nothing to do yet");
