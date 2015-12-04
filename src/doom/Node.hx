@@ -6,6 +6,7 @@ using thx.Ints;
 using thx.Iterators;
 using thx.Strings;
 using thx.Set;
+import thx.Types;
 import doom.AttributeValue;
 
 abstract Node(NodeImpl) from NodeImpl to NodeImpl {
@@ -84,7 +85,13 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
 
   public function diff(that : Node) : Array<Patch> {
     return switch [this, that] {
+      case [ComponentNode(old), ComponentNode(comp)] if(Types.sameType(old, comp)):
+        // TODO suspicious side effect
+        // comp.element = old.element;
+        old.node.diff(comp.node);
       case [ComponentNode(old), ComponentNode(comp)]:
+        // TODO suspicious side effect
+        // comp.element = old.element;
         [ReplaceWithComponent(comp)];
       case [_, ComponentNode(comp)]:
         [ReplaceWithComponent(comp)];
