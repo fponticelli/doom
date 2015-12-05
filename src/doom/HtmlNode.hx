@@ -51,12 +51,12 @@ class HtmlNode {
       }
     }
     trigger(el, "create");
-    thx.Timer.immediate(function() trigger(el, "mount"));
     for(child in children) {
       var n = toHtml(child);
       if(null != n)
         el.appendChild(n);
     }
+    thx.Timer.immediate(function() trigger(el, "mount"));
     return el;
   }
 
@@ -97,8 +97,7 @@ class HtmlNode {
       node.appendChild(el);
       trigger(el, "mount");
     case [AddComponent(comp), DomNode.ELEMENT_NODE]:
-      if(null == comp.element)
-        comp.init();
+      comp.init();
       node.appendChild(comp.element);
       trigger(comp.element, "mount");
     case [Remove, _]:
@@ -123,8 +122,7 @@ class HtmlNode {
       trigger(el, "mount");
     case [ReplaceWithComponent(comp), _]:
       var parent = node.parentNode;
-      if(null == comp.element)
-        comp.init();
+      comp.init();
       parent.replaceChild(comp.element, node);
       trigger(comp.element, "mount");
     case [ReplaceWithText(text), _]:
