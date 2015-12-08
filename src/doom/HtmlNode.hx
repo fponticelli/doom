@@ -136,7 +136,8 @@ class HtmlNode {
       parent.replaceChild(createComment(text), node);
     case [ContentChanged(newcontent), DomNode.TEXT_NODE]
        | [ContentChanged(newcontent), DomNode.COMMENT_NODE]:
-      node.nodeValue = newcontent;
+      if (node.parentNode.nodeName == "TEXTAREA") (cast node.parentNode : TextAreaElement).value = newcontent;
+      else node.nodeValue = newcontent;
     case [PatchChild(index, patches), DomNode.ELEMENT_NODE]:
       var n = (cast node : js.html.Element).childNodes.item(index);
       applyPatches(patches, n);
