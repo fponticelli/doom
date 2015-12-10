@@ -8,4 +8,6 @@ interface IComponent {
 
   public function init() : Void;
   public function toString() : String;
+
+  public function mount() : Void;
 }

@@ -10,6 +10,7 @@ class Doom {
     ref.innerHTML = "";
     component.init();
     ref.appendChild(component.element);
+    thx.Timer.immediate(component.mount);
   }
 
   // namespaces

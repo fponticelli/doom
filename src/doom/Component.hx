@@ -37,6 +37,7 @@ class Component<Api, State> implements IComponent {
   private function render() : Node
     return throw new thx.error.AbstractMethod();
 
+  public function mount() {}
   public function update(newState : State) {
     var oldState = this.state;
     this.state = newState;
