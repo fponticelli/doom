@@ -85,14 +85,8 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
 
   public function diff(that : Node) : Array<Patch> {
     return switch [this, that] {
-      case [ComponentNode(old), ComponentNode(comp)] if(Types.sameType(old, comp)):
-        // TODO suspicious side effect
-        // comp.element = old.element;
-        old.node.diff(comp.node);
       case [ComponentNode(old), ComponentNode(comp)]:
-        // TODO suspicious side effect
-        // comp.element = old.element;
-        [ReplaceWithComponent(comp)];
+        old.node.diff(comp.node);
       case [_, ComponentNode(comp)]:
         [ReplaceWithComponent(comp)];
       case [Element(n1, a1, c1), Element(n2, a2, c2)] if(n1 != n2):

@@ -214,7 +214,7 @@ StringTools.trim = function(s) {
 StringTools.replace = function(s,sub,by) {
 	return s.split(sub).join(by);
 };
-var ValueType = { __ename__ : ["ValueType"], __constructs__ : ["TNull","TInt","TFloat","TBool","TObject","TFunction","TClass","TEnum","TUnknown"] };
+var ValueType = { __ename__ : true, __constructs__ : ["TNull","TInt","TFloat","TBool","TObject","TFunction","TClass","TEnum","TUnknown"] };
 ValueType.TNull = ["TNull",0];
 ValueType.TNull.toString = $estr;
 ValueType.TNull.__enum__ = ValueType;
@@ -243,10 +243,6 @@ Type.__name__ = ["Type"];
 Type.getClassName = function(c) {
 	var a = c.__name__;
 	if(a == null) return null;
-	return a.join(".");
-};
-Type.getEnumName = function(e) {
-	var a = e.__ename__;
 	return a.join(".");
 };
 Type.createInstance = function(cl,args) {
@@ -375,7 +371,7 @@ doom__$AttributeValue_AttributeValue_$Impl_$.equalsTo = function(this1,that) {
 doom__$AttributeValue_AttributeValue_$Impl_$.notEqualsTo = function(this1,that) {
 	return !doom__$AttributeValue_AttributeValue_$Impl_$.equalsTo(this1,that);
 };
-var doom_AttributeValueImpl = { __ename__ : ["doom","AttributeValueImpl"], __constructs__ : ["BoolAttribute","StringAttribute","EventAttribute"] };
+var doom_AttributeValueImpl = { __ename__ : true, __constructs__ : ["BoolAttribute","StringAttribute","EventAttribute"] };
 doom_AttributeValueImpl.BoolAttribute = function(b) { var $x = ["BoolAttribute",0,b]; $x.__enum__ = doom_AttributeValueImpl; $x.toString = $estr; return $x; };
 doom_AttributeValueImpl.StringAttribute = function(s) { var $x = ["StringAttribute",1,s]; $x.__enum__ = doom_AttributeValueImpl; $x.toString = $estr; return $x; };
 doom_AttributeValueImpl.EventAttribute = function(f) { var $x = ["EventAttribute",2,f]; $x.__enum__ = doom_AttributeValueImpl; $x.toString = $estr; return $x; };
@@ -886,9 +882,7 @@ doom__$Node_Node_$Impl_$.diff = function(this1,that) {
 	case 4:
 		switch(that[1]) {
 		case 4:
-			var old = this1[2];
-			var comp = that[2];
-			if(thx_Types.sameType(old,comp)) tmp = doom__$Node_Node_$Impl_$.diff(old.node,comp.node); else tmp = [doom_Patch.ReplaceWithComponent(that[2])];
+			tmp = doom__$Node_Node_$Impl_$.diff(this1[2].node,that[2].node);
 			break;
 		case 0:
 			tmp = [doom_Patch.ReplaceWithElement(that[2],that[3],that[4])];
@@ -988,13 +982,13 @@ doom__$Node_Node_$Impl_$.diff = function(this1,that) {
 doom__$Node_Node_$Impl_$.toString = function(this1) {
 	return doom_XmlNode.toString(this1);
 };
-var doom_NodeImpl = { __ename__ : ["doom","NodeImpl"], __constructs__ : ["Element","Raw","Text","Comment","ComponentNode"] };
+var doom_NodeImpl = { __ename__ : true, __constructs__ : ["Element","Raw","Text","Comment","ComponentNode"] };
 doom_NodeImpl.Element = function(name,attributes,children) { var $x = ["Element",0,name,attributes,children]; $x.__enum__ = doom_NodeImpl; $x.toString = $estr; return $x; };
 doom_NodeImpl.Raw = function(text) { var $x = ["Raw",1,text]; $x.__enum__ = doom_NodeImpl; $x.toString = $estr; return $x; };
 doom_NodeImpl.Text = function(text) { var $x = ["Text",2,text]; $x.__enum__ = doom_NodeImpl; $x.toString = $estr; return $x; };
 doom_NodeImpl.Comment = function(text) { var $x = ["Comment",3,text]; $x.__enum__ = doom_NodeImpl; $x.toString = $estr; return $x; };
 doom_NodeImpl.ComponentNode = function(comp) { var $x = ["ComponentNode",4,comp]; $x.__enum__ = doom_NodeImpl; $x.toString = $estr; return $x; };
-var doom_Patch = { __ename__ : ["doom","Patch"], __constructs__ : ["AddText","AddRaw","AddComment","AddElement","AddComponent","Remove","RemoveAttribute","SetAttribute","ReplaceWithElement","ReplaceWithText","ReplaceWithRaw","ReplaceWithComment","ReplaceWithComponent","ContentChanged","PatchChild"] };
+var doom_Patch = { __ename__ : true, __constructs__ : ["AddText","AddRaw","AddComment","AddElement","AddComponent","Remove","RemoveAttribute","SetAttribute","ReplaceWithElement","ReplaceWithText","ReplaceWithRaw","ReplaceWithComment","ReplaceWithComponent","ContentChanged","PatchChild"] };
 doom_Patch.AddText = function(text) { var $x = ["AddText",0,text]; $x.__enum__ = doom_Patch; $x.toString = $estr; return $x; };
 doom_Patch.AddRaw = function(text) { var $x = ["AddRaw",1,text]; $x.__enum__ = doom_Patch; $x.toString = $estr; return $x; };
 doom_Patch.AddComment = function(text) { var $x = ["AddComment",2,text]; $x.__enum__ = doom_Patch; $x.toString = $estr; return $x; };
@@ -1099,7 +1093,7 @@ dots_Query.__name__ = ["dots","Query"];
 dots_Query.first = function(selector,ctx) {
 	return (ctx != null?ctx:dots_Query.doc).querySelector(selector);
 };
-var haxe_StackItem = { __ename__ : ["haxe","StackItem"], __constructs__ : ["CFunction","Module","FilePos","Method","LocalFunction"] };
+var haxe_StackItem = { __ename__ : true, __constructs__ : ["CFunction","Module","FilePos","Method","LocalFunction"] };
 haxe_StackItem.CFunction = ["CFunction",0];
 haxe_StackItem.CFunction.toString = $estr;
 haxe_StackItem.CFunction.__enum__ = haxe_StackItem;
@@ -1225,7 +1219,7 @@ haxe_IMap.__name__ = ["haxe","IMap"];
 haxe_IMap.prototype = {
 	__class__: haxe_IMap
 };
-var haxe_ds_Option = { __ename__ : ["haxe","ds","Option"], __constructs__ : ["Some","None"] };
+var haxe_ds_Option = { __ename__ : true, __constructs__ : ["Some","None"] };
 haxe_ds_Option.Some = function(v) { var $x = ["Some",0,v]; $x.__enum__ = haxe_ds_Option; $x.toString = $estr; return $x; };
 haxe_ds_Option.None = ["None",1];
 haxe_ds_Option.None.toString = $estr;
@@ -1624,7 +1618,7 @@ thx_Dynamics.string = function(v) {
 		}
 	}
 };
-var thx_Either = { __ename__ : ["thx","Either"], __constructs__ : ["Left","Right"] };
+var thx_Either = { __ename__ : true, __constructs__ : ["Left","Right"] };
 thx_Either.Left = function(value) { var $x = ["Left",0,value]; $x.__enum__ = thx_Either; $x.toString = $estr; return $x; };
 thx_Either.Right = function(value) { var $x = ["Right",1,value]; $x.__enum__ = thx_Either; $x.toString = $estr; return $x; };
 var thx_Enums = function() { };
@@ -1797,43 +1791,6 @@ thx_Timer.clear = function(id) {
 	clearTimeout(id);
 	return;
 };
-var thx_Types = function() { };
-thx_Types.__name__ = ["thx","Types"];
-thx_Types.sameType = function(a,b) {
-	return thx_Types.toString(Type["typeof"](a)) == thx_Types.toString(Type["typeof"](b));
-};
-thx_Types.toString = function(type) {
-	var tmp;
-	switch(type[1]) {
-	case 0:
-		tmp = "Null";
-		break;
-	case 1:
-		tmp = "Int";
-		break;
-	case 2:
-		tmp = "Float";
-		break;
-	case 3:
-		tmp = "Bool";
-		break;
-	case 4:
-		tmp = "{}";
-		break;
-	case 5:
-		tmp = "Function";
-		break;
-	case 6:
-		tmp = Type.getClassName(type[2]);
-		break;
-	case 7:
-		tmp = Type.getEnumName(type[2]);
-		break;
-	default:
-		throw new js__$Boot_HaxeError("invalid type " + Std.string(type));
-	}
-	return tmp;
-};
 var thx_Uuid = function() { };
 thx_Uuid.__name__ = ["thx","Uuid"];
 thx_Uuid.create = function() {
@@ -1965,7 +1922,7 @@ todomvc_data_Reducers.visibilityFilter = function(state,action) {
 	}
 	return tmp;
 };
-var todomvc_data_TodoAction = { __ename__ : ["todomvc","data","TodoAction"], __constructs__ : ["Add","Toggle","Remove","SetVisibilityFilter","UpdateText","ClearCompleted","ToggleAll"] };
+var todomvc_data_TodoAction = { __ename__ : true, __constructs__ : ["Add","Toggle","Remove","SetVisibilityFilter","UpdateText","ClearCompleted","ToggleAll"] };
 todomvc_data_TodoAction.Add = function(text) { var $x = ["Add",0,text]; $x.__enum__ = todomvc_data_TodoAction; $x.toString = $estr; return $x; };
 todomvc_data_TodoAction.Toggle = function(id) { var $x = ["Toggle",1,id]; $x.__enum__ = todomvc_data_TodoAction; $x.toString = $estr; return $x; };
 todomvc_data_TodoAction.Remove = function(id) { var $x = ["Remove",2,id]; $x.__enum__ = todomvc_data_TodoAction; $x.toString = $estr; return $x; };
@@ -1977,7 +1934,7 @@ todomvc_data_TodoAction.ClearCompleted.__enum__ = todomvc_data_TodoAction;
 todomvc_data_TodoAction.ToggleAll = ["ToggleAll",6];
 todomvc_data_TodoAction.ToggleAll.toString = $estr;
 todomvc_data_TodoAction.ToggleAll.__enum__ = todomvc_data_TodoAction;
-var todomvc_data_VisibilityFilter = { __ename__ : ["todomvc","data","VisibilityFilter"], __constructs__ : ["ShowAll","ShowCompleted","ShowActive"] };
+var todomvc_data_VisibilityFilter = { __ename__ : true, __constructs__ : ["ShowAll","ShowCompleted","ShowActive"] };
 todomvc_data_VisibilityFilter.ShowAll = ["ShowAll",0];
 todomvc_data_VisibilityFilter.ShowAll.toString = $estr;
 todomvc_data_VisibilityFilter.ShowAll.__enum__ = todomvc_data_VisibilityFilter;
