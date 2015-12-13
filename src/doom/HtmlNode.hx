@@ -79,6 +79,7 @@ class HtmlNode {
       // trace("MIGRATE NODE?", null != comp.element, comp.toString(), node);
       // if(null == comp.element)
       comp.element = cast node;
+      thx.Timer.immediate(comp.mount);
     case [AddText(text), DomNode.ELEMENT_NODE]:
       node.appendChild(document.createTextNode(text));
     case [AddRaw(text), DomNode.ELEMENT_NODE]:
