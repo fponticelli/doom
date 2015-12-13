@@ -83,8 +83,8 @@ class HtmlNode {
       node.appendChild(document.createTextNode(text));
     case [AddRaw(text), DomNode.ELEMENT_NODE]:
       node.appendChild(Html.parse(text));
-    case [AddComment(text), DomNode.ELEMENT_NODE]:
-      node.appendChild(createComment(text));
+    // case [AddComment(text), DomNode.ELEMENT_NODE]:
+    //   node.appendChild(createComment(text));
     case [AddElement(name, attributes, children), DomNode.ELEMENT_NODE]:
       var el = createElement(name, attributes, children);
       node.appendChild(el);
@@ -121,9 +121,9 @@ class HtmlNode {
     case [ReplaceWithRaw(raw), _]:
       var parent = node.parentNode;
       parent.replaceChild(dots.Html.parse(raw), node);
-    case [ReplaceWithComment(text), _]:
-      var parent = node.parentNode;
-      parent.replaceChild(createComment(text), node);
+    // case [ReplaceWithComment(text), _]:
+    //   var parent = node.parentNode;
+    //   parent.replaceChild(createComment(text), node);
     case [ContentChanged(newcontent), DomNode.TEXT_NODE]
        | [ContentChanged(newcontent), DomNode.COMMENT_NODE]:
       if (node.parentNode.nodeName == "TEXTAREA") (cast node.parentNode : TextAreaElement).value = newcontent;
