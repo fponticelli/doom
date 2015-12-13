@@ -11,11 +11,9 @@ class FancySearchComponent extends Component<FancySearchOptions, {}> {
       "class" => "fancy-search-component fancify",
       "placeholder" => "type to search",
       "type"  => "text",
-      "mount" => handleMount
     ]);
   }
 
-  function handleMount(el : js.html.InputElement) {
-    var fancy = new Search(cast el, api);
-  }
+  override function mount()
+    new Search(cast element, api);
 }
