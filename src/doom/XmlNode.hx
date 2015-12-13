@@ -12,7 +12,7 @@ class XmlNode {
       createElement(name, attributes, children);
     case Text(text): Xml.createPCData(text);
     case Raw(text): Xml.parse(text);
-    case Comment(text): Xml.createComment(text);
+    // case Comment(text): Xml.createComment(text);
     case ComponentNode(comp): toXml(comp.node);
   };
 
@@ -109,7 +109,7 @@ class XmlNode {
       buf;
     case Text(text): text;
     case Raw(text): text;
-    case Comment(text): '<!--$text-->';
+    // case Comment(text): '<!--$text-->';
     case ComponentNode(comp): toString(comp.node);
   };
 

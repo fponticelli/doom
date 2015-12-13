@@ -13,6 +13,7 @@ enum Patch {
     attributes : Map<String, AttributeValue>,
     children : Array<Node>);
   AddComponent(comp : IComponent);
+  MigrateElementToComponent(comp : IComponent);
   Remove;
   RemoveAttribute(name : String);
   SetAttribute(name : String, value : AttributeValue);

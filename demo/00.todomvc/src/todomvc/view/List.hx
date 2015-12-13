@@ -30,8 +30,6 @@ class List extends Component<ListApi, ListState> {
     ]);
 }
 
-
-
 typedef ListApi = {
   function setFilter(filter : VisibilityFilter) : Void;
   function clearCompleted() : Void;

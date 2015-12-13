@@ -255,8 +255,8 @@ class Doom {
     ?child : Node) : Node
     return Node.el(name, attributes, children, child);
 
-  inline public static function comment(content : String) : Node
-    return Node.comment(content);
+  // inline public static function comment(content : String) : Node
+  //   return Node.comment(content);
 
   inline public static function text(content : String) : Node
     return Node.text(content);
@@ -265,8 +265,9 @@ class Doom {
     return Node.raw(content);
 
   inline public static function dummy(?text : String = "empty node") : Node
-    return Node.el("div", ["style" => "display:none"], [
-      Node.comment(' $text ')
+    return Node.el("div", [
+      "style" => "display:none",
+      "data-comment" => text
     ]);
 
   inline public static function comp(comp : IComponent) : Node

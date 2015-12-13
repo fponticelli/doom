@@ -18,8 +18,8 @@ class HtmlNode {
     case Raw(text):
       Html.parse(text);
     case Text(text): document.createTextNode(text);
-    case Comment(text):
-      createComment(text);
+    // case Comment(text):
+    //   createComment(text);
     case ComponentNode(comp):
       comp.init();
       thx.Timer.immediate(comp.mount);
@@ -75,6 +75,10 @@ class HtmlNode {
   }
 
   public static function applyPatch(patch : Patch, node : DomNode) switch [patch, node.nodeType] {
+    case [MigrateElementToComponent(comp), _]:
+      // trace("MIGRATE NODE?", null != comp.element, comp.toString(), node);
+      // if(null == comp.element)
+      comp.element = cast node;
     case [AddText(text), DomNode.ELEMENT_NODE]:
       node.appendChild(document.createTextNode(text));
     case [AddRaw(text), DomNode.ELEMENT_NODE]:
@@ -128,7 +132,7 @@ class HtmlNode {
       var n = (cast node : js.html.Element).childNodes.item(index);
       if(null != n) // TODO ????
         applyPatches(patches, n);
-    case [p, n]:
-      throw new thx.Error('cannot apply patch $p on $n');
+    case [p, _]:
+      throw new thx.Error('cannot apply patch $p on ${node}');
   };
 }

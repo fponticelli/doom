@@ -30,6 +30,7 @@ class Component<Api, State> implements IComponent {
       case _: throw new thx.Error('Component ${toString()} must return only element nodes');
     }
     var patches = oldNode.diff(newNode);
+    // trace(patches.map(Patches.toString).join("\n"));
     HtmlNode.applyPatches(patches, element);
     node = newNode;
   }
@@ -38,6 +39,7 @@ class Component<Api, State> implements IComponent {
     return throw new thx.error.AbstractMethod();
 
   public function mount() {}
+
   public function update(newState : State) {
     var oldState = this.state;
     this.state = newState;
@@ -51,6 +53,6 @@ class Component<Api, State> implements IComponent {
 
   public function toString() {
     var cls = Type.getClassName(Type.getClass(this)).split(".").pop();
-    return '$cls(${node.toString().ellipsisMiddle(40, "...")})';
+    return '$cls(${node.toString().ellipsisMiddle(80, "...")})';
   }
 }
