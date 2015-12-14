@@ -18,7 +18,7 @@ class Component<Api, State> implements IComponent {
 
   public function init() {
     if(null != element)
-      throw new thx.Error('${toString()} has been initialized already');
+      trace("double init", toString());
     element = cast HtmlNode.toHtml(node);
   }
 
