@@ -125,6 +125,14 @@ abstract Nodes(Array<Node>) from Array<Node> to Array<Node> {
 
   @:from inline public static function fromNodeImpl(node : NodeImpl) : Nodes
     return [(node : Node)];
+
+  @:from
+  inline public static function text(content : String) : Nodes
+    return [Text(content)];
+
+  @:from
+  inline public static function comp(comp : IComponent) : Nodes
+    return [(ComponentNode(comp) : Node)];
 }
 
 enum NodeImpl {
