@@ -384,8 +384,8 @@ doom_IComponent.prototype = {
 var doom_Component = function(api,state,children) {
 	this.api = api;
 	this.state = state;
-	this.node = this.render();
 	this.children = children;
+	this.node = this.render();
 };
 doom_Component.__name__ = ["doom","Component"];
 doom_Component.__interfaces__ = [doom_IComponent];

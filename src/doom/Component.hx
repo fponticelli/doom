@@ -15,8 +15,8 @@ class Component<Api, State> implements IComponent {
   public function new(api : Api, state : State, ?children : Nodes) {
     this.api = api;
     this.state = state;
-    this.node = render();
     this.children = children;
+    this.node = render();
   }
 
   public function init() {
