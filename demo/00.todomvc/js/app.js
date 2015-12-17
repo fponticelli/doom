@@ -130,7 +130,7 @@ Main.main = function() {
 		f2(action2);
 	};
 	store.subscribe(tmp3);
-	Doom.mount(new todomvc_view_App(store,{ }),dots_Query.first("section.todoapp"));
+	Doom.mount(new todomvc_view_App(store,{ }),dots_Query.find("section.todoapp"));
 };
 Main.getFilterFromHash = function() {
 	var hash = thx_Strings.trimCharsLeft(window.location.hash,"#");
@@ -381,16 +381,17 @@ doom_IComponent.__name__ = ["doom","IComponent"];
 doom_IComponent.prototype = {
 	__class__: doom_IComponent
 };
-var doom_Component = function(api,state) {
+var doom_Component = function(api,state,children) {
 	this.api = api;
 	this.state = state;
 	this.node = this.render();
+	this.children = children;
 };
 doom_Component.__name__ = ["doom","Component"];
 doom_Component.__interfaces__ = [doom_IComponent];
 doom_Component.prototype = {
 	init: function() {
-		if(null != this.element) haxe_Log.trace("double init",{ fileName : "Component.hx", lineNumber : 21, className : "doom.Component", methodName : "init", customParams : [this.toString()]});
+		if(null != this.element) haxe_Log.trace("double init",{ fileName : "Component.hx", lineNumber : 24, className : "doom.Component", methodName : "init", customParams : [this.toString()]});
 		this.element = doom_HtmlNode.toHtml(this.node);
 	}
 	,updateNode: function(oldNode) {
@@ -401,14 +402,14 @@ doom_Component.prototype = {
 		case 3:
 			break;
 		default:
-			throw new thx_Error("Component " + this.toString() + " must return only element nodes",null,{ fileName : "Component.hx", lineNumber : 30, className : "doom.Component", methodName : "updateNode"});
+			throw new thx_Error("Component " + this.toString() + " must return only element nodes",null,{ fileName : "Component.hx", lineNumber : 33, className : "doom.Component", methodName : "updateNode"});
 		}
 		var patches = doom__$Node_Node_$Impl_$.diff(oldNode,newNode);
 		doom_HtmlNode.applyPatches(patches,this.element);
 		this.node = newNode;
 	}
 	,render: function() {
-		throw new thx_error_AbstractMethod({ fileName : "Component.hx", lineNumber : 39, className : "doom.Component", methodName : "render"});
+		throw new thx_error_AbstractMethod({ fileName : "Component.hx", lineNumber : 42, className : "doom.Component", methodName : "render"});
 	}
 	,mount: function() {
 	}
@@ -963,7 +964,7 @@ dots_Html.parse = function(html) {
 };
 var dots_Query = function() { };
 dots_Query.__name__ = ["dots","Query"];
-dots_Query.first = function(selector,ctx) {
+dots_Query.find = function(selector,ctx) {
 	return (ctx != null?ctx:dots_Query.doc).querySelector(selector);
 };
 var haxe_StackItem = { __ename__ : true, __constructs__ : ["CFunction","Module","FilePos","Method","LocalFunction"] };
@@ -1920,8 +1921,8 @@ todomvc_data_VisibilityFilters.filterVisibility = function(arr,filter) {
 	}
 	return tmp;
 };
-var todomvc_view_App = function(api,state) {
-	doom_Component.call(this,api,state);
+var todomvc_view_App = function(api,state,children) {
+	doom_Component.call(this,api,state,children);
 };
 todomvc_view_App.__name__ = ["todomvc","view","App"];
 todomvc_view_App.__super__ = doom_Component;
@@ -1959,8 +1960,8 @@ todomvc_view_App.prototype = $extend(doom_Component.prototype,{
 	}
 	,__class__: todomvc_view_App
 });
-var todomvc_view_Body = function(api,state) {
-	doom_Component.call(this,api,state);
+var todomvc_view_Body = function(api,state,children) {
+	doom_Component.call(this,api,state,children);
 };
 todomvc_view_Body.__name__ = ["todomvc","view","Body"];
 todomvc_view_Body.__super__ = doom_Component;
@@ -1993,8 +1994,8 @@ todomvc_view_Body.prototype = $extend(doom_Component.prototype,{
 	}
 	,__class__: todomvc_view_Body
 });
-var todomvc_view_Footer = function(api,state) {
-	doom_Component.call(this,api,state);
+var todomvc_view_Footer = function(api,state,children) {
+	doom_Component.call(this,api,state,children);
 };
 todomvc_view_Footer.__name__ = ["todomvc","view","Footer"];
 todomvc_view_Footer.__super__ = doom_Component;
@@ -2147,8 +2148,8 @@ todomvc_view_Footer.prototype = $extend(doom_Component.prototype,{
 	}
 	,__class__: todomvc_view_Footer
 });
-var todomvc_view_Header = function(api,state) {
-	doom_Component.call(this,api,state);
+var todomvc_view_Header = function(api,state,children) {
+	doom_Component.call(this,api,state,children);
 };
 todomvc_view_Header.__name__ = ["todomvc","view","Header"];
 todomvc_view_Header.__super__ = doom_Component;
@@ -2198,8 +2199,8 @@ todomvc_view_Header.prototype = $extend(doom_Component.prototype,{
 	}
 	,__class__: todomvc_view_Header
 });
-var todomvc_view_Item = function(api,state) {
-	doom_Component.call(this,api,state);
+var todomvc_view_Item = function(api,state,children) {
+	doom_Component.call(this,api,state,children);
 };
 todomvc_view_Item.__name__ = ["todomvc","view","Item"];
 todomvc_view_Item.__super__ = doom_Component;
@@ -2299,8 +2300,8 @@ todomvc_view_Item.prototype = $extend(doom_Component.prototype,{
 	}
 	,__class__: todomvc_view_Item
 });
-var todomvc_view_List = function(api,state) {
-	doom_Component.call(this,api,state);
+var todomvc_view_List = function(api,state,children) {
+	doom_Component.call(this,api,state,children);
 };
 todomvc_view_List.__name__ = ["todomvc","view","List"];
 todomvc_view_List.__super__ = doom_Component;

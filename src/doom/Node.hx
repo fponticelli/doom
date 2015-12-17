@@ -119,6 +119,14 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
     return doom.XmlNode.toString(this);
 }
 
+abstract Nodes(Array<Node>) from Array<Node> to Array<Node> {
+  @:from inline public static function fromNode(node : Node) : Nodes
+    return [node];
+
+  @:from inline public static function fromNodeImpl(node : NodeImpl) : Nodes
+    return [(node : Node)];
+}
+
 enum NodeImpl {
   Element(
     name : String,

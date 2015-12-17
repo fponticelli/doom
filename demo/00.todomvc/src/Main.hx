@@ -39,7 +39,7 @@ class Main {
     // init app
     Doom.mount(
       new App(store, {}),
-      Query.first("section.todoapp")
+      Query.find("section.todoapp")
     );
   }
 

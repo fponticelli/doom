@@ -3,17 +3,20 @@ package doom;
 import js.html.Element;
 using doom.Patch;
 using thx.Strings;
+import doom.Node;
 
 class Component<Api, State> implements IComponent {
   public var element : Element;
   public var node : Node;
   public var api : Api;
   public var state : State;
+  public var children : Nodes;
 
-  public function new(api : Api, state : State) {
+  public function new(api : Api, state : State, ?children : Nodes) {
     this.api = api;
     this.state = state;
     this.node = render();
+    this.children = children;
   }
 
   public function init() {

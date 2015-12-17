@@ -6,7 +6,7 @@ class Main {
     var api = new fs.AppApi("vegetables.json");
     Doom.mount(
       new App(api, api.state),
-      Query.first("section.fs")
+      Query.find("section.fs")
     );
   }
 }

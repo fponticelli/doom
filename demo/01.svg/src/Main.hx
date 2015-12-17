@@ -5,7 +5,7 @@ class Main {
   static function main() {
     Doom.mount(
       new SvgApp({}, {}),
-      Query.first("section.svg")
+      Query.find("section.svg")
     );
   }
 }
