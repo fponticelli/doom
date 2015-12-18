@@ -2,6 +2,7 @@ package doom;
 
 import js.html.Event;
 import js.html.Element;
+import thx.Error;
 import thx.Ints;
 import thx.Floats;
 
@@ -59,6 +60,12 @@ abstract AttributeValue(AttributeValueImpl) from AttributeValueImpl to Attribute
     return fromStringValueHandler(function(s : String) {
       if(Floats.canParse(s)) f(Floats.parse(s));
     });
+
+  public function toString() : String
+    return switch this {
+      case StringAttribute(s) : s;
+      case a : throw new Error('cannot convert attribute $a to string');
+    };
 
   @:op(A==B)
   public function equalsTo(that : AttributeValue)

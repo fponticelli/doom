@@ -2,6 +2,7 @@ import doom.AttributeValue;
 import doom.IComponent;
 import doom.Node;
 import js.html.Element;
+using thx.Iterators;
 
 class Doom {
   public static function mount(component : IComponent, ref : Element) {
@@ -248,6 +249,12 @@ class Doom {
   inline public static function WBR(?attributes : Map<String, AttributeValue>)
     return el("wbr", attributes);
 
+  // TODO: make this a macro that can parse at compile time if the string is available at compile time,
+  // or falls back to runtime if the string is not available at compile time
+  inline public static function D(selector : String, ?attributes : Map<String, AttributeValue>, ?children : Array<Node>, ?child : Node) : Node {
+    var parseResult = doom.SelectorParser.parseSelector(selector, attributes);
+    return el(parseResult.tag, parseResult.attributes, children, child);
+  }
 
   inline public static function el(name : String,
     ?attributes : Map<String, AttributeValue>,
