@@ -2,7 +2,6 @@ import doom.AttributeValue;
 import doom.IComponent;
 import doom.Node;
 import js.html.Element;
-using thx.Iterators;
 
 class Doom {
   public static function mount(component : IComponent, ref : Element) {
