@@ -13,7 +13,7 @@ class Body extends Component<BodyApi, AppState> {
       var all = state.todos.length,
           completed = state.todos.filterVisibility(ShowCompleted).length,
           remaining = all - completed;
-      DIV([
+      div([
         new List(api, {
           items : state.todos.filterVisibility(state.visibilityFilter),
           allCompleted : completed == 0

@@ -8,11 +8,11 @@ using thx.Strings;
 
 class Header extends Component<AddItemApi, {}> {
   override function render()
-    return HEADER([
+    return header([
         "class" => "header"
       ], [
-        H1("todos"),
-        INPUT([
+        h1("todos"),
+        input([
           "class"       => "new-todo",
           "placeholder" => "What needs to be done?",
           "autofocus"   => true,

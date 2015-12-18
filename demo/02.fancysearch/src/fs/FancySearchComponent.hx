@@ -7,7 +7,7 @@ import fancy.search.util.Types;
 
 class FancySearchComponent extends Component<FancySearchOptions, {}> {
   override function render() {
-    return INPUT([
+    return input([
       "class" => "fancy-search-component fancify",
       "placeholder" => "type to search",
       "type"  => "text",

@@ -8,27 +8,27 @@ import doom.Node;
 class Footer extends Component<FooterApi, FooterState> {
   override function render() {
     var footerContent = [
-        SPAN([
+        span([
             "class" => "todo-count"
           ],
           getItemsLeftLabel()
         ),
-        UL(["class" => "filters"], [
-          LI(A([
+        ul(["class" => "filters"], [
+          li(a([
             "class" => [
               "selected" => isFilter(ShowAll)
             ],
             "href" => "#",
             "click" => handleClickFilter.bind(ShowAll)
           ], "All")),
-          LI(A([
+          li(a([
             "class" => [
               "selected" => isFilter(ShowActive)
             ],
             "href" => "#/active",
             "click" => handleClickFilter.bind(ShowActive)
           ], "Active")),
-          LI(A([
+          li(a([
             "class" => [
               "selected" => isFilter(ShowCompleted)
             ],
@@ -39,13 +39,13 @@ class Footer extends Component<FooterApi, FooterState> {
       ];
     if(state.hasCompleted) {
       footerContent.push(
-        BUTTON([
+        button([
           "class" => "clear-completed",
           "click" => handleClear
         ], "Clear completed")
       );
     }
-    return FOOTER(["class" => "footer"], footerContent);
+    return footer(["class" => "footer"], footerContent);
   }
 
   function handleClear()
@@ -58,7 +58,7 @@ class Footer extends Component<FooterApi, FooterState> {
     return Type.enumEq(state.filter, filter);
 
   function getItemsLeftLabel() : Array<Node>
-    return state.remaining == 1 ? [STRONG("1"), " item left"] : [STRONG('${state.remaining}'), " items left"];
+    return state.remaining == 1 ? [strong("1"), " item left"] : [strong('${state.remaining}'), " items left"];
 }
 
 typedef FooterApi = {

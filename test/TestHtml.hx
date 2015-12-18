@@ -12,7 +12,7 @@ class TestHtml extends TestBaseHtml {
   public function testHtmlPatch() {
     var patches = [
           SetAttribute("name", "value"),
-          AddElement("a", ["href" => "#"], new Map(), []),
+          AddElement("a", ["href" => "#"], []),
           PatchChild(0, [AddText("hello")])
         ];
     HtmlNode.applyPatches(patches, dom);

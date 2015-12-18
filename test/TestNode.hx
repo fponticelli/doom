@@ -7,8 +7,6 @@ class TestNode extends TestBase {
   public function testDiff() {
     Assert.same([], (Text("a") : Node).diff(Text("a")));
     Assert.same([ContentChanged("b")], (Text("a") : Node).diff(Text("b")));
-    Assert.same([ReplaceWithText("b")], (Comment("a") : Node).diff(Text("b")));
-    Assert.same([ReplaceWithComment("b")], (Text("a") : Node).diff(Comment("b")));
   }
 
   public function testAttributeDiff() {

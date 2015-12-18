@@ -8,9 +8,9 @@ class VeggieComponent extends Component<{}, Option<Veggie>> {
   override function render() {
     return switch state {
       case Some(item):
-        ARTICLE([
-          H2(item.vegetable),
-          TABLE([
+        article([
+          h2(item.vegetable),
+          table([
             comp(new CookingComponent("steamed", item.steamed)),
             comp(new CookingComponent("micro waved", item.microwaved)),
             comp(new CookingComponent("blanched", item.blanched)),
@@ -19,7 +19,7 @@ class VeggieComponent extends Component<{}, Option<Veggie>> {
           ])
         ]);
       case None:
-        ARTICLE("Please Search for a veggie");
+        article("Please Search for a veggie");
     };
   }
 }

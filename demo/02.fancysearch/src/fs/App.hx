@@ -13,8 +13,8 @@ class App extends Component<AppApi, AppState> {
   }
 
   override function render() {
-    return DIV(["class" => "fancy-container"], [
-      H1("veggies cooking time"),
+    return div(["class" => "fancy-container"], [
+      h1("veggies cooking time"),
       comp(new SearchItem({}, state))
     ]);
   }

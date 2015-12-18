@@ -30,6 +30,6 @@ class App extends Component<Store<AppState, TodoAction>, {}> {
     api.subscribe(function() {
       body.update(api.state);
     });
-    return DIV([header, body]);
+    return div([header, body]);
   }
 }

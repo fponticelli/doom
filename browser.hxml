@@ -3,6 +3,7 @@
 -cp test
 -lib thx.core
 -lib utest
+-lib dots
 -main TestAll
 -D html
 

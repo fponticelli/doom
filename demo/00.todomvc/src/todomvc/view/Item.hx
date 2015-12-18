@@ -8,27 +8,27 @@ using thx.Strings;
 
 class Item extends Component<ItemApi, ItemState> {
   override function render()
-    return LI([
+    return li([
         "class" => [
           "completed" => state.item.completed,
           "editing"   => state.editing,
         ],
         "dblclick" => handleDblClick
       ], [
-      DIV(["class" => "view"], [
-        INPUT([
+      div(["class" => "view"], [
+        input([
           "class"   => "toggle",
           "type"    => "checkbox",
           "checked" => state.item.completed,
           "change"  => api.toggle
         ]),
-        LABEL(state.item.text),
-        BUTTON([
+        label(state.item.text),
+        button([
           "class" => "destroy",
           "click" => api.remove
         ])
       ]),
-      INPUT([
+      input([
         "class" => "edit",
         "value" => state.item.text,
         "blur"  => handleBlur,

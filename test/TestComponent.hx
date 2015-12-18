@@ -4,16 +4,16 @@ using doom.Component;
 
 class TestComponent extends TestBaseHtml {
   public function testBasic() {
-    var component = new SimpleComponent();
-    component.mount(dom);
+    var component = new SimpleComponent({}, 0, null, false);
+    Doom.mount(component, dom);
     Assert.equals("", dom.innerHTML);
     component.update(5);
     Assert.equals("<span>5</span>", dom.innerHTML);
   }
 
   public function testUpdate() {
-    var component = new SimpleComponent();
-    component.mount(dom);
+    var component = new SimpleComponent({}, 0, null, false);
+    Doom.mount(component, dom);
     component.update(1);
     Assert.equals("<span>1</span>", dom.innerHTML);
     component.update(2);
@@ -23,8 +23,8 @@ class TestComponent extends TestBaseHtml {
   }
 
   public function testNested() {
-    var component = new ContainerComponent();
-    component.mount(dom);
+    var component = new ContainerComponent({}, {name : "some", value : 1});
+    Doom.mount(component, dom);
     component.update({ name : "doom", value : 1 });
     Assert.equals('<div class="doom"><span>1</span></div>', dom.innerHTML);
     component.update({ name : "thx", value : 1 });
@@ -35,8 +35,8 @@ class TestComponent extends TestBaseHtml {
 
   public function testUpdateNested() {
     var done = Assert.createAsync(),
-        component = new ContainerUpdatingComponent();
-    component.mount(dom);
+        component = new ContainerUpdatingComponent({}, {name : "some", value : 1});
+    Doom.mount(component, dom);
     component.update({ name : "doom", value : 1 });
     Assert.equals('<div class="doom"><span>1</span></div>', dom.innerHTML);
     thx.Timer.delay(function() {
@@ -46,27 +46,27 @@ class TestComponent extends TestBaseHtml {
   }
 }
 
-class SimpleComponent extends Component<Int> {
+class SimpleComponent extends Component<{}, Int> {
   var selfUpdating : Bool;
-  public function new(selfUpdating = false) {
-    super();
+  public function new(api, state, children, selfUpdating = false) {
+    super(api, state, children);
     this.selfUpdating = selfUpdating;
   }
-  override function render(value : Int) {
+  override function render() {
     if(selfUpdating) {
       selfUpdating = false;
-      thx.Timer.delay(function() update(value+1), 10);
+      thx.Timer.delay(function() update(state+1), 10);
     }
-    return el("span", '$value');
+    return el("span", '$state');
   }
 }
 
-class ContainerComponent extends Component<{ name : String, value : Int }> {
-  override function render(t : { name : String, value : Int })
-    return el('div', ["class" => t.name], new SimpleComponent().view(t.value));
+class ContainerComponent extends Component<{}, { name : String, value : Int }> {
+  override function render()
+    return el('div', ["class" => state.name], new SimpleComponent({}, state.value, null, false));
 }
 
-class ContainerUpdatingComponent extends Component<{ name : String, value : Int }> {
-  override function render(t : { name : String, value : Int })
-    return el('div', ["class" => t.name], new SimpleComponent(true).view(t.value));
+class ContainerUpdatingComponent extends Component<{}, { name : String, value : Int }> {
+  override function render()
+    return el('div', ["class" => state.name], new SimpleComponent({}, state.value, null, true));
 }

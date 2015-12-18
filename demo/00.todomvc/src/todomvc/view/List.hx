@@ -8,15 +8,15 @@ import todomvc.data.VisibilityFilter;
 
 class List extends Component<ListApi, ListState> {
   override function render()
-    return SECTION(["class" => "main"], [
-      INPUT([
+    return section(["class" => "main"], [
+      input([
         "class" => "toggle-all",
         "type" => "checkbox",
         "checked" => state.allCompleted,
         "change" => api.toggleAll
       ]),
-      LABEL(["for" => "toggle-all"], "Mark all as complete"),
-      UL(["class" => "todo-list"], [
+      label(["for" => "toggle-all"], "Mark all as complete"),
+      ul(["class" => "todo-list"], [
         for(item in state.items)
           new Item({
             remove : api.remove.bind(item.id),

@@ -119,6 +119,8 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
     return doom.XmlNode.toString(this);
 }
 
+@:forward(length, concat, copy, filter, indexOf, iterator, join, lastIndexOf,
+          map, slice)
 abstract Nodes(Array<Node>) from Array<Node> to Array<Node> {
   @:from inline public static function fromNode(node : Node) : Nodes
     return [node];
@@ -133,6 +135,9 @@ abstract Nodes(Array<Node>) from Array<Node> to Array<Node> {
   @:from
   inline public static function comp(comp : IComponent) : Nodes
     return [(ComponentNode(comp) : Node)];
+
+  public function toString()
+    return this.map(function(c) return c.toString()).join("\n");
 }
 
 enum NodeImpl {

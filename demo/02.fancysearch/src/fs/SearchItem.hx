@@ -18,10 +18,10 @@ class SearchItem extends Component<{}, AppState> {
 
     return switch state {
       case Loading:
-        SECTION(["class" => "container"], "Loading ...");
+        section(["class" => "container"], "Loading ...");
       case Data(data):
-        SECTION(["class" => "container"], [
-          HEADER(DIV(["class" => "fancy"],
+        section(["class" => "container"], [
+          header(div(["class" => "fancy"],
             new FancySearchComponent(
               {}, {
               suggestionOptions : {
@@ -32,7 +32,7 @@ class SearchItem extends Component<{}, AppState> {
           comp(veggieComp)
         ]);
       case Error(msg):
-        SECTION(["class" => "container error"], msg);
+        section(["class" => "container error"], msg);
     };
   }
 
