@@ -115,7 +115,7 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
     });
   }
 
-  @:to public function toString() : String
+  public function toString() : String
     return doom.XmlNode.toString(this);
 }
 
