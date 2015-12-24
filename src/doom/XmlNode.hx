@@ -12,7 +12,6 @@ class XmlNode {
       createElement(name, attributes, children);
     case Text(text): Xml.createPCData(text);
     case Raw(text): Xml.parse(text);
-    // case Comment(text): Xml.createComment(text);
     case ComponentNode(comp): toXml(comp.node);
   };
 
@@ -44,8 +43,6 @@ class XmlNode {
       node.addChild(Xml.createPCData(text));
     case [AddRaw(text), Element]:
       node.addChild(Xml.parse(text));
-    // case [AddComment(text), Element]:
-    //   node.addChild(Xml.createComment(text));
     case [AddElement(name, attributes, children), Element]:
       node.addChild(createElement(name, attributes, children));
     case [AddComponent(comp), Element]:
@@ -81,11 +78,6 @@ class XmlNode {
           pos = parent.iterator().indexOf(node);
       parent.removeChild(node);
       parent.insertChild(Xml.parse(raw), pos);
-    // case [ReplaceWithComment(text), _]:
-    //   var parent = node.parent,
-    //       pos = parent.iterator().indexOf(node);
-    //   parent.removeChild(node);
-    //   parent.insertChild(Xml.createComment(text), pos);
     case [ContentChanged(newcontent), CData]
        | [ContentChanged(newcontent), Comment]:
       node.nodeValue = newcontent;
@@ -109,7 +101,6 @@ class XmlNode {
       buf;
     case Text(text): text;
     case Raw(text): text;
-    // case Comment(text): '<!--$text-->';
     case ComponentNode(comp): toString(comp.node);
   };
 

@@ -23,9 +23,6 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
     return Element(name, attributes, children);
   }
 
-  // inline public static function comment(content : String) : Node
-  //   return Comment(content);
-
   @:from
   inline public static function text(content : String) : Node
     return Text(content);
@@ -59,8 +56,6 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
         [AddText(t)];
       case Raw(t):
         [AddRaw(t)];
-      // case Comment(t):
-      //   [AddComment(t)];
       case ComponentNode(comp):
         [AddComponent(comp)];
     };
@@ -102,16 +97,14 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
           .concat(diffNodes(c1, c2));
       case [_, Element(n2, a2, c2)]:
         [ReplaceWithElement(n2, a2, c2)];
-      case [Text(t1), Text(t2)]/* | [Comment(t1), Comment(t2)] */ if(t1 != t2):
+      case [Text(t1), Text(t2)] if(t1 != t2):
         [ContentChanged(t2)];
-      case [Text(_), Text(_)]/* | [Comment(_), Comment(_)] */:
+      case [Text(_), Text(_)]:
         [];
       case [_, Text(t)]:
         [ReplaceWithText(t)];
       case [_, Raw(t)]:
         [ReplaceWithRaw(t)];
-      // case [_, Comment(t)]:
-      //   [ReplaceWithComment(t)];
     });
   }
 
@@ -151,6 +144,5 @@ enum NodeImpl {
     children : Array<Node>);
   Raw(text : String);
   Text(text : String);
-  //Comment(text : String);
   ComponentNode<Api, State>(comp : Component<Api, State>);
 }

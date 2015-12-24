@@ -261,9 +261,6 @@ class Doom {
     ?child : Node) : Node
     return Node.el(name, attributes, children, child);
 
-  // inline public static function comment(content : String) : Node
-  //   return Node.comment(content);
-
   inline public static function text(content : String) : Node
     return Node.text(content);
 

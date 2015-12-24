@@ -7,7 +7,6 @@ using thx.Maps;
 enum Patch {
   AddText(text : String);
   AddRaw(text : String);
-  // AddComment(text : String);
   AddElement(
     name : String,
     attributes : Map<String, AttributeValue>,
@@ -23,7 +22,6 @@ enum Patch {
     children : Array<Node>);
   ReplaceWithText(text : String);
   ReplaceWithRaw(raw : String);
-  // ReplaceWithComment(text : String);
   ReplaceWithComponent<Api, State>(comp : Component<Api, State>);
   ContentChanged(newcontent : String);
   PatchChild(index : Int, patches : Array<Patch>);
