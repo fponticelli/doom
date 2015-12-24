@@ -45,6 +45,37 @@ class TestComponent extends TestBaseHtml {
       done();
     }, 20);
   }
+
+  public function testDomMount() {
+    var counter = 0;
+    var comp = new ComponentPhases(function() ++counter);
+    var done = Assert.createAsync();
+    Assert.equals(0, counter);
+    Doom.mount(comp, dom);
+    thx.Timer.delay(function() {
+      Assert.equals(1, counter);
+      comp.update({});
+      Assert.equals(1, counter);
+      done();
+    }, 10);
+  }
+
+  public function testMountUpdate() {
+    var counter = 0;
+    var comp = new ParentComponent({}, {}, [
+        comp(new ComponentPhases(function() ++counter)),
+        comp(new ComponentPhases(function() ++counter))
+      ]);
+    var done = Assert.createAsync();
+    Assert.equals(0, counter);
+    Doom.mount(comp, dom);
+    thx.Timer.delay(function() {
+      Assert.equals(2, counter);
+      comp.update({});
+      Assert.equals(2, counter);
+      done();
+    }, 10);
+  }
 }
 
 class SimpleComponent extends Component<{}, Int> {
@@ -72,4 +103,24 @@ class ContainerComponent extends Component<{}, { name : String, value : Int }> {
 class ContainerUpdatingComponent extends Component<{}, { name : String, value : Int }> {
   override function render()
     return el('div', ["class" => state.name], new SimpleComponent({}, state.value, null, true));
+}
+
+class ParentComponent extends doom.Component<{}, {}> {
+  override function render()
+    return div(children);
+}
+
+class ComponentPhases extends doom.Component<{}, {}> {
+  var mountHandle : Void -> Void;
+  public function new(mountHandle : Void -> Void) {
+    this.mountHandle = mountHandle;
+    super({}, {});
+  }
+
+  override function render()
+    return div("first render");
+
+  override function mount() {
+    mountHandle();
+  }
 }
