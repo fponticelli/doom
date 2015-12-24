@@ -136,6 +136,10 @@ abstract Nodes(Array<Node>) from Array<Node> to Array<Node> {
   inline public static function comp(comp : IComponent) : Nodes
     return [(ComponentNode(comp) : Node)];
 
+  @:from
+  inline public static function arrayComp(comps : Array<IComponent>) : Nodes
+    return comps.map(function(comp) : Node return comp);
+
   public function toString()
     return this.map(function(c) return c.toString()).join("\n");
 }
