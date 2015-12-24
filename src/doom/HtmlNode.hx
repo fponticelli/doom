@@ -17,7 +17,8 @@ class HtmlNode {
       createElement(name, attributes, children);
     case Raw(text):
       Html.parse(text);
-    case Text(text): document.createTextNode(text);
+    case Text(text):
+      document.createTextNode(text);
     // case Comment(text):
     //   createComment(text);
     case ComponentNode(comp):

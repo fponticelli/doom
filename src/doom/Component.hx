@@ -5,7 +5,7 @@ using doom.Patch;
 using thx.Strings;
 import doom.Node;
 
-class Component<Api, State> implements IComponent {
+class Component<Api, State> {
   public var element : Element;
   public var node : Node;
   public var api : Api;

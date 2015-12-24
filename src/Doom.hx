@@ -1,10 +1,10 @@
 import doom.AttributeValue;
-import doom.IComponent;
+import doom.Component;
 import doom.Node;
 import js.html.Element;
 
 class Doom {
-  public static function mount(component : IComponent, ref : Element) {
+  public static function mount<Api, State>(component : Component<Api, State>, ref : Element) {
     if(null == ref)
       throw 'reference element is set to null';
     ref.innerHTML = "";
@@ -276,7 +276,7 @@ class Doom {
       "data-comment" => text
     ]);
 
-  inline public static function comp(comp : IComponent) : Node
+  inline public static function comp<Api, State>(comp : Component<Api, State>) : Node
     return Node.comp(comp);
 
 }

@@ -12,8 +12,8 @@ enum Patch {
     name : String,
     attributes : Map<String, AttributeValue>,
     children : Array<Node>);
-  AddComponent(comp : IComponent);
-  MigrateElementToComponent(comp : IComponent);
+  AddComponent<Api, State>(comp : Component<Api, State>);
+  MigrateElementToComponent<Api, State>(comp : Component<Api, State>);
   Remove;
   RemoveAttribute(name : String);
   SetAttribute(name : String, value : AttributeValue);
@@ -24,7 +24,7 @@ enum Patch {
   ReplaceWithText(text : String);
   ReplaceWithRaw(raw : String);
   // ReplaceWithComment(text : String);
-  ReplaceWithComponent(comp : IComponent);
+  ReplaceWithComponent<Api, State>(comp : Component<Api, State>);
   ContentChanged(newcontent : String);
   PatchChild(index : Int, patches : Array<Patch>);
 }
