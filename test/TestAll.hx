@@ -7,10 +7,8 @@ class TestAll {
       new TestNode(),
       new TestXml(),
       new TestSelectorParser(),
-      #if (js && html)
       new TestHtml(),
       new TestComponent()
-      #end
     ]);
   }
 }
