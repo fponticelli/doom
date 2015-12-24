@@ -1,12 +1,13 @@
 import utest.Assert;
 import doom.Node.*;
 using doom.Component;
+import Doom.*;
 
 class TestComponent extends TestBaseHtml {
   public function testBasic() {
     var component = new SimpleComponent({}, 0, null, false);
     Doom.mount(component, dom);
-    Assert.equals("", dom.innerHTML);
+    Assert.equals("<span>0</span>", dom.innerHTML);
     component.update(5);
     Assert.equals("<span>5</span>", dom.innerHTML);
   }
@@ -49,13 +50,15 @@ class TestComponent extends TestBaseHtml {
 class SimpleComponent extends Component<{}, Int> {
   var selfUpdating : Bool;
   public function new(api, state, children, selfUpdating = false) {
-    super(api, state, children);
     this.selfUpdating = selfUpdating;
+    super(api, state, children);
   }
   override function render() {
     if(selfUpdating) {
       selfUpdating = false;
-      thx.Timer.delay(function() update(state+1), 10);
+      thx.Timer.delay(function() {
+        update(state+1);
+      }, 2);
     }
     return el("span", '$state');
   }
