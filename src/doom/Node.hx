@@ -84,6 +84,8 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
         [MigrateComponentToComponent(old, comp)];
       case [_, ComponentNode(comp)]:
         [MigrateElementToComponent(comp)];
+      case [ComponentNode(comp), _]:
+        [DestroyComponent(comp)];
       case [_, _]:
         [];
     };

@@ -71,6 +71,8 @@ class HtmlNode {
   }
 
   public static function applyPatch(patch : Patch, node : DomNode) switch [patch, node.nodeType] {
+    case [DestroyComponent(comp), _]:
+      comp.destroy();
     case [MigrateComponentToComponent(oldComp, newComp), _] if(thx.Types.sameType(oldComp, newComp)):
       newComp.element = oldComp.element;
       newComp.migrate(cast oldComp);

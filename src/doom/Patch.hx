@@ -12,6 +12,7 @@ enum Patch {
     attributes : Map<String, AttributeValue>,
     children : Array<Node>);
   AddComponent<Api, State>(comp : Component<Api, State>);
+  DestroyComponent<Api, State>(comp : Component<Api, State>);
   MigrateComponentToComponent<OldApi, OldState, NewApi, NewState>(oldComp : Component<OldApi, OldState>, newComp : Component<NewApi, NewState>);
   MigrateElementToComponent<Api, State>(comp : Component<Api, State>);
   Remove;

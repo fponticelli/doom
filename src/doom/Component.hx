@@ -45,6 +45,7 @@ class Component<Api, State> {
   public function migrate(old : Dynamic) {}
   public function mount() {}
   public function refresh() {}
+  public function destroy() {}
 
   public function update(newState : State) {
     var oldState = this.state;
