@@ -71,10 +71,18 @@ class HtmlNode {
   }
 
   public static function applyPatch(patch : Patch, node : DomNode) switch [patch, node.nodeType] {
+    case [MigrateComponentToComponent(oldComp, newComp), _] if(thx.Types.sameType(oldComp, newComp)):
+      newComp.element = oldComp.element;
+      untyped if(null != newComp.migrate) newComp.migrate(oldComp);
+      newComp.refresh();
+    case [MigrateComponentToComponent(oldComp, newComp), _]:
+      newComp.element = oldComp.element;
+      newComp.refresh();
     case [MigrateElementToComponent(comp), _]:
       // trace("MIGRATE NODE?", null != comp.element, comp.toString(), node);
       // if(null == comp.element)
       comp.element = cast node;
+      comp.refresh();
       // TODO why is this needed?
       // thx.Timer.immediate(comp.mount);
     case [AddText(text), DomNode.ELEMENT_NODE]:

@@ -42,6 +42,7 @@ class Component<Api, State> {
     return throw new thx.error.AbstractMethod();
 
   public function mount() {}
+  public function refresh() {}
 
   public function update(newState : State) {
     var oldState = this.state;

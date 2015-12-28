@@ -79,10 +79,12 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
   }
 
   public function diff(that : Node) : Array<Patch> {
-    var p : Array<Patch> = switch that {
-      case ComponentNode(comp):
+    var p : Array<Patch> = switch [this, that] {
+      case [ComponentNode(old), ComponentNode(comp)]:
+        [MigrateComponentToComponent(old, comp)];
+      case [_, ComponentNode(comp)]:
         [MigrateElementToComponent(comp)];
-      case _:
+      case [_, _]:
         [];
     };
     return p.concat(switch [this, that] {
