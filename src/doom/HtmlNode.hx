@@ -40,13 +40,18 @@ class HtmlNode {
     for(key in attributes.keys()) {
       var value = attributes.get(key);
       switch value {
-        case StringAttribute(s) if(s.hasContent()):
+        case null:
+          // do nothing
+        case StringAttribute(s) if(null == s || s == ""):
+          // do nothing
+        case StringAttribute(s):
           el.setAttribute(key, s);
         case BoolAttribute(b) if(b):
           el.setAttribute(key, "");
         case EventAttribute(e):
           addEvent(el, key, e);
         case _:
+          // do nothing
       }
     }
     for(child in children) {
@@ -99,11 +104,15 @@ class HtmlNode {
       (cast node : js.html.Element).removeAttribute(name);
     case [SetAttribute(name, value), DomNode.ELEMENT_NODE]:
       switch value {
-        case StringAttribute(s) if(s.hasContent()):
+        case null:
+          (cast node : js.html.Element).removeAttribute(name);
+        case StringAttribute(s) if(s == null || s == ""):
+          (cast node : js.html.Element).removeAttribute(name);
+        case StringAttribute(s):
           (cast node : js.html.Element).setAttribute(name, s);
         case BoolAttribute(b) if(b):
           (cast node : js.html.Element).setAttribute(name, name);
-        case StringAttribute(_), BoolAttribute(_):
+        case BoolAttribute(_):
           (cast node : js.html.Element).removeAttribute(name);
         case EventAttribute(e):
           addEvent(cast node, name, e);
