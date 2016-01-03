@@ -80,7 +80,9 @@ class HtmlNode {
       comp.destroy();
     case [MigrateComponentToComponent(oldComp, newComp), _] if(thx.Types.sameType(oldComp, newComp)):
       newComp.element = oldComp.element;
-      newComp.migrate(cast oldComp);
+      var migrate = Reflect.field(newComp, "migrate");
+      if(null != migrate)
+        Reflect.callMethod(newComp, migrate, [oldComp]);
       newComp.refresh();
     case [MigrateComponentToComponent(oldComp, newComp), _]:
       newComp.element = oldComp.element;

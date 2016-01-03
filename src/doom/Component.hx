@@ -42,7 +42,6 @@ class Component<Api, State> {
   private function render() : Node
     return throw new thx.error.AbstractMethod();
 
-  public function migrate(old : Dynamic) {}
   public function mount() {}
   public function refresh() {}
   public function destroy() {}
