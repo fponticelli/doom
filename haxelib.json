@@ -1,0 +1,15 @@
+{
+  "name": "doom",
+  "url": "https://github.com/fponticelli/doom",
+  "license": "MIT",
+  "classPath": "src",
+  "tags": ["js", "virtual dom", "html", "front-end", "ui", "doom"],
+  "description": "Virtual Dom library.",
+  "releasenote": "first release.",
+  "version": "0.1.0",
+  "contributors": ["fponticelli"],
+  "dependencies" : {
+    "thx.core" : "",
+    "dots" : ""
+  }
+}
