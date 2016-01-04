@@ -22,42 +22,42 @@ abstract AttributeValue(AttributeValueImpl) from AttributeValueImpl to Attribute
     return BoolAttribute(b);
 
   @:from static public function fromHandler(f : Void -> Void) : AttributeValue
-    return EventAttribute(function(e : Event) {
+    return null == f ? BoolAttribute(false) : EventAttribute(function(e : Event) {
       e.preventDefault();
       f();
     });
 
   @:from static public function fromEventHandler<T : Event>(f : T -> Void) : AttributeValue
-    return EventAttribute(f);
+    return null == f ? BoolAttribute(false) : EventAttribute(f);
 
   @:from static public function fromElementHandler<T : Element>(f : T -> Void) : AttributeValue
-    return EventAttribute(function(e : Event) {
+    return null == f ? BoolAttribute(false) : EventAttribute(function(e : Event) {
       e.preventDefault();
       var input : T = cast e.target;
       f(input);
     });
 
   @:from static public function fromStringValueHandler(f : String -> Void) : AttributeValue
-    return EventAttribute(function(e : Event) {
+    return null == f ? BoolAttribute(false) : EventAttribute(function(e : Event) {
       e.preventDefault();
       var value : String = dots.Dom.getValue(cast e.target);
       f(value);
     });
 
   @:from static public function fromBoolValueHandler(f : Bool -> Void) : AttributeValue
-    return EventAttribute(function(e : Event) {
+    return null == f ? BoolAttribute(false) : EventAttribute(function(e : Event) {
       e.preventDefault();
       var value : Bool = (cast e.target : js.html.InputElement).checked;
       f(value);
     });
 
   @:from static public function fromIntValueHandler(f : Int -> Void) : AttributeValue
-    return fromStringValueHandler(function(s : String) {
+    return null == f ? BoolAttribute(false) : fromStringValueHandler(function(s : String) {
       if(Ints.canParse(s)) f(Ints.parse(s));
     });
 
   @:from static public function fromFloatValueHandler(f : Float -> Void) : AttributeValue
-    return fromStringValueHandler(function(s : String) {
+    return null == f ? BoolAttribute(false) : fromStringValueHandler(function(s : String) {
       if(Floats.canParse(s)) f(Floats.parse(s));
     });
 
