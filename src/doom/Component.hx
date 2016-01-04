@@ -20,8 +20,8 @@ class Component<Api, State> {
   }
 
   public function init() {
-    if(null != element)
-      trace("double init", toString());
+    // if(null != element)
+    //   trace("double init", toString());
     element = cast HtmlNode.toHtml(node);
   }
 
