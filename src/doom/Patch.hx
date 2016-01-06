@@ -11,10 +11,10 @@ enum Patch {
     name : String,
     attributes : Map<String, AttributeValue>,
     children : Array<Node>);
-  AddComponent<Api, State>(comp : Component<Api, State>);
-  DestroyComponent<Api, State>(comp : Component<Api, State>);
-  MigrateComponentToComponent<OldApi, OldState, NewApi, NewState>(oldComp : Component<OldApi, OldState>, newComp : Component<NewApi, NewState>);
-  MigrateElementToComponent<Api, State>(comp : Component<Api, State>);
+  AddComponent(comp : IComponent);
+  DestroyComponent(comp : IComponent);
+  MigrateComponentToComponent(oldComp : IComponent, newComp : IComponent);
+  MigrateElementToComponent(comp : IComponent);
   Remove;
   RemoveAttribute(name : String);
   SetAttribute(name : String, value : AttributeValue);
@@ -24,7 +24,7 @@ enum Patch {
     children : Array<Node>);
   ReplaceWithText(text : String);
   ReplaceWithRaw(raw : String);
-  ReplaceWithComponent<Api, State>(comp : Component<Api, State>);
+  ReplaceWithComponent(comp : IComponent);
   ContentChanged(newcontent : String);
   PatchChild(index : Int, patches : Array<Patch>);
 }

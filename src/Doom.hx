@@ -1,5 +1,6 @@
 import doom.AttributeValue;
 import doom.Component;
+import doom.IComponent;
 import doom.Node;
 import js.html.Element;
 
@@ -273,7 +274,7 @@ class Doom {
       "data-comment" => text
     ]);
 
-  inline public static function comp<Api, State>(comp : Component<Api, State>) : Node
+  inline public static function comp(comp : IComponent) : Node
     return Node.comp(comp);
 
 }
