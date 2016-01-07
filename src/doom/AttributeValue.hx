@@ -70,6 +70,7 @@ abstract AttributeValue(AttributeValueImpl) from AttributeValueImpl to Attribute
   @:op(A==B)
   public function equalsTo(that : AttributeValue)
     return switch [this, that] {
+      case [null, _], [_, null]: false;
       case [BoolAttribute(a), BoolAttribute(b)]: a == b;
       case [StringAttribute(a), StringAttribute(b)]: a == b;
       case [_, _]: false;
