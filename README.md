@@ -14,8 +14,8 @@ TODO
 
 ## AutoComponents
 
-You can also create a Component by extending the special doom.AutoComponent
-base class.  This class has a Haxe @:autoBuild macro which will generate
+You can also create a `Component` by extending the special `doom.AutoComponent`
+base class.  This class has a Haxe `@:autoBuild` macro which will generate
 a lot of the State/Api/etc. boilerplate code that is typically needed for
 Components.
 
