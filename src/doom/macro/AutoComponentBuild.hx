@@ -455,7 +455,7 @@ class AutoComponentBuild {
           args: [], // Array<FunctionArg>
         }),
         doc: null,
-        access: [APrivate],
+        access: [APrivate, AInline],
       }
       fields.push(getterFunctionField);
     }
@@ -500,7 +500,7 @@ class AutoComponentBuild {
           args: [], // Array<FunctionArg>
         }),
         doc: null,
-        access: [APrivate],
+        access: [APrivate, AInline],
       }
       fields.push(getterFunctionField);
     }

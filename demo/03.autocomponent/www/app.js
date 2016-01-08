@@ -1054,7 +1054,7 @@ ac_AutoButton.prototype = $extend(doom_AutoComponent.prototype,{
 				if(__map_reserved["class"] != null) _g.setReserved("class",value1); else _g.h["class"] = value1;
 			}
 			{
-				var value2 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler($this.get_click());
+				var value2 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler($this.api.click);
 				if(__map_reserved.click != null) _g.setReserved("click",value2); else _g.h["click"] = value2;
 			}
 			$r = _g;
@@ -1062,7 +1062,7 @@ ac_AutoButton.prototype = $extend(doom_AutoComponent.prototype,{
 		}(this)),this.children,null);
 	}
 	,getStyleClass: function() {
-		var _g = this.get_style();
+		var _g = this.state.style;
 		switch(_g[1]) {
 		case 0:
 			return "";
@@ -1081,7 +1081,7 @@ ac_AutoButton.prototype = $extend(doom_AutoComponent.prototype,{
 		}
 	}
 	,getSizeClass: function() {
-		var _g = this.get_size();
+		var _g = this.state.size;
 		switch(_g[1]) {
 		case 0:
 			return "";
@@ -1145,12 +1145,7 @@ ac_AutoWidget.prototype = $extend(doom_AutoComponent.prototype,{
 			}
 			$r = _g1;
 			return $r;
-		}(this)),null,Doom.h2(null,null,(function($this) {
-			var $r;
-			var content = "Title: " + $this.get_title();
-			$r = doom_NodeImpl.Text(content);
-			return $r;
-		}(this)))),Doom.div((function($this) {
+		}(this)),null,Doom.h2(null,null,doom_NodeImpl.Text("Title: " + this.state.title))),Doom.div((function($this) {
 			var $r;
 			var _g2 = new haxe_ds_StringMap();
 			{
@@ -1159,12 +1154,7 @@ ac_AutoWidget.prototype = $extend(doom_AutoComponent.prototype,{
 			}
 			$r = _g2;
 			return $r;
-		}(this)),null,Doom.h3(null,null,(function($this) {
-			var $r;
-			var content1 = "Sub-title: " + $this.get_subTitle();
-			$r = doom_NodeImpl.Text(content1);
-			return $r;
-		}(this)))),Doom.div((function($this) {
+		}(this)),null,Doom.h3(null,null,doom_NodeImpl.Text("Sub-title: " + this.state.subTitle))),Doom.div((function($this) {
 			var $r;
 			var _g3 = new haxe_ds_StringMap();
 			{
@@ -1173,12 +1163,7 @@ ac_AutoWidget.prototype = $extend(doom_AutoComponent.prototype,{
 			}
 			$r = _g3;
 			return $r;
-		}(this)),null,Doom.p(null,null,(function($this) {
-			var $r;
-			var content2 = $this.get_content();
-			$r = doom_NodeImpl.Text(content2);
-			return $r;
-		}(this)))),this.get_footer() != null?Doom.div((function($this) {
+		}(this)),null,Doom.p(null,null,doom_NodeImpl.Text(this.state.content))),this.state.footer != null?Doom.div((function($this) {
 			var $r;
 			var _g4 = new haxe_ds_StringMap();
 			{
@@ -1288,9 +1273,9 @@ doom__$AttributeValue_AttributeValue_$Impl_$.toString = function(this1) {
 	}
 };
 doom__$AttributeValue_AttributeValue_$Impl_$.equalsTo = function(this1,that) {
-	switch(this1[1]) {
+	if(this1 == null) return false; else switch(this1[1]) {
 	case 0:
-		switch(that[1]) {
+		if(that == null) return false; else switch(that[1]) {
 		case 0:
 			var a = this1[2];
 			var b = that[2];
@@ -1300,7 +1285,7 @@ doom__$AttributeValue_AttributeValue_$Impl_$.equalsTo = function(this1,that) {
 		}
 		break;
 	case 1:
-		switch(that[1]) {
+		if(that == null) return false; else switch(that[1]) {
 		case 1:
 			var a1 = this1[2];
 			var b1 = that[2];
@@ -1310,7 +1295,10 @@ doom__$AttributeValue_AttributeValue_$Impl_$.equalsTo = function(this1,that) {
 		}
 		break;
 	default:
-		return false;
+		if(that == null) return false; else switch(that[1]) {
+		default:
+			return false;
+		}
 	}
 };
 doom__$AttributeValue_AttributeValue_$Impl_$.notEqualsTo = function(this1,that) {

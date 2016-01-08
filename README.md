@@ -126,20 +126,20 @@ class MyButton extends AutoComponent {
   public var click(get, null) : Void -> Void;
   public var hover(get, null) : Void -> Void;
 
-  // generated getters for state/api
-  function get_style() : String {
+  // generated (inline) getters for state/api
+  inline function get_style() : String {
     return state.style;
   }
 
-  function get_size() : String {
+  inline function get_size() : String {
     return state.size;
   }
 
-  function get_click() : Void -> Void {
+  inline function get_click() : Void -> Void {
     return api.click;
   }
 
-  function get_hover() : Void -> Void {
+  inline function get_hover() : Void -> Void {
     return api.hover;
   }
 
