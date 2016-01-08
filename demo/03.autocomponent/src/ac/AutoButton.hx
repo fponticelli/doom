@@ -19,8 +19,8 @@ enum AutoButtonSize {
   Small;
 }
 
-class AutoButton implements AutoComponent {
-  @:state
+class AutoButton extends AutoComponent {
+  @:state(Default)
   public var style : AutoButtonStyle;
 
   @:state(Default)
@@ -29,7 +29,7 @@ class AutoButton implements AutoComponent {
   @:api
   public var click : Void -> Void;
 
-  public function render() : Node {
+  public override function render() : Node {
     return button([
       "type" => "button",
       "class" => 'btn ${getStyleClass()}, ${getSizeClass()}',

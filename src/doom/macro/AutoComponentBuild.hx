@@ -8,19 +8,30 @@ import haxe.macro.TypeTools;
 using haxe.macro.ExprTools;
 
 class AutoComponentBuild {
-  static inline var CHILDREN_FIELD = 'children';
-  static inline var STATE_FIELD = 'state';
-  static inline var API_FIELD = 'api';
-  static inline var NEW_FIELD = 'new';
-  static inline var CREATE_FIELD = 'create';
-  static inline var CHILDREN_META = ':$CHILDREN_FIELD';
-  static inline var STATE_META = ':$STATE_FIELD';
-  static inline var API_META = ':$API_FIELD';
-  static inline var STATE_SUFFIX = 'State';
-  static inline var API_SUFFIX = 'Api';
+  // field names
+  static inline var CHILDREN_IDENT = 'children';
+  static inline var STATE_IDENT = 'state';
+  static inline var API_IDENT = 'api';
+  static inline var NEW_IDENT = 'new';
+  static inline var CREATE_IDENT = 'create';
+  static inline var UPDATE_IDENT = "update";
+  static inline var SHOULD_RENDER_IDENT = "shouldRender";
+  static inline var NEW_STATE_IDENT = "newState";
+  static inline var OLD_STATE_IDENT = "newState";
+
+  // metadata names
+  static inline var CHILDREN_META = ':$CHILDREN_IDENT';
+  static inline var STATE_META = ':$STATE_IDENT';
+  static inline var API_META = ':$API_IDENT';
+
+  // metadata param identifiers
   static inline var OPT_IDENT = 'opt';
   static inline var REQ_IDENT = 'req';
   static inline var NONE_IDENT = 'none';
+
+  // Api/State type suffixes
+  static inline var STATE_SUFFIX = 'State';
+  static inline var API_SUFFIX = 'Api';
 
   public static function build() : Array<Field> {
     var localClass : ClassType = Context.getLocalClass().get();
@@ -77,6 +88,7 @@ class AutoComponentBuild {
       stateMeta: stateMeta,
       stateComplexType: stateComplexType
     }));
+    */
 
     // Change "@:api" vars to getter properties for api object
     changeApiFieldsToProperties(fields, apiMeta);
@@ -88,8 +100,9 @@ class AutoComponentBuild {
     fields.push(generateUpdateFunction({ stateComplexType: stateComplexType }));
 
     // Add "shouldRender" function to class
-    fields.push(generateShouldRenderFunction({ stateComplexType: stateComplexType }));
-    */
+    if (!hasFieldByName(fields, SHOULD_RENDER_IDENT)) {
+      fields.push(generateShouldRenderFunction({ stateComplexType: stateComplexType }));
+    }
 
     return fields;
   }
@@ -275,7 +288,7 @@ class AutoComponentBuild {
   static function generateApiField(options: { apiComplexType : ComplexType }) : Field {
     return {
       pos: Context.currentPos(),
-      name: API_FIELD,
+      name: API_IDENT,
       meta: null,
       kind: FVar(options.apiComplexType, null),
       access: [APublic],
@@ -285,7 +298,7 @@ class AutoComponentBuild {
   static function generateStateField(options: { stateComplexType : ComplexType }) : Field {
     return {
       pos: Context.currentPos(),
-      name: STATE_FIELD,
+      name: STATE_IDENT,
       meta: null,
       kind: FVar(options.stateComplexType, null),
       access: [APublic],
@@ -295,7 +308,7 @@ class AutoComponentBuild {
   static function generateChildrenField(options: { required : Bool }) : Field {
     return {
       pos: Context.currentPos(),
-      name: CHILDREN_FIELD,
+      name: CHILDREN_IDENT,
       meta: null,
       kind: options.required ?
         FVar(macro : doom.Node.Nodes, null) :
@@ -319,10 +332,25 @@ class AutoComponentBuild {
     stateComplexType : ComplexType,
   }) : Field {
     // Create the constructor body expression
-    var constructorExprs : Array<Expr> = [
+    var constructorExprs : Array<Expr> = [];
+
+    // Add expressions to assign default state values for any state field with a default
+    var stateMetas = switch options.stateMeta {
+      case None: [];
+      case Only(fieldMeta) : [fieldMeta];
+      case Many(fieldMetas) : fieldMetas;
+    };
+    for (fieldMeta in stateMetas) {
+      if (!fieldMeta.isRequired && fieldMeta.hasDefaultValue) {
+        var fieldName = fieldMeta.field.name;
+        var expr : Expr = macro if (state.$fieldName == null) state.$fieldName = $e{fieldMeta.defaultValue};
+        constructorExprs.push(expr);
+      }
+    }
+    constructorExprs = constructorExprs.concat([
       macro this.api = api,
       macro this.state = state,
-    ];
+    ]);
     switch options.childrenMeta {
       case None: // no-op
       case Optional | Required: constructorExprs.push(macro this.children = children);
@@ -330,25 +358,27 @@ class AutoComponentBuild {
     constructorExprs.push(macro super());
     var constructorExpr : Expr = macro $b{constructorExprs};
 
+    //trace(ExprTools.toString(constructorExpr));
+
     // Create the constructor args
     var constructorArgs : Array<FunctionArg> = [];
     constructorArgs.push({
-      name: API_FIELD,
+      name: API_IDENT,
       type: options.apiComplexType
     });
     constructorArgs.push({
-      name: STATE_FIELD,
+      name: STATE_IDENT,
       type: options.stateComplexType
     });
     switch options.childrenMeta {
       case None: // no-op
       case Optional: constructorArgs.push({
-        name: CHILDREN_FIELD,
+        name: CHILDREN_IDENT,
         opt: true,
         type: macro : doom.Node.Nodes
       });
       case Required: constructorArgs.push({
-        name: CHILDREN_FIELD,
+        name: CHILDREN_IDENT,
         type: macro : doom.Node.Nodes
       });
     }
@@ -356,7 +386,7 @@ class AutoComponentBuild {
     // "new" field
     return {
       pos: Context.currentPos(),
-      name: NEW_FIELD,
+      name: NEW_IDENT,
       meta: null,
       kind: FFun({
         ret: null,
@@ -367,25 +397,177 @@ class AutoComponentBuild {
     };
   }
 
-  static function generateCreateFunction(options: { childrenMeta: ChildrenMeta, apiComplexType: ComplexType, apiMeta: ApiMeta, stateComplexType: ComplexType, stateMeta: StateMeta }) : Field {
+  static function generateCreateFunction(options: {
+    childrenMeta: ChildrenMeta,
+    apiComplexType: ComplexType,
+    apiMeta: ApiMeta,
+    stateComplexType: ComplexType,
+    stateMeta: StateMeta
+  }) : Field {
     return null;
   }
 
+  // change:
+  // @api public var myApi : Void -> Void;
+  //
+  // to:
+  // public var myApi(get, null) : Void -> Void;
+  //
+  // function get_myApi() : Void -> Void {
+  //   return api.myApi;
+  // }
   static function changeApiFieldsToProperties(fields : Array<Field>, apiMeta : ApiMeta) : Void {
+    var apiFieldMetas = switch apiMeta {
+      case None: [];
+      case Only(fieldMeta) : [fieldMeta];
+      case Many(fieldMetas) : fieldMetas;
+    };
+    for (apiFieldMeta in apiFieldMetas) {
+      var field = apiFieldMeta.field;
+      var originalKind = switch field.kind {
+        case FieldType.FVar(t, e) : { type: t, expr: e };
+        case FieldType.FProp(g, s, t, e) : null;
+        case FieldType.FFun(f) : null;
+      };
+      if (originalKind == null) Context.error('AutoComponent: cannot convert api field ${field.name} to getter property', field.pos);
+      fields.remove(field);
+      var propField : Field = {
+        pos: Context.currentPos(),
+        name: field.name,
+        meta: null,
+        kind: FProp("get", "null", originalKind.type, originalKind.expr),
+        doc: field.doc,
+        access: field.access,
+      };
+      fields.push(propField);
+      var fieldParts : Array<String> = ["api", field.name];
+      var bodyExprs :Array<Expr> = [
+        macro return $p{fieldParts},
+      ];
+      var getterFunctionField : Field = {
+        pos: Context.currentPos(),
+        name: 'get_${field.name}',
+        meta: null,
+        kind: FFun({
+          ret: originalKind.type, // Null<ComplexType>
+          params: [], // Null<Array<TypeParamDecl>>
+          expr: macro $b{bodyExprs}, // Null<Expr>
+          args: [], // Array<FunctionArg>
+        }),
+        doc: null,
+        access: [APrivate],
+      }
+      fields.push(getterFunctionField);
+    }
   }
 
   static function changeStateFieldsToProperties(fields : Array<Field>, stateMeta : StateMeta) : Void {
+    var stateFieldMetas = switch stateMeta {
+      case None: [];
+      case Only(fieldMeta) : [fieldMeta];
+      case Many(fieldMetas) : fieldMetas;
+    };
+    for (stateFieldMeta in stateFieldMetas) {
+      var field = stateFieldMeta.field;
+      var originalKind = switch field.kind {
+        case FieldType.FVar(t, e) : { type: t, expr: e };
+        case FieldType.FProp(g, s, t, e) : null;
+        case FieldType.FFun(f) : null;
+      };
+      if (originalKind == null) Context.error('AutoComponent: cannot convert state field ${field.name} to getter property', field.pos);
+      fields.remove(field);
+      var propField : Field = {
+        pos: Context.currentPos(),
+        name: field.name,
+        meta: null,
+        kind: FProp("get", "null", originalKind.type, originalKind.expr),
+        doc: field.doc,
+        access: field.access,
+      };
+      fields.push(propField);
+      var fieldParts : Array<String> = ["state", field.name];
+      var bodyExprs :Array<Expr> = [
+        macro return $p{fieldParts},
+      ];
+      var getterFunctionField : Field = {
+        pos: Context.currentPos(),
+        name: 'get_${field.name}',
+        meta: null,
+        kind: FFun({
+          ret: originalKind.type, // Null<ComplexType>
+          params: [], // Null<Array<TypeParamDecl>>
+          expr: macro $b{bodyExprs}, // Null<Expr>
+          args: [], // Array<FunctionArg>
+        }),
+        doc: null,
+        access: [APrivate],
+      }
+      fields.push(getterFunctionField);
+    }
   }
 
-  static function changeApiFieldToProperty(fields : Field, field : Field) {
-  }
-
+  // public function update(newState : State) {
+  //   var oldState = this.state;
+  //   this.state = newState;
+  //   if(!shouldRender(oldState, newState))
+  //     return;
+  //   updateNode(node);
+  // }
   static function generateUpdateFunction(options: { stateComplexType: ComplexType }) : Field {
-    return null;
+    return {
+      pos: Context.currentPos(),
+      name: UPDATE_IDENT,
+      meta: null,
+      doc: null,
+      access: [APublic],
+      kind: FFun({
+        ret: null,
+        params: [],
+        expr: macro {
+          var oldState = this.state;
+          this.state = newState;
+          if (!shouldRender(oldState, newState)) return;
+          updateNode(node);
+        },
+        args: [{
+          value: null, // Null<Null<Expr>>
+          type: options.stateComplexType, // Null<ComplexType>
+          opt: false, // Null<Bool>
+          name: "newState", // String
+        }]
+      }),
+    };
   }
 
+  // public function shouldRender(oldState : State, newState : State) {
+  //   return true;
+  // }
   static function generateShouldRenderFunction(options: { stateComplexType: ComplexType }) : Field {
-    return null;
+    return {
+      pos: Context.currentPos(),
+      name: SHOULD_RENDER_IDENT,
+      meta: null,
+      doc: null,
+      access: [APublic],
+      kind: FFun({
+        ret: null,
+        params: [],
+        expr: macro {
+          return true;
+        },
+        args: [{
+          value: null, // Null<Null<Expr>>
+          type: options.stateComplexType, // Null<ComplexType>
+          opt: false, // Null<Bool>
+          name: "oldState", // String
+        }, {
+          value: null, // Null<Null<Expr>>
+          type: options.stateComplexType, // Null<ComplexType>
+          opt: false, // Null<Bool>
+          name: "newState", // String
+        }]
+      }),
+    };
   }
 
   static function fullyQualifyFieldTypes(fields : Array<Field>) : Array<Field> {
@@ -465,6 +647,13 @@ class AutoComponentBuild {
     };
     return field;
   }
+
+  static function hasFieldByName(fields : Array<Field>, name : String) : Bool {
+    for (field in fields) {
+      if (field.name == name) return true;
+    }
+    return false;
+  }
 }
 
 enum ChildrenMeta {
@@ -482,12 +671,12 @@ typedef FieldMeta = {
 
 enum StateMeta {
   None;
-  Only(field : FieldMeta);
-  Many(fields : Array<FieldMeta>);
+  Only(fieldMeta : FieldMeta);
+  Many(fieldMetas : Array<FieldMeta>);
 }
 
 enum ApiMeta {
   None;
-  Only(field : FieldMeta);
-  Many(fields : Array<FieldMeta>);
+  Only(fieldMeta : FieldMeta);
+  Many(fieldMetas : Array<FieldMeta>);
 }

@@ -881,21 +881,42 @@ Xml.prototype = {
 	}
 	,__class__: Xml
 };
-var doom_Component = function(api,state,children) {
-	this.api = api;
-	this.state = state;
-	this.children = children;
-	this.node = this.render();
-};
-doom_Component.__name__ = ["doom","Component"];
-doom_Component.prototype = {
+var doom_IComponent = function() { };
+doom_IComponent.__name__ = ["doom","IComponent"];
+doom_IComponent.prototype = {
 	element: null
 	,node: null
-	,api: null
-	,state: null
-	,children: null
+	,init: null
+	,render: null
+	,mount: null
+	,refresh: null
+	,destroy: null
+	,toString: null
+	,__class__: doom_IComponent
+};
+var doom_ComponentBase = function() {
+	this.node = this.render();
+};
+doom_ComponentBase.__name__ = ["doom","ComponentBase"];
+doom_ComponentBase.__interfaces__ = [doom_IComponent];
+doom_ComponentBase.prototype = {
+	element: null
+	,node: null
 	,init: function() {
 		this.element = doom_HtmlNode.toHtml(this.node);
+	}
+	,render: function() {
+		throw new thx_error_AbstractMethod({ fileName : "ComponentBase.hx", lineNumber : 22, className : "doom.ComponentBase", methodName : "render"});
+	}
+	,mount: function() {
+	}
+	,refresh: function() {
+	}
+	,destroy: function() {
+	}
+	,toString: function() {
+		var cls = Type.getClassName(js_Boot.getClass(this)).split(".").pop();
+		return "" + cls + "(" + thx_Strings.ellipsisMiddle(doom__$Node_Node_$Impl_$.toString(this.node),80,"...") + ")";
 	}
 	,updateNode: function(oldNode) {
 		var newNode = this.render();
@@ -905,20 +926,185 @@ doom_Component.prototype = {
 		case 3:
 			break;
 		default:
-			throw new thx_Error("Component " + this.toString() + " must return only element nodes",null,{ fileName : "Component.hx", lineNumber : 34, className : "doom.Component", methodName : "updateNode"});
+			throw new thx_Error("Component " + this.toString() + " must return only element nodes",null,{ fileName : "ComponentBase.hx", lineNumber : 41, className : "doom.ComponentBase", methodName : "updateNode"});
 		}
 		var patches = doom__$Node_Node_$Impl_$.diff(oldNode,newNode);
 		doom_HtmlNode.applyPatches(patches,this.element);
 		this.node = newNode;
 	}
-	,render: function() {
-		throw new thx_error_AbstractMethod({ fileName : "Component.hx", lineNumber : 43, className : "doom.Component", methodName : "render"});
+	,__class__: doom_ComponentBase
+};
+var doom_Component = function(api,state,children) {
+	this.api = api;
+	this.state = state;
+	this.children = children;
+	doom_ComponentBase.call(this);
+};
+doom_Component.__name__ = ["doom","Component"];
+doom_Component.__super__ = doom_ComponentBase;
+doom_Component.prototype = $extend(doom_ComponentBase.prototype,{
+	api: null
+	,state: null
+	,children: null
+	,update: function(newState) {
+		var oldState = this.state;
+		this.state = newState;
+		if(!this.shouldRender(oldState,newState)) return;
+		this.updateNode(this.node);
 	}
-	,mount: function() {
+	,shouldRender: function(oldState,newState) {
+		return true;
 	}
-	,refresh: function() {
+	,__class__: doom_Component
+});
+var ac_App = function(api,state,children) {
+	doom_Component.call(this,api,state,children);
+};
+ac_App.__name__ = ["ac","App"];
+ac_App.__super__ = doom_Component;
+ac_App.prototype = $extend(doom_Component.prototype,{
+	render: function() {
+		return Doom.div((function($this) {
+			var $r;
+			var _g = new haxe_ds_StringMap();
+			{
+				var value = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("my-app");
+				if(__map_reserved["class"] != null) _g.setReserved("class",value); else _g.h["class"] = value;
+			}
+			$r = _g;
+			return $r;
+		}(this)),[(function($this) {
+			var $r;
+			var comp = new ac_AutoButton({ click : $bind($this,$this.onClick)},{ },[doom_NodeImpl.Text("Click me")]);
+			$r = doom_NodeImpl.ComponentNode(comp);
+			return $r;
+		}(this)),(function($this) {
+			var $r;
+			var comp1 = new ac_AutoWidget({ },{ title : "My title", subTitle : "My subtitle", content : "My content", footer : "My footer"});
+			$r = doom_NodeImpl.ComponentNode(comp1);
+			return $r;
+		}(this))],null);
 	}
-	,destroy: function() {
+	,onClick: function() {
+		console.log("button click");
+	}
+	,__class__: ac_App
+});
+var ac_AutoButtonStyle = { __ename__ : ["ac","AutoButtonStyle"], __constructs__ : ["Default","Primary","Secondary","Info","Warning","Danger","Success"] };
+ac_AutoButtonStyle.Default = ["Default",0];
+ac_AutoButtonStyle.Default.toString = $estr;
+ac_AutoButtonStyle.Default.__enum__ = ac_AutoButtonStyle;
+ac_AutoButtonStyle.Primary = ["Primary",1];
+ac_AutoButtonStyle.Primary.toString = $estr;
+ac_AutoButtonStyle.Primary.__enum__ = ac_AutoButtonStyle;
+ac_AutoButtonStyle.Secondary = ["Secondary",2];
+ac_AutoButtonStyle.Secondary.toString = $estr;
+ac_AutoButtonStyle.Secondary.__enum__ = ac_AutoButtonStyle;
+ac_AutoButtonStyle.Info = ["Info",3];
+ac_AutoButtonStyle.Info.toString = $estr;
+ac_AutoButtonStyle.Info.__enum__ = ac_AutoButtonStyle;
+ac_AutoButtonStyle.Warning = ["Warning",4];
+ac_AutoButtonStyle.Warning.toString = $estr;
+ac_AutoButtonStyle.Warning.__enum__ = ac_AutoButtonStyle;
+ac_AutoButtonStyle.Danger = ["Danger",5];
+ac_AutoButtonStyle.Danger.toString = $estr;
+ac_AutoButtonStyle.Danger.__enum__ = ac_AutoButtonStyle;
+ac_AutoButtonStyle.Success = ["Success",6];
+ac_AutoButtonStyle.Success.toString = $estr;
+ac_AutoButtonStyle.Success.__enum__ = ac_AutoButtonStyle;
+var ac_AutoButtonSize = { __ename__ : ["ac","AutoButtonSize"], __constructs__ : ["Default","Large","Small"] };
+ac_AutoButtonSize.Default = ["Default",0];
+ac_AutoButtonSize.Default.toString = $estr;
+ac_AutoButtonSize.Default.__enum__ = ac_AutoButtonSize;
+ac_AutoButtonSize.Large = ["Large",1];
+ac_AutoButtonSize.Large.toString = $estr;
+ac_AutoButtonSize.Large.__enum__ = ac_AutoButtonSize;
+ac_AutoButtonSize.Small = ["Small",2];
+ac_AutoButtonSize.Small.toString = $estr;
+ac_AutoButtonSize.Small.__enum__ = ac_AutoButtonSize;
+var doom_AutoComponent = function() {
+	doom_ComponentBase.call(this);
+};
+doom_AutoComponent.__name__ = ["doom","AutoComponent"];
+doom_AutoComponent.__super__ = doom_ComponentBase;
+doom_AutoComponent.prototype = $extend(doom_ComponentBase.prototype,{
+	__class__: doom_AutoComponent
+});
+var ac_AutoButton = function(api,state,children) {
+	if(state.style == null) state.style = ac_AutoButtonStyle.Default;
+	if(state.size == null) state.size = ac_AutoButtonSize.Default;
+	this.api = api;
+	this.state = state;
+	this.children = children;
+	doom_AutoComponent.call(this);
+};
+ac_AutoButton.__name__ = ["ac","AutoButton"];
+ac_AutoButton.__super__ = doom_AutoComponent;
+ac_AutoButton.prototype = $extend(doom_AutoComponent.prototype,{
+	render: function() {
+		return Doom.button((function($this) {
+			var $r;
+			var _g = new haxe_ds_StringMap();
+			{
+				var value = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("button");
+				if(__map_reserved.type != null) _g.setReserved("type",value); else _g.h["type"] = value;
+			}
+			{
+				var value1 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("btn " + $this.getStyleClass() + ", " + $this.getSizeClass());
+				if(__map_reserved["class"] != null) _g.setReserved("class",value1); else _g.h["class"] = value1;
+			}
+			{
+				var value2 = doom__$AttributeValue_AttributeValue_$Impl_$.fromHandler($this.get_click());
+				if(__map_reserved.click != null) _g.setReserved("click",value2); else _g.h["click"] = value2;
+			}
+			$r = _g;
+			return $r;
+		}(this)),this.children,null);
+	}
+	,getStyleClass: function() {
+		var _g = this.get_style();
+		switch(_g[1]) {
+		case 0:
+			return "";
+		case 1:
+			return "btn-primary";
+		case 2:
+			return "btn-secondary";
+		case 3:
+			return "btn-info";
+		case 4:
+			return "btn-warn";
+		case 5:
+			return "btn-danger";
+		case 6:
+			return "btn-success";
+		}
+	}
+	,getSizeClass: function() {
+		var _g = this.get_size();
+		switch(_g[1]) {
+		case 0:
+			return "";
+		case 1:
+			return "btn-lg";
+		case 2:
+			return "btn-sm";
+		}
+	}
+	,api: null
+	,state: null
+	,children: null
+	,click: null
+	,get_click: function() {
+		return this.api.click;
+	}
+	,style: null
+	,get_style: function() {
+		return this.state.style;
+	}
+	,size: null
+	,get_size: function() {
+		return this.state.size;
 	}
 	,update: function(newState) {
 		var oldState = this.state;
@@ -929,19 +1115,108 @@ doom_Component.prototype = {
 	,shouldRender: function(oldState,newState) {
 		return true;
 	}
-	,toString: function() {
-		var cls = Type.getClassName(js_Boot.getClass(this)).split(".").pop();
-		return "" + cls + "(" + thx_Strings.ellipsisMiddle(doom__$Node_Node_$Impl_$.toString(this.node),80,"...") + ")";
+	,__class__: ac_AutoButton
+});
+var ac_AutoWidget = function(api,state) {
+	if(state.subTitle == null) state.subTitle = "";
+	this.api = api;
+	this.state = state;
+	doom_AutoComponent.call(this);
+};
+ac_AutoWidget.__name__ = ["ac","AutoWidget"];
+ac_AutoWidget.__super__ = doom_AutoComponent;
+ac_AutoWidget.prototype = $extend(doom_AutoComponent.prototype,{
+	render: function() {
+		return Doom.div((function($this) {
+			var $r;
+			var _g = new haxe_ds_StringMap();
+			{
+				var value = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("widget");
+				if(__map_reserved["class"] != null) _g.setReserved("class",value); else _g.h["class"] = value;
+			}
+			$r = _g;
+			return $r;
+		}(this)),[doom__$Node_Node_$Impl_$.el("hr",null,null,null),Doom.h1(null,null,doom_NodeImpl.Text("Widget")),Doom.div((function($this) {
+			var $r;
+			var _g1 = new haxe_ds_StringMap();
+			{
+				var value1 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("widget-title");
+				if(__map_reserved["class"] != null) _g1.setReserved("class",value1); else _g1.h["class"] = value1;
+			}
+			$r = _g1;
+			return $r;
+		}(this)),null,Doom.h2(null,null,(function($this) {
+			var $r;
+			var content = "Title: " + $this.get_title();
+			$r = doom_NodeImpl.Text(content);
+			return $r;
+		}(this)))),Doom.div((function($this) {
+			var $r;
+			var _g2 = new haxe_ds_StringMap();
+			{
+				var value2 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("widget-title");
+				if(__map_reserved["class"] != null) _g2.setReserved("class",value2); else _g2.h["class"] = value2;
+			}
+			$r = _g2;
+			return $r;
+		}(this)),null,Doom.h3(null,null,(function($this) {
+			var $r;
+			var content1 = "Sub-title: " + $this.get_subTitle();
+			$r = doom_NodeImpl.Text(content1);
+			return $r;
+		}(this)))),Doom.div((function($this) {
+			var $r;
+			var _g3 = new haxe_ds_StringMap();
+			{
+				var value3 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("widget-title");
+				if(__map_reserved["class"] != null) _g3.setReserved("class",value3); else _g3.h["class"] = value3;
+			}
+			$r = _g3;
+			return $r;
+		}(this)),null,Doom.p(null,null,(function($this) {
+			var $r;
+			var content2 = $this.get_content();
+			$r = doom_NodeImpl.Text(content2);
+			return $r;
+		}(this)))),this.get_footer() != null?Doom.div((function($this) {
+			var $r;
+			var _g4 = new haxe_ds_StringMap();
+			{
+				var value4 = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("widget-title");
+				if(__map_reserved["class"] != null) _g4.setReserved("class",value4); else _g4.h["class"] = value4;
+			}
+			$r = _g4;
+			return $r;
+		}(this)),null,Doom.p(null,null,doom_NodeImpl.Text("Footer: footer"))):Doom.dummy(null),doom__$Node_Node_$Impl_$.el("hr",null,null,null)],null);
 	}
-	,__class__: doom_Component
-};
-var ac_App = function(api,state,children) {
-	doom_Component.call(this,api,state,children);
-};
-ac_App.__name__ = ["ac","App"];
-ac_App.__super__ = doom_Component;
-ac_App.prototype = $extend(doom_Component.prototype,{
-	__class__: ac_App
+	,api: null
+	,state: null
+	,title: null
+	,get_title: function() {
+		return this.state.title;
+	}
+	,subTitle: null
+	,get_subTitle: function() {
+		return this.state.subTitle;
+	}
+	,content: null
+	,get_content: function() {
+		return this.state.content;
+	}
+	,footer: null
+	,get_footer: function() {
+		return this.state.footer;
+	}
+	,update: function(newState) {
+		var oldState = this.state;
+		this.state = newState;
+		if(!this.shouldRender(oldState,newState)) return;
+		this.updateNode(this.node);
+	}
+	,shouldRender: function(oldState,newState) {
+		return true;
+	}
+	,__class__: ac_AutoWidget
 });
 var doom__$AttributeValue_AttributeValue_$Impl_$ = {};
 doom__$AttributeValue_AttributeValue_$Impl_$.__name__ = ["doom","_AttributeValue","AttributeValue_Impl_"];
