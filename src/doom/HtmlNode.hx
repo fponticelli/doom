@@ -21,7 +21,7 @@ class HtmlNode {
       document.createTextNode(text);
     case ComponentNode(comp):
       comp.init();
-      thx.Timer.immediate(comp.mount);
+      thx.Timer.immediate(comp.didMount);
       comp.element;
   }
 
@@ -77,19 +77,19 @@ class HtmlNode {
 
   public static function applyPatch(patch : Patch, node : DomNode) switch [patch, node.nodeType] {
     case [DestroyComponent(comp), _]:
-      comp.destroy();
+      comp.didUnmount();
     case [MigrateComponentToComponent(oldComp, newComp), _] if(thx.Types.sameType(oldComp, newComp)):
       newComp.element = oldComp.element;
       var migrate = Reflect.field(newComp, "migrate");
       if(null != migrate)
         Reflect.callMethod(newComp, migrate, [oldComp]);
-      newComp.refresh();
+      newComp.didRefresh();
     case [MigrateComponentToComponent(oldComp, newComp), _]:
       newComp.element = oldComp.element;
-      thx.Timer.immediate(newComp.mount);
+      thx.Timer.immediate(newComp.didMount);
     case [MigrateElementToComponent(comp), _]:
       comp.element = cast node;
-      comp.refresh();
+      comp.didRefresh();
     case [AddText(text), DomNode.ELEMENT_NODE]:
       node.appendChild(document.createTextNode(text));
     case [AddRaw(text), DomNode.ELEMENT_NODE]:
@@ -126,7 +126,7 @@ class HtmlNode {
     case [ReplaceWithComponent(comp), _]:
       var parent = node.parentNode;
       comp.init();
-      thx.Timer.immediate(comp.mount);
+      thx.Timer.immediate(comp.didMount);
       parent.replaceChild(comp.element, node);
     case [ReplaceWithText(text), _]:
       var parent = node.parentNode;

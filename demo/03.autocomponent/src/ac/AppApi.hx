@@ -1,4 +1,0 @@
-package ac;
-
-typedef AppApi = {
-};

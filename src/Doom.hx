@@ -4,14 +4,15 @@ import doom.IComponent;
 import doom.Node;
 import js.html.Element;
 
-class Doom {
-  public static function mount<Api, State>(component : Component<Api, State>, ref : Element) {
+@:autoBuild(doom.macro.AutoComponentBuild.build())
+class Doom extends doom.ComponentBase {
+  public static function mount(component : IComponent, ref : Element) {
     if(null == ref)
       throw 'reference element is set to null';
     ref.innerHTML = "";
     component.init();
     ref.appendChild(component.element);
-    thx.Timer.immediate(component.mount);
+    thx.Timer.immediate(component.didMount);
   }
 
   // namespaces

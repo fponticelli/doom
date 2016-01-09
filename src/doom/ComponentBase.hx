@@ -22,11 +22,9 @@ class ComponentBase implements IComponent {
     return throw new thx.error.AbstractMethod();
   }
 
-  public function mount() {}
-
-  public function refresh() {}
-
-  public function destroy() {}
+  public function didMount() {}
+  public function didRefresh() {}
+  public function didUnmount() {}
 
   public function toString() {
     var cls = Type.getClassName(Type.getClass(this)).split(".").pop();

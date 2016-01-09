@@ -1,10 +1,9 @@
 package ac;
 
 import Doom.*;
-import doom.*;
 
 @:children(none)
-class AutoWidget extends AutoComponent {
+class AutoWidget extends Doom {
   @:state
   public var title : String;
 
@@ -17,7 +16,7 @@ class AutoWidget extends AutoComponent {
   @:state(opt)
   public var footer : String;
 
-  public override function render() : Node {
+  public override function render()
     return div([
       "class" => "widget"
     ], [
@@ -29,5 +28,4 @@ class AutoWidget extends AutoComponent {
       footer != null ? div(["class" => "widget-title"], p('Footer: footer')) : dummy(),
       hr(),
     ]);
-  }
 }

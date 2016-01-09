@@ -120,7 +120,7 @@ class ComponentPhases extends doom.Component<{}, {}> {
   override function render()
     return div("first render");
 
-  override function mount() {
+  override function didMount() {
     mountHandle();
   }
 }

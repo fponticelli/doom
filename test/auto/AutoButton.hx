@@ -11,7 +11,7 @@ enum AutoButtonStyle {
 }
 
 @:children(opt) // nothing=opt or req|opt|none
-class AutoButton extends AutoComponent {
+class AutoButton extends Doom {
   @:state // nothing=req or req|opt|literal value
   public var intValue : Int;
 

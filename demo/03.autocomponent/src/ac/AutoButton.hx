@@ -1,7 +1,6 @@
 package ac;
 
 import Doom.*;
-import doom.*;
 
 enum AutoButtonStyle {
   Default;
@@ -19,7 +18,7 @@ enum AutoButtonSize {
   Small;
 }
 
-class AutoButton extends AutoComponent {
+class AutoButton extends Doom {
   @:state(Default)
   public var style : AutoButtonStyle;
 
@@ -29,15 +28,14 @@ class AutoButton extends AutoComponent {
   @:api
   public var click : Void -> Void;
 
-  public override function render() : Node {
+  override function render()
     return button([
       "type" => "button",
-      "class" => 'btn ${getStyleClass()}, ${getSizeClass()}',
+      "class" => 'btn ${getStyleClass()} ${getSizeClass()}',
       "click" => click
     ], children);
-  }
 
-  function getStyleClass() : String {
+  function getStyleClass() : String
     return switch style {
       case Default: "";
       case Primary: "btn-primary";
@@ -47,13 +45,11 @@ class AutoButton extends AutoComponent {
       case Danger: "btn-danger";
       case Success: "btn-success";
     };
-  }
 
-  function getSizeClass() : String {
+  function getSizeClass() : String
     return switch size {
       case Default: "";
       case Large: "btn-lg";
       case Small: "btn-sm";
     };
-  }
 }

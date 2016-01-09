@@ -6,15 +6,15 @@
 
 [SVG support](https://rawgit.com/fponticelli/doom/master/demo/01.svg/www/index.html)
 
-[AutoComponent macro](https://rawgit.com/fponticelli/doom/master/demo/03.autocomponent/www/index.html)
+[Doom Auto Component macro](https://rawgit.com/fponticelli/doom/master/demo/03.autocomponent/www/index.html)
 
 ## Components
 
 TODO
 
-## AutoComponents
+## Auto Components
 
-You can also create a `Component` by extending the special `doom.AutoComponent`
+You can also create a `Component` by extending the special `Doom`
 base class.  This class has a Haxe `@:autoBuild` macro which will generate
 a lot of the State/Api/etc. boilerplate code that is typically needed for
 Components.
@@ -54,7 +54,7 @@ properties).
 - `@:api` - denotes a required api field
 - `@:api(opt)` - denotes an optional api field
 
-### Example AutoComponent class:
+### Example Auto Component (Doom class):
 
 ```haxe
 package my.components;
@@ -63,7 +63,7 @@ import Doom.*;
 import doom.*;
 
 @:children(opt) // this component has optional children
-class MyButton extends AutoComponent {
+class MyButton extends Doom {
   @:state // required state field
   public var style : String;
 
@@ -94,7 +94,7 @@ class MyButton extends AutoComponent {
 }
 ```
 
-Result of AutoComponent @:autoBuild macro:
+Result of Doom auto-component @:autoBuild macro:
 
 ```haxe
 // Generated state structure (in same package as component)
@@ -114,7 +114,7 @@ typedef MyButtonApi = {
 };
 
 // Modified component class
-class MyButton extends AutoComponent {
+class MyButton extends Doom {
   // added state/api/children fields
   public var state : MyButtonState;
   public var api : MyButtonApi;
