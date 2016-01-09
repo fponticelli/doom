@@ -31,7 +31,7 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
     return Raw(content);
 
   @:from
-  inline public static function comp<Api, State>(comp : Component<Api, State>) : Node
+  inline public static function comp(comp : IComponent) : Node
     return ComponentNode(comp);
 
   public static function diffAttributes(a : Map<String, AttributeValue>, b : Map<String, AttributeValue>) : Array<Patch> {
@@ -148,5 +148,5 @@ enum NodeImpl {
     children : Array<Node>);
   Raw(text : String);
   Text(text : String);
-  ComponentNode<Api, State>(comp : Component<Api, State>);
+  ComponentNode(comp : IComponent);
 }

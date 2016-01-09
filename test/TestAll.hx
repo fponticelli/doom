@@ -8,7 +8,8 @@ class TestAll {
       new TestXml(),
       new TestSelectorParser(),
       new TestHtml(),
-      new TestComponent()
+      new TestComponent(),
+      new TestAutoComponent(),
     ]);
   }
 }

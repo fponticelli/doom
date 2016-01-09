@@ -15,11 +15,11 @@ page.open(url, function (status) {
   }
   poll(function(result) {
     if(result.isOk) {
-      console.log('test successfull');
+      console.log('phantom.js: test successful');
       console.log(result.message);
       phantom.exit();
     } else {
-      console.log('test errors');
+      console.log('phantom.js: test errors');
       console.log(result.message);
       phantom.exit(1);
     }
