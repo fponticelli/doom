@@ -29,7 +29,8 @@ doom_IComponent.prototype = {
 	,toString: null
 	,__class__: doom_IComponent
 };
-var doom_ComponentBase = function() {
+var doom_ComponentBase = function(children) {
+	this.children = null == children?[]:children;
 	this.node = this.render();
 };
 doom_ComponentBase.__name__ = ["doom","ComponentBase"];
@@ -37,11 +38,12 @@ doom_ComponentBase.__interfaces__ = [doom_IComponent];
 doom_ComponentBase.prototype = {
 	element: null
 	,node: null
+	,children: null
 	,init: function() {
 		this.element = doom_HtmlNode.toHtml(this.node);
 	}
 	,render: function() {
-		throw new thx_error_AbstractMethod({ fileName : "ComponentBase.hx", lineNumber : 22, className : "doom.ComponentBase", methodName : "render"});
+		throw new thx_error_AbstractMethod({ fileName : "ComponentBase.hx", lineNumber : 24, className : "doom.ComponentBase", methodName : "render"});
 	}
 	,didMount: function() {
 	}
@@ -61,7 +63,7 @@ doom_ComponentBase.prototype = {
 		case 3:
 			break;
 		default:
-			throw new thx_Error("Component " + this.toString() + " must return only element nodes",null,{ fileName : "ComponentBase.hx", lineNumber : 39, className : "doom.ComponentBase", methodName : "updateNode"});
+			throw new thx_Error("Component " + this.toString() + " must return only element nodes",null,{ fileName : "ComponentBase.hx", lineNumber : 41, className : "doom.ComponentBase", methodName : "updateNode"});
 		}
 		var patches = doom__$Node_Node_$Impl_$.diff(oldNode,newNode);
 		doom_HtmlNode.applyPatches(patches,this.element);
@@ -69,8 +71,8 @@ doom_ComponentBase.prototype = {
 	}
 	,__class__: doom_ComponentBase
 };
-var Doom = function() {
-	doom_ComponentBase.call(this);
+var Doom = function(children) {
+	doom_ComponentBase.call(this,children);
 };
 Doom.__name__ = ["Doom"];
 Doom.mount = function(component,ref) {
@@ -914,23 +916,27 @@ var ac_App = function(api,state,children) {
 	this.api = api;
 	this.state = state;
 	this.children = children;
-	Doom.call(this);
+	Doom.call(this,children);
 };
 ac_App.__name__ = ["ac","App"];
+ac_App.create = function(children) {
+	var apiVar = { };
+	var stateVar = { };
+	return doom_NodeImpl.ComponentNode(new ac_App(apiVar,stateVar,children));
+};
 ac_App.__super__ = Doom;
 ac_App.prototype = $extend(Doom.prototype,{
 	render: function() {
 		var _g = new haxe_ds_StringMap();
 		var value = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("my-app");
 		if(__map_reserved["class"] != null) _g.setReserved("class",value); else _g.h["class"] = value;
-		return doom__$Node_Node_$Impl_$.el("div",_g,[doom_NodeImpl.ComponentNode(new ac_AutoButton({ click : $bind(this,this.onClick)},{ },[doom_NodeImpl.Text("Click me")])),doom_NodeImpl.ComponentNode(new ac_AutoWidget({ },{ title : "My title", subTitle : "My subtitle", content : "My content", footer : "My footer"}))],null);
+		return doom__$Node_Node_$Impl_$.el("div",_g,[ac_AutoButton.create($bind(this,this.onClick),null,[doom_NodeImpl.Text("Click me")]),ac_AutoWidget.create("My title","My content",{ subTitle : "My subtitle", footer : "My footer"})],null);
 	}
 	,onClick: function() {
 		console.log("button click");
 	}
 	,api: null
 	,state: null
-	,children: null
 	,update: function(newState) {
 		var oldState = this.state;
 		this.state = newState;
@@ -980,9 +986,15 @@ var ac_AutoButton = function(api,state,children) {
 	this.api = api;
 	this.state = state;
 	this.children = children;
-	Doom.call(this);
+	Doom.call(this,children);
 };
 ac_AutoButton.__name__ = ["ac","AutoButton"];
+ac_AutoButton.create = function(click,state,children) {
+	var apiVar = { click : click};
+	if(state == null) state = { };
+	var stateVar = { style : state.style, size : state.size};
+	return doom_NodeImpl.ComponentNode(new ac_AutoButton(apiVar,stateVar,children));
+};
 ac_AutoButton.__super__ = Doom;
 ac_AutoButton.prototype = $extend(Doom.prototype,{
 	render: function() {
@@ -1027,7 +1039,6 @@ ac_AutoButton.prototype = $extend(Doom.prototype,{
 	}
 	,api: null
 	,state: null
-	,children: null
 	,click: null
 	,get_click: function() {
 		return this.api.click;
@@ -1055,9 +1066,15 @@ var ac_AutoWidget = function(api,state) {
 	if(state.subTitle == null) state.subTitle = "";
 	this.api = api;
 	this.state = state;
-	Doom.call(this);
+	Doom.call(this,null);
 };
 ac_AutoWidget.__name__ = ["ac","AutoWidget"];
+ac_AutoWidget.create = function(title,content,state) {
+	var apiVar = { };
+	if(state == null) state = { };
+	var stateVar = { title : title, subTitle : state.subTitle, content : content, footer : state.footer};
+	return doom_NodeImpl.ComponentNode(new ac_AutoWidget(apiVar,stateVar));
+};
 ac_AutoWidget.__super__ = Doom;
 ac_AutoWidget.prototype = $extend(Doom.prototype,{
 	render: function() {
@@ -1227,10 +1244,9 @@ var doom_AttributeValueImpl = { __ename__ : ["doom","AttributeValueImpl"], __con
 doom_AttributeValueImpl.BoolAttribute = function(b) { var $x = ["BoolAttribute",0,b]; $x.__enum__ = doom_AttributeValueImpl; $x.toString = $estr; return $x; };
 doom_AttributeValueImpl.StringAttribute = function(s) { var $x = ["StringAttribute",1,s]; $x.__enum__ = doom_AttributeValueImpl; $x.toString = $estr; return $x; };
 doom_AttributeValueImpl.EventAttribute = function(f) { var $x = ["EventAttribute",2,f]; $x.__enum__ = doom_AttributeValueImpl; $x.toString = $estr; return $x; };
-var doom_Component = function(api,state,children) {
+var doom_Component = function(api,state) {
 	this.api = api;
 	this.state = state;
-	this.children = children;
 	doom_ComponentBase.call(this);
 };
 doom_Component.__name__ = ["doom","Component"];
@@ -1238,7 +1254,6 @@ doom_Component.__super__ = doom_ComponentBase;
 doom_Component.prototype = $extend(doom_ComponentBase.prototype,{
 	api: null
 	,state: null
-	,children: null
 	,update: function(newState) {
 		var oldState = this.state;
 		this.state = newState;

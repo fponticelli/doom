@@ -8,12 +8,10 @@ import doom.Node;
 class Component<Api, State> extends ComponentBase {
   public var api : Api;
   public var state : State;
-  public var children : Nodes;
 
-  public function new(api : Api, state : State, ?children : Nodes) {
+  public function new(api : Api, state : State) {
     this.api = api;
     this.state = state;
-    this.children = children;
     super();
   }
 

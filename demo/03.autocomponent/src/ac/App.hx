@@ -5,8 +5,11 @@ import Doom.*;
 class App extends Doom {
   override function render()
     return div(["class" => "my-app"], [
-      new AutoButton({ click: onClick }, {}, "Click me"),
-      new AutoWidget({}, { title: "My title", subTitle: "My subtitle", content: "My content", footer: "My footer" }),
+      AutoButton.create(onClick, "Click me"),
+      AutoWidget.create("My title", "My content", {
+        subTitle: "My subtitle",
+        footer: "My footer"
+      }),
     ]);
 
   function onClick() : Void

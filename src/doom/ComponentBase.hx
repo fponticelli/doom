@@ -7,8 +7,10 @@ using thx.Strings;
 class ComponentBase implements IComponent {
   public var element : Element;
   public var node : Node;
+  public var children : Nodes;
 
-  public function new() {
+  public function new(?children : Nodes) {
+    this.children = null == children ? [] : children;
     this.node = render();
   }
 
