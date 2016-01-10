@@ -16,7 +16,7 @@ class AutoComponentBuild {
   static inline var STATE_IDENT = 'state';
   static inline var API_IDENT = 'api';
   static inline var NEW_IDENT = 'new';
-  static inline var CREATE_IDENT = 'create';
+  static inline var WITH_IDENT = 'with';
   static inline var UPDATE_IDENT = "update";
   static inline var SHOULD_RENDER_IDENT = "shouldRender";
   static inline var NEW_STATE_IDENT = "newState";
@@ -75,9 +75,9 @@ class AutoComponentBuild {
     }));
 
     if(!thx.Arrays.any(fields, function(field) {
-      return field.name == CREATE_IDENT;
+      return field.name == WITH_IDENT;
     })) {
-      fields.push(generateCreate({
+      fields.push(generateWith({
         childrenMeta : childrenMeta,
         apiMeta: apiMeta,
         stateMeta: stateMeta,
@@ -254,7 +254,7 @@ class AutoComponentBuild {
     };
   }
 
-  static function generateCreatePartsFromMeta(meta : FieldsMeta, name : String) : { args : Array<FunctionArg>, exprs : Array<Expr> } {
+  static function generateWithPartsFromMeta(meta : FieldsMeta, name : String) : { args : Array<FunctionArg>, exprs : Array<Expr> } {
     var args = [],
         exprs = [],
         genName = '${name}Var';
@@ -324,15 +324,15 @@ class AutoComponentBuild {
     };
   }
 
-  static function generateCreate(options: {
+  static function generateWith(options: {
     childrenMeta : ChildrenMeta,
     apiMeta: FieldsMeta,
     stateMeta: FieldsMeta,
   }) : Field {
-    var genApi = generateCreatePartsFromMeta(options.apiMeta, API_IDENT),
-        genState = generateCreatePartsFromMeta(options.stateMeta, STATE_IDENT),
-        createArgs = genApi.args.concat(genState.args),
-        createExprs = genApi.exprs.concat(genState.exprs),
+    var genApi = generateWithPartsFromMeta(options.apiMeta, API_IDENT),
+        genState = generateWithPartsFromMeta(options.stateMeta, STATE_IDENT),
+        withArgs = genApi.args.concat(genState.args),
+        withExprs = genApi.exprs.concat(genState.exprs),
         apiName = '${API_IDENT}Var',
         stateName = '${STATE_IDENT}Var';
 
@@ -340,14 +340,14 @@ class AutoComponentBuild {
     switch options.childrenMeta {
       case None:
       case Required:
-        createArgs.push({
+        withArgs.push({
           name: CHILDREN_IDENT,
           type: TypeTools.toComplexType(Context.getType("doom.Node.Nodes")),
           opt: false
         });
         constructorArgs.push(macro $i{CHILDREN_IDENT});
       case Optional:
-        createArgs.push({
+        withArgs.push({
           name: CHILDREN_IDENT,
           type: TypeTools.toComplexType(Context.getType("doom.Node.Nodes")),
           opt: true
@@ -366,17 +366,17 @@ class AutoComponentBuild {
           ),
           pos : Context.currentPos()
         };
-    createExprs.push(macro return $e{instance});
+    withExprs.push(macro return $e{instance});
 
-    // "create" field
+    // "with" field
     return {
       pos: Context.currentPos(),
-      name: CREATE_IDENT,
+      name: WITH_IDENT,
       meta: null,
       kind: FFun({
-        ret: macro : doom.Node,
-        expr: macro $b{createExprs},
-        args: createArgs,
+        ret: macro : doom.IComponent,
+        expr: macro $b{withExprs},
+        args: withArgs,
       }),
       access: [AStatic, APublic]
     };
@@ -396,7 +396,7 @@ class AutoComponentBuild {
     stateMeta: FieldsMeta,
     stateComplexType : ComplexType,
   }) : Field {
-    // Create the constructor body expression
+    // With the constructor body expression
     var constructorExprs : Array<Expr> = [];
 
     // Add expressions to assign default state values for any state field with a default
@@ -431,7 +431,7 @@ class AutoComponentBuild {
 
     //trace(ExprTools.toString(constructorExpr));
 
-    // Create the constructor args
+    // With the constructor args
     var constructorArgs : Array<FunctionArg> = [];
     constructorArgs.push({
       name: API_IDENT,
@@ -468,7 +468,7 @@ class AutoComponentBuild {
     };
   }
 
-  static function generateCreateFunction(options: {
+  static function generateWithFunction(options: {
     childrenMeta: ChildrenMeta,
     apiComplexType: ComplexType,
     apiMeta: FieldsMeta,

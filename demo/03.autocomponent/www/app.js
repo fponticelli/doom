@@ -605,7 +605,7 @@ Lambda.has = function(it,elt) {
 var Main = function() { };
 Main.__name__ = ["Main"];
 Main.main = function() {
-	Doom.mount(new ac_App({ },{ }),dots_Query.find("#root"));
+	Doom.mount(ac_App["with"](),dots_Query.find("#root"));
 };
 Math.__name__ = ["Math"];
 var Reflect = function() { };
@@ -919,10 +919,10 @@ var ac_App = function(api,state,children) {
 	Doom.call(this,children);
 };
 ac_App.__name__ = ["ac","App"];
-ac_App.create = function(children) {
+ac_App["with"] = function(children) {
 	var apiVar = { };
 	var stateVar = { };
-	return doom_NodeImpl.ComponentNode(new ac_App(apiVar,stateVar,children));
+	return new ac_App(apiVar,stateVar,children);
 };
 ac_App.__super__ = Doom;
 ac_App.prototype = $extend(Doom.prototype,{
@@ -930,7 +930,7 @@ ac_App.prototype = $extend(Doom.prototype,{
 		var _g = new haxe_ds_StringMap();
 		var value = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("my-app");
 		if(__map_reserved["class"] != null) _g.setReserved("class",value); else _g.h["class"] = value;
-		return doom__$Node_Node_$Impl_$.el("div",_g,[ac_AutoButton.create($bind(this,this.onClick),null,[doom_NodeImpl.Text("Click me")]),ac_AutoWidget.create("My title","My content",{ subTitle : "My subtitle", footer : "My footer"})],null);
+		return doom__$Node_Node_$Impl_$.el("div",_g,[doom_NodeImpl.ComponentNode(ac_AutoButton["with"]($bind(this,this.onClick),null,[doom_NodeImpl.Text("Click me")])),doom_NodeImpl.ComponentNode(ac_AutoWidget["with"]("My title","My content",{ subTitle : "My subtitle", footer : "My footer"}))],null);
 	}
 	,onClick: function() {
 		console.log("button click");
@@ -989,11 +989,11 @@ var ac_AutoButton = function(api,state,children) {
 	Doom.call(this,children);
 };
 ac_AutoButton.__name__ = ["ac","AutoButton"];
-ac_AutoButton.create = function(click,state,children) {
+ac_AutoButton["with"] = function(click,state,children) {
 	var apiVar = { click : click};
 	if(state == null) state = { };
 	var stateVar = { style : state.style, size : state.size};
-	return doom_NodeImpl.ComponentNode(new ac_AutoButton(apiVar,stateVar,children));
+	return new ac_AutoButton(apiVar,stateVar,children);
 };
 ac_AutoButton.__super__ = Doom;
 ac_AutoButton.prototype = $extend(Doom.prototype,{
@@ -1069,11 +1069,11 @@ var ac_AutoWidget = function(api,state) {
 	Doom.call(this,null);
 };
 ac_AutoWidget.__name__ = ["ac","AutoWidget"];
-ac_AutoWidget.create = function(title,content,state) {
+ac_AutoWidget["with"] = function(title,content,state) {
 	var apiVar = { };
 	if(state == null) state = { };
 	var stateVar = { title : title, subTitle : state.subTitle, content : content, footer : state.footer};
-	return doom_NodeImpl.ComponentNode(new ac_AutoWidget(apiVar,stateVar));
+	return new ac_AutoWidget(apiVar,stateVar);
 };
 ac_AutoWidget.__super__ = Doom;
 ac_AutoWidget.prototype = $extend(Doom.prototype,{

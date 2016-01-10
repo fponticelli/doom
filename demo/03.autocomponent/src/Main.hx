@@ -3,6 +3,6 @@ import ac.App;
 
 class Main {
   static function main() {
-    Doom.mount(new App({}, {}), Query.find("#root"));
+    Doom.mount(App.with(), Query.find("#root"));
   }
 }

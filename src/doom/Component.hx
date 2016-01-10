@@ -9,10 +9,10 @@ class Component<Api, State> extends ComponentBase {
   public var api : Api;
   public var state : State;
 
-  public function new(api : Api, state : State) {
+  public function new(api : Api, state : State, ?children : Nodes) {
     this.api = api;
     this.state = state;
-    super();
+    super(children);
   }
 
   public function update(newState : State) {
