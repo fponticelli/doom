@@ -9,6 +9,7 @@ using haxe.macro.ExprTools;
 import thx.macro.MacroFields;
 import thx.macro.MacroClassTypes;
 using thx.Arrays;
+using thx.Strings;
 
 class AutoComponentBuild {
   // field names
@@ -48,9 +49,11 @@ class AutoComponentBuild {
     // Generate the State and Api modules/types from the state/api metadata
     //trace('generateApiModule');
     var apiComplexType = generateModule({ localClass: localClass, meta: apiMeta }, API_IDENT);
+    generateOptionsModule({ localClass: localClass, meta: apiMeta }, API_IDENT);
 
     //trace('generateStateModule');
     var stateComplexType = generateModule({ localClass: localClass, meta: stateMeta }, STATE_IDENT);
+    generateOptionsModule({ localClass: localClass, meta: stateMeta }, STATE_IDENT);
 
     // Add "api" field to class
     //trace('generateApiField');
@@ -221,7 +224,7 @@ class AutoComponentBuild {
   static function generateModule(options: { localClass : ClassType, meta : FieldsMeta }, name : String) : ComplexType {
     var classPackages = options.localClass.pack;
     var className = options.localClass.name;
-    var apiTypeName = '${className}${name}';
+    var apiTypeName = '${className}${name.upperCaseFirst()}';
     var modulePath : String = '${classPackages.join(".")}.${apiTypeName}';
     var apiTypeDefinition = {
       pos: Context.currentPos(),
@@ -236,6 +239,34 @@ class AutoComponentBuild {
         case Only(fieldMeta): [fieldMetaToField(fieldMeta)];
         case Many(fieldMetas) : fieldMetasToFields(fieldMetas);
       })
+    };
+    var types: Array<TypeDefinition> = [apiTypeDefinition];
+    var imports : Array<ImportExpr> = [];
+    var usings : Array<TypePath> = [];
+    Context.defineModule(modulePath, types, imports, usings);
+    return TypeTools.toComplexType(Context.getType(modulePath));
+  }
+
+  static function generateOptionsModule(options: { localClass : ClassType, meta : FieldsMeta }, name : String) : ComplexType {
+    var classPackages = options.localClass.pack;
+    var className = options.localClass.name;
+    var apiTypeName = '${className}${name.upperCaseFirst()}Options';
+    var modulePath : String = '${classPackages.join(".")}.${apiTypeName}';
+    var apiTypeDefinition = {
+      pos: Context.currentPos(),
+      params: null,
+      pack: [],
+      name: apiTypeName,
+      meta: null,
+      kind: TDStructure, // TypeDefKind
+      isExtern: false,
+      fields: fullyQualifyFieldTypes((switch options.meta {
+                case None: [];
+                case Only(fieldMeta): [fieldMeta];
+                case Many(fieldMetas) : fieldMetas;
+              })
+              .filter(function(item) { return !item.isRequired;})
+              .map(fieldMetaToField))
     };
     var types: Array<TypeDefinition> = [apiTypeDefinition];
     var imports : Array<ImportExpr> = [];
