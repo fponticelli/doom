@@ -125,6 +125,13 @@ abstract Nodes(Array<Node>) from Array<Node> to Array<Node> {
   @:from inline public static function fromNodeImpl(node : NodeImpl) : Nodes
     return [(node : Node)];
 
+  @:from inline public static function fromIComps(comps : Array<IComponent>) : Nodes
+    return comps.map(Node.comp);
+    
+  @:from
+  inline public static function fromComps<Api, State>(comps : Array<Component<Api, State>>) : Nodes
+    return comps.map(Node.comp);
+
   @:from
   inline public static function text(content : String) : Nodes
     return [Text(content)];
@@ -132,10 +139,6 @@ abstract Nodes(Array<Node>) from Array<Node> to Array<Node> {
   @:from
   inline public static function comp<Api, State>(comp : Component<Api, State>) : Nodes
     return [(ComponentNode(comp) : Node)];
-
-  @:from
-  inline public static function arrayComp<Api, State>(comps : Array<Component<Api, State>>) : Nodes
-    return comps.map(function(comp) : Node return comp);
 
   public function toString()
     return this.map(function(c) return c.toString()).join("\n");
