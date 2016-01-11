@@ -6,13 +6,20 @@ import js.html.Element;
 
 @:autoBuild(doom.macro.AutoComponentBuild.build())
 class Doom extends doom.ComponentBase {
-  public static function mount(component : IComponent, ref : Element) {
+  public static function mount(node : Node, ref : Element) {
     if(null == ref)
       throw 'reference element is set to null';
-    ref.innerHTML = "";
-    component.init();
-    ref.appendChild(component.element);
-    thx.Timer.immediate(component.didMount);
+    switch node {
+      case ComponentNode(comp):
+        ref.innerHTML = "";
+        comp.init();
+        ref.appendChild(comp.element);
+        thx.Timer.immediate(comp.didMount);
+      case other:
+        var dom = doom.HtmlNode.toHtml(other);
+        ref.innerHTML = "";
+        ref.appendChild(dom);
+    }
   }
 
   // namespaces

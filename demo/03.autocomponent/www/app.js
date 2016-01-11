@@ -75,12 +75,22 @@ var Doom = function(children) {
 	doom_ComponentBase.call(this,children);
 };
 Doom.__name__ = ["Doom"];
-Doom.mount = function(component,ref) {
+Doom.mount = function(node,ref) {
 	if(null == ref) throw new js__$Boot_HaxeError("reference element is set to null");
-	ref.innerHTML = "";
-	component.init();
-	ref.appendChild(component.element);
-	thx_Timer.immediate($bind(component,component.didMount));
+	var other = node;
+	switch(node[1]) {
+	case 3:
+		var comp = node[2];
+		ref.innerHTML = "";
+		comp.init();
+		ref.appendChild(comp.element);
+		thx_Timer.immediate($bind(comp,comp.didMount));
+		break;
+	default:
+		var dom = doom_HtmlNode.toHtml(other);
+		ref.innerHTML = "";
+		ref.appendChild(dom);
+	}
 };
 Doom.a = function(attributes,children,child) {
 	return doom__$Node_Node_$Impl_$.el("a",attributes,children,child);
@@ -922,7 +932,7 @@ ac_App.__name__ = ["ac","App"];
 ac_App["with"] = function(children) {
 	var apiVar = { };
 	var stateVar = { };
-	return new ac_App(apiVar,stateVar,children);
+	return doom_NodeImpl.ComponentNode(new ac_App(apiVar,stateVar,children));
 };
 ac_App.__super__ = Doom;
 ac_App.prototype = $extend(Doom.prototype,{
@@ -930,7 +940,7 @@ ac_App.prototype = $extend(Doom.prototype,{
 		var _g = new haxe_ds_StringMap();
 		var value = doom__$AttributeValue_AttributeValue_$Impl_$.fromString("my-app");
 		if(__map_reserved["class"] != null) _g.setReserved("class",value); else _g.h["class"] = value;
-		return doom__$Node_Node_$Impl_$.el("div",_g,[doom_NodeImpl.ComponentNode(ac_AutoButton["with"]($bind(this,this.onClick),null,[doom_NodeImpl.Text("Click me")])),doom_NodeImpl.ComponentNode(ac_AutoWidget["with"]("My title","My content",{ subTitle : "My subtitle", footer : "My footer"}))],null);
+		return doom__$Node_Node_$Impl_$.el("div",_g,[ac_AutoButton["with"]($bind(this,this.onClick),null,[doom_NodeImpl.Text("Click me")]),ac_AutoWidget["with"]("My title","My content",{ subTitle : "My subtitle", footer : "My footer"})],null);
 	}
 	,onClick: function() {
 		console.log("button click");
@@ -993,7 +1003,7 @@ ac_AutoButton["with"] = function(click,state,children) {
 	var apiVar = { click : click};
 	if(state == null) state = { };
 	var stateVar = { style : state.style, size : state.size};
-	return new ac_AutoButton(apiVar,stateVar,children);
+	return doom_NodeImpl.ComponentNode(new ac_AutoButton(apiVar,stateVar,children));
 };
 ac_AutoButton.__super__ = Doom;
 ac_AutoButton.prototype = $extend(Doom.prototype,{
@@ -1073,7 +1083,7 @@ ac_AutoWidget["with"] = function(title,content,state) {
 	var apiVar = { };
 	if(state == null) state = { };
 	var stateVar = { title : title, subTitle : state.subTitle, content : content, footer : state.footer};
-	return new ac_AutoWidget(apiVar,stateVar);
+	return doom_NodeImpl.ComponentNode(new ac_AutoWidget(apiVar,stateVar));
 };
 ac_AutoWidget.__super__ = Doom;
 ac_AutoWidget.prototype = $extend(Doom.prototype,{
@@ -1244,10 +1254,10 @@ var doom_AttributeValueImpl = { __ename__ : ["doom","AttributeValueImpl"], __con
 doom_AttributeValueImpl.BoolAttribute = function(b) { var $x = ["BoolAttribute",0,b]; $x.__enum__ = doom_AttributeValueImpl; $x.toString = $estr; return $x; };
 doom_AttributeValueImpl.StringAttribute = function(s) { var $x = ["StringAttribute",1,s]; $x.__enum__ = doom_AttributeValueImpl; $x.toString = $estr; return $x; };
 doom_AttributeValueImpl.EventAttribute = function(f) { var $x = ["EventAttribute",2,f]; $x.__enum__ = doom_AttributeValueImpl; $x.toString = $estr; return $x; };
-var doom_Component = function(api,state) {
+var doom_Component = function(api,state,children) {
 	this.api = api;
 	this.state = state;
-	doom_ComponentBase.call(this);
+	doom_ComponentBase.call(this,children);
 };
 doom_Component.__name__ = ["doom","Component"];
 doom_Component.__super__ = doom_ComponentBase;
@@ -1776,16 +1786,17 @@ doom__$Node_Nodes_$Impl_$.fromNode = function(node) {
 doom__$Node_Nodes_$Impl_$.fromNodeImpl = function(node) {
 	return [node];
 };
+doom__$Node_Nodes_$Impl_$.fromIComps = function(comps) {
+	return comps.map(doom__$Node_Node_$Impl_$.comp);
+};
+doom__$Node_Nodes_$Impl_$.fromComps = function(comps) {
+	return comps.map(doom__$Node_Node_$Impl_$.comp);
+};
 doom__$Node_Nodes_$Impl_$.text = function(content) {
 	return [doom_NodeImpl.Text(content)];
 };
 doom__$Node_Nodes_$Impl_$.comp = function(comp) {
 	return [doom_NodeImpl.ComponentNode(comp)];
-};
-doom__$Node_Nodes_$Impl_$.arrayComp = function(comps) {
-	return comps.map(function(comp) {
-		return doom_NodeImpl.ComponentNode(comp);
-	});
 };
 doom__$Node_Nodes_$Impl_$.toString = function(this1) {
 	return this1.map(function(c) {

@@ -405,7 +405,7 @@ class AutoComponentBuild {
       name: WITH_IDENT,
       meta: null,
       kind: FFun({
-        ret: macro : doom.IComponent,
+        ret: macro : doom.Node,
         expr: macro $b{withExprs},
         args: withArgs,
       }),
