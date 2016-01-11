@@ -8,6 +8,7 @@ import haxe.macro.TypeTools;
 using haxe.macro.ExprTools;
 import thx.macro.MacroFields;
 import thx.macro.MacroClassTypes;
+import thx.macro.MacroTypes;
 using thx.Arrays;
 using thx.Strings;
 
@@ -634,35 +635,14 @@ class AutoComponentBuild {
   static function fullyQualifyFieldType(field : Field) : Field {
     return switch field.kind {
       case FVar(complexType, expr) :
-        field.kind = FVar(fullyQualifyComplexType(complexType), expr);
+        field.kind = FVar(MacroTypes.qualifyComplexType(complexType), expr);
         field;
       case _ : field;
     };
   }
 
-  static function fullyQualifyComplexTypes(complexTypes : Array<ComplexType>) : Array<ComplexType> {
-    return complexTypes.map(fullyQualifyComplexType);
-  }
-
-  static function fullyQualifyComplexType(complexType : ComplexType) : ComplexType {
-    return switch complexType {
-      case TPath({ name: "Void" }) : complexType;
-      case TPath({ name: "Null", params: params, pack: pack, sub: sub }) : TPath({
-        name: "Null",
-        params: fullyQualifyTypeParams(params),
-        pack: pack,
-        sub: sub,
-      });
-      case TPath(p) :
-        var complexTypeString = ComplexTypeTools.toString(complexType);
-        var type = Context.getType(complexTypeString);
-        TypeTools.toComplexType(type);
-      case TFunction(args, ret) : TFunction(fullyQualifyComplexTypes(args), fullyQualifyComplexType(ret));
-      case TAnonymous(fields) : TAnonymous(fullyQualifyFieldTypes(fields));
-      case TParent(t) : TParent(fullyQualifyComplexType(t));
-      case TExtend(p, fields) : TExtend(p, fullyQualifyFieldTypes(fields));
-      case TOptional(t) : TOptional(fullyQualifyComplexType(t));
-    };
+  static function qualifyComplexTypes(complexTypes : Array<ComplexType>) : Array<ComplexType> {
+    return complexTypes.map(MacroTypes.qualifyComplexType);
   }
 
   static function fullyQualifyTypeParams(typeParams : Array<TypeParam>) : Array<TypeParam> {
@@ -671,7 +651,7 @@ class AutoComponentBuild {
 
   static function fullyQualifyTypeParam(typeParam : TypeParam) : TypeParam {
     return switch typeParam {
-      case TPType(complexType) : TPType(fullyQualifyComplexType(complexType));
+    case TPType(complexType) : TPType(MacroTypes.qualifyComplexType(complexType));
       case _ : typeParam;
     };
   }
