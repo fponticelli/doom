@@ -108,9 +108,11 @@ class XmlNode {
     var buf = "";
     for(key in attributes.keys()) {
       var value = attributes.get(key);
-      switch value {
+      if(null == value)
+        buf += ' $key';
+      else switch value {
         case StringAttribute(s) if(s.hasContent()):
-          buf += ' $key="${s.replace('"', '&quot;')}"';
+          buf += ' $key="' + s.replace('"', '&quot;') + '"';
         case BoolAttribute(b) if(b):
           buf += ' $key="$key"';
         case _:
