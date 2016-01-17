@@ -41,7 +41,7 @@ class ComponentBase implements IComponent {
       case _: throw new thx.Error('Component ${toString()} must return only element nodes');
     }
     var patches = oldNode.diff(newNode);
-    // trace(patches.map(Patches.toString).join("\n"));
+    // trace(patches.map(doom.Patch.Patches.toString).join("\n"));
     HtmlNode.applyPatches(patches, element);
     node = newNode;
   }
