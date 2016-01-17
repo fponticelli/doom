@@ -66,6 +66,7 @@ doom_ComponentBase.prototype = {
 			throw new thx_Error("Component " + this.toString() + " must return only element nodes",null,{ fileName : "ComponentBase.hx", lineNumber : 41, className : "doom.ComponentBase", methodName : "updateNode"});
 		}
 		var patches = doom__$Node_Node_$Impl_$.diff(oldNode,newNode);
+		console.log(patches.map(doom_Patches.toString).join("\n"));
 		doom_HtmlNode.applyPatches(patches,this.element);
 		this.node = newNode;
 	}
@@ -1581,21 +1582,24 @@ doom__$Node_Node_$Impl_$.diffAttributes = function(a,b) {
 		return thx__$Set_Set_$Impl_$.map(_e,f);
 	};
 	var _e1 = common;
-	var _e2 = (function(predicate) {
+	var tmp1 = thx__$Set_Set_$Impl_$.map((function(predicate) {
 		return thx__$Set_Set_$Impl_$.filter(_e1,predicate);
 	})(function(_) {
 		return doom__$AttributeValue_AttributeValue_$Impl_$.notEqualsTo(__map_reserved[_] != null?a.getReserved(_):a.h[_],__map_reserved[_] != null?b.getReserved(_):b.h[_]);
+	}),function(k) {
+		var v = __map_reserved[k] != null?b.getReserved(k):b.h[k];
+		if(null == v) return doom_Patch.RemoveAttribute(k); else return doom_Patch.SetAttribute(k,v);
 	});
-	var tmp1 = (function(f1) {
-		return thx__$Set_Set_$Impl_$.map(_e2,f1);
+	var _e2 = added;
+	var _e3 = (function(predicate1) {
+		return thx__$Set_Set_$Impl_$.filter(_e2,predicate1);
 	})(function(_1) {
-		return doom_Patch.SetAttribute(_1,__map_reserved[_1] != null?b.getReserved(_1):b.h[_1]);
+		return (__map_reserved[_1] != null?b.getReserved(_1):b.h[_1]) != null;
 	});
-	var _e3 = added;
 	return tmp(function(_2) {
 		return doom_Patch.RemoveAttribute(_2);
-	}).concat(tmp1).concat((function(f2) {
-		return thx__$Set_Set_$Impl_$.map(_e3,f2);
+	}).concat(tmp1).concat((function(f1) {
+		return thx__$Set_Set_$Impl_$.map(_e3,f1);
 	})(function(_3) {
 		return doom_Patch.SetAttribute(_3,__map_reserved[_3] != null?b.getReserved(_3):b.h[_3]);
 	}));
@@ -1743,15 +1747,22 @@ doom__$Node_Node_$Impl_$.diff = function(this1,that) {
 		case 2:
 			var t11 = this1[2];
 			var t21 = that[2];
-			if(t11 != t21) tmp = [doom_Patch.ContentChanged(t21)]; else tmp = [];
+			if(t11 != t21) tmp = [doom_Patch.ContentChanged(t21)]; else {
+				var a = this1[2];
+				var b = that[2];
+				if(a == b) tmp = []; else {
+					var t4 = that[2];
+					tmp = [doom_Patch.ReplaceWithText(t4)];
+				}
+			}
 			break;
 		case 1:
-			var t4 = that[2];
-			tmp = [doom_Patch.ReplaceWithRaw(t4)];
+			var t5 = that[2];
+			tmp = [doom_Patch.ReplaceWithRaw(t5)];
 			break;
 		}
 		break;
-	default:
+	case 1:
 		switch(that[1]) {
 		case 3:
 			var comp6 = that[2];
@@ -1764,12 +1775,38 @@ doom__$Node_Node_$Impl_$.diff = function(this1,that) {
 			tmp = [doom_Patch.ReplaceWithElement(n23,a24,c24)];
 			break;
 		case 2:
-			var t5 = that[2];
-			tmp = [doom_Patch.ReplaceWithText(t5)];
+			var t6 = that[2];
+			tmp = [doom_Patch.ReplaceWithText(t6)];
 			break;
 		case 1:
-			var t6 = that[2];
-			tmp = [doom_Patch.ReplaceWithRaw(t6)];
+			var a3 = this1[2];
+			var b1 = that[2];
+			if(a3 == b1) tmp = []; else {
+				var t7 = that[2];
+				tmp = [doom_Patch.ReplaceWithRaw(t7)];
+			}
+			break;
+		}
+		break;
+	default:
+		switch(that[1]) {
+		case 3:
+			var comp7 = that[2];
+			tmp = [doom_Patch.ReplaceWithComponent(comp7)];
+			break;
+		case 0:
+			var c25 = that[4];
+			var a25 = that[3];
+			var n24 = that[2];
+			tmp = [doom_Patch.ReplaceWithElement(n24,a25,c25)];
+			break;
+		case 2:
+			var t8 = that[2];
+			tmp = [doom_Patch.ReplaceWithText(t8)];
+			break;
+		case 1:
+			var t9 = that[2];
+			tmp = [doom_Patch.ReplaceWithRaw(t9)];
 			break;
 		}
 	}
@@ -2253,7 +2290,7 @@ doom_XmlNode.attributesToString = function(attributes) {
 	while(tmp.hasNext()) {
 		var key = tmp.next();
 		var value = __map_reserved[key] != null?attributes.getReserved(key):attributes.h[key];
-		switch(value[1]) {
+		if(null == value) buf += " " + key; else switch(value[1]) {
 		case 1:
 			var s = value[2];
 			if(s != null && s.length > 0) buf += " " + key + "=\"" + StringTools.replace(s,"\"","&quot;") + "\"";

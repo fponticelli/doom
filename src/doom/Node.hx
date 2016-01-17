@@ -43,9 +43,15 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
 
     return removed.map.fn(Patch.RemoveAttribute(_))
       .concat(
-        common.filter.fn(a.get(_) != b.get(_))
-          .map.fn(Patch.SetAttribute(_, b.get(_))))
-      .concat(added.map.fn(Patch.SetAttribute(_, b.get(_))));
+        common
+          .filter.fn(a.get(_) != b.get(_))
+          .map(function(k) {
+            var v = b.get(k);
+            return null == v ? Patch.RemoveAttribute(k) : Patch.SetAttribute(k, v);
+          }))
+      .concat(added
+        .filter.fn(b.get(_) != null)
+        .map.fn(Patch.SetAttribute(_, b.get(_))));
   }
 
   static function diffAdd(node : Node) : Array<Patch>
