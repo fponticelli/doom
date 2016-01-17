@@ -103,10 +103,12 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
         [ReplaceWithElement(n2, a2, c2)];
       case [Text(t1), Text(t2)] if(t1 != t2):
         [ContentChanged(t2)];
-      case [Text(_), Text(_)]:
+      case [Text(a), Text(b)] if(a == b):
         [];
       case [_, Text(t)]:
         [ReplaceWithText(t)];
+      case [Raw(a), Raw(b)] if(a == b):
+        [];
       case [_, Raw(t)]:
         [ReplaceWithRaw(t)];
     });
@@ -127,7 +129,7 @@ abstract Nodes(Array<Node>) from Array<Node> to Array<Node> {
 
   @:from inline public static function fromIComps(comps : Array<IComponent>) : Nodes
     return comps.map(Node.comp);
-    
+
   @:from
   inline public static function fromComps<Api, State>(comps : Array<Component<Api, State>>) : Nodes
     return comps.map(Node.comp);
