@@ -86,6 +86,7 @@ class HtmlNode {
         Reflect.callMethod(newComp, migrate, [oldComp]);
       newComp.didRefresh();
     case [MigrateComponentToComponent(oldComp, newComp), _]:
+      oldComp.didUnmount();
       newComp.element = oldComp.element;
       newComp.didMount();
     case [MigrateElementToComponent(comp), _]:

@@ -85,16 +85,26 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
   }
 
   public function diff(that : Node) : Array<Patch> {
+    function destroySubComponents(node) : Array<Patch> {
+      return switch node {
+        case ComponentNode(comp):
+          [Patch.DestroyComponent(comp)].concat(destroySubComponents(comp.node));
+        case _:
+          [];
+      };
+    }
+
     var p : Array<Patch> = switch [this, that] {
       case [ComponentNode(old), ComponentNode(comp)]:
         [MigrateComponentToComponent(old, comp)];
       case [_, ComponentNode(comp)]:
         [MigrateElementToComponent(comp)];
       case [ComponentNode(comp), _]:
-        [DestroyComponent(comp)];
+        destroySubComponents(this);
       case [_, _]:
         [];
     };
+
     return p.concat(switch [this, that] {
       case [ComponentNode(old), ComponentNode(comp)]:
         old.node.diff(comp.node);
