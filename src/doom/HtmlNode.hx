@@ -80,7 +80,6 @@ class HtmlNode {
     case [DestroyComponent(comp), _]:
       comp.didUnmount();
     case [MigrateComponentToComponent(oldComp, newComp), _] if(thx.Types.sameType(oldComp, newComp)):
-      trace(Type.getClassName(Type.getClass(oldComp)));
       newComp.element = oldComp.element;
       var migrate = Reflect.field(newComp, "migrate");
       if(null != migrate)
@@ -88,15 +87,9 @@ class HtmlNode {
       newComp.didRefresh();
     case [MigrateComponentToComponent(oldComp, newComp), _]:
       newComp.element = oldComp.element;
-      // thx.Timer.immediate(newComp.didMount);
-
-      // TODO init() ?
       newComp.didMount();
     case [MigrateElementToComponent(comp), _]:
       comp.element = cast node;
-      // comp.didRefresh();
-
-      // TODO init() ?
       comp.didMount();
     case [AddText(text), DomNode.ELEMENT_NODE]:
       node.appendChild(document.createTextNode(text));
