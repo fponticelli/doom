@@ -226,7 +226,8 @@ class AutoComponentBuild {
     var classPackages = options.localClass.pack;
     var className = options.localClass.name;
     var apiTypeName = '${className}${name.upperCaseFirst()}';
-    var modulePath : String = '${classPackages.join(".")}.${apiTypeName}';
+    var modulePath : String = '${classPackages.concat([apiTypeName]).join(".")}';
+    trace(modulePath);
     var apiTypeDefinition = {
       pos: Context.currentPos(),
       params: null,
