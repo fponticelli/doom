@@ -14,10 +14,11 @@ class ComponentBase implements IComponent {
     this.node = render();
   }
 
-  public function init() {
+  public function init(post : Array<Void -> Void>) {
     // if(null != element)
     //   trace("double init", toString());
-    element = cast HtmlNode.toHtml(node);
+    post.insert(0, didMount);
+    element = cast HtmlNode.toHtml(node, post);
   }
 
   public function render() : Node {

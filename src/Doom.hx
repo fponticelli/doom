@@ -12,13 +12,16 @@ class Doom extends doom.ComponentBase {
     switch node {
       case ComponentNode(comp):
         ref.innerHTML = "";
-        comp.init();
+        var post = [];
+        comp.init(post);
         ref.appendChild(comp.element);
-        thx.Timer.immediate(comp.didMount);
+        for(f in post) f();
       case other:
-        var dom = doom.HtmlNode.toHtml(other);
+        var post = [];
+        var dom = doom.HtmlNode.toHtml(other, post);
         ref.innerHTML = "";
         ref.appendChild(dom);
+        for(f in post) f();
     }
   }
 

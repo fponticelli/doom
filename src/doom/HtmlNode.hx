@@ -12,20 +12,21 @@ import doom.AttributeValue;
 import thx.Timer;
 
 class HtmlNode {
-  public static function toHtml(node : Node) : js.html.Node return switch (node : NodeImpl) {
+  public static function toHtml(node : Node, post : Array<Void -> Void>) : js.html.Node return switch (node : NodeImpl) {
     case Element(name, attributes, children):
-      createElement(name, attributes, children);
+      createElement(name, attributes, children, post);
     case Raw(text):
       Html.parse(text);
     case Text(text):
       document.createTextNode(text);
     case ComponentNode(comp):
-      comp.init();
-      thx.Timer.immediate(comp.didMount);
+      comp.init(post);
+      // thx.Timer.immediate(comp.didMount);
+      // comp.didMount();
       comp.element;
   }
 
-  static function createElement(name : String, attributes : Map<String, AttributeValue>, children : Array<Node>) : Element {
+  static function createElement(name : String, attributes : Map<String, AttributeValue>, children : Array<Node>, post : Array<Void -> Void>) : Element {
     var colonPos = name.indexOf(":");
     var el = if(colonPos > 0) {
             var prefix = name.substring(0, colonPos),
@@ -55,7 +56,7 @@ class HtmlNode {
       }
     }
     for(child in children) {
-      var n = toHtml(child);
+      var n = toHtml(child, post);
       if(null != n)
         el.appendChild(n);
     }
@@ -79,6 +80,7 @@ class HtmlNode {
     case [DestroyComponent(comp), _]:
       comp.didUnmount();
     case [MigrateComponentToComponent(oldComp, newComp), _] if(thx.Types.sameType(oldComp, newComp)):
+      trace(Type.getClassName(Type.getClass(oldComp)));
       newComp.element = oldComp.element;
       var migrate = Reflect.field(newComp, "migrate");
       if(null != migrate)
@@ -86,20 +88,30 @@ class HtmlNode {
       newComp.didRefresh();
     case [MigrateComponentToComponent(oldComp, newComp), _]:
       newComp.element = oldComp.element;
-      thx.Timer.immediate(newComp.didMount);
+      // thx.Timer.immediate(newComp.didMount);
+
+      // TODO init() ?
+      newComp.didMount();
     case [MigrateElementToComponent(comp), _]:
       comp.element = cast node;
-      comp.didRefresh();
+      // comp.didRefresh();
+
+      // TODO init() ?
+      comp.didMount();
     case [AddText(text), DomNode.ELEMENT_NODE]:
       node.appendChild(document.createTextNode(text));
     case [AddRaw(text), DomNode.ELEMENT_NODE]:
       node.appendChild(Html.parse(text));
     case [AddElement(name, attributes, children), DomNode.ELEMENT_NODE]:
-      var el = createElement(name, attributes, children);
+      var post = [],
+          el = createElement(name, attributes, children, post);
       node.appendChild(el);
+      for(f in post) f();
     case [AddComponent(comp), DomNode.ELEMENT_NODE]:
-      comp.init();
+      var post = [];
+      comp.init(post);
       node.appendChild(comp.element);
+      for(f in post) f();
     case [Remove, _]:
       node.parentNode.removeChild(node);
     case [RemoveAttribute(name), DomNode.ELEMENT_NODE]:
@@ -121,13 +133,16 @@ class HtmlNode {
       }
     case [ReplaceWithElement(name, attributes, children), _]:
       var parent = node.parentNode,
-          el = createElement(name, attributes, children);
+          post = [],
+          el = createElement(name, attributes, children, post);
       parent.replaceChild(el, node);
+      for(f in post) f();
     case [ReplaceWithComponent(comp), _]:
       var parent = node.parentNode;
-      comp.init();
-      thx.Timer.immediate(comp.didMount);
+      var post = [];
+      comp.init(post);
       parent.replaceChild(comp.element, node);
+      for(f in post) f();
     case [ReplaceWithText(text), _]:
       var parent = node.parentNode;
       parent.replaceChild(document.createTextNode(text), node);
