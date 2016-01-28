@@ -21,8 +21,6 @@ class HtmlNode {
       document.createTextNode(text);
     case ComponentNode(comp):
       comp.init(post);
-      // thx.Timer.immediate(comp.didMount);
-      // comp.didMount();
       comp.element;
   }
 
@@ -80,6 +78,7 @@ class HtmlNode {
     case [DestroyComponent(comp), _]:
       comp.didUnmount();
     case [MigrateComponentToComponent(oldComp, newComp), _] if(thx.Types.sameType(oldComp, newComp)):
+      // TODO should check that elements are of the same type (tagName)?
       newComp.element = oldComp.element;
       var migrate = Reflect.field(newComp, "migrate");
       if(null != migrate)
@@ -87,9 +86,9 @@ class HtmlNode {
       newComp.didRefresh();
     case [MigrateComponentToComponent(oldComp, newComp), _]:
       oldComp.didUnmount();
-      newComp.element = oldComp.element;
-      newComp.didMount();
+      applyPatch(MigrateElementToComponent(newComp), node);
     case [MigrateElementToComponent(comp), _]:
+      // TODO should check that elements are of the same type (tagName)?
       comp.element = cast node;
       comp.didMount();
     case [AddText(text), DomNode.ELEMENT_NODE]:
