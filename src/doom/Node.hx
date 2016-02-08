@@ -115,6 +115,8 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
       case [Element(_, a1, c1), Element(_, a2, c2)]:
         diffAttributes(a1, a2)
           .concat(diffNodes(c1, c2));
+      case [Text(_), Element(n2, a2, c2)]:
+        [ReplaceWithElement(n2, a2, c2)];
       case [_, Element(n2, a2, c2)]:
         [ReplaceWithElement(n2, a2, c2)];
       case [Text(t1), Text(t2)] if(t1 != t2):

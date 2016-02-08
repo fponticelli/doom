@@ -61,6 +61,14 @@ class HtmlNode {
     return el;
   }
 
+  static function replaceNode(enter : DomNode, exit : DomNode, patch : Patch) {
+    var parent = exit.parentNode;
+    if(null == parent) {
+      return;
+    }
+    parent.replaceChild(enter, exit);
+  }
+
   public static function applyPatches(patches : Array<Patch>, node : DomNode) {
     for(patch in patches)
       applyPatch(patch, node);
@@ -77,6 +85,7 @@ class HtmlNode {
   public static function applyPatch(patch : Patch, node : DomNode) switch [patch, node.nodeType] {
     case [DestroyComponent(comp), _]:
       comp.didUnmount();
+      comp.isUnmounted = true;
     case [MigrateComponentToComponent(oldComp, newComp), _] if(thx.Types.sameType(oldComp, newComp)):
       // TODO should check that elements are of the same type (tagName)?
       newComp.element = oldComp.element;
@@ -85,9 +94,10 @@ class HtmlNode {
         Reflect.callMethod(newComp, migrate, [oldComp]);
       newComp.didRefresh();
     case [MigrateComponentToComponent(oldComp, newComp), _]:
-      oldComp.didUnmount();
       applyPatch(MigrateElementToComponent(newComp), node);
-    case [MigrateElementToComponent(comp), _]:
+      oldComp.didUnmount();
+      oldComp.isUnmounted = true;
+    case [MigrateElementToComponent(comp), _]: // if(comp.element.tagName == (cast node : js.html.Element).tagName):
       // TODO should check that elements are of the same type (tagName)?
       comp.element = cast node;
       comp.didMount();
@@ -125,31 +135,28 @@ class HtmlNode {
           addEvent(cast node, name, e);
       }
     case [ReplaceWithElement(name, attributes, children), _]:
-      var parent = node.parentNode,
-          post = [],
+      var post = [],
           el = createElement(name, attributes, children, post);
-      parent.replaceChild(el, node);
+      replaceNode(el, node, patch);
       for(f in post) f();
     case [ReplaceWithComponent(comp), _]:
-      var parent = node.parentNode;
       var post = [];
       comp.init(post);
-      parent.replaceChild(comp.element, node);
+      replaceNode(comp.element, node, patch);
       for(f in post) f();
     case [ReplaceWithText(text), _]:
-      var parent = node.parentNode;
-      parent.replaceChild(document.createTextNode(text), node);
+      replaceNode(document.createTextNode(text), node, patch);
     case [ReplaceWithRaw(raw), _]:
-      var parent = node.parentNode;
-      parent.replaceChild(dots.Html.parse(raw), node);
+      replaceNode(dots.Html.parse(raw), node, patch);
     case [ContentChanged(newcontent), DomNode.TEXT_NODE]
        | [ContentChanged(newcontent), DomNode.COMMENT_NODE]:
       if (node.parentNode.nodeName == "TEXTAREA") (cast node.parentNode : TextAreaElement).value = newcontent;
       else node.nodeValue = newcontent;
     case [PatchChild(index, patches), DomNode.ELEMENT_NODE]:
       var n = (cast node : js.html.Element).childNodes.item(index);
-      if(null != n) // TODO ????
+      if(null != n) { // TODO ????
         applyPatches(patches, n);
+      }
     case [p, _]:
       throw new thx.Error('cannot apply patch $p on ${node}');
   };

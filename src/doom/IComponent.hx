@@ -6,6 +6,7 @@ import js.html.Element;
 interface IComponent {
   public var element : Element;
   public var node : Node;
+  public var isUnmounted : Bool;
   public function init(post : Array<Void -> Void>) : Void;
   public function render() : Node;
 

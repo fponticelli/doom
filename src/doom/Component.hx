@@ -18,7 +18,7 @@ class Component<Api, State> extends ComponentBase {
   public function update(newState : State) {
     var oldState = this.state;
     this.state = newState;
-    if(!shouldRender(oldState, newState))
+    if(isUnmounted || !shouldRender(oldState, newState))
       return;
     updateNode(node);
   }

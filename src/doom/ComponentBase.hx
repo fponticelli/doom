@@ -9,6 +9,8 @@ class ComponentBase implements IComponent {
   public var node : Node;
   public var children : Nodes;
 
+  public var isUnmounted = false;
+
   public function new(?children : Nodes) {
     this.children = null == children ? [] : children;
     this.node = render();

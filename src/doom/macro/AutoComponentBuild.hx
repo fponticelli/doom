@@ -584,7 +584,7 @@ class AutoComponentBuild {
         expr: macro {
           var oldState = this.state;
           this.state = newState;
-          if (!shouldRender(oldState, newState)) return;
+          if(isUnmounted || !shouldRender(oldState, newState)) return;
           updateNode(node);
         },
         args: [{
