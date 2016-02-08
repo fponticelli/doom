@@ -70,8 +70,10 @@ class HtmlNode {
   }
 
   public static function applyPatches(patches : Array<Patch>, node : DomNode) {
+    var post = [];
     for(patch in patches)
-      applyPatch(patch, node);
+      applyPatch(patch, node, post);
+    for(f in post) f();
   }
 
   static function addEvent(el : js.html.Element, name : String, handler : EventHandler) {
@@ -82,7 +84,7 @@ class HtmlNode {
     Reflect.deleteField(el, 'on$name');
   }
 
-  public static function applyPatch(patch : Patch, node : DomNode) switch [patch, node.nodeType] {
+  public static function applyPatch(patch : Patch, node : DomNode, post : Array<Void -> Void>) switch [patch, node.nodeType] {
     case [DestroyComponent(comp), _]:
       comp.didUnmount();
       comp.isUnmounted = true;
@@ -94,27 +96,23 @@ class HtmlNode {
         Reflect.callMethod(newComp, migrate, [oldComp]);
       newComp.didRefresh();
     case [MigrateComponentToComponent(oldComp, newComp), _]:
-      applyPatch(MigrateElementToComponent(newComp), node);
       oldComp.didUnmount();
       oldComp.isUnmounted = true;
-    case [MigrateElementToComponent(comp), _]: // if(comp.element.tagName == (cast node : js.html.Element).tagName):
+      applyPatch(MigrateElementToComponent(newComp), node, post);
+    case [MigrateElementToComponent(comp), _]:
       // TODO should check that elements are of the same type (tagName)?
       comp.element = cast node;
-      comp.didMount();
+      post.insert(0, comp.didMount);
     case [AddText(text), DomNode.ELEMENT_NODE]:
       node.appendChild(document.createTextNode(text));
     case [AddRaw(text), DomNode.ELEMENT_NODE]:
       node.appendChild(Html.parse(text));
     case [AddElement(name, attributes, children), DomNode.ELEMENT_NODE]:
-      var post = [],
-          el = createElement(name, attributes, children, post);
+      var el = createElement(name, attributes, children, post);
       node.appendChild(el);
-      for(f in post) f();
     case [AddComponent(comp), DomNode.ELEMENT_NODE]:
-      var post = [];
       comp.init(post);
       node.appendChild(comp.element);
-      for(f in post) f();
     case [Remove, _]:
       node.parentNode.removeChild(node);
     case [RemoveAttribute(name), DomNode.ELEMENT_NODE]:
