@@ -20,6 +20,7 @@ class HtmlNode {
     case Text(text):
       document.createTextNode(text);
     case ComponentNode(comp):
+      comp.node = comp.render();
       comp.init(post);
       comp.element;
   }
@@ -91,6 +92,7 @@ class HtmlNode {
     case [MigrateComponentToComponent(oldComp, newComp), _] if(thx.Types.sameType(oldComp, newComp)):
       // TODO should check that elements are of the same type (tagName)?
       newComp.element = oldComp.element;
+      newComp.node = newComp.render();
       var migrate = Reflect.field(newComp, "migrate");
       if(null != migrate)
         Reflect.callMethod(newComp, migrate, [oldComp]);
@@ -98,10 +100,13 @@ class HtmlNode {
     case [MigrateComponentToComponent(oldComp, newComp), _]:
       oldComp.didUnmount();
       oldComp.isUnmounted = true;
+      // newComp.node = newComp.render();
       applyPatch(MigrateElementToComponent(newComp), node, post);
     case [MigrateElementToComponent(comp), _]:
       // TODO should check that elements are of the same type (tagName)?
       comp.element = cast node;
+      comp.node = comp.render();
+
       post.insert(0, comp.didMount);
     case [AddText(text), DomNode.ELEMENT_NODE]:
       node.appendChild(document.createTextNode(text));
@@ -111,6 +116,7 @@ class HtmlNode {
       var el = createElement(name, attributes, children, post);
       node.appendChild(el);
     case [AddComponent(comp), DomNode.ELEMENT_NODE]:
+      comp.node = comp.render();
       comp.init(post);
       node.appendChild(comp.element);
     case [Remove, _]:
@@ -139,6 +145,7 @@ class HtmlNode {
       for(f in post) f();
     case [ReplaceWithComponent(comp), _]:
       var post = [];
+      comp.node = comp.render();
       comp.init(post);
       replaceNode(comp.element, node, patch);
       for(f in post) f();

@@ -7,13 +7,14 @@ import doom.Node;
 import doom.AttributeValue;
 
 class XmlNode {
-  public static function toXml(node : Node) return switch (node : NodeImpl) {
-    case Element(name, attributes, children):
-      createElement(name, attributes, children);
-    case Text(text): Xml.createPCData(text);
-    case Raw(text): Xml.parse(text);
-    case ComponentNode(comp): toXml(comp.node);
-  };
+  public static function toXml(node : Node)
+    return switch (node : NodeImpl) {
+      case Element(name, attributes, children):
+        createElement(name, attributes, children);
+      case Text(text): Xml.createPCData(text);
+      case Raw(text): Xml.parse(text);
+      case ComponentNode(comp): toXml(comp.render());
+    };
 
   static function createElement(name : String, attributes : Map<String, AttributeValue>, children : Array<Node>) {
     var xml = Xml.createElement(name);
@@ -88,7 +89,7 @@ class XmlNode {
       throw new thx.Error('cannot apply patch $p on $n');
   };
 
-  public static function toString(node : Node) return switch (node : NodeImpl) {
+  public static function toString(node : Node)return switch (node : NodeImpl) {
     case Element(name, attributes, children):
       var buf = '<$name${attributesToString(attributes)}';
       if(children.length == 0)
@@ -101,7 +102,7 @@ class XmlNode {
       buf;
     case Text(text): text;
     case Raw(text): text;
-    case ComponentNode(comp): toString(comp.node);
+    case ComponentNode(comp): toString(comp.render());
   };
 
   public static function attributesToString(attributes : Map<String, AttributeValue>) {

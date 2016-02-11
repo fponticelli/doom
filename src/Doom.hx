@@ -13,6 +13,7 @@ class Doom extends doom.ComponentBase {
       case ComponentNode(comp):
         ref.innerHTML = "";
         var post = [];
+        comp.node = comp.render();
         comp.init(post);
         ref.appendChild(comp.element);
         for(f in post) f();

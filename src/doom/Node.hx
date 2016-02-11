@@ -107,6 +107,8 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
 
     return p.concat(switch [this, that] {
       case [ComponentNode(old), ComponentNode(comp)]:
+        if(null == comp.node)
+          comp.node = comp.render();
         old.node.diff(comp.node);
       case [_, ComponentNode(comp)]:
         [ReplaceWithComponent(comp)];

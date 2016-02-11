@@ -13,7 +13,6 @@ class ComponentBase implements IComponent {
 
   public function new(?children : Nodes) {
     this.children = null == children ? [] : children;
-    this.node = render();
   }
 
   public function init(post : Array<Void -> Void>) {
@@ -37,14 +36,16 @@ class ComponentBase implements IComponent {
   }
 
   private function updateNode(oldNode : Node) {
+    trace("UPDATENODE");
     var newNode = render();
+    trace(newNode);
     switch newNode {
       case doom.Node.NodeImpl.Element(_): // do nothing
       case doom.Node.NodeImpl.ComponentNode(_):
       case _: throw new thx.Error('Component ${toString()} must return only element nodes');
     }
     var patches = oldNode.diff(newNode);
-    // trace(patches.map(doom.Patch.Patches.toString).join("\n"));
+    trace(patches.map(doom.Patch.Patches.toString).join("\n"));
     HtmlNode.applyPatches(patches, element);
     node = newNode;
   }

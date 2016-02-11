@@ -26,6 +26,8 @@ class TestComponent extends TestBaseHtml {
   public function testNested() {
     var component = new ContainerComponent({}, {name : "some", value : 1});
     Doom.mount(component, dom);
+    trace(component.node);
+    trace(component.element);
     component.update({ name : "doom", value : 1 });
     Assert.equals('<div class="doom"><span>1</span></div>', dom.innerHTML);
     component.update({ name : "thx", value : 1 });
