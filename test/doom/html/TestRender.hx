@@ -28,7 +28,7 @@ class TestRender {
   public function testSettingAttributes() {
     var div = js.Browser.document.createElement("div");
     div.setAttribute("id", "main");
-    renderer.updateAttributes(["class" => "container"], div);
+    renderer.applyNodeAttributes(["class" => "container"], div);
     Assert.equals("container", div.getAttribute("class"));
     Assert.isFalse(div.hasAttribute("id"));
   }
