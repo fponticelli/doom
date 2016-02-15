@@ -8,5 +8,5 @@ enum VNode {
   Comment(comment : String);
   Raw(code : String);
   Text(text : String);
-  ComponentNode<Api, State>(comp : Component<Api, State>);
+  ComponentNode<Props, El>(comp : Component<Props, El>);
 }

@@ -9,7 +9,7 @@ import doom.core.VNode;
 using thx.Arrays;
 using thx.Set;
 
-class Render implements doom.core.IRender<Element> {
+class Render /*implements doom.core.IRender<Element>*/ {
   // namespaces
   public static var defaultNamespaces = [
     "svg" => "http://www.w3.org/2000/svg"
@@ -17,8 +17,8 @@ class Render implements doom.core.IRender<Element> {
 
   public var doc(default, null) : Document;
   public var namespaces(default, null) : Map<String, String>;
-  public var nodeToComponent(default, null) : Map<Node, Component<Dynamic, Dynamic>>;
-  public var componentToNode(default, null) : Map<Component<Dynamic, Dynamic>, Node>;
+  public var nodeToComponent(default, null) : Map<Node, Component<Dynamic, Node>>;
+  public var componentToNode(default, null) : Map<Component<Dynamic, Node>, Node>;
 
   public function new(?doc : Document, ?namespaces : Map<String, String>) {
     if(null == doc)
@@ -202,9 +202,9 @@ if(newDom.nodeType != dstDom.nodeType) {
         doc.createTextNode(text);
       case ComponentNode(comp):
         comp.willMount();
-        post.insert(0, comp.didMount);
         var node = comp.render(),
             dom  = generateNode(node, post);
+        post.insert(0, function() comp.didMount(cast dom)); // TODO remove cast
         nodeToComponent.set(dom, cast comp); // TODO remove cast
         componentToNode.set(cast comp, dom); // TODO remove cast
         dom;

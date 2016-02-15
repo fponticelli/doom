@@ -1,12 +1,10 @@
 package doom.core;
 
-class Component<Api, State> {
-  public var api(default, null) : Api;
-  public var state(default, null) : State;
+class Component<Props, El> {
+  public var props(default, null) : Props;
   public var children(default, null) : VNodes;
-  function new(api : Api, state : State, children : VNodes) {
-    this.api = api;
-    this.state = state;
+  function new(props : Props, children : VNodes) {
+    this.props = props;
     this.children = children;
   }
 
@@ -14,7 +12,7 @@ class Component<Api, State> {
     return throw new thx.error.AbstractMethod();
   }
 
-  public function didMount() {}
+  public function didMount(el : El) {}
   public function willMount() {}
 
   public function didUnmount() {}
