@@ -4,7 +4,7 @@ import doom.Patch;
 
 class TestHtml extends TestBaseHtml {
   public function testHtml() {
-    var dom : js.html.Element = cast el4.toHtml();
+    var dom : js.html.Element = cast el4.toHtml([]);
     Assert.equals("DIV", dom.nodeName);
     Assert.equals("value", dom.getAttribute("name"));
   }

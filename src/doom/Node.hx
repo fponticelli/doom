@@ -85,10 +85,21 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
   }
 
   public function diff(that : Node) : Array<Patch> {
+    if(null == this) return switch that {
+      case ComponentNode(comp):
+        [ReplaceWithComponent(comp)];
+      case Element(n, a, c):
+        [ReplaceWithElement(n, a, c)];
+      case Text(t):
+        [ReplaceWithText(t)];
+      case Raw(t):
+        [ReplaceWithRaw(t)];
+    }
+
     function destroySubComponents(node) : Array<Patch> {
       return switch node {
         case ComponentNode(comp):
-          [Patch.DestroyComponent(comp)].concat(destroySubComponents(comp.node));
+          [Patch.DestroyComponent(comp)].concat(null != comp.node ? destroySubComponents(comp.node) : []);
         case _:
           [];
       };
@@ -109,6 +120,8 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
       case [ComponentNode(old), ComponentNode(comp)]:
         if(null == comp.node)
           comp.node = comp.render();
+        // if(null == old.node)
+        //   old.node = old.render();
         old.node.diff(comp.node);
       case [_, ComponentNode(comp)]:
         [ReplaceWithComponent(comp)];

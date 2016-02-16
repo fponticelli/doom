@@ -37,16 +37,18 @@ class ComponentBase implements IComponent {
   }
 
   private function updateNode(oldNode : Node) {
-    trace("UPDATENODE");
+    // trace("UPDATENODE");
     var newNode = render();
-    trace(newNode);
+    // trace(newNode);
     switch newNode {
       case doom.Node.NodeImpl.Element(_): // do nothing
       case doom.Node.NodeImpl.ComponentNode(_):
       case _: throw new thx.Error('Component ${toString()} must return only element nodes');
     }
+    // if(null == oldNode)
+    //   oldNode = render();
     var patches = oldNode.diff(newNode);
-    trace(patches.map(doom.Patch.Patches.toString).join("\n"));
+    // trace(patches.map(doom.Patch.Patches.toString).join("\n"));
     HtmlNode.applyPatches(patches, element);
     node = newNode;
   }
