@@ -1,5 +1,7 @@
-import doom.*;
-import doom.SelectorParser.SelectorParserResult;
+package doom.core;
+
+import doom.core.*;
+import doom.core.SelectorParser.SelectorParserResult;
 import utest.Assert;
 using thx.Iterators;
 using thx.Maps;

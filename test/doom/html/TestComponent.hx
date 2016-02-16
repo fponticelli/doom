@@ -36,6 +36,23 @@ class TestComponent {
       { phase : Render,    hasElement : true, isUnmounted : false },
     ], comp.phases);
   }
+
+  public function testComponentReplacedBySame() {
+    // A -> A
+  }
+
+  public function testComponentReplacedByDifferent() {
+    // A -> B
+    // B -> A
+  }
+
+  public function testComponentReplacedByElement() {
+    // A -> Element
+  }
+
+  public function testElementReplacedByComponent() {
+    // Element -> A
+  }
 }
 
 private class SampleComponent extends doom.html.Component<{}> {
