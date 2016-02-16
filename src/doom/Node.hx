@@ -89,8 +89,6 @@ abstract Node(NodeImpl) from NodeImpl to NodeImpl {
       return switch node {
         case ComponentNode(comp):
           [Patch.DestroyComponent(comp)].concat(destroySubComponents(comp.node));
-        case Element(_, _, children):
-          children.map(destroySubComponents).flatten();
         case _:
           [];
       };
