@@ -31,8 +31,9 @@ class ComponentBase implements IComponent {
   public function didUnmount() {}
 
   public function toString() {
-    var cls = Type.getClassName(Type.getClass(this)).split(".").pop();
-    return '$cls(${node.toString().ellipsisMiddle(80, "...")})';
+    var cls = Type.getClassName(Type.getClass(this)).split(".").pop(),
+        node = null == node ? "" : node.toString();
+    return '$cls(${node.ellipsisMiddle(80, "...")})';
   }
 
   private function updateNode(oldNode : Node) {
