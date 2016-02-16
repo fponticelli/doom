@@ -6,11 +6,15 @@ import doom.core.VNode;
 class TestComponent {
   public function new() {}
 
-  public function testLifecycle() {
-    var doom = new doom.html.Render(),
-        comp = new SampleComponent({}, []);
+  var render : Render;
+  public function setup() {
+    render = new Render();
+  }
+
+  public function testSimpleLifecycle() {
+    var comp = new SampleComponent({}, []);
     Assert.equals(0, comp.counter);
-    doom.mount(comp, js.Browser.document.body);
+    render.mount(comp, js.Browser.document.body);
     Assert.equals(3, comp.counter);
   }
 }

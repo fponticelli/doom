@@ -7,4 +7,15 @@
 -main TestAll
 -D html
 
+doom.core.AttributeValue
+doom.core.Component
+doom.core.IRender
+doom.core.SelectorParser
+doom.core.VNode
+doom.core.VNodes
+doom.html.Component
+doom.html.Html
+doom.html.Render
+doom.html.Svg
+
 -cmd phantomjs bin/phantom.js
