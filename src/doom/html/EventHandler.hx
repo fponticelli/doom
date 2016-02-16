@@ -1,4 +1,4 @@
-package doom;
+package doom.html;
 
 import haxe.Constraints;
 import js.html.Element;
