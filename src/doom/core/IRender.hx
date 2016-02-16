@@ -1,5 +1,5 @@
 package doom.core;
 
 interface IRender<T> {
-  function render(node : VNode, parent : T) : Void;
+  function apply(node : VNode, dom : T) : Void;
 }

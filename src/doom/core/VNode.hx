@@ -1,10 +1,19 @@
 package doom.core;
 
-enum VNode {
+import doom.core.Component;
+
+abstract VNode(VNodeImpl) from VNodeImpl to VNodeImpl {
+  @:from inline static public function fromString(s : String) : VNode
+    return Text(s);
+  @:from inline static public function fromComp<Props, EL>(comp : Component<Props, EL>) : VNode
+    return ComponentNode(comp);
+}
+
+enum VNodeImpl {
   Element(
     name : String,
     attributes : Map<String, AttributeValue>,
-    children : Array<VNode>);
+    children : VNodes);
   Comment(comment : String);
   Raw(code : String);
   Text(text : String);

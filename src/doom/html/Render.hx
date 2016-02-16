@@ -4,12 +4,14 @@ import js.html.Document;
 import js.html.Element;
 import js.html.Node;
 import doom.core.AttributeValue;
-import doom.core.Component;
+import doom.html.Component;
 import doom.core.VNode;
+import doom.core.VNodes;
 using thx.Arrays;
 using thx.Set;
 
-class Render /*implements doom.core.IRender<Element>*/ {
+@:access(doom.html.Component.doom)
+class Render implements doom.core.IRender<Element> {
   // namespaces
   public static var defaultNamespaces = [
     "svg" => "http://www.w3.org/2000/svg"
@@ -17,8 +19,8 @@ class Render /*implements doom.core.IRender<Element>*/ {
 
   public var doc(default, null) : Document;
   public var namespaces(default, null) : Map<String, String>;
-  public var nodeToComponent(default, null) : Map<Node, Component<Dynamic, Node>>;
-  public var componentToNode(default, null) : Map<Component<Dynamic, Node>, Node>;
+  public var nodeToComponent(default, null) : Map<Node, Component<Dynamic>>;
+  public var componentToNode(default, null) : Map<Component<Dynamic>, Node>;
 
   public function new(?doc : Document, ?namespaces : Map<String, String>) {
     if(null == doc)
@@ -35,8 +37,18 @@ class Render /*implements doom.core.IRender<Element>*/ {
     componentToNode = new Map();
   }
 
-  public function render(node : VNode, parent : Element) {
+  public function mount(node : VNode, parent : Element) {
+    parent.innerHTML = "";
+    var post = [],
+        n = generate(node);
+    parent.appendChild(n);
+    for(f in post) f();
+  }
 
+  public function apply(node : VNode, dom : Node) {
+    var post = [];
+    applyToNode(node, dom, dom.parentElement, post);
+    for(f in post) f();
   }
 
   public function generate(node : VNode) : Node {
@@ -67,6 +79,7 @@ class Render /*implements doom.core.IRender<Element>*/ {
       case Text(text):
         applyTextToNode(text, dom, parent, post);
       case ComponentNode(comp):
+        // comp.doom = this;
         // comp.willMount();
         // post.insert(0, comp.didMount);
         // var node = comp.render(),
@@ -109,7 +122,7 @@ if(newDom.nodeType != dstDom.nodeType) {
     replaceChild(parent, dstDom, srcDom);
   }
 
-  function applyElementToNode(name : String, attributes : Map<String, AttributeValue>, children : Array<VNode>, dom : Node, parent : Element, post : Array<Void -> Void>) {
+  function applyElementToNode(name : String, attributes : Map<String, AttributeValue>, children : VNodes, dom : Node, parent : Element, post : Array<Void -> Void>) {
     if(dom.nodeType == Node.ELEMENT_NODE && (cast dom : Element).tagName == name) {
       applyNodeAttributes(attributes, cast dom);
     } else {
@@ -190,6 +203,7 @@ if(newDom.nodeType != dstDom.nodeType) {
     }
   }
 
+  @:access(doom.core.Component.element)
   function generateNode(node : VNode, post : Array<Void -> Void>) : Node {
     return switch node {
       case Element(name, attributes, children):
@@ -204,7 +218,8 @@ if(newDom.nodeType != dstDom.nodeType) {
         comp.willMount();
         var node = comp.render(),
             dom  = generateNode(node, post);
-        post.insert(0, function() comp.didMount(cast dom)); // TODO remove cast
+        comp.element = cast dom; // TODO remove cast
+        post.insert(0, function() comp.didMount()); // TODO remove cast
         nodeToComponent.set(dom, cast comp); // TODO remove cast
         componentToNode.set(cast comp, dom); // TODO remove cast
         dom;
@@ -212,7 +227,7 @@ if(newDom.nodeType != dstDom.nodeType) {
   }
 
 
-  public function createElement(name : String, attributes : Map<String, AttributeValue>, children : Array<VNode>, post : Array<Void -> Void>) : Element {
+  public function createElement(name : String, attributes : Map<String, AttributeValue>, children : VNodes, post : Array<Void -> Void>) : Element {
     var colonPos = name.indexOf(":");
     var el = if(colonPos > 0) {
             var prefix = name.substring(0, colonPos),
