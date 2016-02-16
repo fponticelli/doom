@@ -4,7 +4,8 @@ class Component<Props, El> {
   public var props(default, null) : Props;
   public var children(default, null) : VNodes;
   public var element(default, null) : El;
-  public var doom : IRender<El>;
+  public var isUnmounted(default, null) : Bool = false;
+  public var apply(default, null) : VNode -> El -> Void;
 
   public function new(props : Props, children : VNodes) {
     this.props = props;
@@ -19,12 +20,11 @@ class Component<Props, El> {
     if(!shouldUpdate(this.props, props))
       return;
     this.props = props;
-    var node = render();
-    doom.apply(node, element);
+    apply(VNode.comp(this), element);
   }
 
   public function shouldUpdate(oldProps : Props, newProps : Props) {
-    return true;
+    return !isUnmounted;
   }
 
   public function didMount() {}

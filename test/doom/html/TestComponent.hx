@@ -2,6 +2,7 @@ package doom.html;
 
 import utest.Assert;
 import doom.core.VNode;
+import js.html.Node;
 
 class TestComponent {
   public function new() {}
@@ -13,38 +14,69 @@ class TestComponent {
 
   public function testSimpleLifecycle() {
     var comp = new SampleComponent({}, []);
-    Assert.equals(0, comp.counter);
+    Assert.same([], comp.phases);
     render.mount(comp, js.Browser.document.body);
-    Assert.equals(3, comp.counter);
+    Assert.same([
+      { phase : WillMount, hasElement : false, isUnmounted : false },
+      { phase : Render,    hasElement : false, isUnmounted : false },
+      { phase : DidMount,  hasElement : true,  isUnmounted : false },
+    ], comp.phases);
+  }
+
+  public function testUpdate() {
+    var comp = new SampleComponent({}, []);
+    render.mount(comp, js.Browser.document.body);
+    comp.update({});
+
+    trace(comp.phases);
+    Assert.same([
+      { phase : WillMount, hasElement : false, isUnmounted : false },
+      { phase : Render,    hasElement : false, isUnmounted : false },
+      { phase : DidMount,  hasElement : true,  isUnmounted : false },
+      { phase : Render,    hasElement : true, isUnmounted : false },
+    ], comp.phases);
   }
 }
 
 private class SampleComponent extends doom.html.Component<{}> {
-  public var counter = 0;
+  public var phases : Array<PhaseInfo> = [];
 
   override function willMount() {
-    counter++;
-    Assert.equals(1, counter);
-    Assert.isNull(element);
+    addPhase(WillMount);
   }
   override function render() {
-    counter++;
-    Assert.equals(2, counter);
+    addPhase(Render);
     return Element("div", new Map(), children);
   }
   override function didMount() {
-    counter++;
-    Assert.equals(3, counter);
-    Assert.notNull(element);
+    addPhase(DidMount);
   }
   override function willUnmount() {
-    counter++;
-    Assert.equals(4, counter);
-    Assert.notNull(element);
+    addPhase(WillUnmount);
   }
   override function didUnmount() {
-    counter++;
-    Assert.equals(5, counter);
-    Assert.isNull(element);
+    addPhase(DidUnmount);
   }
+
+  function addPhase(phase : Phase) {
+    phases.push({
+      phase : phase,
+      hasElement : element != null,
+      isUnmounted : isUnmounted
+    });
+  }
+}
+
+private typedef PhaseInfo = {
+  phase : Phase,
+  hasElement : Bool,
+  isUnmounted : Bool
+}
+
+private enum Phase {
+  WillMount;
+  Render;
+  DidMount;
+  WillUnmount;
+  DidUnmount;
 }

@@ -7,10 +7,11 @@ import doom.core.AttributeValue;
 import doom.html.Component;
 import doom.core.VNode;
 import doom.core.VNodes;
+import thx.Types;
 using thx.Arrays;
 using thx.Set;
 
-@:access(doom.html.Component.doom)
+@:access(doom.core.Component)
 class Render implements doom.core.IRender<Element> {
   // namespaces
   public static var defaultNamespaces = [
@@ -47,11 +48,15 @@ class Render implements doom.core.IRender<Element> {
 
   public function apply(node : VNode, dom : Node) {
     var post = [];
+    trace("** apply");
+    // trace(node);
+    // trace('has dom? ${null != dom}');
     applyToNode(node, dom, dom.parentElement, post);
     for(f in post) f();
   }
 
   public function generate(node : VNode) : Node {
+    trace("** generate");
     var post = [],
         dom = generateNode(node, post);
     for(f in post) f();
@@ -59,6 +64,7 @@ class Render implements doom.core.IRender<Element> {
   }
 
   function applyToNode(node : Null<VNode>, dom : Null<Node>, parent : Element, post : Array<Void -> Void>) {
+    trace("** applyToNode");
     if(null == node && null == dom)
       return;
     if(null == node) {
@@ -79,18 +85,12 @@ class Render implements doom.core.IRender<Element> {
       case Text(text):
         applyTextToNode(text, dom, parent, post);
       case ComponentNode(comp):
-        // comp.doom = this;
-        // comp.willMount();
-        // post.insert(0, comp.didMount);
-        // var node = comp.render(),
-        //     dom  = generateNode(node, post);
-        // nodeToComponent.set(dom, cast comp); // TODO remove cast
-        // componentToNode.set(cast comp, dom); // TODO remove cast
-        // dom;
+        applyComponentToNode(cast comp, dom, parent, post); // TODO remove cast
       };
   }
 
   function applyNodeToNode(srcDom : Null<Node>, dstDom : Null<Node>, parent : Element) {
+    trace("** applyNodeToNode");
     if(null == srcDom && null == dstDom)
       return;
     else if(null == srcDom) {
@@ -122,7 +122,41 @@ if(newDom.nodeType != dstDom.nodeType) {
     replaceChild(parent, dstDom, srcDom);
   }
 
+  function applyComponentToNode<Props>(newComp : doom.html.Component<Props>, dom : Node, parent : Element, post : Array<Void -> Void>) {
+    trace("** applyComponentToNode");
+    trace("applyComponentToNode");
+    var oldComp = nodeToComponent.get(dom);
+    if(null != oldComp) {
+      trace(Types.sameType(newComp, oldComp));
+      if(Types.sameType(newComp, oldComp)) {
+        oldComp.props = newComp.props;
+        var node = oldComp.render();
+        applyToNode(node, dom, parent, post);
+      } else {
+        oldComp.willUnmount();
+        nodeToComponent.set(dom, cast newComp); // TODO remove cast
+        componentToNode.remove(oldComp); // TODO remove cast
+        componentToNode.set(cast newComp, dom); // TODO remove cast
+        var node = newComp.render();
+        applyToNode(node, dom, parent, post);
+        oldComp.didUnmount();
+      }
+    } else {
+      var node = newComp.render();
+      nodeToComponent.set(dom, cast newComp); // TODO remove cast
+      componentToNode.set(cast newComp, dom); // TODO remove cast
+      applyToNode(node, dom, parent, post);
+    }
+    // comp.willMount();
+    // var node = comp.render(),
+    //     dom  = generateNode(node, post);
+    // comp.element = cast dom; // TODO remove cast
+    // comp.apply = cast this.apply; // TODO remove cast
+    // post.insert(0, function() comp.didMount()); // TODO remove cast
+  }
+
   function applyElementToNode(name : String, attributes : Map<String, AttributeValue>, children : VNodes, dom : Node, parent : Element, post : Array<Void -> Void>) {
+    trace("** applyElementToNode");
     if(dom.nodeType == Node.ELEMENT_NODE && (cast dom : Element).tagName == name) {
       applyNodeAttributes(attributes, cast dom);
     } else {
@@ -133,6 +167,7 @@ if(newDom.nodeType != dstDom.nodeType) {
   }
 
   function applyCommentToNode(comment : String, dom : Node, parent : Element, post : Array<Void -> Void>) {
+    trace("** applyCommentToNode");
     if(dom.nodeType == Node.COMMENT_NODE) {
       dom.textContent = comment;
     } else {
@@ -142,6 +177,7 @@ if(newDom.nodeType != dstDom.nodeType) {
   }
 
   function applyTextToNode(text : String, dom : Node, parent : Element, post : Array<Void -> Void>) {
+    trace("** applyTextToNode");
     if(dom.nodeType == Node.COMMENT_NODE) {
       dom.textContent = text;
     } else {
@@ -151,16 +187,22 @@ if(newDom.nodeType != dstDom.nodeType) {
   }
 
   function replaceChild(parent : Element, oldDom : Node, newDom : Node) {
-    var comp = nodeToComponent.get(oldDom);
-    if(null != comp) {
-      comp.willUnmount();
-      nodeToComponent.remove(oldDom);
-      componentToNode.remove(comp);
-    }
+    trace("** replaceChild");
+    if(oldDom == newDom)
+      return;
+    // var oldComp = nodeToComponent.get(oldDom),
+    //     newComp = nodeToComponent.get(newDom);
+    // if(null != oldComp) {
+    //   nodeToComponent.remove(oldDom);
+    //   componentToNode.remove(oldComp);
+    //   if(!Types.sameType(oldComp, newComp)) {
+    //     oldComp.willUnmount();
+    //   }
+    // }
     parent.replaceChild(newDom, oldDom);
-    if(null != comp) {
-      comp.didUnmount();
-    }
+    // if(null != oldComp && !Types.sameType(oldComp, newComp)) {
+    //   oldComp.didUnmount();
+    // }
   }
 
   public function applyElementAttributes(srcDom : Element, dstDom : Element) {
@@ -219,6 +261,7 @@ if(newDom.nodeType != dstDom.nodeType) {
         var node = comp.render(),
             dom  = generateNode(node, post);
         comp.element = cast dom; // TODO remove cast
+        comp.apply = cast this.apply; // TODO remove cast
         post.insert(0, function() comp.didMount()); // TODO remove cast
         nodeToComponent.set(dom, cast comp); // TODO remove cast
         componentToNode.set(cast comp, dom); // TODO remove cast
