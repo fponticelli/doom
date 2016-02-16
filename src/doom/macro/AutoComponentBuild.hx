@@ -635,18 +635,14 @@ class AutoComponentBuild {
   static function fullyQualifyFieldType(field : Field) : Field {
     return switch field.kind {
       case FVar(complexType, expr) :
-        field.kind = FVar(qualifyComplexType(complexType), expr);
+        field.kind = FVar(MacroTypes.qualifyComplexType(complexType), expr);
         field;
       case _ : field;
     };
   }
 
   static function qualifyComplexTypes(complexTypes : Array<ComplexType>) : Array<ComplexType> {
-    return complexTypes.map(qualifyComplexType);
-  }
-
-  static function qualifyComplexType(type : ComplexType) {
-    return MacroTypes.qualifyComplexType(type);
+    return complexTypes.map(MacroTypes.qualifyComplexType);
   }
 
   static function fullyQualifyTypeParams(typeParams : Array<TypeParam>) : Array<TypeParam> {
@@ -655,7 +651,7 @@ class AutoComponentBuild {
 
   static function fullyQualifyTypeParam(typeParam : TypeParam) : TypeParam {
     return switch typeParam {
-    case TPType(complexType) : TPType(qualifyComplexType(complexType));
+    case TPType(complexType) : TPType(MacroTypes.qualifyComplexType(complexType));
       case _ : typeParam;
     };
   }
