@@ -13,6 +13,7 @@ doom.core.IRender
 doom.core.SelectorParser
 doom.core.VNode
 doom.core.VNodes
+doom.html.Attributes
 doom.html.Component
 doom.html.Html
 doom.html.Render

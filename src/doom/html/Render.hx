@@ -5,6 +5,7 @@ import js.html.Element;
 import js.html.Node;
 import doom.core.AttributeValue;
 import doom.html.Component;
+import doom.html.Attributes.*;
 import doom.core.VNode;
 import doom.core.VNodes;
 import thx.Types;
@@ -242,22 +243,7 @@ class Render implements doom.core.IRender<Element> {
     trace("** replaceChild, is same? " + (oldDom == newDom));
     if(oldDom == newDom)
       return newDom;
-    // var oldComp = nodeToComponent.get(oldDom),
-    //     newComp = nodeToComponent.get(newDom);
-    // if(null != oldComp) {
-    //   nodeToComponent.remove(oldDom);
-    //   componentToNode.remove(oldComp);
-    //   if(!Types.sameType(oldComp, newComp)) {
-    //     oldComp.willUnmount();
-    //   }
-    // }
     parent.replaceChild(newDom, oldDom);
-    // parent.insertBefore(newDom, oldDom);
-    // parent.removeChild(oldDom);
-
-    // if(null != oldComp && !Types.sameType(oldComp, newComp)) {
-    //   oldComp.didUnmount();
-    // }
     return newDom;
   }
 
@@ -279,10 +265,10 @@ class Render implements doom.core.IRender<Element> {
       dstDom.removeAttribute(key);
 
     for(key in srcAttrs) {
-      var srcValue = srcDom.getAttribute(key),
-          dstValue = dstDom.getAttribute(key);
+      var srcValue = getAttribute(srcDom, key),
+          dstValue = getAttribute(dstDom, key);
       if(srcValue == dstValue) continue;
-      dstDom.setAttribute(key, srcValue);
+      setDynamicAttribute(dstDom, key, srcValue);
     }
   }
 
@@ -296,15 +282,13 @@ class Render implements doom.core.IRender<Element> {
     for(key in vdomAttrs) {
       switch attributes.get(key) {
         case null:
-          dom.removeAttribute(key);
+          removeAttribute(dom, key);
         case StringAttribute(s) if(null == s || s == ""):
-          dom.removeAttribute(key);
-        case BoolAttribute(b) if(!b):
-          dom.removeAttribute(key);
+          removeAttribute(dom, key);
+        case BoolAttribute(b):
+          toggleBoolAttribute(dom, key, b);
         case StringAttribute(s):
-          dom.setAttribute(key, s);
-        case BoolAttribute(_): // always true
-          dom.setAttribute(key, key);
+          setStringAttribute(dom, key, s);
         case EventAttribute(e):
           setEvent(dom, key, e);
       }

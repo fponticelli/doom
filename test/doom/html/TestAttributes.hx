@@ -6,12 +6,25 @@ import utest.Assert;
 
 class TestAttributes extends Base {
   public function testBooleanAttribute() {
-    var el = parseElement('<input type="checkbox">');
-
+    var el : js.html.InputElement = cast parseElement('<input type="checkbox">');
+    Assert.isFalse(el.checked);
     render.applyNodeAttributes(["type" => "checkbox", "checked" => true], el);
-    assertSameHtml('<input type="checkbox" checked="checked">', el);
+    assertSameHtml('<input type="checkbox">', el);
+    Assert.isTrue(el.checked);
     render.applyNodeAttributes(["type" => "checkbox", "checked" => false], el);
     assertSameHtml('<input type="checkbox">', el);
+    Assert.isFalse(el.checked);
+  }
+
+  public function testBooleanAttributeChecked() {
+    var el : js.html.InputElement = cast parseElement('<input type="checkbox" checked>');
+    Assert.isTrue(el.checked);
+    render.applyNodeAttributes(["type" => "checkbox", "checked" => false], el);
+    assertSameHtml('<input type="checkbox" checked="">', el);
+    Assert.isFalse(el.checked);
+    render.applyNodeAttributes(["type" => "checkbox", "checked" => true], el);
+    assertSameHtml('<input type="checkbox" checked="">', el);
+    Assert.isTrue(el.checked);
   }
 
   public function testSettingAttributes() {
