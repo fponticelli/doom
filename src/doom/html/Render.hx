@@ -103,24 +103,20 @@ class Render implements doom.core.IRender<Element> {
     }
 
     if(srcDom.nodeType == dstDom.nodeType) {
+      // TODO, should we check if there is a component associated?
       if(srcDom.nodeType == Node.ELEMENT_NODE) {
         var srcEl = (cast srcDom : Element),
             dstEl = (cast dstDom : Element);
         applyElementAttributes(srcEl, dstEl);
-/*
-if(newDom.nodeType != dstDom.nodeType) {
-  replaceChild(parent, dstDom, newDom);
-} else if(newDom.nodeType == Node.ELEMENT_NODE && (cast newDom : Element).tagName == (cast dstDom : Element).tagName) {
-
-} else {
-
-}
-*/
+        zipNodeListAndNodeList(srcEl.childNodes, dstEl.childNodes).each(function(t) {
+          applyNodeToNode(t._0, t._1, dstEl);
+        });
+      } else {
+        throw "not implemented";
       }
-      // Node.ELEMENT_NODE && (cast newDom : Element).tagName == name) {
-      // applyNodeAttributes(attributes, cast dom);
+    } else {
+      replaceChild(parent, dstDom, srcDom);
     }
-    replaceChild(parent, dstDom, srcDom);
   }
 
   function applyComponentToNode<Props>(newComp : doom.html.Component<Props>, dom : Node, parent : Element, post : Array<Void -> Void>) {
@@ -147,12 +143,6 @@ if(newDom.nodeType != dstDom.nodeType) {
       componentToNode.set(cast newComp, dom); // TODO remove cast
       applyToNode(node, dom, parent, post);
     }
-    // comp.willMount();
-    // var node = comp.render(),
-    //     dom  = generateNode(node, post);
-    // comp.element = cast dom; // TODO remove cast
-    // comp.apply = cast this.apply; // TODO remove cast
-    // post.insert(0, function() comp.didMount()); // TODO remove cast
   }
 
   function applyElementToNode(name : String, attributes : Map<String, AttributeValue>, children : VNodes, dom : Node, parent : Element, post : Array<Void -> Void>) {
@@ -211,6 +201,11 @@ if(newDom.nodeType != dstDom.nodeType) {
   function zipVNodesAndNodeList(vnodes : VNodes, children : js.html.NodeList) : Array<Tuple2<VNode, Node>> {
     var len = thx.Ints.max(vnodes.length, children.length);
     return [for(i in 0...len) Tuple2.of(vnodes[i], children[i])];
+  }
+
+  function zipNodeListAndNodeList(left : js.html.NodeList, right : js.html.NodeList) : Array<Tuple2<Node, Node>> {
+    var len = thx.Ints.max(left.length, right.length);
+    return [for(i in 0...len) Tuple2.of(left[i], right[i])];
   }
 
   public function applyElementAttributes(srcDom : Element, dstDom : Element) {
