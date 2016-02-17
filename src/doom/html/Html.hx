@@ -247,6 +247,9 @@ class Html {
   inline public static function text(content : String) : VNode
     return VNode.text(content);
 
+  inline public static function comment(content : String) : VNode
+    return VNode.comment(content);
+
   inline public static function raw(content : String) : VNode
     return VNode.raw(content);
 

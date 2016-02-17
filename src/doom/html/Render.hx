@@ -222,7 +222,7 @@ class Render implements doom.core.IRender<Element> {
 
   function applyTextToNode(text : String, dom : Node, parent : Element, post : Array<Void -> Void>) : Node {
     trace("** applyTextToNode");
-    if(dom.nodeType == Node.COMMENT_NODE) {
+    if(dom.nodeType == Node.TEXT_NODE) {
       dom.textContent = text;
       return dom;
     } else {
@@ -246,6 +246,9 @@ class Render implements doom.core.IRender<Element> {
     //   }
     // }
     parent.replaceChild(newDom, oldDom);
+    // parent.insertBefore(newDom, oldDom);
+    // parent.removeChild(oldDom);
+
     // if(null != oldComp && !Types.sameType(oldComp, newComp)) {
     //   oldComp.didUnmount();
     // }
