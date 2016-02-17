@@ -4,21 +4,11 @@ import utest.Assert;
 import doom.core.VNode;
 import js.html.Node;
 
-class TestComponent {
-  public function new() {}
-
-  var render : Render;
-  public function setup() {
-    render = new Render();
-  }
-  public function teardown() {
-    js.Browser.document.body.innerHTML = "";
-  }
-
+class TestComponent extends Base {
   public function testSimpleLifecycle() {
     var comp = new SampleComponent({}, []);
     Assert.same([], comp.phases);
-    render.mount(comp, js.Browser.document.body);
+    mount(comp);
     Assert.same([
       { phase : WillMount, hasElement : false, isUnmounted : false },
       { phase : Render,    hasElement : false, isUnmounted : false },
@@ -28,7 +18,7 @@ class TestComponent {
 
   public function testUpdate() {
     var comp = new SampleComponent({}, []);
-    render.mount(comp, js.Browser.document.body);
+    mount(comp);
     comp.update({});
 
     Assert.same([
@@ -42,8 +32,8 @@ class TestComponent {
   public function testComponentInsideElement() {
     var comp = new SampleComponent({}, []),
         div   = doom.html.Html.div(["class" => "container"], comp);
-    render.mount(div, js.Browser.document.body);
-    var dom = js.Browser.document.body.querySelector(".container");
+    mount(div);
+    var dom = select(".container");
     Assert.same([
       { phase : WillMount, hasElement : false, isUnmounted : false },
       { phase : Render,    hasElement : false, isUnmounted : false },
@@ -60,8 +50,8 @@ class TestComponent {
     var comp1 = new SampleComponent({}, []),
         comp2 = new SampleComponent({}, []),
         div   = doom.html.Html.div(["class" => "container"], comp1);
-    render.mount(div, js.Browser.document.body);
-    var dom = js.Browser.document.body.querySelector(".container");
+    mount(div);
+    var dom = select(".container");
     comp1.phases = [];
     div = doom.html.Html.div(["class" => "container"], comp2);
     render.apply(div, dom);
@@ -75,8 +65,8 @@ class TestComponent {
     var comp1 = new SampleComponent({}, []),
         comp2 = new SampleComponent({}, []),
         div   = doom.html.Html.div(["class" => "container"], comp1);
-    render.mount(div, js.Browser.document.body);
-    var dom = js.Browser.document.body.querySelector(".container");
+    mount(div);
+    var dom = select(".container");
     div = doom.html.Html.div(["class" => "container"], comp2);
     render.apply(div, dom);
     comp1.phases = [];
@@ -91,8 +81,8 @@ class TestComponent {
     var comp1 = new SampleComponent({}, []),
         comp2 = new SampleComponent({}, []),
         div   = doom.html.Html.div(["class" => "container"], comp1);
-    render.mount(div, js.Browser.document.body);
-    var dom = js.Browser.document.body.querySelector(".container");
+    mount(div);
+    var dom = select(".container");
     div = doom.html.Html.div(["class" => "container"], comp2);
     render.apply(div, dom);
     comp1.phases = [];
@@ -107,8 +97,8 @@ class TestComponent {
     var comp1 = new SampleComponent({}, []),
         comp2 = new SampleComponent2({}, []),
         div   = doom.html.Html.div(["class" => "container"], comp1);
-    render.mount(div, js.Browser.document.body);
-    var dom = js.Browser.document.body.querySelector(".container");
+    mount(div);
+    var dom = select(".container");
     div = doom.html.Html.div(["class" => "container"], comp2);
     render.apply(div, dom);
     Assert.same([
@@ -135,8 +125,8 @@ class TestComponent {
     var comp = new SampleComponent({}, []),
         el   = doom.html.Html.div(["class" => "some"], []),
         div  = doom.html.Html.div(["class" => "container"], comp);
-    render.mount(div, js.Browser.document.body);
-    var dom = js.Browser.document.body.querySelector(".container");
+    mount(div);
+    var dom = select(".container");
     Assert.same([
       { phase : WillMount,   hasElement : false, isUnmounted : false },
       { phase : Render,      hasElement : false, isUnmounted : false },
@@ -159,8 +149,8 @@ class TestComponent {
     var comp = new SampleComponent({}, []),
         el   = doom.html.Html.div(["class" => "some"], []),
         div  = doom.html.Html.div(["class" => "container"], el);
-    render.mount(div, js.Browser.document.body);
-    var dom = js.Browser.document.body.querySelector(".container");
+    mount(div);
+    var dom = select(".container");
     div = doom.html.Html.div(["class" => "container"], comp);
     render.apply(div, dom);
     Assert.same([
@@ -176,8 +166,8 @@ class TestComponent {
   public function testComponentIsRemovedFromDom() {
     var comp = new SampleComponent({}, []),
         div  = doom.html.Html.div(["class" => "container"], comp);
-    render.mount(div, js.Browser.document.body);
-    var dom = js.Browser.document.body.querySelector(".container");
+    mount(div);
+    var dom = select(".container");
     div = doom.html.Html.div(["class" => "container"]);
     comp.phases = [];
     render.apply(div, dom);
