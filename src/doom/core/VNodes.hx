@@ -19,7 +19,6 @@ abstract VNodes(Array<VNode>) from Array<VNode> {
   inline public static function comps<Prop, El>(comps : Array<Component<Prop, El>>) : VNodes
     return comps.map(VNode.comp);
 
-  @:from
   inline public static function comment(content : String) : VNodes
     return [VNode.comment(content)];
 
