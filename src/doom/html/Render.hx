@@ -299,14 +299,14 @@ class Render implements doom.core.IRender<Element> {
           dom.removeAttribute(key);
         case StringAttribute(s) if(null == s || s == ""):
           dom.removeAttribute(key);
+        case BoolAttribute(b) if(!b):
+          dom.removeAttribute(key);
         case StringAttribute(s):
           dom.setAttribute(key, s);
-        case BoolAttribute(b) if(b):
-          dom.setAttribute(key, "");
+        case BoolAttribute(_): // always true
+          dom.setAttribute(key, key);
         case EventAttribute(e):
           setEvent(dom, key, e);
-        case _:
-          // do nothing
       }
     }
   }

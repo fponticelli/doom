@@ -40,7 +40,11 @@ class Base {
     return body().querySelector(selector);
   }
 
-  public function assertHtml(expectHtml : String, ?pos : haxe.PosInfos) {
-    Assert.equals(expectHtml, asText(), pos);
+  public function assertHtml(expectedHtml : String, ?pos : haxe.PosInfos) {
+    Assert.equals(expectedHtml, asText(), pos);
+  }
+
+  public function assertSameHtml(expectedHtml : String, el : js.html.Element, ?pos : haxe.PosInfos) {
+    Assert.equals(expectedHtml, el.outerHTML, pos);
   }
 }
