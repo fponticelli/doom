@@ -119,12 +119,17 @@ class Render implements doom.core.IRender<Element> {
     }
   }
 
+  function migrate<Props>(src : doom.html.Component<Props>, dst : doom.html.Component<Props>) {
+    dst.props = src.props;
+    src.update = dst.update;
+  }
+
   function applyComponentToNode<Props>(newComp : doom.html.Component<Props>, dom : Node, parent : Element, post : Array<Void -> Void>) {
     var oldComp = nodeToComponent.get(dom);
     trace("** applyComponentToNode, has oldComp? " + (null != oldComp) + ", are same type? " + Types.sameType(newComp, oldComp));
     if(null != oldComp) {
       if(Types.sameType(newComp, oldComp)) {
-        oldComp.props = newComp.props;
+        migrate(cast newComp, cast oldComp);
         var node = oldComp.render();
         applyToNode(node, dom, parent, post);
       } else {

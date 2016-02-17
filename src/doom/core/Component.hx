@@ -16,7 +16,7 @@ class Component<Props, El> {
     return throw new thx.error.AbstractMethod();
   }
 
-  public function update(props : Props) {
+  dynamic public function update(props : Props) {
     if(!shouldUpdate(this.props, props))
       return;
     this.props = props;

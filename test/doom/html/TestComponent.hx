@@ -35,7 +35,7 @@ class TestComponent {
       { phase : WillMount, hasElement : false, isUnmounted : false },
       { phase : Render,    hasElement : false, isUnmounted : false },
       { phase : DidMount,  hasElement : true,  isUnmounted : false },
-      { phase : Render,    hasElement : true, isUnmounted : false },
+      { phase : Render,    hasElement : true,  isUnmounted : false },
     ], comp.phases);
   }
 
@@ -52,7 +52,7 @@ class TestComponent {
     comp.phases = [];
     render.apply(div, dom);
     Assert.same([
-      { phase : Render,    hasElement : true, isUnmounted : false }
+      { phase : Render,    hasElement : true,  isUnmounted : false }
     ], comp.phases);
   }
 
@@ -72,11 +72,35 @@ class TestComponent {
   }
 
   public function testComponentReplacedBySameUpdateComp1() {
-    // TODO update comp1
+    var comp1 = new SampleComponent({}, []),
+        comp2 = new SampleComponent({}, []),
+        div   = doom.html.Html.div(["class" => "container"], comp1);
+    render.mount(div, js.Browser.document.body);
+    var dom = js.Browser.document.body.querySelector(".container");
+    div = doom.html.Html.div(["class" => "container"], comp2);
+    render.apply(div, dom);
+    comp1.phases = [];
+    comp1.update({});
+    Assert.same([
+      { phase : Render,    hasElement : true, isUnmounted : false }
+    ], comp1.phases);
+    Assert.same([], comp2.phases);
   }
 
   public function testComponentReplacedBySameUpdateComp2() {
-    // TODO update comp2
+    var comp1 = new SampleComponent({}, []),
+        comp2 = new SampleComponent({}, []),
+        div   = doom.html.Html.div(["class" => "container"], comp1);
+    render.mount(div, js.Browser.document.body);
+    var dom = js.Browser.document.body.querySelector(".container");
+    div = doom.html.Html.div(["class" => "container"], comp2);
+    render.apply(div, dom);
+    comp1.phases = [];
+    comp2.update({});
+    Assert.same([
+      { phase : Render,    hasElement : true, isUnmounted : false }
+    ], comp1.phases);
+    Assert.same([], comp2.phases);
   }
 
   public function testComponentReplacedByDifferent() {
