@@ -7,14 +7,17 @@ class Component<Props, El> {
   public var isUnmounted(default, null) : Bool = false;
   public var apply(default, null) : VNode -> El -> Void;
 
-  public function new(props : Props, children : VNodes) {
+  public function new(props : Props, ?children : VNodes) {
     this.props = props;
-    this.children = children;
+    this.children = null == children ? [] : children;
   }
 
   public function render() : VNode {
     return throw new thx.error.AbstractMethod();
   }
+
+  public function asNode() : VNode
+    return VNode.comp(this);
 
   dynamic public function update(props : Props) {
     if(!shouldUpdate(this.props, props))
