@@ -104,8 +104,31 @@ class TestComponent {
   }
 
   public function testComponentReplacedByDifferent() {
-    // A -> B
-    // B -> A
+    var comp1 = new SampleComponent({}, []),
+        comp2 = new SampleComponent2({}, []),
+        div   = doom.html.Html.div(["class" => "container"], comp1);
+    render.mount(div, js.Browser.document.body);
+    var dom = js.Browser.document.body.querySelector(".container");
+    div = doom.html.Html.div(["class" => "container"], comp2);
+    render.apply(div, dom);
+    Assert.same([
+      { phase : WillMount,   hasElement : false, isUnmounted : false },
+      { phase : Render,      hasElement : false, isUnmounted : false },
+      { phase : DidMount,    hasElement : true,  isUnmounted : false },
+      { phase : WillUnmount, hasElement : true,  isUnmounted : false },
+      { phase : DidUnmount,  hasElement : false,  isUnmounted : true },
+    ], comp1.phases);
+    Assert.same([
+      { phase : WillMount, hasElement : false, isUnmounted : false },
+      { phase : Render,    hasElement : false, isUnmounted : false },
+      { phase : DidMount,  hasElement : true,  isUnmounted : false }
+    ], comp2.phases);
+    comp1.phases = [];
+    comp1.update({}); // should do nothing
+    Assert.same([], comp1.phases);
+    comp2.phases = [];
+    comp2.update({}); // should do nothing
+    Assert.same([{ phase : Render, hasElement : true, isUnmounted : false }], comp2.phases);
   }
 
   public function testComponentReplacedByElement() {
@@ -116,6 +139,8 @@ class TestComponent {
     // Element -> A
   }
 }
+
+private class SampleComponent2 extends SampleComponent {}
 
 private class SampleComponent extends doom.html.Component<{}> {
   public var phases : Array<PhaseInfo> = [];
