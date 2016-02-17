@@ -101,32 +101,40 @@ class Render implements doom.core.IRender<Element> {
       };
   }
 
-  function applyNodeToNode(srcDom : Null<Node>, dstDom : Null<Node>, parent : Element) {
+  function applyNodeToNode(srcDom : Null<Node>, dstDom : Null<Node>, parent : Element, tryUnmount : Bool) : Node {
     trace("** applyNodeToNode");
     if(null == srcDom && null == dstDom)
-      return;
+      return null;
     else if(null == srcDom) {
       parent.removeChild(dstDom);
-      return;
+      return null;
     } else if(null == dstDom) {
       parent.appendChild(srcDom);
-      return;
+      return srcDom;
     }
-
+    if(tryUnmount)
+      unmountDomComponent(dstDom);
     if(srcDom.nodeType == dstDom.nodeType) {
-      // TODO, should we check if there is a component associated?
       if(srcDom.nodeType == Node.ELEMENT_NODE) {
         var srcEl = (cast srcDom : Element),
             dstEl = (cast dstDom : Element);
-        applyElementAttributes(srcEl, dstEl);
-        zipNodeListAndNodeList(srcEl.childNodes, dstEl.childNodes).each(function(t) {
-          applyNodeToNode(t._0, t._1, dstEl);
-        });
+        if(srcEl.tagName == dstEl.tagName) {
+          applyElementAttributes(srcEl, dstEl);
+          zipNodeListAndNodeList(srcEl.childNodes, dstEl.childNodes).each(function(t) {
+            applyNodeToNode(t._0, t._1, dstEl, true);
+          });
+          return dstDom;
+        } else {
+          return replaceChild(parent, dstDom, srcDom);
+        }
+      } else if(srcDom.nodeType == Node.COMMENT_NODE || srcDom.nodeType == Node.TEXT_NODE) {
+        dstDom.textContent = srcDom.textContent;
+        return dstDom;
       } else {
-        throw "not implemented";
+        return replaceChild(parent, dstDom, srcDom);
       }
     } else {
-      replaceChild(parent, dstDom, srcDom);
+      return replaceChild(parent, dstDom, srcDom);
     }
   }
 
