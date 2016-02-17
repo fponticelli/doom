@@ -90,7 +90,8 @@ class Render implements doom.core.IRender<Element> {
       case Raw(code):
         if(tryUnmount)
           unmountDomComponent(dom);
-        dots.Html.parse(code);
+        var node = dots.Html.parse(code);
+        applyNodeToNode(node, dom, parent, true);
       case Text(text):
         if(tryUnmount)
           unmountDomComponent(dom);
