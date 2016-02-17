@@ -212,8 +212,7 @@ class Render implements doom.core.IRender<Element> {
     } else {
       var el = createElement(name, attributes, children, post);
       // applyNodeAttributes(attributes, el);
-      replaceChild(parent, dom, el);
-      return el;
+      return replaceChild(parent, dom, el);
     }
   }
 
@@ -224,8 +223,7 @@ class Render implements doom.core.IRender<Element> {
       return dom;
     } else {
       var el = doc.createComment(comment);
-      replaceChild(parent, dom, el);
-      return el;
+      return replaceChild(parent, dom, el);
     }
   }
 
@@ -236,15 +234,14 @@ class Render implements doom.core.IRender<Element> {
       return dom;
     } else {
       var el = doc.createTextNode(text);
-      replaceChild(parent, dom, el);
-      return el;
+      return replaceChild(parent, dom, el);
     }
   }
 
   function replaceChild(parent : Element, oldDom : Node, newDom : Node) {
     trace("** replaceChild, is same? " + (oldDom == newDom));
     if(oldDom == newDom)
-      return;
+      return newDom;
     // var oldComp = nodeToComponent.get(oldDom),
     //     newComp = nodeToComponent.get(newDom);
     // if(null != oldComp) {
@@ -261,6 +258,7 @@ class Render implements doom.core.IRender<Element> {
     // if(null != oldComp && !Types.sameType(oldComp, newComp)) {
     //   oldComp.didUnmount();
     // }
+    return newDom;
   }
 
   function zipVNodesAndNodeList(vnodes : VNodes, children : js.html.NodeList) : Array<Tuple2<VNode, Node>> {
