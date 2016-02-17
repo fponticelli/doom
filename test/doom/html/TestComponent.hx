@@ -11,6 +11,9 @@ class TestComponent {
   public function setup() {
     render = new Render();
   }
+  public function teardown() {
+    js.Browser.document.body.innerHTML = "";
+  }
 
   public function testSimpleLifecycle() {
     var comp = new SampleComponent({}, []);
@@ -56,9 +59,24 @@ class TestComponent {
   public function testComponentReplacedBySame() {
     var comp1 = new SampleComponent({}, []),
         comp2 = new SampleComponent({}, []),
-        div   = doom.html.Html.div(comp1);
+        div   = doom.html.Html.div(["class" => "container"], comp1);
     render.mount(div, js.Browser.document.body);
-    // A -> A
+    var dom = js.Browser.document.body.querySelector(".container");
+    comp1.phases = [];
+    div = doom.html.Html.div(["class" => "container"], comp2);
+    render.apply(div, dom);
+    Assert.same([
+      { phase : Render,    hasElement : true, isUnmounted : false }
+    ], comp1.phases);
+    Assert.same([], comp2.phases);
+  }
+
+  public function testComponentReplacedBySameUpdateComp1() {
+    // TODO update comp1
+  }
+
+  public function testComponentReplacedBySameUpdateComp2() {
+    // TODO update comp2
   }
 
   public function testComponentReplacedByDifferent() {
