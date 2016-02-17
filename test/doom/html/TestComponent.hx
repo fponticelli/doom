@@ -28,7 +28,6 @@ class TestComponent {
     render.mount(comp, js.Browser.document.body);
     comp.update({});
 
-    trace(comp.phases);
     Assert.same([
       { phase : WillMount, hasElement : false, isUnmounted : false },
       { phase : Render,    hasElement : false, isUnmounted : false },
@@ -37,7 +36,28 @@ class TestComponent {
     ], comp.phases);
   }
 
+  public function testComponentInsideElement() {
+    var comp = new SampleComponent({}, []),
+        div   = doom.html.Html.div(["class" => "container"], comp);
+    render.mount(div, js.Browser.document.body);
+    var dom = js.Browser.document.body.querySelector(".container");
+    Assert.same([
+      { phase : WillMount, hasElement : false, isUnmounted : false },
+      { phase : Render,    hasElement : false, isUnmounted : false },
+      { phase : DidMount,  hasElement : true,  isUnmounted : false }
+    ], comp.phases);
+    comp.phases = [];
+    render.apply(div, dom);
+    Assert.same([
+      { phase : Render,    hasElement : true, isUnmounted : false }
+    ], comp.phases);
+  }
+
   public function testComponentReplacedBySame() {
+    var comp1 = new SampleComponent({}, []),
+        comp2 = new SampleComponent({}, []),
+        div   = doom.html.Html.div(comp1);
+    render.mount(div, js.Browser.document.body);
     // A -> A
   }
 
@@ -63,7 +83,7 @@ private class SampleComponent extends doom.html.Component<{}> {
   }
   override function render() {
     addPhase(Render);
-    return Element("div", new Map(), children);
+    return Element("div", ["class" => "sample"], children);
   }
   override function didMount() {
     addPhase(DidMount);

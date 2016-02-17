@@ -32,4 +32,11 @@ class TestRender {
     Assert.equals("container", div.getAttribute("class"));
     Assert.isFalse(div.hasAttribute("id"));
   }
+
+  public function testMountElement() {
+    var render = new Render(),
+        el = doom.html.Html.div(["class" => "some"]);
+    render.mount(el, js.Browser.document.body);
+    Assert.equals('<div class="some"></div>', js.Browser.document.body.innerHTML);
+  }
 }

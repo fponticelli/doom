@@ -10,6 +10,7 @@ import doom.core.VNodes;
 import thx.Types;
 using thx.Arrays;
 using thx.Set;
+using thx.Tuple;
 
 @:access(doom.core.Component)
 class Render implements doom.core.IRender<Element> {
@@ -64,7 +65,7 @@ class Render implements doom.core.IRender<Element> {
   }
 
   function applyToNode(node : Null<VNode>, dom : Null<Node>, parent : Element, post : Array<Void -> Void>) {
-    trace("** applyToNode");
+    trace("** applyToNode, has node? " + (null != node) + ", has dom? " + (null != dom));
     if(null == node && null == dom)
       return;
     if(null == node) {
@@ -123,11 +124,9 @@ if(newDom.nodeType != dstDom.nodeType) {
   }
 
   function applyComponentToNode<Props>(newComp : doom.html.Component<Props>, dom : Node, parent : Element, post : Array<Void -> Void>) {
-    trace("** applyComponentToNode");
-    trace("applyComponentToNode");
     var oldComp = nodeToComponent.get(dom);
+    trace("** applyComponentToNode, has oldComp? " + (null != oldComp) + ", are same type? " + Types.sameType(newComp, oldComp));
     if(null != oldComp) {
-      trace(Types.sameType(newComp, oldComp));
       if(Types.sameType(newComp, oldComp)) {
         oldComp.props = newComp.props;
         var node = oldComp.render();
@@ -139,6 +138,7 @@ if(newDom.nodeType != dstDom.nodeType) {
         componentToNode.set(cast newComp, dom); // TODO remove cast
         var node = newComp.render();
         applyToNode(node, dom, parent, post);
+        oldComp.isUnmounted = true;
         oldComp.didUnmount();
       }
     } else {
@@ -156,9 +156,12 @@ if(newDom.nodeType != dstDom.nodeType) {
   }
 
   function applyElementToNode(name : String, attributes : Map<String, AttributeValue>, children : VNodes, dom : Node, parent : Element, post : Array<Void -> Void>) {
-    trace("** applyElementToNode");
-    if(dom.nodeType == Node.ELEMENT_NODE && (cast dom : Element).tagName == name) {
+    trace("** applyElementToNode, name: " + name.toUpperCase() + ", old node: " + (dom.nodeType == Node.ELEMENT_NODE ? (cast dom : Element).tagName : '${dom.nodeType}'));
+    if(dom.nodeType == Node.ELEMENT_NODE && (cast dom : Element).tagName == name.toUpperCase()) {
       applyNodeAttributes(attributes, cast dom);
+      zipVNodesAndNodeList(children, dom.childNodes).each(function(t) {
+        applyToNode(t._0, t._1, cast dom, post);
+      });
     } else {
       var el = createElement(name, attributes, children, post);
       applyNodeAttributes(attributes, el);
@@ -187,7 +190,7 @@ if(newDom.nodeType != dstDom.nodeType) {
   }
 
   function replaceChild(parent : Element, oldDom : Node, newDom : Node) {
-    trace("** replaceChild");
+    trace("** replaceChild, is same? " + (oldDom == newDom));
     if(oldDom == newDom)
       return;
     // var oldComp = nodeToComponent.get(oldDom),
@@ -203,6 +206,11 @@ if(newDom.nodeType != dstDom.nodeType) {
     // if(null != oldComp && !Types.sameType(oldComp, newComp)) {
     //   oldComp.didUnmount();
     // }
+  }
+
+  function zipVNodesAndNodeList(vnodes : VNodes, children : js.html.NodeList) : Array<Tuple2<VNode, Node>> {
+    var len = thx.Ints.max(vnodes.length, children.length);
+    return [for(i in 0...len) Tuple2.of(vnodes[i], children[i])];
   }
 
   public function applyElementAttributes(srcDom : Element, dstDom : Element) {

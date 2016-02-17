@@ -4,6 +4,7 @@ import doom.core.VNode;
 
 @:forward(length, concat, copy, filter, indexOf, iterator, join, lastIndexOf,
           map, slice)
+@:arrayAccess
 abstract VNodes(Array<VNode>) from Array<VNode> {
   @:from inline public static function node(node : VNode) : VNodes
     return [node];
