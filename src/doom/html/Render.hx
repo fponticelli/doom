@@ -151,7 +151,6 @@ class Render implements doom.core.IRender<Element> {
         Reflect.setField(dst, field, f);
       }
     }
-    dst.willUpdate();
   }
 
   function applyComponentToNode<Props>(newComp : doom.html.Component<Props>, dom : Node, parent : Element, post : Array<Void -> Void>) : Node {
@@ -160,8 +159,14 @@ class Render implements doom.core.IRender<Element> {
     if(null != oldComp) {
       if(Types.sameType(newComp, oldComp)) {
         migrate(cast newComp, cast oldComp);
-        var node = oldComp.render();
-        return applyToNode(node, dom, parent, post, false);
+        oldComp.willUpdate();
+        post.push(oldComp.didUpdate);
+        if(oldComp.shouldRender()) {
+          var node = oldComp.render();
+          return applyToNode(node, dom, parent, post, false);
+        } else {
+          return dom;
+        }
       } else {
         oldComp.willUnmount();
         nodeToComponent.set(dom, cast newComp); // TODO remove cast

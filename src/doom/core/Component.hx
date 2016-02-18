@@ -22,12 +22,16 @@ class Component<Props, El> {
   public function update(props : Props) {
     var old = this.props;
     this.props = props;
-    if(!shouldRender(old, props))
+    if(!shouldUpdate(old, props) || !shouldRender())
       return;
     apply(VNode.comp(this), node);
   }
 
-  public function shouldRender(oldProps : Props, newProps : Props) {
+  public function shouldUpdate(oldProps : Props, newProps : Props) {
+    return true;
+  }
+
+  public function shouldRender() {
     return !isUnmounted;
   }
 
@@ -38,6 +42,7 @@ class Component<Props, El> {
   public function willMount() {}
 
   public function willUpdate() {}
+  public function didUpdate() {}
 
   public function didUnmount() {}
   public function willUnmount() {}

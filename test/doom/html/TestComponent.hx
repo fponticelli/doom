@@ -22,11 +22,12 @@ class TestComponent extends Base {
     comp.update({});
 
     Assert.same([
-      { phase : WillMount, hasElement : false, isUnmounted : false },
-      { phase : Render,    hasElement : false, isUnmounted : false },
-      { phase : DidMount,  hasElement : true,  isUnmounted : false },
+      { phase : WillMount,  hasElement : false, isUnmounted : false },
+      { phase : Render,     hasElement : false, isUnmounted : false },
+      { phase : DidMount,   hasElement : true,  isUnmounted : false },
       { phase : WillUpdate, hasElement : true,  isUnmounted : false },
-      { phase : Render,    hasElement : true,  isUnmounted : false },
+      { phase : Render,     hasElement : true,  isUnmounted : false },
+      { phase : DidUpdate,  hasElement : true,  isUnmounted : false }
     ], comp.phases);
   }
 
@@ -44,7 +45,8 @@ class TestComponent extends Base {
     render.apply(div, dom);
     Assert.same([
       { phase : WillUpdate, hasElement : true, isUnmounted : false },
-      { phase : Render,     hasElement : true, isUnmounted : false }
+      { phase : Render,     hasElement : true, isUnmounted : false },
+      { phase : DidUpdate,  hasElement : true, isUnmounted : false }
     ], comp.phases);
   }
 
@@ -59,7 +61,8 @@ class TestComponent extends Base {
     render.apply(div, dom);
     Assert.same([
       { phase : WillUpdate, hasElement : true, isUnmounted : false },
-      { phase : Render,     hasElement : true, isUnmounted : false }
+      { phase : Render,     hasElement : true, isUnmounted : false },
+      { phase : DidUpdate,  hasElement : true, isUnmounted : false }
     ], comp1.phases);
     Assert.same([], comp2.phases);
   }
@@ -76,7 +79,8 @@ class TestComponent extends Base {
     comp1.update({});
     Assert.same([
       { phase : WillUpdate, hasElement : true, isUnmounted : false },
-      { phase : Render,     hasElement : true, isUnmounted : false }
+      { phase : Render,     hasElement : true, isUnmounted : false },
+      { phase : DidUpdate,  hasElement : true, isUnmounted : false }
     ], comp1.phases);
     Assert.same([], comp2.phases);
   }
@@ -93,7 +97,8 @@ class TestComponent extends Base {
     comp2.update({});
     Assert.same([
       { phase : WillUpdate, hasElement : true, isUnmounted : false },
-      { phase : Render,     hasElement : true, isUnmounted : false }
+      { phase : Render,     hasElement : true, isUnmounted : false },
+      { phase : DidUpdate,  hasElement : true, isUnmounted : false }
     ], comp1.phases);
     Assert.same([], comp2.phases);
   }
@@ -125,7 +130,8 @@ class TestComponent extends Base {
     comp2.update({}); // should do nothing
     Assert.same([
       { phase : WillUpdate, hasElement : true,  isUnmounted : false },
-      { phase : Render, hasElement : true, isUnmounted : false }
+      { phase : Render, hasElement : true, isUnmounted : false },
+      { phase : DidUpdate,  hasElement : true, isUnmounted : false }
     ], comp2.phases);
   }
 
@@ -170,7 +176,8 @@ class TestComponent extends Base {
     comp.update({}); // should do nothing
     Assert.same([
       { phase : WillUpdate, hasElement : true, isUnmounted : false },
-      { phase : Render, hasElement : true, isUnmounted : false }
+      { phase : Render, hasElement : true, isUnmounted : false },
+      { phase : DidUpdate,  hasElement : true, isUnmounted : false }
     ], comp.phases);
   }
 
@@ -207,11 +214,14 @@ private class SampleComponent extends doom.html.Component<{}> {
   override function didMount() {
     addPhase(DidMount);
   }
-  override function willUnmount() {
-    addPhase(WillUnmount);
-  }
   override function willUpdate() {
     addPhase(WillUpdate);
+  }
+  override function didUpdate() {
+    addPhase(DidUpdate);
+  }
+  override function willUnmount() {
+    addPhase(WillUnmount);
   }
   override function didUnmount() {
     addPhase(DidUnmount);
@@ -236,7 +246,8 @@ private enum Phase {
   WillMount;
   Render;
   DidMount;
-  WillUnmount;
   WillUpdate;
+  DidUpdate;
+  WillUnmount;
   DidUnmount;
 }
