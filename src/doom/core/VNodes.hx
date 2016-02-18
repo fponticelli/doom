@@ -27,6 +27,10 @@ abstract VNodes(Array<VNode>) from Array<VNode> {
     return [VNode.text(content)];
 
   @:from
+  inline public static function texts(contents : Array<String>) : VNodes
+    return contents.map(VNode.text);
+
+  @:from
   inline public static function comp<Prop, El>(comp : Component<Prop, El>) : VNodes
     return [VNode.comp(comp)];
 }
