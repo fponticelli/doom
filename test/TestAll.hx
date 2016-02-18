@@ -10,15 +10,3 @@ class TestAll {
     ]);
   }
 }
-
-/*
-TODO
-  events
-    add
-    replace
-    remove
-  renderers
-    subnodes ?
-  components that alterate the dom
-  async components that alterate the dom
-*/
