@@ -3,7 +3,7 @@ package doom.core;
 class Component<Props, El> {
   public var props(default, null) : Props;
   public var children(default, null) : Null<VNodes>;
-  public var element(default, null) : El;
+  public var node(default, null) : El;
   public var isUnmounted(default, null) : Bool = false;
   public var apply(default, null) : VNode -> El -> Void;
 
@@ -19,19 +19,25 @@ class Component<Props, El> {
   public function asNode() : VNode
     return VNode.comp(this);
 
-  dynamic public function update(props : Props) {
-    if(!shouldUpdate(this.props, props))
-      return;
+  public function update(props : Props) {
+    var old = this.props;
     this.props = props;
-    apply(VNode.comp(this), element);
+    if(!shouldRender(old, props))
+      return;
+    apply(VNode.comp(this), node);
   }
 
-  public function shouldUpdate(oldProps : Props, newProps : Props) {
+  public function shouldRender(oldProps : Props, newProps : Props) {
     return !isUnmounted;
   }
 
+  public function migrationFields()
+    return ["props", "update"];
+
   public function didMount() {}
   public function willMount() {}
+
+  public function willUpdate() {}
 
   public function didUnmount() {}
   public function willUnmount() {}
