@@ -41,10 +41,12 @@ class Render implements doom.core.IRender<Element> {
   }
 
   public function mount(node : VNode, parent : Element) {
+    // trace("** mount");
     parent.innerHTML = "";
     var post = [],
-        n = generate(node);
+        n = generateNode(node, post);
     parent.appendChild(n);
+    trace('** mount: post (${post.length})');
     for(f in post) f();
   }
 
@@ -59,6 +61,7 @@ class Render implements doom.core.IRender<Element> {
     // trace("** generate");
     var post = [],
         dom = generateNode(node, post);
+    trace('** generate: post (${post.length})');
     for(f in post) f();
     return dom;
   }
@@ -311,16 +314,22 @@ class Render implements doom.core.IRender<Element> {
   }
 
   function generateNode(node : VNode, post : Array<Void -> Void>) : Node {
+    // trace("** generateNode");
     return switch node {
       case Element(name, attributes, children):
+        // trace("** generateNode: element");
         createElement(name, attributes, children, post);
       case Comment(comment):
+        // trace("** generateNode: comment");
         doc.createComment(comment);
       case Raw(code):
+        // trace("** generateNode: raw");
         dots.Html.parse(code);
       case Text(text):
+        // trace("** generateNode: text");
         doc.createTextNode(text);
       case ComponentNode(comp):
+        // trace("** generateNode: component");
         comp.willMount();
         var node = comp.render(),
             dom  = generateNode(node, post);
