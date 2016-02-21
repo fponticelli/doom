@@ -165,7 +165,7 @@ class Render implements doom.core.IRender<Element> {
         oldComp.willUpdate();
         post.push(oldComp.didUpdate);
         if(oldComp.shouldRender()) {
-          var node = oldComp.render();
+          var node = renderComponent(oldComp);
           return applyToNode(node, dom, parent, post, false);
         } else {
           return dom;
@@ -177,7 +177,7 @@ class Render implements doom.core.IRender<Element> {
         componentToNode.set(cast newComp, dom); // TODO remove cast
 
         newComp.willMount();
-        var node = newComp.render();
+        var node = renderComponent(newComp);
         newComp.apply = cast this.apply; // TODO remove cast
         var dom = applyToNode(node, dom, parent, post, false);
         newComp.node = cast dom; // TODO remove cast
@@ -193,7 +193,7 @@ class Render implements doom.core.IRender<Element> {
       }
     } else {
       newComp.willMount();
-      var node = newComp.render();
+      var node = renderComponent(newComp);
       newComp.apply = cast this.apply; // TODO remove cast
       var dom = applyToNode(node, dom, parent, post, false);
       newComp.node = cast dom; // TODO remove cast
@@ -209,6 +209,13 @@ class Render implements doom.core.IRender<Element> {
     if(null == comp) return;
     unmountComponent(comp);
   }
+
+  function renderComponent<Props, El>(comp : doom.core.Component<Props, El>) : VNode
+    // TODO runtime check should be avoided with better types
+    return switch comp.render() {
+      case ComponentNode(c): throw new thx.Error('Component ${thx.Types.valueTypeToString(comp)} should not return another component (${thx.Types.valueTypeToString(c)}) directly');
+      case other: other;
+    };
 
   function unmountComponent<Props>(comp : Component<Props>) {
     var node = componentToNode.get(comp);
@@ -331,7 +338,7 @@ class Render implements doom.core.IRender<Element> {
       case ComponentNode(comp):
         // trace("** generateNode: component");
         comp.willMount();
-        var node = comp.render(),
+        var node = renderComponent(comp),
             dom  = generateNode(node, post);
         comp.node = cast dom; // TODO remove cast
         comp.apply = cast this.apply; // TODO remove cast

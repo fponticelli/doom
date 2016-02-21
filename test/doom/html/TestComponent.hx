@@ -3,6 +3,8 @@ package doom.html;
 import utest.Assert;
 import doom.core.VNode;
 import js.html.Node;
+import doom.html.Phase;
+import doom.html.Html.*;
 
 class TestComponent extends Base {
   public function testSimpleLifecycle() {
@@ -197,6 +199,23 @@ class TestComponent extends Base {
     comp.update({}); // should do nothing
     Assert.same([], comp.phases);
   }
+
+  public function testComponentThatReturnsComponent() {
+    Assert.raises(function() {
+      var comp = new ComponentA({});
+      mount(comp);
+    });
+  }
+}
+
+private class ComponentA extends doom.html.Component<{}> {
+  override function render()
+    return new ComponentB({}).asNode();
+}
+
+private class ComponentB extends doom.html.Component<{}> {
+  override function render()
+    return div('b');
 }
 
 private class SampleComponent2 extends SampleComponent {}
@@ -234,20 +253,4 @@ private class SampleComponent extends doom.html.Component<{}> {
       isUnmounted : isUnmounted
     });
   }
-}
-
-private typedef PhaseInfo = {
-  phase : Phase,
-  hasElement : Bool,
-  isUnmounted : Bool
-}
-
-private enum Phase {
-  WillMount;
-  Render;
-  DidMount;
-  WillUpdate;
-  DidUpdate;
-  WillUnmount;
-  DidUnmount;
 }

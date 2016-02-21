@@ -22,6 +22,7 @@ class Component<Props, El> {
   public function update(props : Props) {
     var old = this.props;
     this.props = props;
+    // trace("** update, shouldUpdate? " + shouldUpdate(old, props) + ", shouldRender? " + shouldRender());
     if(!shouldUpdate(old, props) || !shouldRender())
       return;
     apply(VNode.comp(this), node);
