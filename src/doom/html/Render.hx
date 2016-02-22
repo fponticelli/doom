@@ -237,7 +237,6 @@ class Render implements doom.core.IRender<Element> {
       return dom;
     } else {
       var el = createElement(name, attributes, children, post);
-      // applyNodeAttributes(attributes, el);
       return replaceChild(parent, dom, el);
     }
   }

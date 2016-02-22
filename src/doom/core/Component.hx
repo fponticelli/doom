@@ -37,7 +37,7 @@ class Component<Props, El> {
   }
 
   public function migrationFields()
-    return ["props", "update"];
+    return ["props", "update", "children"];
 
   public function didMount() {}
   public function willMount() {}
