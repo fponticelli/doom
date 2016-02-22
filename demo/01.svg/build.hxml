@@ -1,8 +1,0 @@
--js www/app.js
--cp ../../src
--cp src
--lib dots
--lib thx.core
--main Main
--D html
--debug
