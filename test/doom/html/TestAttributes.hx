@@ -33,4 +33,13 @@ class TestAttributes extends Base {
     Assert.equals("container", div.getAttribute("class"));
     Assert.isFalse(div.hasAttribute("id"));
   }
+
+  public function testApplyClass() {
+    mount(button(["type" => "button", "class" => "btn btn-secondary"], "click"));
+    assertHtml('<button type="button" class="btn btn-secondary">click</button>');
+    apply(button(["type" => "button", "class" => "btn btn-secondary active"], "click"));
+    assertHtml('<button type="button" class="btn btn-secondary active">click</button>');
+    mount(button(["type" => "button", "class" => "btn btn-secondary"], "click"));
+    assertHtml('<button type="button" class="btn btn-secondary">click</button>');
+  }
 }

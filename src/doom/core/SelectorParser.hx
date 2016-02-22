@@ -60,12 +60,12 @@ class SelectorParser {
     var attributes : Map<String, AttributeValue> = new Map();
     while (index < selector.length) {
       var attribute = gobbleAttribute();
-      //trace(attribute.key, attribute.value);
+      // trace(attribute.key, attribute.value);
       if (attribute.key == "class" && attributes.exists("class")) {
         var previousClass = attributes.get("class").toString();
         attribute.value = '$previousClass ${attribute.value.toString()}';
       }
-      //trace(attribute.key, attribute.value);
+      // trace(attribute.key, attribute.value);
       attributes.set(attribute.key, attribute.value);
     }
     return attributes;

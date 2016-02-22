@@ -206,6 +206,14 @@ class TestComponent extends Base {
       mount(comp);
     });
   }
+
+  public function testNestedComponentUpdate() {
+    var comp = new NestedComponent({ counter : 1 });
+    mount(comp);
+    assertHtml('<div><div><div>counter: 1</div></div></div>');
+    comp.update({ counter : 2 });
+    assertHtml('<div><div><div>counter: 2</div></div></div>');
+  }
 }
 
 private class ComponentA extends doom.html.Component<{}> {
@@ -216,6 +224,16 @@ private class ComponentA extends doom.html.Component<{}> {
 private class ComponentB extends doom.html.Component<{}> {
   override function render()
     return div('b');
+}
+
+private class NestedComponent extends doom.html.Component<{ counter : Int }> {
+  override function render()
+    return div(div(new ChildComponent({ counter : props.counter })));
+}
+
+private class ChildComponent extends doom.html.Component<{ counter : Int }> {
+  override function render()
+    return div('counter: ${props.counter}');
 }
 
 private class SampleComponent2 extends SampleComponent {}

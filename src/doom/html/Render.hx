@@ -46,7 +46,7 @@ class Render implements doom.core.IRender<Element> {
     var post = [],
         n = generateNode(node, post);
     parent.appendChild(n);
-    trace('** mount: post (${post.length})');
+    // trace('** mount: post (${post.length})');
     for(f in post) f();
   }
 
@@ -61,7 +61,7 @@ class Render implements doom.core.IRender<Element> {
     // trace("** generate");
     var post = [],
         dom = generateNode(node, post);
-    trace('** generate: post (${post.length})');
+    // trace('** generate: post (${post.length})');
     for(f in post) f();
     return dom;
   }
