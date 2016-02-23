@@ -2,12 +2,12 @@ package doom.core;
 
 class Component<Props, El> {
   public var props(default, null) : Props;
-  public var children(default, null) : Null<VNodes>;
+  public var children(default, null) : Null<VChildren>;
   public var node(default, null) : El;
   public var isUnmounted(default, null) : Bool = false;
-  public var apply(default, null) : VNode -> El -> Void;
+  public var apply(default, null) : VChild -> El -> Void;
 
-  public function new(props : Props, ?children : VNodes) {
+  public function new(props : Props, ?children : VChildren) {
     this.props = props;
     this.children = children;
   }
@@ -16,8 +16,8 @@ class Component<Props, El> {
     return throw new thx.error.AbstractMethod();
   }
 
-  public function asNode() : VNode
-    return VNode.comp(this);
+  public function asNode() : VChild
+    return this;
 
   public function update(props : Props) {
     var old = this.props;
@@ -25,7 +25,7 @@ class Component<Props, El> {
     // trace("** update, shouldUpdate? " + shouldUpdate(old, props) + ", shouldRender? " + shouldRender());
     if(!shouldUpdate(old, props) || !shouldRender())
       return;
-    apply(VNode.comp(this), node);
+    apply(this, node);
   }
 
   public function shouldUpdate(oldProps : Props, newProps : Props) {
