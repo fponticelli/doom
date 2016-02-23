@@ -363,6 +363,7 @@ class Render implements doom.core.IRender<Element> {
           }
     applyNodeAttributes(attributes, el);
     for(child in children) {
+      if(null == child) continue;
       var n = generateNode(child, post);
       el.appendChild(n);
     }
