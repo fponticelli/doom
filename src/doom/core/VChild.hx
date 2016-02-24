@@ -7,6 +7,9 @@ abstract VChild(VChildImpl) from VChildImpl to VChildImpl {
     return VChildImpl.Node(VNode.text(text));
   @:from inline public static function comp<Props, El>(comp : Component<Props, El>) : VChild
     return VChildImpl.Comp(comp);
+
+  inline public function asChildren() : VChildren
+    return [this];
 }
 
 enum VChildImpl {

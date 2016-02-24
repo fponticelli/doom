@@ -16,7 +16,7 @@ class Component<Props, El> {
     return throw new thx.error.AbstractMethod();
   }
 
-  public function asNode() : VChild
+  public function asChild() : VChild
     return this;
 
   public function update(props : Props) {
