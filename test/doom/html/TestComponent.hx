@@ -200,13 +200,6 @@ class TestComponent extends Base {
     Assert.same([], comp.phases);
   }
 
-  public function testComponentThatReturnsComponent() {
-    Assert.raises(function() {
-      var comp = new ComponentA({});
-      mount(comp);
-    });
-  }
-
   public function testNestedComponentUpdate() {
     var comp = new NestedComponent({ counter : 1 });
     mount(comp);
@@ -214,16 +207,6 @@ class TestComponent extends Base {
     comp.update({ counter : 2 });
     assertHtml('<div><div><div>counter: 2</div></div></div>');
   }
-}
-
-private class ComponentA extends doom.html.Component<{}> {
-  override function render()
-    return new ComponentB({}).asNode();
-}
-
-private class ComponentB extends doom.html.Component<{}> {
-  override function render()
-    return div('b');
 }
 
 private class NestedComponent extends doom.html.Component<{ counter : Int }> {
