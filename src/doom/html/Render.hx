@@ -229,8 +229,14 @@ class Render implements doom.core.IRender<Element> {
     unmountComponent(comp);
   }
 
-  function renderComponent<Props, El>(comp : doom.core.Component<Props, El>) : VNode
-    return comp.render();
+  function renderComponent<Props, El>(comp : doom.core.Component<Props, El>) : VNode {
+    try {
+      return comp.render();
+    } catch(e : Dynamic) {
+      var typeName = thx.Types.valueTypeToString(comp);
+      return throw new thx.error.ErrorWrapper('unable to render $typeName', e);
+    }
+  }
 
   function unmountComponent<Props>(comp : Component<Props>) {
     var node = componentToNode.get(comp);

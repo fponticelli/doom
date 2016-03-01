@@ -1,5 +1,8 @@
 package doom.core;
 
+using thx.Strings;
+import thx.Error;
+
 class Component<Props, El> {
   public var props(default, null) : Props;
   public var children(default, null) : Null<VChildren>;
@@ -25,7 +28,20 @@ class Component<Props, El> {
     // trace("** update, shouldUpdate? " + shouldUpdate(old, props) + ", shouldRender? " + shouldRender());
     if(!shouldUpdate(old, props) || !shouldRender())
       return;
-    apply(this, node);
+    try {
+      apply(this, node);
+    } catch(e : Dynamic) {
+      rethrowUpdateError(e);
+    }
+  }
+
+  function rethrowUpdateError(e : Dynamic) {
+    var s = Std.string(e);
+    if(s.contains("apply is not a function")) {
+      throw new Error('method `apply` has not been correctly migrated to ${Type.getClassName(Type.getClass(this))}');
+    } else {
+      throw Error.fromDynamic(e);
+    }
   }
 
   public function shouldUpdate(oldProps : Props, newProps : Props) {

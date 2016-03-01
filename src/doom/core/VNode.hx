@@ -19,10 +19,10 @@ abstract VNode(VNodeImpl) from VNodeImpl to VNodeImpl {
     return Element(name, attributes, children);
   }
 
-  inline public function asChild() : VChild
+  @:to inline public function asChild() : VChild
     return VChild.node(this);
 
-  inline public function asChildren() : VChildren
+  @:to inline public function asChildren() : VChildren
     return [VChild.node(this)];
 
   // TODO
