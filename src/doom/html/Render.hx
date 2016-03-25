@@ -178,40 +178,44 @@ class Render implements doom.core.IRender<Element> {
   }
 
   function applyComponentToNode<Props>(newComp : doom.html.Component<Props>, dom : DOMNode, parent : Element, post : Array<Void -> Void>) : DOMNode {
-    var oldComp = domComponentMap.getComponent(dom);
+    var oldComps = domComponentMap.getComponents(dom);
     // trace("** applyComponentToNode, has oldComp? " + (null != oldComp) + ", are same type? " + Types.sameType(newComp, oldComp));
-    if(null != oldComp) {
-      if(Types.sameType(newComp, oldComp)) {
+    if(null != oldComps) {
+      var oldComp = oldComps.find(function(comp) return Types.sameType(comp, newComp));
+      if(null == oldComp) {
+        for(oldComp in oldComps) {
+          oldComp.willUnmount();
+          domComponentMap.removeByComponent(oldComp);
+          domComponentMap.set(newComp, dom);
+          newComp.willMount();
+          var node = renderComponent(newComp);
+          newComp.apply = cast this.apply; // TODO remove cast
+          var dom = applyToNode(node, dom, parent, post, false);
+          newComp.node = cast dom; // TODO remove cast
+
+          post.insert(0, function() newComp.didMount()); // TODO remove cast
+          domComponentMap.set(newComp, dom); // TODO remove case
+
+          oldComp.isUnmounted = true;
+          oldComp.node = null;
+          oldComp.didUnmount();
+        }
+        return dom;
+      } else {
         migrate(cast newComp, cast oldComp);
         oldComp.willUpdate();
         post.push(oldComp.didUpdate);
         if(oldComp.shouldRender()) {
-          domComponentMap.remove(oldComp, dom);
+          domComponentMap.removeByComponent(oldComp);
+          // domComponentMap.remove(oldComp, dom);
           var node = renderComponent(oldComp),
-              newDom = applyToNode(node, dom, parent, post, false);
+          newDom = applyToNode(node, dom, parent, post, false);
           oldComp.node = newDom;
           domComponentMap.set(oldComp, newDom);
           return newDom;
         } else {
           return dom;
         }
-      } else {
-        oldComp.willUnmount();
-        domComponentMap.removeByComponent(oldComp);
-        domComponentMap.set(newComp, dom);
-        newComp.willMount();
-        var node = renderComponent(newComp);
-        newComp.apply = cast this.apply; // TODO remove cast
-        var dom = applyToNode(node, dom, parent, post, false);
-        newComp.node = cast dom; // TODO remove cast
-
-        post.insert(0, function() newComp.didMount()); // TODO remove cast
-        domComponentMap.set(newComp, dom); // TODO remove case
-
-        oldComp.isUnmounted = true;
-        oldComp.node = null;
-        oldComp.didUnmount();
-        return dom;
       }
     } else {
       newComp.willMount();
@@ -226,9 +230,10 @@ class Render implements doom.core.IRender<Element> {
   }
 
   function unmountDomComponent(dom : DOMNode) {
-    var comp = domComponentMap.getComponent(dom);
-    if(null == comp) return;
-    unmountComponent(comp);
+    var comps = domComponentMap.getComponents(dom);
+    if(null == comps) return;
+    for(comp in comps)
+      unmountComponent(comp);
   }
 
   function renderComponent<Props, El>(comp : doom.core.Component<Props, El>) : VNode {
@@ -407,32 +412,43 @@ class Render implements doom.core.IRender<Element> {
 }
 
 private class DomComponentMap {
-  var domToComponent(default, null) : Map<DOMNode, Component<Dynamic>>;
+  var domToComponent(default, null) : Map<DOMNode, Array<Component<Dynamic>>>;
   var componentToDom(default, null) : Map<Component<Dynamic>, DOMNode>;
   public function new() {
     componentToDom = new Map();
     domToComponent = new Map();
   }
 
-  public function getComponent(dom : DOMNode) : Component<Dynamic>
+  public function getComponents(dom : DOMNode) : Array<Component<Dynamic>>
     return domToComponent.get(dom);
 
-  public function getDom(comp : Component<Dynamic>) : DOMNode
+  function getDom(comp : Component<Dynamic>) : DOMNode
     return componentToDom.get(comp);
 
   public function set(comp : Component<Dynamic>, dom : DOMNode) {
     componentToDom.set(comp, dom);
-    domToComponent.set(dom, comp);
+    var list = domToComponent.get(dom);
+    if(null == list) {
+      list = [comp];
+      domToComponent.set(dom, list);
+    } else {
+      list.push(comp);
+    }
   }
 
-  public function removeByComponent(comp : Component<Dynamic>)
-    remove(comp, getDom(comp));
-
-  public function removeByDom(dom : DOMNode)
-    remove(getComponent(dom), dom);
-
-  public function remove(comp : Component<Dynamic>, dom : DOMNode) {
+  public function removeByComponent(comp : Component<Dynamic>) {
+    var dom = componentToDom.get(comp);
     componentToDom.remove(comp);
+    var list = getComponents(dom);
+    list.remove(comp);
+    if(list.length == 0)
+      domToComponent.remove(dom);
+  }
+
+  public function removeByDom(dom : DOMNode) {
+    for(comp in getComponents(dom)) {
+      componentToDom.remove(comp);
+    }
     domToComponent.remove(dom);
   }
 }
