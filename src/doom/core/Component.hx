@@ -19,8 +19,8 @@ class Component<Props, El> {
     return throw new thx.error.AbstractMethod();
   }
 
-  public function asChild() : VNode
-    return this;
+  public function asNode() : VNode
+    return VNode.comp(this);
 
   public function update(props : Props) {
     var old = this.props;

@@ -12,11 +12,6 @@ abstract VNodes(Array<VNode>) to Array<VNode> {
     return [VNode.comp(comp)];
   @:from public static function children(children : Array<VNode>) : VNodes
     return new VNodes(children);
-  // public static function nodes(children : Array<VNode>) : VNodes
-  //   return children.map(VNode.node);
-
-  @:to inline public function toArray() : Array<VNodeImpl>
-    return cast this;
 
   inline function new(arr : Array<VNode>)
     this = arr;
@@ -34,4 +29,7 @@ abstract VNodes(Array<VNode>) to Array<VNode> {
 
   inline public function filter(predicate : VNode -> Bool) : VNodes
     return this.filter(predicate);
+
+  @:to inline public function toArray() : Array<VNodeImpl>
+    return cast this;
 }

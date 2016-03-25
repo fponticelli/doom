@@ -1,15 +1,10 @@
 package doom.core;
 
 abstract VNode(VNodeImpl) from VNodeImpl to VNodeImpl {
-  // @:from inline public static function node(node : VNode) : VNode
-  //   return VNodeImpl.Node(node);
   @:from inline public static function text(text : String) : VNode
     return VNodeImpl.Text(text);
   @:from inline public static function comp<Props, El>(comp : Component<Props, El>) : VNode
     return VNodeImpl.Comp(comp);
-
-  // @:from inline static public function text(s : String) : VNode
-  //   return Text(s);
   inline public static function raw(content : String) : VNode
     return Raw(content);
   inline public static function comment(content : String) : VNode
@@ -24,7 +19,7 @@ abstract VNode(VNodeImpl) from VNodeImpl to VNodeImpl {
     return Element(name, attributes, children);
   }
 
-  @:to inline public function asChildren() : VNodes
+  @:to inline public function asNodes() : VNodes
     return [this];
 }
 
