@@ -18,7 +18,11 @@ using thx.Tuple;
 class Render implements doom.core.IRender<Element> {
   // namespaces
   public static var defaultNamespaces = [
-    "svg" => "http://www.w3.org/2000/svg"
+    "svg"   => "http://www.w3.org/2000/svg",
+    "xlink" => "http://www.w3.org/1999/xlink",
+    "ev"    => "http://www.w3.org/2001/xml-events",
+    "xsl"   => "http://www.w3.org/1999/XSL/Transform",
+    "m"     => "http://www.w3.org/1998/Math/MathML"
   ];
 
   public var doc(default, null) : Document;
