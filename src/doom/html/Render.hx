@@ -27,8 +27,7 @@ class Render implements doom.core.IRender<Element> {
 
   public var doc(default, null) : Document;
   public var namespaces(default, null) : Map<String, String>;
-  public var nodeToComponent(default, null) : Map<DOMNode, Component<Dynamic>>;
-  public var componentToNode(default, null) : Map<Component<Dynamic>, DOMNode>;
+  public var domComponentMap(default, null) : DomComponentMap;
 
   public function new(?doc : Document, ?namespaces : Map<String, String>) {
     if(null == doc)
@@ -41,8 +40,7 @@ class Render implements doom.core.IRender<Element> {
         this.namespaces.set(key, defaultNamespaces.get(key));
     } else
       this.namespaces = namespaces;
-    nodeToComponent = new Map();
-    componentToNode = new Map();
+    domComponentMap = new DomComponentMap();
   }
 
   public function mount(node : VChild, parent : Element) {
@@ -180,7 +178,7 @@ class Render implements doom.core.IRender<Element> {
   }
 
   function applyComponentToNode<Props>(newComp : doom.html.Component<Props>, dom : DOMNode, parent : Element, post : Array<Void -> Void>) : DOMNode {
-    var oldComp = nodeToComponent.get(dom);
+    var oldComp = domComponentMap.getComponent(dom);
     // trace("** applyComponentToNode, has oldComp? " + (null != oldComp) + ", are same type? " + Types.sameType(newComp, oldComp));
     if(null != oldComp) {
       if(Types.sameType(newComp, oldComp)) {
@@ -188,22 +186,19 @@ class Render implements doom.core.IRender<Element> {
         oldComp.willUpdate();
         post.push(oldComp.didUpdate);
         if(oldComp.shouldRender()) {
-          nodeToComponent.remove(dom);
-          componentToNode.remove(oldComp);
+          domComponentMap.remove(oldComp, dom);
           var node = renderComponent(oldComp),
               newDom = applyToNode(node, dom, parent, post, false);
           oldComp.node = newDom;
-          nodeToComponent.set(newDom, oldComp);
-          componentToNode.set(oldComp, newDom);
+          domComponentMap.set(oldComp, newDom);
           return newDom;
         } else {
           return dom;
         }
       } else {
         oldComp.willUnmount();
-        nodeToComponent.set(dom, cast newComp); // TODO remove cast
-        componentToNode.remove(oldComp); // TODO remove cast
-        componentToNode.set(cast newComp, dom); // TODO remove cast
+        domComponentMap.removeByComponent(oldComp);
+        domComponentMap.set(newComp, dom);
         newComp.willMount();
         var node = renderComponent(newComp);
         newComp.apply = cast this.apply; // TODO remove cast
@@ -211,8 +206,7 @@ class Render implements doom.core.IRender<Element> {
         newComp.node = cast dom; // TODO remove cast
 
         post.insert(0, function() newComp.didMount()); // TODO remove cast
-        nodeToComponent.set(dom, cast newComp); // TODO remove cast
-        componentToNode.set(cast newComp, dom); // TODO remove cast
+        domComponentMap.set(newComp, dom); // TODO remove case
 
         oldComp.isUnmounted = true;
         oldComp.node = null;
@@ -226,14 +220,13 @@ class Render implements doom.core.IRender<Element> {
       var dom = applyToNode(node, dom, parent, post, false);
       newComp.node = cast dom; // TODO remove cast
       post.insert(0, function() newComp.didMount()); // TODO remove cast
-      nodeToComponent.set(dom, cast newComp); // TODO remove cast
-      componentToNode.set(cast newComp, dom); // TODO remove cast
+      domComponentMap.set(newComp, dom);
       return dom;
     }
   }
 
   function unmountDomComponent(dom : DOMNode) {
-    var comp = nodeToComponent.get(dom);
+    var comp = domComponentMap.getComponent(dom);
     if(null == comp) return;
     unmountComponent(comp);
   }
@@ -248,9 +241,7 @@ class Render implements doom.core.IRender<Element> {
   }
 
   function unmountComponent<Props>(comp : Component<Props>) {
-    var node = componentToNode.get(comp);
-    componentToNode.remove(comp);
-    nodeToComponent.remove(node);
+    domComponentMap.removeByComponent(comp);
     comp.willUnmount();
     comp.isUnmounted = true;
     comp.node = null;
@@ -361,8 +352,7 @@ class Render implements doom.core.IRender<Element> {
         comp.node = cast dom; // TODO remove cast
         comp.apply = cast this.apply; // TODO remove cast
         post.insert(0, function() comp.didMount()); // TODO remove cast
-        nodeToComponent.set(dom, cast comp); // TODO remove cast
-        componentToNode.set(cast comp, dom); // TODO remove cast
+        domComponentMap.set(cast comp, dom); // TODO remove cast
         dom;
     };
   }
@@ -413,5 +403,36 @@ class Render implements doom.core.IRender<Element> {
 
   static function removeEvent(el : js.html.Element, name : String) {
     Reflect.deleteField(el, 'on$name');
+  }
+}
+
+private class DomComponentMap {
+  var domToComponent(default, null) : Map<DOMNode, Component<Dynamic>>;
+  var componentToDom(default, null) : Map<Component<Dynamic>, DOMNode>;
+  public function new() {
+    componentToDom = new Map();
+    domToComponent = new Map();
+  }
+
+  public function getComponent(dom : DOMNode) : Component<Dynamic>
+    return domToComponent.get(dom);
+
+  public function getDom(comp : Component<Dynamic>) : DOMNode
+    return componentToDom.get(comp);
+
+  public function set(comp : Component<Dynamic>, dom : DOMNode) {
+    componentToDom.set(comp, dom);
+    domToComponent.set(dom, comp);
+  }
+
+  public function removeByComponent(comp : Component<Dynamic>)
+    remove(comp, getDom(comp));
+
+  public function removeByDom(dom : DOMNode)
+    remove(getComponent(dom), dom);
+
+  public function remove(comp : Component<Dynamic>, dom : DOMNode) {
+    componentToDom.remove(comp);
+    domToComponent.remove(dom);
   }
 }
