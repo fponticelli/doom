@@ -188,8 +188,14 @@ class Render implements doom.core.IRender<Element> {
         oldComp.willUpdate();
         post.push(oldComp.didUpdate);
         if(oldComp.shouldRender()) {
-          var node = renderComponent(oldComp);
-          return applyToNode(node, dom, parent, post, false);
+          nodeToComponent.remove(dom);
+          componentToNode.remove(oldComp);
+          var node = renderComponent(oldComp),
+              newDom = applyToNode(node, dom, parent, post, false);
+          oldComp.node = newDom;
+          nodeToComponent.set(newDom, oldComp);
+          componentToNode.set(oldComp, newDom);
+          return newDom;
         } else {
           return dom;
         }
@@ -198,7 +204,6 @@ class Render implements doom.core.IRender<Element> {
         nodeToComponent.set(dom, cast newComp); // TODO remove cast
         componentToNode.remove(oldComp); // TODO remove cast
         componentToNode.set(cast newComp, dom); // TODO remove cast
-
         newComp.willMount();
         var node = renderComponent(newComp);
         newComp.apply = cast this.apply; // TODO remove cast

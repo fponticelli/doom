@@ -207,6 +207,56 @@ class TestComponent extends Base {
     comp.update({ counter : 2 });
     assertHtml('<div><div><div>counter: 2</div></div></div>');
   }
+
+  public function testSwitchNodeTypeBetweenTextAndElement() {
+    var comp = new SwitchingComponent({ type : Div });
+    mount(comp);
+    assertHtml('<div class="container"></div>');
+    comp.update({ type : Text });
+    assertHtml('just text');
+    comp.update({ type : Div });
+    assertHtml('<div class="container"></div>');
+    comp.update({ type : Text });
+    assertHtml('just text');
+  }
+
+  public function testSwitchNodeTypeBetweenElementAndText() {
+    var comp = new SwitchingComponent({ type : Text });
+    mount(comp);
+    assertHtml('just text');
+    comp.update({ type : Div });
+    assertHtml('<div class="container"></div>');
+    comp.update({ type : Text });
+    assertHtml('just text');
+    comp.update({ type : Div });
+    assertHtml('<div class="container"></div>');
+  }
+
+  public function testSwitchNodeTypeBetweenElements() {
+    var comp = new SwitchingComponent({ type : Div });
+    mount(comp);
+    assertHtml('<div class="container"></div>');
+    comp.update({ type : Span });
+    assertHtml('<span class="inline"></span>');
+    comp.update({ type : Div });
+    assertHtml('<div class="container"></div>');
+    comp.update({ type : Span });
+    assertHtml('<span class="inline"></span>');
+    Assert.same([
+      { phase : WillMount,  hasElement : false, isUnmounted : false },
+      { phase : Render,     hasElement : false, isUnmounted : false },
+      { phase : DidMount,   hasElement : true,  isUnmounted : false },
+      { phase : WillUpdate, hasElement : true,  isUnmounted : false },
+      { phase : Render,     hasElement : true,  isUnmounted : false },
+      { phase : DidUpdate,  hasElement : true,  isUnmounted : false },
+      { phase : WillUpdate, hasElement : true,  isUnmounted : false },
+      { phase : Render,     hasElement : true,  isUnmounted : false },
+      { phase : DidUpdate,  hasElement : true,  isUnmounted : false },
+      { phase : WillUpdate, hasElement : true,  isUnmounted : false },
+      { phase : Render,     hasElement : true,  isUnmounted : false },
+      { phase : DidUpdate,  hasElement : true,  isUnmounted : false },
+    ], comp.phases);
+  }
 }
 
 private class NestedComponent extends doom.html.Component<{ counter : Int }> {
@@ -219,9 +269,9 @@ private class ChildComponent extends doom.html.Component<{ counter : Int }> {
     return div('counter: ${props.counter}');
 }
 
-private class SampleComponent2 extends SampleComponent {}
+private class SampleComponent2 extends SampleComponent<{}> {}
 
-private class SampleComponent extends doom.html.Component<{}> {
+private class SampleComponent<T> extends doom.html.Component<T> {
   public var phases : Array<PhaseInfo> = [];
 
   override function willMount() {
@@ -254,4 +304,21 @@ private class SampleComponent extends doom.html.Component<{}> {
       isUnmounted : isUnmounted
     });
   }
+}
+
+private class SwitchingComponent extends SampleComponent<{ type : NodeType }> {
+  override function render() {
+    addPhase(Render);
+    return switch props.type {
+      case Div: div(["class" => "container"]);
+      case Span: span(["class" => "inline"]);
+      case Text: text("just text");
+    };
+  }
+}
+
+private enum NodeType {
+  Div;
+  Span;
+  Text;
 }
