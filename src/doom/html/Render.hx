@@ -63,7 +63,7 @@ class Render implements doom.core.IRender<Element> {
   public function generate(node : VNode) : DOMNode {
     // trace("** generate");
     var post = [],
-        dom = generateDom(node, post);
+        dom = generateVChildDom(node, post);
     // trace('** generate: post (${post.length})');
     for(f in post) f();
     return dom;
@@ -83,10 +83,7 @@ class Render implements doom.core.IRender<Element> {
       parent.appendChild(el);
       return el;
     }
-    return switch node {
-      case Node(n): applyToNode(n, dom, parent, post, tryUnmount);
-      case Comp(comp): applyComponentToNode(cast comp, dom, parent, post); // TODO remove cast
-    };
+    return applyToNode(node, dom, parent, post, tryUnmount);
   }
 
   function applyToNode(node : Null<VNode>, dom : Null<DOMNode>, parent : Element, post : Array<Void -> Void>, tryUnmount : Bool) : DOMNode {
@@ -100,7 +97,7 @@ class Render implements doom.core.IRender<Element> {
       parent.removeChild(dom);
       return null;
     } else if(null == dom) {
-      var el = generateDom(node, post);
+      var el = generateVChildDom(node, post);
       parent.appendChild(el);
       return el;
     }
@@ -122,7 +119,9 @@ class Render implements doom.core.IRender<Element> {
         if(tryUnmount)
           unmountDomComponent(dom);
         applyTextToNode(text, dom, parent, post);
-      };
+      case Comp(comp):
+        applyComponentToNode(cast comp, dom, parent, post); // TODO remove cast
+    };
   }
 
   function applyNodeToNode(srcDom : Null<DOMNode>, dstDom : Null<DOMNode>, parent : Element, tryUnmount : Bool) : DOMNode {
@@ -347,36 +346,28 @@ class Render implements doom.core.IRender<Element> {
 
   function generateVChildDom(node : VChild, post : Array<Void -> Void>) : DOMNode {
     return switch node {
-      case Node(n):
-        generateDom(n, post);
+      case Element(name, attributes, children):
+        // trace("** generateVChildDom: element");
+        createElement(name, attributes, children, post);
+      case Comment(comment):
+        // trace("** generateVChildDom: comment");
+        doc.createComment(comment);
+      case Raw(code):
+        // trace("** generateVChildDom: raw");
+        dots.Html.parse(code);
+      case Text(text):
+        // trace("** generateVChildDom: text");
+        doc.createTextNode(text);
       case Comp(comp):
         // trace("** generateVChildDom: component");
         comp.willMount();
         var node = renderComponent(comp),
-            dom  = generateDom(node, post);
+            dom  = generateVChildDom(node, post);
         comp.node = cast dom; // TODO remove cast
         comp.apply = cast this.apply; // TODO remove cast
         post.insert(0, function() comp.didMount()); // TODO remove cast
         domComponentMap.set(cast comp, dom); // TODO remove cast
         dom;
-    };
-  }
-
-  function generateDom(node : VNode, post : Array<Void -> Void>) : DOMNode {
-    // trace("** generateDom");
-    return switch node {
-      case Element(name, attributes, children):
-        // trace("** generateDom: element");
-        createElement(name, attributes, children, post);
-      case Comment(comment):
-        // trace("** generateDom: comment");
-        doc.createComment(comment);
-      case Raw(code):
-        // trace("** generateDom: raw");
-        dots.Html.parse(code);
-      case Text(text):
-        // trace("** generateDom: text");
-        doc.createTextNode(text);
     };
   }
 

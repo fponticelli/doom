@@ -16,13 +16,13 @@ class TestInference {
 
     child = VNode.text("hi");
     switch child {
-      case Node(Text("hi")): Assert.pass();
+      case Text("hi"): Assert.pass();
       case _: Assert.fail();
     }
 
     child = "hi again";
     switch child {
-      case Node(Text("hi again")): Assert.pass();
+      case Text("hi again"): Assert.pass();
       case _: Assert.fail();
     }
   }
@@ -52,19 +52,19 @@ class TestInference {
 
     children = VNode.text("hi");
     switch (children : Array<VChildImpl>) {
-      case [Node(Text("hi"))]: Assert.pass();
+      case [Text("hi")]: Assert.pass();
       case _: Assert.fail();
     }
 
     children = "hi again";
     switch (children : Array<VChild>) {
-      case [Node(Text("hi again"))]: Assert.pass();
+      case [Text("hi again")]: Assert.pass();
       case _: Assert.fail();
     }
 
     children = ["hi"];
     switch (children : Array<VChild>) {
-      case [Node(Text("hi"))]: Assert.pass();
+      case [Text("hi")]: Assert.pass();
       case _: Assert.fail();
     }
 
