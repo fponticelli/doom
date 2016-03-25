@@ -6,9 +6,8 @@ import js.html.Node as DOMNode;
 import doom.core.AttributeValue;
 import doom.html.Component;
 import doom.html.Attributes.*;
-import doom.core.VChild;
-import doom.core.VChildren;
 import doom.core.VNode;
+import doom.core.VNodes;
 import thx.Types;
 using thx.Arrays;
 using thx.Set;
@@ -43,33 +42,33 @@ class Render implements doom.core.IRender<Element> {
     domComponentMap = new DomComponentMap();
   }
 
-  public function mount(node : VChild, parent : Element) {
+  public function mount(node : VNode, parent : Element) {
     // trace("** mount");
     parent.innerHTML = "";
     var post = [],
-        n = generateVChildDom(node, post);
+        n = generateDom(node, post);
     parent.appendChild(n);
     // trace('** mount: post (${post.length})');
     for(f in post) f();
   }
 
-  public function apply(node : VChild, dom : DOMNode) {
+  public function apply(node : VNode, dom : DOMNode) {
     var post = [];
     // trace("** apply");
-    applyVChildToNode(node, dom, dom.parentElement, post, false);
+    applyVNodeToNode(node, dom, dom.parentElement, post, false);
     for(f in post) f();
   }
 
   public function generate(node : VNode) : DOMNode {
     // trace("** generate");
     var post = [],
-        dom = generateVChildDom(node, post);
+        dom = generateDom(node, post);
     // trace('** generate: post (${post.length})');
     for(f in post) f();
     return dom;
   }
 
-  function applyVChildToNode(node : Null<VChild>, dom : Null<DOMNode>, parent : Element, post : Array<Void -> Void>, tryUnmount : Bool) : DOMNode {
+  function applyVNodeToNode(node : Null<VNode>, dom : Null<DOMNode>, parent : Element, post : Array<Void -> Void>, tryUnmount : Bool) : DOMNode {
     if(null == node && null == dom) {
       return null;
     } else if(null == node) {
@@ -79,7 +78,7 @@ class Render implements doom.core.IRender<Element> {
       parent.removeChild(dom);
       return null;
     } else if(null == dom) {
-      var el = generateVChildDom(node, post);
+      var el = generateDom(node, post);
       parent.appendChild(el);
       return el;
     }
@@ -97,7 +96,7 @@ class Render implements doom.core.IRender<Element> {
       parent.removeChild(dom);
       return null;
     } else if(null == dom) {
-      var el = generateVChildDom(node, post);
+      var el = generateDom(node, post);
       parent.appendChild(el);
       return el;
     }
@@ -252,12 +251,12 @@ class Render implements doom.core.IRender<Element> {
     comp.didUnmount();
   }
 
-  function applyElementToNode(name : String, attributes : Map<String, AttributeValue>, children : VChildren, dom : DOMNode, parent : Element, post : Array<Void -> Void>) : DOMNode {
+  function applyElementToNode(name : String, attributes : Map<String, AttributeValue>, children : VNodes, dom : DOMNode, parent : Element, post : Array<Void -> Void>) : DOMNode {
     // trace("** applyElementToNode, name: " + name.toUpperCase() + ", old node: " + (dom.nodeType == DOMNode.ELEMENT_NODE ? (cast dom : Element).tagName : '${dom.nodeType}'));
     if(dom.nodeType == DOMNode.ELEMENT_NODE && (cast dom : Element).tagName == name.toUpperCase()) {
       applyNodeAttributes(attributes, cast dom);
-      zipVChildrenAndNodeList(children, dom.childNodes).each(function(t) {
-        applyVChildToNode(t._0, t._1, cast dom, post, true);
+      zipVNodesAndNodeList(children, dom.childNodes).each(function(t) {
+        applyVNodeToNode(t._0, t._1, cast dom, post, true);
       });
       return dom;
     } else {
@@ -296,7 +295,7 @@ class Render implements doom.core.IRender<Element> {
     return newDom;
   }
 
-  function zipVChildrenAndNodeList(vnodes : VChildren, children : js.html.NodeList) : Array<Tuple2<VChild, DOMNode>> {
+  function zipVNodesAndNodeList(vnodes : VNodes, children : js.html.NodeList) : Array<Tuple2<VNode, DOMNode>> {
     var len = thx.Ints.max(vnodes.length, children.length);
     return [for(i in 0...len) Tuple2.of(vnodes[i], children[i])];
   }
@@ -344,25 +343,25 @@ class Render implements doom.core.IRender<Element> {
     }
   }
 
-  function generateVChildDom(node : VChild, post : Array<Void -> Void>) : DOMNode {
+  function generateDom(node : VNode, post : Array<Void -> Void>) : DOMNode {
     return switch node {
       case Element(name, attributes, children):
-        // trace("** generateVChildDom: element");
+        // trace("** generateDom: element");
         createElement(name, attributes, children, post);
       case Comment(comment):
-        // trace("** generateVChildDom: comment");
+        // trace("** generateDom: comment");
         doc.createComment(comment);
       case Raw(code):
-        // trace("** generateVChildDom: raw");
+        // trace("** generateDom: raw");
         dots.Html.parse(code);
       case Text(text):
-        // trace("** generateVChildDom: text");
+        // trace("** generateDom: text");
         doc.createTextNode(text);
       case Comp(comp):
-        // trace("** generateVChildDom: component");
+        // trace("** generateDom: component");
         comp.willMount();
         var node = renderComponent(comp),
-            dom  = generateVChildDom(node, post);
+            dom  = generateDom(node, post);
         comp.node = cast dom; // TODO remove cast
         comp.apply = cast this.apply; // TODO remove cast
         post.insert(0, function() comp.didMount()); // TODO remove cast
@@ -372,7 +371,7 @@ class Render implements doom.core.IRender<Element> {
   }
 
 
-  public function createElement(name : String, attributes : Map<String, AttributeValue>, children : VChildren, post : Array<Void -> Void>) : Element {
+  public function createElement(name : String, attributes : Map<String, AttributeValue>, children : VNodes, post : Array<Void -> Void>) : Element {
     var colonPos = name.indexOf(":");
     var el = if(colonPos > 0) {
             var prefix = name.substring(0, colonPos),
@@ -387,7 +386,7 @@ class Render implements doom.core.IRender<Element> {
     applyNodeAttributes(attributes, el);
     for(child in children) {
       if(null == child) continue;
-      var n = generateVChildDom(child, post);
+      var n = generateDom(child, post);
       el.appendChild(n);
     }
     return el;

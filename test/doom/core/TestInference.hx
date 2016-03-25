@@ -1,14 +1,13 @@
 package doom.core;
 
 import utest.Assert;
-import doom.core.VChild;
 import doom.core.VNode;
 
 class TestInference {
   public function new() {}
 
-  public function testVChild() {
-    var child : VChild = new Sample({});
+  public function testVNode() {
+    var child : VNode = new Sample({});
     switch child {
       case Comp(c) if(Std.is(c, Sample)): Assert.pass();
       case _: Assert.fail();
@@ -38,32 +37,32 @@ class TestInference {
     Assert.pass();
   }
 
-  public function testVChildrenFields() {
-    var children : VChildren = [];
+  public function testVNodesFields() {
+    var children : VNodes = [];
     Assert.isNull(children[0]);
   }
 
-  public function testVChildren() {
-    var children : VChildren = new Sample({});
-    switch (children : Array<VChildImpl>) {
+  public function testVNodes() {
+    var children : VNodes = new Sample({});
+    switch (children : Array<VNodeImpl>) {
       case [Comp(c)] if(Std.is(c, Sample)): Assert.pass();
       case _: Assert.fail();
     }
 
     children = VNode.text("hi");
-    switch (children : Array<VChildImpl>) {
+    switch (children : Array<VNodeImpl>) {
       case [Text("hi")]: Assert.pass();
       case _: Assert.fail();
     }
 
     children = "hi again";
-    switch (children : Array<VChild>) {
+    switch (children : Array<VNode>) {
       case [Text("hi again")]: Assert.pass();
       case _: Assert.fail();
     }
 
     children = ["hi"];
-    switch (children : Array<VChild>) {
+    switch (children : Array<VNode>) {
       case [Text("hi")]: Assert.pass();
       case _: Assert.fail();
     }

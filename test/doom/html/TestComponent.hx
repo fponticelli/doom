@@ -1,7 +1,6 @@
 package doom.html;
 
 import utest.Assert;
-import doom.core.VChild;
 import doom.core.VNode;
 import js.html.Node;
 import doom.html.Phase;

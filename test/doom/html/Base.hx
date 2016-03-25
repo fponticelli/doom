@@ -1,7 +1,6 @@
 package doom.html;
 
 import js.Browser.*;
-import doom.core.VChild;
 import doom.core.VNode;
 import utest.Assert;
 
@@ -30,7 +29,7 @@ class Base {
     return document.body;
   }
 
-  public function mount(node : VChild) {
+  public function mount(node : VNode) {
     render.mount(node, body());
   }
 
