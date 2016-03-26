@@ -55,7 +55,7 @@ class Render implements doom.core.IRender<Element> {
   public function apply(node : VNode, dom : DOMNode) {
     var post = [];
     // trace("** apply");
-    applyVNodeToNode(node, dom, dom.parentElement, post, false);
+    applyToNode(node, dom, dom.parentElement, post, false);
     for(f in post) f();
   }
 
@@ -66,23 +66,6 @@ class Render implements doom.core.IRender<Element> {
     // trace('** generate: post (${post.length})');
     for(f in post) f();
     return dom;
-  }
-
-  function applyVNodeToNode(node : Null<VNode>, dom : Null<DOMNode>, parent : Element, post : Array<Void -> Void>, tryUnmount : Bool) : DOMNode {
-    if(null == node && null == dom) {
-      return null;
-    } else if(null == node) {
-      // trace("** applyToNode: REMOVE CHILD");
-      if(tryUnmount)
-        unmountDomComponent(dom);
-      parent.removeChild(dom);
-      return null;
-    } else if(null == dom) {
-      var el = generateDom(node, post);
-      parent.appendChild(el);
-      return el;
-    }
-    return applyToNode(node, dom, parent, post, tryUnmount);
   }
 
   function applyToNode(node : Null<VNode>, dom : Null<DOMNode>, parent : Element, post : Array<Void -> Void>, tryUnmount : Bool) : DOMNode {
@@ -256,7 +239,7 @@ class Render implements doom.core.IRender<Element> {
     if(dom.nodeType == DOMNode.ELEMENT_NODE && (cast dom : Element).tagName == name.toUpperCase()) {
       applyNodeAttributes(attributes, cast dom);
       zipVNodesAndNodeList(children, dom.childNodes).each(function(t) {
-        applyVNodeToNode(t._0, t._1, cast dom, post, true);
+        applyToNode(t._0, t._1, cast dom, post, true);
       });
       return dom;
     } else {
