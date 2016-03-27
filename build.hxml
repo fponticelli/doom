@@ -11,9 +11,8 @@ doom.core.AttributeValue
 doom.core.Component
 doom.core.IRender
 doom.core.SelectorParser
-doom.core.VChild
-doom.core.VChildren
 doom.core.VNode
+doom.core.VNodes
 doom.html.Attributes
 doom.html.Component
 doom.html.Html

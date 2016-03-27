@@ -5,12 +5,12 @@ import thx.Error;
 
 class Component<Props, El> {
   public var props(default, null) : Props;
-  public var children(default, null) : Null<VChildren>;
+  public var children(default, null) : Null<VNodes>;
   public var node(default, null) : El;
   public var isUnmounted(default, null) : Bool = false;
-  public var apply(default, null) : VChild -> El -> Void;
+  public var apply(default, null) : VNode -> El -> Void;
 
-  public function new(props : Props, ?children : VChildren) {
+  public function new(props : Props, ?children : VNodes) {
     this.props = props;
     this.children = children;
   }
@@ -19,8 +19,8 @@ class Component<Props, El> {
     return throw new thx.error.AbstractMethod();
   }
 
-  public function asChild() : VChild
-    return this;
+  public function asNode() : VNode
+    return VNode.comp(this);
 
   public function update(props : Props) {
     var old = this.props;
@@ -63,4 +63,9 @@ class Component<Props, El> {
 
   public function didUnmount() {}
   public function willUnmount() {}
+
+  public function append(children : VNodes) : VNodes {
+    this.children = this.children.concat(children);
+    return this.children;
+  }
 }

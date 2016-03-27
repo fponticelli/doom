@@ -1,17 +1,17 @@
 package doom.core;
 
-import doom.core.Component;
-
 abstract VNode(VNodeImpl) from VNodeImpl to VNodeImpl {
-  @:from inline static public function text(s : String) : VNode
-    return Text(s);
+  @:from inline public static function text(text : String) : VNode
+    return VNodeImpl.Text(text);
+  @:from inline public static function comp<Props, El>(comp : Component<Props, El>) : VNode
+    return VNodeImpl.Comp(comp);
   inline public static function raw(content : String) : VNode
     return Raw(content);
   inline public static function comment(content : String) : VNode
     return Comment(content);
   public static function el(name : String,
     ?attributes : Map<String, AttributeValue>,
-    ?children : VChildren) : VNode {
+    ?children : VNodes) : VNode {
     if(null == attributes)
       attributes = new Map();
     if(null == children)
@@ -19,22 +19,17 @@ abstract VNode(VNodeImpl) from VNodeImpl to VNodeImpl {
     return Element(name, attributes, children);
   }
 
-  @:to inline public function asChild() : VChild
-    return VChild.node(this);
-
-  @:to inline public function asChildren() : VChildren
-    return [VChild.node(this)];
-
-  // TODO
-  //   * toString (requires XML backend)
+  @:to inline public function asNodes() : VNodes
+    return [this];
 }
 
 enum VNodeImpl {
   Element(
     name : String,
     attributes : Map<String, AttributeValue>,
-    children : VChildren);
+    children : VNodes);
   Comment(comment : String);
   Raw(code : String);
   Text(text : String);
+  Comp<Props, El>(comp : Component<Props, El>);
 }

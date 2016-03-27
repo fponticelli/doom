@@ -257,6 +257,20 @@ class TestComponent extends Base {
       { phase : DidUpdate,  hasElement : true,  isUnmounted : false },
     ], comp.phases);
   }
+
+  public function testComponentReturnsComponent() {
+    var comp = new ComponentA({});
+    mount(comp);
+    assertHtml('<div></div>');
+  }
+}
+
+private class ComponentA extends doom.html.Component<{}> {
+  override function render() : VNode return new ComponentB({});
+}
+
+private class ComponentB extends doom.html.Component<{}> {
+  override function render() : VNode return div();
 }
 
 private class NestedComponent extends doom.html.Component<{ counter : Int }> {

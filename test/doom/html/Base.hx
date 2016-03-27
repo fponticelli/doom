@@ -1,7 +1,6 @@
 package doom.html;
 
 import js.Browser.*;
-import doom.core.VChild;
 import doom.core.VNode;
 import utest.Assert;
 
@@ -11,7 +10,6 @@ class Base {
   var render : Render;
   public function setup() {
     document.body.innerHTML = "";
-    // phases = [];
     render = new Render();
   }
   public function teardown() {
@@ -30,7 +28,7 @@ class Base {
     return document.body;
   }
 
-  public function mount(node : VChild) {
+  public function mount(node : VNode) {
     render.mount(node, body());
   }
 
@@ -49,17 +47,4 @@ class Base {
   public function assertSameHtml(expectedHtml : String, el : js.html.Element, ?pos : haxe.PosInfos) {
     Assert.equals(expectedHtml, el.outerHTML, pos);
   }
-
-  // var phases : Array<PhaseInfo>;
-  // public function addPhase(phase : Phase, comp : doom.core.Component<Dynamic, Dynamic>) {
-  //
-  // }
-  //
-  // public function resetPhases() {
-  //
-  // }
-  //
-  // public function assertPhases(expected : Array<PhaseInfo>, ?pos : haxe.PosInfos) {
-  //   Assert.same(expected, phases, pos);
-  // }
 }
