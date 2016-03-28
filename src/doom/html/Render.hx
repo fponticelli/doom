@@ -395,11 +395,15 @@ private class DomComponentMap {
     domToComponent = new Map();
   }
 
-  public function getComponents(dom : DOMNode) : Array<Component<Dynamic>>
+  public function getComponents(dom : DOMNode) : Array<Component<Dynamic>> {
+    if(null == dom) return null;
     return domToComponent.get(dom);
+  }
 
-  function getDom(comp : Component<Dynamic>) : DOMNode
+  function getDom(comp : Component<Dynamic>) : DOMNode {
+    if(null == comp) return null;
     return componentToDom.get(comp);
+  }
 
   public function set(comp : Component<Dynamic>, dom : DOMNode) {
     componentToDom.set(comp, dom);
@@ -416,6 +420,7 @@ private class DomComponentMap {
     var dom = componentToDom.get(comp);
     componentToDom.remove(comp);
     var list = getComponents(dom);
+    if(null == list) return;
     list.remove(comp);
     if(list.length == 0)
       domToComponent.remove(dom);
@@ -424,6 +429,7 @@ private class DomComponentMap {
   public function removeByDom(dom : DOMNode) {
     var comps = getComponents(dom);
     domToComponent.remove(dom);
+    if(null == comps) return;
     for(comp in comps) {
       componentToDom.remove(comp);
     }
