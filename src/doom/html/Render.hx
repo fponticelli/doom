@@ -167,7 +167,6 @@ class Render implements doom.core.IRender<Element> {
         for(oldComp in oldComps) {
           oldComp.willUnmount();
           domComponentMap.removeByComponent(oldComp);
-          domComponentMap.set(newComp, dom);
           newComp.willMount();
           var node = renderComponent(newComp);
           newComp.apply = cast this.apply; // TODO remove cast
@@ -419,9 +418,10 @@ private class DomComponentMap {
   }
 
   public function removeByDom(dom : DOMNode) {
-    for(comp in getComponents(dom)) {
+    var comps = getComponents(dom);
+    domToComponent.remove(dom);
+    for(comp in comps) {
       componentToDom.remove(comp);
     }
-    domToComponent.remove(dom);
   }
 }
