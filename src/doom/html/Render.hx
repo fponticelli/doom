@@ -210,6 +210,10 @@ class Render implements doom.core.IRender<Element> {
   }
 
   function unmountDomComponent(dom : DOMNode) {
+    for(i in 0...dom.childNodes.length) {
+      var child = dom.childNodes[i];
+      unmountDomComponent(child);
+    }
     var comps = domComponentMap.getComponents(dom);
     if(null == comps) return;
     for(comp in comps)
