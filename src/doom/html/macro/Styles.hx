@@ -51,7 +51,7 @@ class Styles {
   public static function loadCssForComponent(cls : ClassType) {
     var parts = cls.pack.copy(),
         priv = null;
-    if(parts.last().startsWith("_")) { // private class
+    if(parts.length > 0 && parts.last().startsWith("_")) { // private class
       priv = parts.pop().substring(1);
     }
     var pack = parts.join(".");
