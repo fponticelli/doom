@@ -317,7 +317,7 @@ class Render implements doom.core.IRender<Element> {
       switch attributes.get(key) {
         case null:
           removeAttribute(dom, key);
-        case StringAttribute(s) if(null == s || s == ""):
+        case StringAttribute(s) if(null == s || s == "" && key != "value"):
           removeAttribute(dom, key);
         case BoolAttribute(b):
           toggleBoolAttribute(dom, key, b);
