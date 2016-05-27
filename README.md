@@ -1,190 +1,142 @@
 # Doom
 
-## Vitual Dom Library for Haxe
+Doom is a Virtual Dom Library for Haxe. It is strictly typed (no `Dynamic`s
+lurking around) and built to be easy to use.
 
-[TodoMVC Demo](https://rawgit.com/fponticelli/doom/master/demo/00.todomvc/index.html)
+## Demos
 
-[SVG support](https://rawgit.com/fponticelli/doom/master/demo/01.svg/www/index.html)
+  * [TodoMVC Demo](https://rawgit.com/fponticelli/doom/master/demo/todomvc/index.html)
+  * [SVG support](https://rawgit.com/fponticelli/doom/master/demo/svg/www/index.html)
+  * [Doom Auto Component macro](https://rawgit.com/fponticelli/doom/master/demo/autocomponent/www/index.html)
 
-[Doom Auto Component macro](https://rawgit.com/fponticelli/doom/master/demo/03.autocomponent/www/index.html)
+## VNode
+
+A `VNode` (virtual node) is the basic rendering element in Doom. It can
+represent an element (like a `DIV` or an `A`), simple text or a Component.
+
+Generating a `VNode` doesn't automatically render it. A `VNode` needs to be
+translated into browser DOM nodes. There are two ways to do that:
+
+  * mount the `VNode` directly in the DOM
+  * generate and return a `VNode` from a `Component.render` method.
+
+To mount a `VNode` use `Doom.render.mount()`:
+
+```haxe
+import doom.html.Html.*;
+import js.Browser.document as doc;
+
+class Main {
+  static function main()
+    Doom.browser.mount(
+      h1("I'm just a simple element"),
+      doc.getElementById("main")
+    );
+}
+```
+
+### VNode Types
+
+The following `VNode` types exist:
+
+  * `Element(name: String, attributes: Map<String, AttributeValue>, children: VNodes)`
+  * `Comment(comment: String)`
+  * `Raw(code: String)`
+  * `Text(text: String)`
+  * `Comp<Props, El>(comp: Component<Props, El>)`
+
+These can be generated using the homonymous methods on `doom.core.VNode`, `doom.html.Html` and/or `doom.html.Svg` (the last two are convenient aliases). The methods are `el`, `comp`, `comment`, `raw` and `text`. `doom.html.Html` also contains shortcut methods like `div` or `input` to generate equivalent
+nodes.
+
+### VNodes
+
+Most elements accept child elements, there are typed as `VNodes` which is an abstract on `Array<VNode>` with a few additional benefits (mostly implicit cast from common types).
+
+### AttributeValue
+
+Elements expect a `Map<String, AttributeValue>` to set the node attributes and properties. `AttributeValue` is a convenient abstract that simplifies assigning the right values to the attributes.
+
+`AttributeValue` has 3 constructors:
+
+  * `BoolAttribute(b : Bool)`
+  * `StringAttribute(s : String)`
+  * `EventAttribute<T : Event>(f : T -> Void)`
+
+Here are the types that are implicitly converted to `AttributeValue`:
+
+  * `String` for attributes like `id` or `class`
+  * `Map<String, Bool>` mainly to be used with `class`. It is convenient to turn
+    on and off class names:
+
+```haxe
+div([
+  "class" => [
+    "button" => true,
+    "active" => props.active,
+    style    => null != style
+  ]
+]);
+```
+
+  * `Bool` used with attributes like `disabled` or `checked`
+  * `Void -> Void` an event handler that doesn't care about information
+    related to the even itself. `click` is the perfect example for it.
+  * `(T : Event) -> Void` when you want an event handler and have full control
+    on the `Event` object.
+  * `(T : Element) -> Void`, the handler receives the original element that
+    triggered the event.
+  * `String -> Void`, the handler receives the text content of the element
+    that triggered the event. The text content is retrieved in different ways
+    according to the type of element (`input`, `textarea`, `select`, ...).
+  * `Bool -> Void`, the handler receives a flag value from the `checked`
+    attribute.
+  * `Int -> Void`, works like `String -> Void` but tries to convert the value
+    into an `Int`. If that cannot happen the handler is not invoked.
+  * `Float -> Void`, same as `Int -> Void` but for floats.
+
+*Note*: All event handlers except for `(T : Event) -> Void` will automatically
+call `event.preventDefault()`.
 
 ## Components
 
-TODO
-
-## Auto Components
-
-You can also create a `Component` by extending the special `Doom`
-base class.  This class has a Haxe `@:autoBuild` macro which will generate
-a lot of the State/Api/etc. boilerplate code that is typically needed for
-Components.
-
-The extending class should use metadata params on the class and fields
-to provide information about the children, state, and api capabilities
-of the Component.
-
-### Class-level metadata
-
-#### `@:children`
-
-Defines whether the component has no children, required
-children, or optional children (Nodes).
-
-- `@:children(opt)` - denotes that the component has optional children
-- `@:children(req)` - denotes that the component has required children
-- `@:children(none)` - denotes that the component has no children (e.g. input or br elements)
-- If not specified, the default is `@:children(opt)`
-
-### Field-level metadata
-
-#### `@:state`
-
-State fields must currently be defined as `var`s in the class (not
-properties).
-
-- `@:state` - denotes a required state field
-- `@:state(opt)` - denotes an optional state field with no default value
-- `@:state(value)` - denotes an optional state field with default value `value`.  `value` must match the var's type.
-
-#### `@:api`
-
-API fields must be defined as `var`s in the class (not functions or
-properties).
-
-- `@:api` - denotes a required api field
-- `@:api(opt)` - denotes an optional api field
-
-### Example Auto Component (Doom class):
+A component is anything between a full UI application and a button. A component
+lives inside another component (as a VNode returned by the `render` method) or it can be mounted directly in the dom.
 
 ```haxe
-package my.components;
+import doom.html.Component;
+import doom.html.Html.*;
+using thx.Objects;
+import thx.Timer;
 
-import Doom.*;
-import doom.*;
-
-@:children(opt) // this component has optional children
-class MyButton extends Doom {
-  @:state // required state field
-  public var style : String;
-
-  @:state("btn-lg") // optional state field (defaults to "btn-lg" if not provided by the caller)
-  public var size : String;
-
-  @:api // required api field
-  public var click : Void -> Void;
-
-  @:api(opt) // optional api field
-  public var hover : Void -> Void;
-
-  // don't define constructor - it will be generated
-
-  // don't define static create function - generated
-
-  // don't define update/shouldRender functions - generated
-
-  // define the render function as usual (using member state/api vars)
-  override function render() : Node {
-    return button([
-      "type" => "button",
-      "class" => '$style $size',
-      "click" => click,
-      "hover" => hover
-    ], children);
+class Main {
+  static function main() {
+    var div = js.Browser.document.getElementById("main");
+    Doom.browser.mount(new BannerComponent({
+      messages : [ "Doom", "is", "Magic", "(but the good kind)" ],
+      delay : 500,
+      toDisplay : 0
+    }), div);
   }
+}
+
+class BannerComponent extends Component<BannerProps> {
+  override function render() {
+    Timer.delay(function() {
+      update(props.merge({
+        toDisplay : (props.toDisplay + 1) % props.messages.length
+      }));
+    }, props.delay);
+    return h1(props.messages[props.toDisplay]);
+  }
+}
+
+typedef BannerProps = {
+  messages : Array<String>,
+  delay : Int,
+  toDisplay : Int
 }
 ```
 
-Result of Doom auto-component @:autoBuild macro:
-
-```haxe
-// Generated state structure (in same package as component)
-package my.components;
-
-typedef MyButtonState = {
-  style : String,
-  ?size : String
-};
-
-// Generate api structure (in same package as component)
-package my.components;
-
-typedef MyButtonApi = {
-  click: Void -> Void,
-  ?hover: Void -> Void
-};
-
-// Modified component class
-class MyButton extends Doom {
-  // added state/api/children fields
-  public var state : MyButtonState;
-  public var api : MyButtonApi;
-  public var children : Null<Nodes>;
-
-  // fields changed to properties
-  public var style(get, null) : String;
-  public var size(get, null) : String;
-  public var click(get, null) : Void -> Void;
-  public var hover(get, null) : Void -> Void;
-
-  // generated (inline) getters for state/api
-  inline function get_style() : String {
-    return state.style;
-  }
-
-  inline function get_size() : String {
-    return state.size;
-  }
-
-  inline function get_click() : Void -> Void {
-    return api.click;
-  }
-
-  inline function get_hover() : Void -> Void {
-    return api.hover;
-  }
-
-  // generated constructor
-  public function new(api : MyButtonApi, state: MyButtonState, ?children : Nodes) {
-    if (state.size == null) state.size = "btn-lg";
-    this.api = api;
-    this.state = state;
-    this.children = children;
-    super();
-  }
-
-  // generated static create function
-  /* not yet implemented
-  public static function create(
-    click : Void -> Void,
-    ?optApi : { ?hover : Void -> Void },
-    style : String,
-    ?optState : { ?size : String },
-    ?children : Nodes) : MyButton {
-    // TODO
-    return new MyButton({
-      style: style,
-      size: size
-    }, {
-    }, children);
-  }
-  */
-
-  // generated update function
-  public function update(newState : MyButtonState) : Void {
-    var oldState = this.state;
-    this.state = newState;
-    if (!shouldRender(oldState, newState)) return;
-    updateNode(node);
-  }
-
-  // generated shouldRender function (if not provided above)
-  public function shouldRender(oldState : MyButtonState, newState : MyButtonState) : Bool {
-    return true;
-  }
-
-  // render function unchanged
-  public function render() : Node {
-    // same code as above
-  }
-}
-```
+  * TODO describe update
+  * TODO describe api
+  * TODO describe state
