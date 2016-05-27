@@ -3,7 +3,7 @@ package doom.html;
 import js.Browser.*;
 import utest.Assert;
 import doom.core.VNode;
-import dots.Html;
+import dots.Dom;
 import doom.html.Html.*;
 
 class TestRender extends Base {
@@ -17,7 +17,7 @@ class TestRender extends Base {
       ]), expected : '<div class="container"><h1>title</h1><h2>subtitle</h2></div>'}
     ];
     for(test in tests)
-      Assert.equals(test.expected, Html.toString(render.generate(test.value)));
+      Assert.equals(test.expected, Dom.toString(render.generate(test.value)));
   }
 
   public function testMountElement() {

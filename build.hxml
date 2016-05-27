@@ -10,7 +10,6 @@
 doom.core.AttributeValue
 doom.core.Component
 doom.core.IRender
-doom.core.SelectorParser
 doom.core.VNode
 doom.core.VNodes
 doom.html.Attributes

@@ -310,8 +310,12 @@ class Render implements doom.core.IRender<Element> {
     var domAttrs  = Set.createString([for(i in 0...dom.attributes.length) dom.attributes.item(i).name]),
         vdomAttrs = Set.createString([for(key in attributes.keys()) key]),
         removed   = domAttrs.difference(vdomAttrs);
-    for(key in removed) // TODO remove event
-      dom.removeAttribute(key);
+    for(key in removed) {
+      if(hasEvent(dom, key))
+        removeEvent(dom, key);
+      else
+        dom.removeAttribute(key);
+    }
 
     for(key in vdomAttrs) {
       switch attributes.get(key) {
@@ -386,6 +390,10 @@ class Render implements doom.core.IRender<Element> {
 
   static function removeEvent(el : js.html.Element, name : String) {
     Reflect.deleteField(el, 'on$name');
+  }
+
+  static function hasEvent(el : js.html.Element, name : String) {
+    return Reflect.hasField(el, 'on$name');
   }
 }
 
