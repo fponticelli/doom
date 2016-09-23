@@ -13,6 +13,12 @@ abstract VNodes(Array<VNode>) to Array<VNode> {
   @:from public static function children(children : Array<VNode>) : VNodes
     return new VNodes(children);
 
+  @:from inline public static function lazy(fn: Void -> VNode): VNodes
+    return [VNode.lazy(fn)];
+
+  @:from inline public static function renderable(r: Renderable): VNodes
+    return [VNode.lazy(r.render)];
+
   inline function new(arr : Array<VNode>)
     this = arr;
 

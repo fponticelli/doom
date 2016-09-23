@@ -104,6 +104,8 @@ class Render implements doom.core.IRender<Element> {
         applyTextToNode(text, dom, parent, post);
       case Comp(comp):
         applyComponentToNode(cast comp, dom, parent, post); // TODO remove cast
+      case Lazy(render):
+        applyToNode(render(), dom, parent, post, tryUnmount);
     };
   }
 
@@ -360,6 +362,8 @@ class Render implements doom.core.IRender<Element> {
         post.insert(0, function() comp.didMount()); // TODO remove cast
         domComponentMap.set(cast comp, dom); // TODO remove cast
         dom;
+      case Lazy(render):
+        generateDom(render(), post);
     };
   }
 
