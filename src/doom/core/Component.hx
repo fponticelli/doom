@@ -63,9 +63,4 @@ class Component<Props, El> {
 
   public function didUnmount() {}
   public function willUnmount() {}
-
-  public function append(children : VNodes) : VNodes {
-    this.children = this.children.concat(children);
-    return this.children;
-  }
 }

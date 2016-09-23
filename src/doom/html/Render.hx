@@ -8,6 +8,7 @@ import doom.html.Component;
 import doom.html.Attributes.*;
 import doom.core.VNode;
 import doom.core.VNodes;
+import dots.EventHandler;
 import thx.Types;
 using thx.Arrays;
 using thx.Set;

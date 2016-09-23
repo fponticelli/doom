@@ -21,6 +21,11 @@ abstract VNodes(Array<VNode>) to Array<VNode> {
     return this;
   }
 
+  public function prepend(child : VNode) : VNodes {
+    this.unshift(child);
+    return this;
+  }
+
   inline public function concat(other : VNodes) : VNodes
     return this.concat(other);
 
