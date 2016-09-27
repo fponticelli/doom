@@ -14,6 +14,7 @@ doom.core.VNode
 doom.core.VNodes
 doom.html.Attributes
 doom.html.Component
+doom.html.Element
 doom.html.Html
 doom.html.Render
 doom.html.Svg

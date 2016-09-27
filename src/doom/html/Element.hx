@@ -5,6 +5,7 @@ import doom.core.VNodes;
 import doom.core.AttributeValue;
 import dots.EventHandler;
 import js.html.Event;
+using thx.Arrays;
 using thx.Strings;
 
 @:autoBuild(doom.html.macro.Styles.buildNamespace())
@@ -60,7 +61,7 @@ class Element<ElementType: Element<ElementType>> implements doom.core.Renderable
     return self();
   }
 
-  public function appendEventAttribute(name, fn: EventHandler) {
+  public function appendEventAttribute(name, fn: EventHandler)
     return switch attributes.get(name) {
       case null, BoolAttribute(_), StringAttribute(_): setEventAttribute(name, fn);
       case EventAttribute(f): setEventAttribute(name, function(e : Event) {
@@ -68,7 +69,6 @@ class Element<ElementType: Element<ElementType>> implements doom.core.Renderable
         fn(cast e);
       });
     };
-  }
 
   public function click(fn: EventHandler)
     return appendEventAttribute("click", fn);
@@ -81,6 +81,31 @@ class Element<ElementType: Element<ElementType>> implements doom.core.Renderable
 
   public function addClass(c: String): ElementType
     return appendStringAttribute("class", c);
+
+  public function removeClass(c: String): ElementType
+    return filterClass(function(cls) return cls != c);
+
+  public function filterClass(f: String -> Bool): ElementType
+    return switch attributes.get("class") {
+      case null, BoolAttribute(_), EventAttribute(_):
+        self();
+      case StringAttribute(classes):
+        var nclasses = classes.split(" ").filter(f).join(" ");
+        if(nclasses != classes)
+          self();
+        else
+          setStringAttribute("class", nclasses);
+    };
+
+  public function addNSClass(ns: String, c: String): ElementType {
+    removeNSClass(ns);
+    return addClass('$ns-$c');
+  }
+
+  public function removeNSClass(ns: String): ElementType {
+    ns = '$ns-';
+    return filterClass(function(cls) return !cls.startsWith(ns));
+  }
 
   public function disabled()
     return enableAttribute("disabled");
