@@ -22,7 +22,7 @@ class Component<Props, El> {
   public function asNode() : VNode
     return VNode.comp(this);
 
-  public function update(props : Props) {
+  public function update(props : Props, ?pos: haxe.PosInfos) {
     var old = this.props;
     this.props = props;
     // trace("** update, shouldUpdate? " + shouldUpdate(old, props) + ", shouldRender? " + shouldRender());
@@ -31,16 +31,16 @@ class Component<Props, El> {
     try {
       apply(this, node);
     } catch(e : Dynamic) {
-      rethrowUpdateError(e);
+      rethrowUpdateError(e, pos);
     }
   }
 
-  function rethrowUpdateError(e : Dynamic) {
+  function rethrowUpdateError(e : Dynamic, pos: haxe.PosInfos) {
     var s = Std.string(e);
     if(s.contains("apply is not a function")) {
       throw new Error('method `apply` has not been correctly migrated to ${Type.getClassName(Type.getClass(this))}');
     } else {
-      throw Error.fromDynamic(e);
+      throw Error.fromDynamic(e, pos);
     }
   }
 
