@@ -1,5 +1,20 @@
+var system = require('system');
 var page = require('webpage').create();
-page.onConsoleMessage = function (msg) { console.log(msg); };
+page.onConsoleMessage = function (serialized) {
+  // var args = JSON.parse(serialized);
+  // console.log.call(console, args);
+  console.log(serialized);
+};
+page.onError = function(msg, trace) {
+  var msgStack = ['ERROR: ' + msg];
+  if (trace && trace.length) {
+    msgStack.push('TRACE:');
+    trace.forEach(function(t) {
+      msgStack.push(' -> ' + t.file + ': ' + t.line + (t.function ? ' (in function "' + t.function +'")' : ''));
+    });
+  }
+  system.stderr.write(msgStack.join('\n'));
+};
 var url = './bin/index.html';
 
 page.open(url, function (status) {

@@ -2,6 +2,8 @@
 -cp src
 -cp test
 -lib thx.core
+-lib thx.promise
+-lib thx.stream
 -lib utest
 -lib dots
 -main TestAll

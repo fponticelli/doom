@@ -9,27 +9,27 @@ class Base {
 
   var render : Render;
   public function setup() {
-    document.body.innerHTML = "";
+    el().innerHTML = "";
     render = new Render();
   }
   public function teardown() {
-    document.body.innerHTML = "";
+    el().innerHTML = "";
   }
 
   public function asText() {
-    return document.body.innerHTML;
+    return el().innerHTML;
   }
 
   public function first() : js.html.Node {
-    return document.body.firstChild;
+    return el().firstChild;
   }
 
-  public function body() {
-    return document.body;
+  public function el() {
+    return document.getElementById("ref");
   }
 
   public function mount(node : VNode) {
-    render.mount(node, body());
+    render.mount(node, el());
   }
 
   public function apply(node : VNode) {
@@ -37,7 +37,7 @@ class Base {
   }
 
   public function select(selector : String) {
-    return body().querySelector(selector);
+    return el().querySelector(selector);
   }
 
   public function assertHtml(expectedHtml : String, ?pos : haxe.PosInfos) {

@@ -14,6 +14,11 @@ using thx.Arrays;
 using thx.Set;
 using thx.Tuple;
 
+#if thx_stream
+import thx.stream.Property;
+import thx.stream.Stream;
+#end
+
 @:access(doom.core.Component)
 class Render implements doom.core.IRender<Element> {
   // namespaces
@@ -25,11 +30,11 @@ class Render implements doom.core.IRender<Element> {
     "m"     => "http://www.w3.org/1998/Math/MathML"
   ];
 
-  public var doc(default, null) : Document;
-  public var namespaces(default, null) : Map<String, String>;
-  public var domComponentMap(default, null) : DomComponentMap;
+  public var doc(default, null): Document;
+  public var namespaces(default, null): Map<String, String>;
+  public var domComponentMap(default, null): DomComponentMap;
 
-  public function new(?doc : Document, ?namespaces : Map<String, String>) {
+  public function new(?doc: Document, ?namespaces: Map<String, String>) {
     if(null == doc)
       this.doc = js.Browser.document;
     else
@@ -43,7 +48,7 @@ class Render implements doom.core.IRender<Element> {
     domComponentMap = new DomComponentMap();
   }
 
-  public function mount(node : VNode, parent : Element) {
+  public function mount(node: VNode, parent: Element) {
     // trace("** mount");
     parent.innerHTML = "";
     var post = [],
@@ -51,16 +56,35 @@ class Render implements doom.core.IRender<Element> {
     parent.appendChild(n);
     // trace('** mount: post (${post.length})');
     for(f in post) f();
+    return n;
   }
 
-  public function apply(node : VNode, dom : DOMNode) {
+#if thx_stream
+  public function stream<T>(stream: Stream<VNode>, parent: Element) {
+    var el = null;
+    return stream
+      .next(function(node: VNode) {
+        if(null == el) {
+          el = mount(node, parent);
+        } else {
+          apply(node, el);
+        }
+      })
+      .failure(function(err: thx.Error) {
+        throw err;
+      })
+      .run();
+  }
+#end
+
+  public function apply(node: VNode, dom: DOMNode) {
     var post = [];
     // trace("** apply");
     applyToNode(node, dom, dom.parentElement, post, false);
     for(f in post) f();
   }
 
-  public function generate(node : VNode) : DOMNode {
+  public function generate(node: VNode): DOMNode {
     // trace("** generate");
     var post = [],
         dom = generateDom(node, post);
@@ -69,7 +93,7 @@ class Render implements doom.core.IRender<Element> {
     return dom;
   }
 
-  function applyToNode(node : Null<VNode>, dom : Null<DOMNode>, parent : Element, post : Array<Void -> Void>, tryUnmount : Bool) : DOMNode {
+  function applyToNode(node: Null<VNode>, dom: Null<DOMNode>, parent: Element, post: Array<Void -> Void>, tryUnmount: Bool): DOMNode {
     // trace("** applyToNode, has node? " + (null != node) + ", has dom? " + (null != dom) + ", tryUnmount? " + tryUnmount);
     if(null == node && null == dom) {
       return null;
@@ -109,7 +133,7 @@ class Render implements doom.core.IRender<Element> {
     };
   }
 
-  function applyNodeToNode(srcDom : Null<DOMNode>, dstDom : Null<DOMNode>, parent : Element, tryUnmount : Bool) : DOMNode {
+  function applyNodeToNode(srcDom: Null<DOMNode>, dstDom: Null<DOMNode>, parent: Element, tryUnmount: Bool): DOMNode {
     // trace("** applyNodeToNode");
     if(null == srcDom && null == dstDom)
       return null;
@@ -124,8 +148,8 @@ class Render implements doom.core.IRender<Element> {
       unmountDomComponent(dstDom);
     if(srcDom.nodeType == dstDom.nodeType) {
       if(srcDom.nodeType == DOMNode.ELEMENT_NODE) {
-        var srcEl = (cast srcDom : Element),
-            dstEl = (cast dstDom : Element);
+        var srcEl = (cast srcDom: Element),
+            dstEl = (cast dstDom: Element);
         if(srcEl.tagName == dstEl.tagName) {
           applyElementAttributes(srcEl, dstEl);
           zipNodeListAndNodeList(srcEl.childNodes, dstEl.childNodes).each(function(t) {
@@ -146,7 +170,7 @@ class Render implements doom.core.IRender<Element> {
     }
   }
 
-  function migrate<Props>(src : doom.html.Component<Props>, dst : doom.html.Component<Props>) {
+  function migrate<Props>(src: doom.html.Component<Props>, dst: doom.html.Component<Props>) {
     var fields = dst.migrationFields();
     for(field in fields) {
       var f = Reflect.field(src, field);
@@ -161,7 +185,7 @@ class Render implements doom.core.IRender<Element> {
     }
   }
 
-  function applyComponentToNode<Props>(newComp : doom.html.Component<Props>, dom : DOMNode, parent : Element, post : Array<Void -> Void>) : DOMNode {
+  function applyComponentToNode<Props>(newComp: doom.html.Component<Props>, dom: DOMNode, parent: Element, post: Array<Void -> Void>): DOMNode {
     var oldComps = domComponentMap.getComponents(dom);
     // trace("** applyComponentToNode, has oldComp? " + (null != oldComp) + ", are same type? " + Types.sameType(newComp, oldComp));
     if(null != oldComps) {
@@ -212,7 +236,7 @@ class Render implements doom.core.IRender<Element> {
     }
   }
 
-  function unmountDomComponent(dom : DOMNode) {
+  function unmountDomComponent(dom: DOMNode) {
     for(i in 0...dom.childNodes.length) {
       var child = dom.childNodes[i];
       unmountDomComponent(child);
@@ -223,16 +247,16 @@ class Render implements doom.core.IRender<Element> {
       unmountComponent(comp);
   }
 
-  function renderComponent<Props, El>(comp : doom.core.Component<Props, El>) : VNode {
+  function renderComponent<Props, El>(comp: doom.core.Component<Props, El>): VNode {
     try {
       return comp.render();
-    } catch(e : Dynamic) {
+    } catch(e: Dynamic) {
       var typeName = thx.Types.valueTypeToString(comp);
       return throw new thx.error.ErrorWrapper('unable to render $typeName', e);
     }
   }
 
-  function unmountComponent<Props>(comp : Component<Props>) {
+  function unmountComponent<Props>(comp: Component<Props>) {
     domComponentMap.removeByComponent(comp);
     comp.willUnmount();
     comp.isUnmounted = true;
@@ -240,9 +264,9 @@ class Render implements doom.core.IRender<Element> {
     comp.didUnmount();
   }
 
-  function applyElementToNode(name : String, attributes : Map<String, AttributeValue>, children : VNodes, dom : DOMNode, parent : Element, post : Array<Void -> Void>) : DOMNode {
-    // trace("** applyElementToNode, name: " + name.toUpperCase() + ", old node: " + (dom.nodeType == DOMNode.ELEMENT_NODE ? (cast dom : Element).tagName : '${dom.nodeType}'));
-    if(dom.nodeType == DOMNode.ELEMENT_NODE && (cast dom : Element).tagName == name.toUpperCase()) {
+  function applyElementToNode(name: String, attributes: Map<String, AttributeValue>, children: VNodes, dom: DOMNode, parent: Element, post: Array<Void -> Void>): DOMNode {
+    // trace("** applyElementToNode, name: " + name.toUpperCase() + ", old node: " + (dom.nodeType == DOMNode.ELEMENT_NODE ? (cast dom: Element).tagName: '${dom.nodeType}'));
+    if(dom.nodeType == DOMNode.ELEMENT_NODE && (cast dom: Element).tagName == name.toUpperCase()) {
       applyNodeAttributes(attributes, cast dom);
       zipVNodesAndNodeList(children, dom.childNodes).each(function(t) {
         applyToNode(t._0, t._1, cast dom, post, true);
@@ -254,7 +278,7 @@ class Render implements doom.core.IRender<Element> {
     }
   }
 
-  function applyCommentToNode(comment : String, dom : DOMNode, parent : Element, post : Array<Void -> Void>) : DOMNode {
+  function applyCommentToNode(comment: String, dom: DOMNode, parent: Element, post: Array<Void -> Void>): DOMNode {
     // trace("** applyCommentToNode");
     if(dom.nodeType == DOMNode.COMMENT_NODE) {
       dom.textContent = comment;
@@ -265,7 +289,7 @@ class Render implements doom.core.IRender<Element> {
     }
   }
 
-  function applyTextToNode(text : String, dom : DOMNode, parent : Element, post : Array<Void -> Void>) : DOMNode {
+  function applyTextToNode(text: String, dom: DOMNode, parent: Element, post: Array<Void -> Void>): DOMNode {
     // trace("** applyTextToNode");
     if(dom.nodeType == DOMNode.TEXT_NODE) {
       dom.textContent = text;
@@ -276,7 +300,7 @@ class Render implements doom.core.IRender<Element> {
     }
   }
 
-  function replaceChild(parent : Element, oldDom : DOMNode, newDom : DOMNode) {
+  function replaceChild(parent: Element, oldDom: DOMNode, newDom: DOMNode) {
     // trace("** replaceChild, is same? " + (oldDom == newDom));
     if(oldDom == newDom)
       return newDom;
@@ -284,17 +308,17 @@ class Render implements doom.core.IRender<Element> {
     return newDom;
   }
 
-  function zipVNodesAndNodeList(vnodes : VNodes, children : js.html.NodeList) : Array<Tuple2<VNode, DOMNode>> {
+  function zipVNodesAndNodeList(vnodes: VNodes, children: js.html.NodeList): Array<Tuple2<VNode, DOMNode>> {
     var len = thx.Ints.max(vnodes.length, children.length);
     return [for(i in 0...len) Tuple2.of(vnodes[i], children[i])];
   }
 
-  function zipNodeListAndNodeList(left : js.html.NodeList, right : js.html.NodeList) : Array<Tuple2<DOMNode, DOMNode>> {
+  function zipNodeListAndNodeList(left: js.html.NodeList, right: js.html.NodeList): Array<Tuple2<DOMNode, DOMNode>> {
     var len = thx.Ints.max(left.length, right.length);
     return [for(i in 0...len) Tuple2.of(left[i], right[i])];
   }
 
-  public function applyElementAttributes(srcDom : Element, dstDom : Element) {
+  public function applyElementAttributes(srcDom: Element, dstDom: Element) {
     var dstAttrs = Set.createString([for(i in 0...dstDom.attributes.length) dstDom.attributes.item(i).name]),
         srcAttrs = Set.createString([for(i in 0...srcDom.attributes.length) srcDom.attributes.item(i).name]),
         removed  = dstAttrs.difference(srcAttrs);
@@ -309,7 +333,7 @@ class Render implements doom.core.IRender<Element> {
     }
   }
 
-  public function applyNodeAttributes(attributes : Map<String, AttributeValue>, dom : Element) {
+  public function applyNodeAttributes(attributes: Map<String, AttributeValue>, dom: Element) {
     var domAttrs  = Set.createString([for(i in 0...dom.attributes.length) dom.attributes.item(i).name]),
         vdomAttrs = Set.createString([for(key in attributes.keys()) key]),
         removed   = domAttrs.difference(vdomAttrs);
@@ -338,7 +362,7 @@ class Render implements doom.core.IRender<Element> {
     }
   }
 
-  function generateDom(node : VNode, post : Array<Void -> Void>) : DOMNode {
+  function generateDom(node: VNode, post: Array<Void -> Void>): DOMNode {
     return switch node {
       case Element(name, attributes, children):
         // trace("** generateDom: element");
@@ -368,7 +392,7 @@ class Render implements doom.core.IRender<Element> {
   }
 
 
-  public function createElement(name : String, attributes : Map<String, AttributeValue>, children : VNodes, post : Array<Void -> Void>) : Element {
+  public function createElement(name: String, attributes: Map<String, AttributeValue>, children: VNodes, post: Array<Void -> Void>): Element {
     var colonPos = name.indexOf(":");
     var el = if(colonPos > 0) {
             var prefix = name.substring(0, colonPos),
@@ -389,38 +413,38 @@ class Render implements doom.core.IRender<Element> {
     return el;
   }
 
-  static function setEvent(el : js.html.Element, name : String, handler : EventHandler) {
+  static function setEvent(el: js.html.Element, name: String, handler: EventHandler) {
     Reflect.setField(el, 'on$name', handler);
   }
 
-  static function removeEvent(el : js.html.Element, name : String) {
+  static function removeEvent(el: js.html.Element, name: String) {
     Reflect.deleteField(el, 'on$name');
   }
 
-  static function hasEvent(el : js.html.Element, name : String) {
+  static function hasEvent(el: js.html.Element, name: String) {
     return Reflect.hasField(el, 'on$name');
   }
 }
 
 private class DomComponentMap {
-  var domToComponent(default, null) : Map<DOMNode, Array<Component<Dynamic>>>;
-  var componentToDom(default, null) : Map<Component<Dynamic>, DOMNode>;
+  var domToComponent(default, null): Map<DOMNode, Array<Component<Dynamic>>>;
+  var componentToDom(default, null): Map<Component<Dynamic>, DOMNode>;
   public function new() {
     componentToDom = new Map();
     domToComponent = new Map();
   }
 
-  public function getComponents(dom : DOMNode) : Array<Component<Dynamic>> {
+  public function getComponents(dom: DOMNode): Array<Component<Dynamic>> {
     if(null == dom) return null;
     return domToComponent.get(dom);
   }
 
-  function getDom(comp : Component<Dynamic>) : DOMNode {
+  function getDom(comp: Component<Dynamic>): DOMNode {
     if(null == comp) return null;
     return componentToDom.get(comp);
   }
 
-  public function set(comp : Component<Dynamic>, dom : DOMNode) {
+  public function set(comp: Component<Dynamic>, dom: DOMNode) {
     componentToDom.set(comp, dom);
     var list = domToComponent.get(dom);
     if(null == list) {
@@ -431,7 +455,7 @@ private class DomComponentMap {
     }
   }
 
-  public function removeByComponent(comp : Component<Dynamic>) {
+  public function removeByComponent(comp: Component<Dynamic>) {
     var dom = componentToDom.get(comp);
     componentToDom.remove(comp);
     var list = getComponents(dom);
@@ -441,7 +465,7 @@ private class DomComponentMap {
       domToComponent.remove(dom);
   }
 
-  public function removeByDom(dom : DOMNode) {
+  public function removeByDom(dom: DOMNode) {
     var comps = getComponents(dom);
     domToComponent.remove(dom);
     if(null == comps) return;
