@@ -2,7 +2,6 @@ package doom.html;
 
 import doom.core.VNode;
 import doom.core.AttributeValue;
-import dots.EventHandler;
 import js.html.Event;
 using thx.Arrays;
 using thx.Strings;
@@ -52,21 +51,21 @@ class BaseElement<ElementType: BaseElement<ElementType>> implements doom.core.Re
   public function appendStringAttribute(name, val: String): ElementType {
     return switch attributes.get(name) {
       case null, BoolAttribute(_), EventAttribute(_): setStringAttribute(name, val);
-      case StringAttribute(s): setStringAttribute(name, s + " " + val);
+      case StringAttribute(s): setStringAttribute(name, '$s $val');
     };
   }
 
-  public function setEventAttribute(name, val: EventHandler) {
-    attributes.set(name, EventAttribute(val.toCallback()));
+  public function setEventAttribute(name, f: EventHandler) {
+    attributes.set(name, EventAttribute(f));
     return self();
   }
 
   public function appendEventAttribute(name, fn: EventHandler)
     return switch attributes.get(name) {
       case null, BoolAttribute(_), StringAttribute(_): setEventAttribute(name, fn);
-      case EventAttribute(f): setEventAttribute(name, function(e : Event) {
-        f(cast e);
-        fn(cast e);
+      case EventAttribute(f): setEventAttribute(name, function(el: js.html.Element, e: Event) {
+        f(cast el, cast e);
+        fn(cast el, cast e);
       });
     };
 

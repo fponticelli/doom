@@ -7,10 +7,10 @@ import thx.Ints;
 import thx.Floats;
 
 abstract AttributeValue(AttributeValueImpl) from AttributeValueImpl to AttributeValueImpl {
-  @:from static public function fromString(s : String) : AttributeValue
+  @:from static public function fromString(s: String): AttributeValue
     return StringAttribute(s);
 
-  @:from static public function fromMap(map : Map<String, Bool>) : AttributeValue {
+  @:from static public function fromMap(map: Map<String, Bool>): AttributeValue {
     var values = [];
     for(key in map.keys())
       if(map.get(key))
@@ -18,57 +18,56 @@ abstract AttributeValue(AttributeValueImpl) from AttributeValueImpl to Attribute
     return StringAttribute(values.join(" "));
   }
 
-  @:from static public function fromBool(b : Bool) : AttributeValue
+  @:from static public function fromBool(b: Bool): AttributeValue
     return BoolAttribute(b);
 
-  @:from static public function fromHandler(f : Void -> Void) : AttributeValue
-    return null == f ? BoolAttribute(false) : EventAttribute(function(e : Event) {
-      e.preventDefault();
-      f();
-    });
+  @:from static public function fromEventHandler<EL: Element, E: Event>(f: doom.html.EventHandler): AttributeValue
+    return null == f ? BoolAttribute(false): EventAttribute(f);
 
-  @:from static public function fromEventHandler<T : Event>(f : T -> Void) : AttributeValue
-    return null == f ? BoolAttribute(false) : EventAttribute(f);
+  @:from inline static public function fromHandler(f: Void -> Void): AttributeValue
+    return fromEventHandler(f);
 
-  @:from static public function fromElementHandler<T : Element>(f : T -> Void) : AttributeValue
-    return null == f ? BoolAttribute(false) : EventAttribute(function(e : Event) {
-      e.preventDefault();
-      var input : T = cast e.target;
-      f(input);
-    });
+  @:from inline static public function fromTypedEventHandler<T: Event>(f: T -> Void): AttributeValue
+    return fromEventHandler(f);
 
-  @:from static public function fromStringValueHandler(f : String -> Void) : AttributeValue
-    return null == f ? BoolAttribute(false) : EventAttribute(function(e : Event) {
-      e.preventDefault();
-      var value : String = dots.Dom.getValue(cast e.target);
-      f(value);
-    });
+  @:from inline static public function fromElementHandler<T: Element>(f: T -> Void): AttributeValue
+    return fromEventHandler(f);
 
-  @:from static public function fromBoolValueHandler(f : Bool -> Void) : AttributeValue
-    return null == f ? BoolAttribute(false) : EventAttribute(function(e : Event) {
-      e.preventDefault();
-      var value : Bool = (cast e.target : js.html.InputElement).checked;
-      f(value);
-    });
+  @:from inline static public function fromElementAndEventHandler<TEL: Element, TE: Event>(f: TEL -> TE -> Void): AttributeValue
+    return fromEventHandler(f);
 
-  @:from static public function fromIntValueHandler(f : Int -> Void) : AttributeValue
-    return null == f ? BoolAttribute(false) : fromStringValueHandler(function(s : String) {
-      if(Ints.canParse(s)) f(Ints.parse(s));
-    });
+  @:from inline static public function fromStringValueHandler(f: String -> Void): AttributeValue
+    return fromEventHandler(f);
 
-  @:from static public function fromFloatValueHandler(f : Float -> Void) : AttributeValue
-    return null == f ? BoolAttribute(false) : fromStringValueHandler(function(s : String) {
-      if(Floats.canParse(s)) f(Floats.parse(s));
-    });
+  @:from inline static public function fromStringValueAndEventHandler<TE: Event>(f: String -> TE -> Void): AttributeValue
+    return fromEventHandler(f);
 
-  public function toString() : String
+  @:from inline static public function fromBoolValueHandler(f: Bool -> Void): AttributeValue
+    return fromEventHandler(f);
+
+  @:from inline static public function fromBoolValueAndEventHandler<TE: Event>(f: Bool -> TE -> Void): AttributeValue
+    return fromEventHandler(f);
+
+  @:from inline static public function fromIntValueHandler(f: Int -> Void): AttributeValue
+    return fromEventHandler(f);
+
+  @:from inline static public function fromIntValueAndEventHandler<TE: Event>(f: Int -> TE -> Void): AttributeValue
+    return fromEventHandler(f);
+
+  @:from inline static public function fromFloatValueHandler(f: Float -> Void): AttributeValue
+    return fromEventHandler(f);
+
+  @:from inline static public function fromFloatValueAndEventHandler<TE: Event>(f: Float -> TE -> Void): AttributeValue
+    return fromEventHandler(f);
+
+  public function toString(): String
     return switch this {
-      case StringAttribute(s) : s;
-      case a : throw new Error('cannot convert attribute $a to string');
+      case StringAttribute(s): s;
+      case a: throw new Error('cannot convert attribute $a to string');
     };
 
   @:op(A==B)
-  public function equalsTo(that : AttributeValue)
+  public function equalsTo(that: AttributeValue)
     return switch [this, that] {
       case [null, _], [_, null]: false;
       case [BoolAttribute(a), BoolAttribute(b)]: a == b;
@@ -77,12 +76,12 @@ abstract AttributeValue(AttributeValueImpl) from AttributeValueImpl to Attribute
     };
 
   @:op(A!=B)
-  public function notEqualsTo(that : AttributeValue)
+  public function notEqualsTo(that: AttributeValue)
     return !equalsTo(that);
 }
 
 enum AttributeValueImpl {
-  BoolAttribute(b : Bool);
-  StringAttribute(s : String);
-  EventAttribute<T : Event>(f : T -> Void);
+  BoolAttribute(b: Bool);
+  StringAttribute(s: String);
+  EventAttribute<EL: Element, E: Event>(f: EL -> E -> Void);
 }

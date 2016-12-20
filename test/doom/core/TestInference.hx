@@ -15,13 +15,13 @@ class TestInference {
 
     child = VNode.text("hi");
     switch child {
-      case Text("hi"): Assert.pass();
+      case Text("hi", null, null): Assert.pass();
       case _: Assert.fail();
     }
 
     child = "hi again";
     switch child {
-      case Text("hi again"): Assert.pass();
+      case Text("hi again", null, null): Assert.pass();
       case _: Assert.fail();
     }
   }
@@ -51,19 +51,19 @@ class TestInference {
 
     children = VNode.text("hi");
     switch (children : Array<VNodeImpl>) {
-      case [Text("hi")]: Assert.pass();
+      case [Text("hi", null, null)]: Assert.pass();
       case _: Assert.fail();
     }
 
     children = "hi again";
     switch (children : Array<VNode>) {
-      case [Text("hi again")]: Assert.pass();
+      case [Text("hi again", null, null)]: Assert.pass();
       case _: Assert.fail();
     }
 
     children = ["hi"];
     switch (children : Array<VNode>) {
-      case [Text("hi")]: Assert.pass();
+      case [Text("hi", null, null)]: Assert.pass();
       case _: Assert.fail();
     }
 

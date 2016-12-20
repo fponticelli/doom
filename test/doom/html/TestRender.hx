@@ -9,12 +9,12 @@ import doom.html.Html.*;
 class TestRender extends Base {
   public function testGenerate() {
     var tests = [
-      { value : Comment("a comment"), expected : "<!--a comment-->" },
-      { value : Text("text node"), expected : "text node" },
+      { value : Comment("a comment", null, null), expected : "<!--a comment-->" },
+      { value : Text("text node", null, null), expected : "text node" },
       { value : Element("div", ["class" => "container"], [
-        Element("h1", new Map(), [Text("title")]),
-        Element("h2", new Map(), [Text("subtitle")]),
-      ]), expected : '<div class="container"><h1>title</h1><h2>subtitle</h2></div>'}
+        Element("h1", new Map(), [Text("title", null, null)], null, null),
+        Element("h2", new Map(), [Text("subtitle", null, null)], null, null),
+      ], null, null), expected : '<div class="container"><h1>title</h1><h2>subtitle</h2></div>'}
     ];
     for(test in tests)
       Assert.equals(test.expected, Dom.toString(render.generate(test.value)));
@@ -22,6 +22,13 @@ class TestRender extends Base {
 
   public function testMountElement() {
     mount(div(["class" => "some"]));
+    assertHtml('<div class="some"></div>');
+  }
+
+  public function testMountWithMountElement() {
+    mount(div().mount(function(render, el: js.html.Element) {
+      el.className = "some";
+    }));
     assertHtml('<div class="some"></div>');
   }
 

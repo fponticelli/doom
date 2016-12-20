@@ -8,7 +8,6 @@ import doom.html.Component;
 import doom.html.Attributes.*;
 import doom.core.VNode;
 import doom.core.VNodes;
-import dots.EventHandler;
 import thx.Types;
 using thx.Arrays;
 using thx.Set;
@@ -109,20 +108,20 @@ class Render implements doom.core.IRender<Element> {
       return el;
     }
     return switch node {
-      case Element(name, attributes, children):
+      case Element(name, attributes, children, onMount, onUnmount):
         if(tryUnmount)
           unmountDomComponent(dom);
         applyElementToNode(name, attributes, children, dom, parent, post);
-      case Comment(comment):
+      case Comment(comment, onMount, onUnmount):
         if(tryUnmount)
           unmountDomComponent(dom);
         applyCommentToNode(comment, dom, parent, post);
-      case Raw(code):
+      case Raw(code, onMount, onUnmount):
         if(tryUnmount)
           unmountDomComponent(dom);
         var node = dots.Html.parse(code);
         applyNodeToNode(node, dom, parent, true);
-      case Text(text):
+      case Text(text, onMount, onUnmount):
         if(tryUnmount)
           unmountDomComponent(dom);
         applyTextToNode(text, dom, parent, post);
@@ -247,14 +246,8 @@ class Render implements doom.core.IRender<Element> {
       unmountComponent(comp);
   }
 
-  function renderComponent<Props, El>(comp: doom.core.Component<Props, El>): VNode {
-    try {
-      return comp.render();
-    } catch(e: Dynamic) {
-      var typeName = thx.Types.valueTypeToString(comp);
-      return throw new thx.error.ErrorWrapper('unable to render $typeName', e);
-    }
-  }
+  function renderComponent<Props, El>(comp: doom.core.Component<Props, El>): VNode
+    return comp.render();
 
   function unmountComponent<Props>(comp: Component<Props>) {
     domComponentMap.removeByComponent(comp);
@@ -364,18 +357,30 @@ class Render implements doom.core.IRender<Element> {
 
   function generateDom(node: VNode, post: Array<Void -> Void>): DOMNode {
     return switch node {
-      case Element(name, attributes, children):
+      case Element(name, attributes, children, onMount, onUnmount):
         // trace("** generateDom: element");
-        createElement(name, attributes, children, post);
-      case Comment(comment):
+        var dom = createElement(name, attributes, children, post);
+        if(null != onMount)
+          post.push(onMount.bind(cast this, cast dom));
+        dom;
+      case Comment(comment, onMount, onUnmount):
         // trace("** generateDom: comment");
-        doc.createComment(comment);
-      case Raw(code):
+        var c = doc.createComment(comment);
+        if(null != onMount)
+          post.push(onMount.bind(cast this, cast c));
+        c;
+      case Raw(code, onMount, onUnmount):
         // trace("** generateDom: raw");
-        dots.Html.parse(code);
-      case Text(text):
+        var r = dots.Html.parse(code);
+        if(null != onMount)
+          post.push(onMount.bind(cast this, cast r));
+        r;
+      case Text(text, onMount, onUnmount):
         // trace("** generateDom: text");
-        doc.createTextNode(text);
+        var t = doc.createTextNode(text);
+        if(null != onMount)
+          post.push(onMount.bind(cast this, cast t));
+        t;
       case Comp(comp):
         // trace("** generateDom: component");
         comp.willMount();
@@ -414,7 +419,7 @@ class Render implements doom.core.IRender<Element> {
   }
 
   static function setEvent(el: js.html.Element, name: String, handler: EventHandler) {
-    Reflect.setField(el, 'on$name', handler);
+    Reflect.setField(el, 'on$name', (handler: Element -> js.html.Event -> Void).bind(el, _));
   }
 
   static function removeEvent(el: js.html.Element, name: String) {

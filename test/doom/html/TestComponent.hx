@@ -293,7 +293,7 @@ private class SampleComponent<T> extends doom.html.Component<T> {
   }
   override function render() {
     addPhase(Render);
-    return Element("span", ["class" => "sample"], children);
+    return Element("span", ["class" => "sample"], children, null, null);
   }
   override function didMount() {
     addPhase(DidMount);

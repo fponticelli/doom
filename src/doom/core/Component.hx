@@ -37,6 +37,7 @@ class Component<Props, El> {
 
   function rethrowUpdateError(e : Dynamic, pos: haxe.PosInfos) {
     var s = Std.string(e);
+    trace(s);
     if(s.contains("apply is not a function")) {
       throw new Error('method `apply` has not been correctly migrated to ${Type.getClassName(Type.getClass(this))}');
     } else {
