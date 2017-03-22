@@ -70,11 +70,13 @@ class Styles {
     return css.replace(placeholder, '.$compName');
 
   public static function saveCss(path : String) {
-    var css = [];
-    for(value in cssMap) {
-      css.push(value);
-    }
-    File.saveContent(path, css.join("\n") + "\n");
+    haxe.macro.Context.onGenerate(function(_) {
+      var css = [];
+      for(value in cssMap) {
+        css.push(value);
+      }
+      File.saveContent(path, css.join("\n") + "\n");
+    });
   }
 
   static var cssMap : OrderedMap<String, String> = OrderedMap.createString();

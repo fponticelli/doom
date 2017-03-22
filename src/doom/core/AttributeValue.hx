@@ -10,12 +10,22 @@ abstract AttributeValue(AttributeValueImpl) from AttributeValueImpl to Attribute
   @:from static public function fromString(s: String): AttributeValue
     return StringAttribute(s);
 
-  @:from static public function fromMap(map: Map<String, Bool>): AttributeValue {
+  @:from static public function fromBoolMap(map: Map<String, Bool>): AttributeValue {
     var values = [];
     for(key in map.keys())
       if(map.get(key))
         values.push(key);
     return StringAttribute(values.join(" "));
+  }
+
+  @:from static public function fromStringMap(map: Map<String, String>): AttributeValue {
+    var values = [];
+    for(key in map.keys()) {
+      var value = map.get(key);
+      if(null == value) continue;
+      values.push('$key:$value');
+    }
+    return StringAttribute(values.join(";"));
   }
 
   @:from static public function fromBool(b: Bool): AttributeValue
