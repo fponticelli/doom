@@ -5,9 +5,9 @@ lurking around) and built to be easy to use.
 
 ## Demos
 
-  * [TodoMVC Demo](https://rawgit.com/fponticelli/doom/master/demo/todomvc/index.html)
-  * [SVG support](https://rawgit.com/fponticelli/doom/master/demo/svg/www/index.html)
-  * [Doom Auto Component macro](https://rawgit.com/fponticelli/doom/master/demo/autocomponent/www/index.html)
+* [TodoMVC Demo](https://rawgit.com/fponticelli/doom/master/demo/todomvc/index.html)
+* [SVG support](https://rawgit.com/fponticelli/doom/master/demo/svg/www/index.html)
+* [Doom Auto Component macro](https://rawgit.com/fponticelli/doom/master/demo/autocomponent/www/index.html)
 
 ## VNode
 
@@ -17,8 +17,8 @@ represent an element (like a `DIV` or an `A`), simple text or a Component.
 Generating a `VNode` doesn't automatically render it. A `VNode` needs to be
 translated into browser DOM nodes. There are two ways to do that:
 
-  * mount the `VNode` directly in the DOM
-  * generate and return a `VNode` from a `Component.render` method.
+* mount the `VNode` directly in the DOM
+* generate and return a `VNode` from a `Component.render` method.
 
 To mount a `VNode` use `Doom.render.mount()`:
 
@@ -39,11 +39,11 @@ class Main {
 
 The following `VNode` types exist:
 
-  * `Element(name: String, attributes: Map<String, AttributeValue>, children: VNodes)`
-  * `Comment(comment: String)`
-  * `Raw(code: String)`
-  * `Text(text: String)`
-  * `Comp<Props, El>(comp: Component<Props, El>)`
+* `Element(name: String, attributes: Map<String, AttributeValue>, children: VNodes)`
+* `Comment(comment: String)`
+* `Raw(code: String)`
+* `Text(text: String)`
+* `Comp<Props, El>(comp: Component<Props, El>)`
 
 These can be generated using the homonymous methods on `doom.core.VNode`, `doom.html.Html` and/or `doom.html.Svg` (the last two are convenient aliases). The methods are `el`, `comp`, `comment`, `raw` and `text`. `doom.html.Html` also contains shortcut methods like `div` or `input` to generate equivalent
 nodes.
@@ -58,14 +58,14 @@ Elements expect a `Map<String, AttributeValue>` to set the node attributes and p
 
 `AttributeValue` has 3 constructors:
 
-  * `BoolAttribute(b : Bool)`
-  * `StringAttribute(s : String)`
-  * `EventAttribute<T : Event>(f : T -> Void)`
+* `BoolAttribute(b : Bool)`
+* `StringAttribute(s : String)`
+* `EventAttribute<T : Event>(f : T -> Void)`
 
 Here are the types that are implicitly converted to `AttributeValue`:
 
-  * `String` for attributes like `id` or `class`
-  * `Map<String, Bool>` mainly to be used with `class`. It is convenient to turn
+* `String` for attributes like `id` or `class`
+* `Map<String, Bool>` mainly to be used with `class`. It is convenient to turn
     on and off class names:
 
 ```haxe
@@ -78,21 +78,21 @@ div([
 ]);
 ```
 
-  * `Bool` used with attributes like `disabled` or `checked`
-  * `Void -> Void` an event handler that doesn't care about information
-    related to the even itself. `click` is the perfect example for it.
-  * `(T : Event) -> Void` when you want an event handler and have full control
-    on the `Event` object.
-  * `(T : Element) -> Void`, the handler receives the original element that
-    triggered the event.
-  * `String -> Void`, the handler receives the text content of the element
-    that triggered the event. The text content is retrieved in different ways
-    according to the type of element (`input`, `textarea`, `select`, ...).
-  * `Bool -> Void`, the handler receives a flag value from the `checked`
-    attribute.
-  * `Int -> Void`, works like `String -> Void` but tries to convert the value
-    into an `Int`. If that cannot happen the handler is not invoked.
-  * `Float -> Void`, same as `Int -> Void` but for floats.
+* `Bool` used with attributes like `disabled` or `checked`
+* `Void -> Void` an event handler that doesn't care about information
+  related to the even itself. `click` is the perfect example for it.
+* `(T : Event) -> Void` when you want an event handler and have full control
+  on the `Event` object.
+* `(T : Element) -> Void`, the handler receives the original element that
+  triggered the event.
+* `String -> Void`, the handler receives the text content of the element
+  that triggered the event. The text content is retrieved in different ways
+  according to the type of element (`input`, `textarea`, `select`, ...).
+* `Bool -> Void`, the handler receives a flag value from the `checked`
+  attribute.
+* `Int -> Void`, works like `String -> Void` but tries to convert the value
+  into an `Int`. If that cannot happen the handler is not invoked.
+* `Float -> Void`, same as `Int -> Void` but for floats.
 
 *Note*: All event handlers except for `(T : Event) -> Void` will automatically
 call `event.preventDefault()`.
@@ -137,6 +137,6 @@ typedef BannerProps = {
 }
 ```
 
-  * TODO describe update
-  * TODO describe api
-  * TODO describe state
+* TODO describe update
+* TODO describe api
+* TODO describe state
