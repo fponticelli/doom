@@ -4,7 +4,6 @@ import doom.core.VNodes;
 import thx.stream.Property;
 import thx.stream.Store;
 
-@:autoBuild(doom.html.macro.Styles.buildNamespace())
 class ComponentReducer<Action, Props> extends doom.html.Component<Props> {
   public var dispatch(default, null): Action -> Void;
   public function new(
