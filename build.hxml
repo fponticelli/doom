@@ -22,4 +22,5 @@ doom.html.Html
 doom.html.Render
 doom.html.Svg
 
--cmd phantomjs bin/phantom.js
+# -cmd phantomjs bin/phantom.js
+-cmd node bin/browser.js

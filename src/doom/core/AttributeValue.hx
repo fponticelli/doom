@@ -3,8 +3,6 @@ package doom.core;
 import js.html.Event;
 import js.html.Element;
 import thx.Error;
-import thx.Ints;
-import thx.Floats;
 
 abstract AttributeValue(AttributeValueImpl) from AttributeValueImpl to AttributeValueImpl {
   @:from static public function fromString(s: String): AttributeValue
