@@ -262,6 +262,9 @@ class Render implements doom.core.IRender<Element> {
     if(dom.nodeType == DOMNode.ELEMENT_NODE && (cast dom: Element).tagName == name.toUpperCase()) {
       applyNodeAttributes(attributes, cast dom);
       zipVNodesAndNodeList(children, dom.childNodes).each(function(t) {
+        // `false` was previously `true` for the `tryUnmount` flag,
+        // but this was causing components to re-mount on each render,
+        // so they were struggling to keep their own state
         applyToNode(t._0, t._1, cast dom, post, false);
       });
       return dom;
