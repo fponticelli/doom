@@ -1,7 +1,0 @@
--js example.js
--cp ../src
--lib thx.core
--lib thx.promise
--lib thx.stream
--lib dots
--main Example

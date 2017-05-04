@@ -3,7 +3,7 @@ import doom.html.Html.*;
 using thx.Objects;
 import thx.Timer;
 
-class Example {
+class BannerExample {
   static function main() {
     var div = js.Browser.document.querySelector("body"); // mounting directly on the body
     Doom.browser.mount(new BannerComponent({
