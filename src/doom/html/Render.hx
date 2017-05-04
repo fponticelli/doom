@@ -262,7 +262,7 @@ class Render implements doom.core.IRender<Element> {
     if(dom.nodeType == DOMNode.ELEMENT_NODE && (cast dom: Element).tagName == name.toUpperCase()) {
       applyNodeAttributes(attributes, cast dom);
       zipVNodesAndNodeList(children, dom.childNodes).each(function(t) {
-        applyToNode(t._0, t._1, cast dom, post, true);
+        applyToNode(t._0, t._1, cast dom, post, false);
       });
       return dom;
     } else {
