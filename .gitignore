@@ -1,4 +1,4 @@
 bin/*
 node_modules/*
-
 todomvc/*
+example/*.js

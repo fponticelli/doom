@@ -122,7 +122,7 @@ class Main {
 class BannerComponent extends Component<BannerProps> {
   override function render() {
     Timer.delay(function() {
-      update(props.merge({
+      update(props.shallowMerge({
         toDisplay : (props.toDisplay + 1) % props.messages.length
       }));
     }, props.delay);
