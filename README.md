@@ -8,7 +8,7 @@ lurking around) and built to be easy to use.
 * [TodoMVC Demo](https://rawgit.com/fponticelli/doom-demos/master/todomvc/index.html)
 * [SVG support](https://rawgit.com/fponticelli/doom-demos/master/svg/www/index.html)
 
-Demos source code can be found [here](https://github.com/fponticelli/doom-demos/);
+Demos source code can be found [here](https://github.com/fponticelli/doom-demos/).
 
 ## VNode
 
