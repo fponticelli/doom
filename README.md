@@ -5,9 +5,10 @@ lurking around) and built to be easy to use.
 
 ## Demos
 
-* [TodoMVC Demo](https://rawgit.com/fponticelli/doom/master/demo/todomvc/index.html)
-* [SVG support](https://rawgit.com/fponticelli/doom/master/demo/svg/www/index.html)
-* [Doom Auto Component macro](https://rawgit.com/fponticelli/doom/master/demo/autocomponent/www/index.html)
+* [TodoMVC Demo](https://rawgit.com/fponticelli/doom-demos/master/todomvc/index.html)
+* [SVG support](https://rawgit.com/fponticelli/doom-demos/master/svg/www/index.html)
+
+Demos source code can be found [here](https://github.com/fponticelli/doom-demos/);
 
 ## VNode
 
