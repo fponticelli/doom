@@ -3,16 +3,9 @@
 Doom is a Virtual Dom Library for Haxe. It is strictly typed (no `Dynamic`s
 lurking around) and built to be easy to use.
 
-## Examples
-
-  To see easy examples, please look at the folder `examples` from this repository.
-
 ## Demos
 
-* [TodoMVC Demo](https://rawgit.com/fponticelli/doom-demos/master/todomvc/index.html)
-* [SVG support](https://rawgit.com/fponticelli/doom-demos/master/svg/www/index.html)
-
-Demos source code can be found [here](https://github.com/fponticelli/doom-demos/).
+Examples and demos with source code can be found [here](https://github.com/fponticelli/doom-demos/).
 
 ## VNode
 
@@ -142,6 +135,9 @@ typedef BannerProps = {
 }
 ```
 
+### API documentation
+* [Generated documentation](https://rawgit.com/fponticelli/doom/master/docs/index.html)
+
+## TODO
 * TODO describe update
-* TODO describe api
 * TODO describe state

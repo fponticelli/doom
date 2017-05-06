@@ -10,6 +10,10 @@
   "contributors": ["fponticelli"],
   "dependencies" : {
     "thx.core" : "",
-    "dots" : ""
+    "thx.promise": "",
+    "thx.stream": "",
+    "dots" : "",
+    "utest": "",
+    "dox": ""
   }
 }
