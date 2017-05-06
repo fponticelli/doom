@@ -1,0 +1,44 @@
+{
+  "dependencies": [
+    {
+      "name": "dots",
+      "type": "git",
+      "dir": "",
+      "ref": "9b7c752",
+      "url": "git@github.com:fponticelli/dots"
+    },
+    {
+      "name": "dox",
+      "type": "haxelib",
+      "version": "1.1.0"
+    },
+    {
+      "name": "thx.core",
+      "type": "git",
+      "dir": "",
+      "ref": "e800498",
+      "url": "git@github.com:fponticelli/thx.core"
+    },
+    {
+      "name": "thx.promise",
+      "type": "git",
+      "dir": "",
+      "ref": "65379a9",
+      "url": "git@github.com:fponticelli/thx.promise"
+    },
+    {
+      "name": "thx.stream",
+      "type": "git",
+      "dir": "",
+      "ref": "bf4520c",
+      "url": "git@github.com:fponticelli/thx.stream"
+    },
+    {
+      "name": "utest",
+      "type": "git",
+      "dir": "",
+      "ref": "0b96b9d",
+      "url": "git@github.com:fponticelli/utest"
+    }
+  ]
+}
