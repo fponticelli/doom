@@ -7,6 +7,18 @@ lurking around) and built to be easy to use.
 
 Examples and demos with source code can be found [here](https://github.com/fponticelli/doom-demos/).
 
+## Tests
+
+Make sure to have [phantomjs](http://phantomjs.org/) installed.
+
+Run the following commands from the root of the projects:
+
+```bash
+haxelib install hmm
+hmm install
+haxe build.hxml
+```
+
 ## VNode
 
 A `VNode` (virtual node) is the basic rendering element in Doom. It can
