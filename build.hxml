@@ -29,4 +29,4 @@ doom.html.Svg
 ## Test cases
 -cmd phantomjs bin/phantom.js
 ## Generate HTML documentation only for doom and direct dependencies
--cmd haxelib run dox --title "Haxe Doom docs" \-in "^doom\." -in "^thx\." -in "^dots\." -i bin/docs.js.xml -o docs
+-cmd haxelib run dox --title "Haxe Doom docs" -in "^doom\." -in "^thx\." -in "^dots\." -i bin/docs.js.xml -o docs
