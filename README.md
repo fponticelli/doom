@@ -3,6 +3,10 @@
 Doom is a Virtual Dom Library for Haxe. It is strictly typed (no `Dynamic`s
 lurking around) and built to be easy to use.
 
+## Examples
+
+  To see easy examples, please look at the folder `examples` from this repository.
+
 ## Demos
 
 * [TodoMVC Demo](https://rawgit.com/fponticelli/doom-demos/master/todomvc/index.html)
@@ -123,7 +127,7 @@ class Main {
 class BannerComponent extends Component<BannerProps> {
   override function render() {
     Timer.delay(function() {
-      update(props.merge({
+      update(props.shallowMerge({
         toDisplay : (props.toDisplay + 1) % props.messages.length
       }));
     }, props.delay);

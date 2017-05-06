@@ -3,13 +3,14 @@ package doom.html;
 import doom.core.VNodes;
 import thx.stream.Property;
 import thx.stream.Store;
+import thx.stream.Reducer.Middleware;
 
 class ComponentReducer<Action, Props> extends doom.html.Component<Props> {
   public var dispatch(default, null): Action -> Void;
   public function new(
     property: Property<Props>,
     reducer: Props -> Action -> Props,
-    ?middleware: Props -> Action -> (Action -> Void) -> Void,
+    ?middleware: Middleware<Props, Action>,
     ?children: VNodes
   ) {
     var store = new Store(property, reducer, middleware);
