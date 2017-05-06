@@ -142,6 +142,9 @@ typedef BannerProps = {
 }
 ```
 
+### API documentation
+* [Generated documentation](https://rawgit.com/fponticelli/doom/master/docs/index.html)
+
+## TODO
 * TODO describe update
-* TODO describe api
 * TODO describe state

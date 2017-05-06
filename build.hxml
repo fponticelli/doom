@@ -1,3 +1,5 @@
+-xml bin/docs.js.xml
+-D doc-gen
 -js bin/browser.js
 -cp src
 -cp test
@@ -22,4 +24,7 @@ doom.html.Html
 doom.html.Render
 doom.html.Svg
 
+## Test cases
 -cmd phantomjs bin/phantom.js
+## Generate HTML documentation
+-cmd haxelib run dox --title "Haxe Doom docs" -i bin/docs.js.xml -o docs
