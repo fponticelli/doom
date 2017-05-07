@@ -1,2 +1,0 @@
-package;
-import doom.Doom;
