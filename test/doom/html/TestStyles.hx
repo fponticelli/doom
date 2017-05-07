@@ -11,10 +11,6 @@ class TestStyles extends Base {
   }
 }
 
-private class A extends doom.html.Component<{}> {
+private class A extends doom.html.Component<{}> {}
 
-}
-
-private class B extends A {
-
-}
+private class B extends A {}

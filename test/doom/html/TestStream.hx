@@ -1,12 +1,7 @@
 package doom.html;
 
-import js.Browser.*;
-import utest.Assert;
-import doom.core.VNode;
-import dots.Dom;
 import doom.html.Html.*;
 import thx.stream.Property;
-import thx.stream.Stream;
 import haxe.ds.Option;
 
 class TestStream extends Base {

@@ -1,9 +1,8 @@
 var system = require('system');
 var page = require('webpage').create();
-page.onConsoleMessage = function (serialized) {
-  // var args = JSON.parse(serialized);
-  // console.log.call(console, args);
-  console.log(serialized);
+page.onConsoleMessage = function (message) {
+  // this doesn't work as expected
+  system.stderr.write(message);
 };
 page.onError = function(msg, trace) {
   var msgStack = ['ERROR: ' + msg];
@@ -32,7 +31,7 @@ page.open(url, function (status) {
     if(result.isOk) {
       console.log('phantom.js: test successful');
       console.log(result.message);
-      phantom.exit();
+      phantom.exit(0);
     } else {
       console.log('phantom.js: test errors');
       console.log(result.message);

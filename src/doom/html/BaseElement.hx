@@ -3,7 +3,6 @@ package doom.html;
 import doom.core.VNode;
 import doom.core.AttributeValue;
 import js.html.Event;
-using thx.Arrays;
 using thx.Strings;
 
 @:autoBuild(doom.html.macro.Styles.buildNamespace())

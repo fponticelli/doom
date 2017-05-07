@@ -2,7 +2,6 @@ package doom.html;
 
 import utest.Assert;
 import doom.core.VNode;
-import js.html.Node;
 import doom.html.Phase;
 import doom.html.Html.*;
 
@@ -131,8 +130,8 @@ class TestComponent extends Base {
     comp2.phases = [];
     comp2.update({}); // should do nothing
     Assert.same([
-      { phase : WillUpdate, hasElement : true,  isUnmounted : false },
-      { phase : Render, hasElement : true, isUnmounted : false },
+      { phase : WillUpdate, hasElement : true, isUnmounted : false },
+      { phase : Render,     hasElement : true, isUnmounted : false },
       { phase : DidUpdate,  hasElement : true, isUnmounted : false }
     ], comp2.phases);
   }
@@ -144,9 +143,9 @@ class TestComponent extends Base {
     mount(div);
     var dom = select(".container");
     Assert.same([
-      { phase : WillMount,   hasElement : false, isUnmounted : false },
-      { phase : Render,      hasElement : false, isUnmounted : false },
-      { phase : DidMount,    hasElement : true,  isUnmounted : false },
+      { phase : WillMount, hasElement : false, isUnmounted : false },
+      { phase : Render,    hasElement : false, isUnmounted : false },
+      { phase : DidMount,  hasElement : true,  isUnmounted : false },
     ], comp.phases);
 
     comp.phases = [];
@@ -170,15 +169,15 @@ class TestComponent extends Base {
     div = doom.html.Html.div(["class" => "container"], comp);
     render.apply(div, dom);
     Assert.same([
-      { phase : WillMount,   hasElement : false, isUnmounted : false },
-      { phase : Render,      hasElement : false, isUnmounted : false },
-      { phase : DidMount,    hasElement : true,  isUnmounted : false }
+      { phase : WillMount, hasElement : false, isUnmounted : false },
+      { phase : Render,    hasElement : false, isUnmounted : false },
+      { phase : DidMount,  hasElement : true,  isUnmounted : false }
     ], comp.phases);
     comp.phases = [];
     comp.update({}); // should do nothing
     Assert.same([
       { phase : WillUpdate, hasElement : true, isUnmounted : false },
-      { phase : Render, hasElement : true, isUnmounted : false },
+      { phase : Render,     hasElement : true, isUnmounted : false },
       { phase : DidUpdate,  hasElement : true, isUnmounted : false }
     ], comp.phases);
   }
@@ -192,8 +191,8 @@ class TestComponent extends Base {
     comp.phases = [];
     render.apply(div, dom);
     Assert.same([
-      { phase : WillUnmount, hasElement : true, isUnmounted : false },
-      { phase : DidUnmount,  hasElement : false,  isUnmounted : true }
+      { phase : WillUnmount, hasElement : true,  isUnmounted : false },
+      { phase : DidUnmount,  hasElement : false, isUnmounted : true }
     ], comp.phases);
     comp.phases = [];
     comp.update({}); // should do nothing

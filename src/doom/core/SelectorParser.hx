@@ -3,7 +3,6 @@ package doom.core;
 import thx.Error;
 using thx.Arrays;
 using thx.Iterators;
-using StringTools;
 using thx.Bools;
 
 typedef SelectorParserResult = {
