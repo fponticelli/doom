@@ -48,12 +48,10 @@ class Render implements doom.core.IRender<Element> {
   }
 
   public function mount(node: VNode, parent: Element) {
-    // trace("** mount");
     parent.innerHTML = "";
     var post = [],
         n = generateDom(node, post);
     parent.appendChild(n);
-    // trace('** mount: post (${post.length})');
     for(f in post) f();
     return n;
   }
@@ -78,28 +76,22 @@ class Render implements doom.core.IRender<Element> {
 
   public function apply(node: VNode, dom: DOMNode) {
     var post = [];
-    // trace("** apply");
-    applyToNode(node, dom, dom.parentElement, post, false);
+    applyToNode(node, dom, dom.parentElement, post);
     for(f in post) f();
   }
 
   public function generate(node: VNode): DOMNode {
-    // trace("** generate");
     var post = [],
         dom = generateDom(node, post);
-    // trace('** generate: post (${post.length})');
     for(f in post) f();
     return dom;
   }
 
-  function applyToNode(node: Null<VNode>, dom: Null<DOMNode>, parent: Element, post: Array<Void -> Void>, tryUnmount: Bool): DOMNode {
-    // trace("** applyToNode, has node? " + (null != node) + ", has dom? " + (null != dom) + ", tryUnmount? " + tryUnmount);
+  function applyToNode(node: Null<VNode>, dom: Null<DOMNode>, parent: Element, post: Array<Void -> Void>): DOMNode {
     if(null == node && null == dom) {
       return null;
     } else if(null == node) {
-      // trace("** applyToNode: REMOVE CHILD");
-      if(tryUnmount)
-        unmountDomComponent(dom);
+      unmountAllComponent(dom);
       parent.removeChild(dom);
       return null;
     } else if(null == dom) {
@@ -109,31 +101,29 @@ class Render implements doom.core.IRender<Element> {
     }
     return switch node {
       case Element(name, attributes, children, onMount, onUnmount):
-        if(tryUnmount)
+        if(children.length == 0)
+          unmountAllComponent(dom);
+        else
           unmountDomComponent(dom);
         applyElementToNode(name, attributes, children, dom, parent, post);
       case Comment(comment, onMount, onUnmount):
-        if(tryUnmount)
-          unmountDomComponent(dom);
+        unmountAllComponent(dom);
         applyCommentToNode(comment, dom, parent, post);
       case Raw(code, onMount, onUnmount):
-        if(tryUnmount)
-          unmountDomComponent(dom);
+        unmountAllComponent(dom);
         var node = dots.Html.parse(code);
-        applyNodeToNode(node, dom, parent, true);
+        applyNodeToNode(node, dom, parent);
       case Text(text, onMount, onUnmount):
-        if(tryUnmount)
-          unmountDomComponent(dom);
+        unmountAllComponent(dom);
         applyTextToNode(text, dom, parent, post);
       case Comp(comp):
         applyComponentToNode(cast comp, dom, parent, post); // TODO remove cast
       case Lazy(render):
-        applyToNode(render(), dom, parent, post, tryUnmount);
+        applyToNode(render(), dom, parent, post);
     };
   }
 
-  function applyNodeToNode(srcDom: Null<DOMNode>, dstDom: Null<DOMNode>, parent: Element, tryUnmount: Bool): DOMNode {
-    // trace("** applyNodeToNode");
+  function applyNodeToNode(srcDom: Null<DOMNode>, dstDom: Null<DOMNode>, parent: Element): DOMNode {
     if(null == srcDom && null == dstDom)
       return null;
     else if(null == srcDom) {
@@ -143,8 +133,7 @@ class Render implements doom.core.IRender<Element> {
       parent.appendChild(srcDom);
       return srcDom;
     }
-    if(tryUnmount)
-      unmountDomComponent(dstDom);
+    unmountDomComponent(dstDom);
     if(srcDom.nodeType == dstDom.nodeType) {
       if(srcDom.nodeType == DOMNode.ELEMENT_NODE) {
         var srcEl = (cast srcDom: Element),
@@ -152,7 +141,7 @@ class Render implements doom.core.IRender<Element> {
         if(srcEl.tagName == dstEl.tagName) {
           applyElementAttributes(srcEl, dstEl);
           zipNodeListAndNodeList(srcEl.childNodes, dstEl.childNodes).each(function(t) {
-            applyNodeToNode(t._0, t._1, dstEl, true);
+            applyNodeToNode(t._0, t._1, dstEl);
           });
           return dstDom;
         } else {
@@ -186,7 +175,6 @@ class Render implements doom.core.IRender<Element> {
 
   function applyComponentToNode<Props>(newComp: doom.html.Component<Props>, dom: DOMNode, parent: Element, post: Array<Void -> Void>): DOMNode {
     var oldComps = domComponentMap.getComponents(dom);
-    // trace("** applyComponentToNode, has oldComp? " + (null != oldComp) + ", are same type? " + Types.sameType(newComp, oldComp));
     if(null != oldComps) {
       var oldComp = oldComps.find(function(comp) return Types.sameType(comp, newComp));
       if(null == oldComp) {
@@ -196,7 +184,7 @@ class Render implements doom.core.IRender<Element> {
           newComp.willMount();
           var node = renderComponent(newComp);
           newComp.apply = cast this.apply; // TODO remove cast
-          var dom = applyToNode(node, dom, parent, post, false);
+          var dom = applyToNode(node, dom, parent, post);
           newComp.node = cast dom; // TODO remove cast
 
           post.insert(0, function() newComp.didMount()); // TODO remove cast
@@ -215,7 +203,7 @@ class Render implements doom.core.IRender<Element> {
           domComponentMap.removeByComponent(oldComp);
           // domComponentMap.remove(oldComp, dom);
           var node = renderComponent(oldComp),
-          newDom = applyToNode(node, dom, parent, post, false);
+          newDom = applyToNode(node, dom, parent, post);
           oldComp.node = newDom;
           domComponentMap.set(oldComp, newDom);
           return newDom;
@@ -227,7 +215,7 @@ class Render implements doom.core.IRender<Element> {
       newComp.willMount();
       var node = renderComponent(newComp);
       newComp.apply = cast this.apply; // TODO remove cast
-      var dom = applyToNode(node, dom, parent, post, false);
+      var dom = applyToNode(node, dom, parent, post);
       newComp.node = cast dom; // TODO remove cast
       post.insert(0, function() newComp.didMount()); // TODO remove cast
       domComponentMap.set(newComp, dom);
@@ -236,14 +224,18 @@ class Render implements doom.core.IRender<Element> {
   }
 
   function unmountDomComponent(dom: DOMNode) {
-    for(i in 0...dom.childNodes.length) {
-      var child = dom.childNodes[i];
-      unmountDomComponent(child);
-    }
     var comps = domComponentMap.getComponents(dom);
     if(null == comps) return;
     for(comp in comps)
       unmountComponent(comp);
+  }
+
+  function unmountAllComponent(dom: DOMNode) {
+    for(i in 0...dom.childNodes.length) {
+      var child = dom.childNodes[i];
+      unmountAllComponent(child);
+    }
+    unmountDomComponent(dom);
   }
 
   function renderComponent<Props, El>(comp: doom.core.Component<Props, El>): VNode
@@ -258,14 +250,10 @@ class Render implements doom.core.IRender<Element> {
   }
 
   function applyElementToNode(name: String, attributes: Map<String, AttributeValue>, children: VNodes, dom: DOMNode, parent: Element, post: Array<Void -> Void>): DOMNode {
-    // trace("** applyElementToNode, name: " + name.toUpperCase() + ", old node: " + (dom.nodeType == DOMNode.ELEMENT_NODE ? (cast dom: Element).tagName: '${dom.nodeType}'));
     if(dom.nodeType == DOMNode.ELEMENT_NODE && (cast dom: Element).tagName == name.toUpperCase()) {
       applyNodeAttributes(attributes, cast dom);
       zipVNodesAndNodeList(children, dom.childNodes).each(function(t) {
-        // `false` was previously `true` for the `tryUnmount` flag,
-        // but this was causing components to re-mount on each render,
-        // so they were struggling to keep their own state
-        applyToNode(t._0, t._1, cast dom, post, false);
+        applyToNode(t._0, t._1, cast dom, post);
       });
       return dom;
     } else {
@@ -275,7 +263,6 @@ class Render implements doom.core.IRender<Element> {
   }
 
   function applyCommentToNode(comment: String, dom: DOMNode, parent: Element, post: Array<Void -> Void>): DOMNode {
-    // trace("** applyCommentToNode");
     if(dom.nodeType == DOMNode.COMMENT_NODE) {
       dom.textContent = comment;
       return dom;
@@ -286,7 +273,6 @@ class Render implements doom.core.IRender<Element> {
   }
 
   function applyTextToNode(text: String, dom: DOMNode, parent: Element, post: Array<Void -> Void>): DOMNode {
-    // trace("** applyTextToNode");
     if(dom.nodeType == DOMNode.TEXT_NODE) {
       dom.textContent = text;
       return dom;
@@ -297,7 +283,6 @@ class Render implements doom.core.IRender<Element> {
   }
 
   function replaceChild(parent: Element, oldDom: DOMNode, newDom: DOMNode) {
-    // trace("** replaceChild, is same? " + (oldDom == newDom));
     if(oldDom == newDom)
       return newDom;
     parent.replaceChild(newDom, oldDom);
@@ -361,31 +346,26 @@ class Render implements doom.core.IRender<Element> {
   function generateDom(node: VNode, post: Array<Void -> Void>): DOMNode {
     return switch node {
       case Element(name, attributes, children, onMount, onUnmount):
-        // trace("** generateDom: element");
         var dom = createElement(name, attributes, children, post);
         if(null != onMount)
           post.push(onMount.bind(cast this, cast dom));
         dom;
       case Comment(comment, onMount, onUnmount):
-        // trace("** generateDom: comment");
         var c = doc.createComment(comment);
         if(null != onMount)
           post.push(onMount.bind(cast this, cast c));
         c;
       case Raw(code, onMount, onUnmount):
-        // trace("** generateDom: raw");
         var r = dots.Html.parse(code);
         if(null != onMount)
           post.push(onMount.bind(cast this, cast r));
         r;
       case Text(text, onMount, onUnmount):
-        // trace("** generateDom: text");
         var t = doc.createTextNode(text);
         if(null != onMount)
           post.push(onMount.bind(cast this, cast t));
         t;
       case Comp(comp):
-        // trace("** generateDom: component");
         comp.willMount();
         var node = renderComponent(comp),
             dom  = generateDom(node, post);

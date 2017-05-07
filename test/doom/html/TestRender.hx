@@ -1,6 +1,5 @@
 package doom.html;
 
-import js.Browser.*;
 import utest.Assert;
 import doom.core.VNode;
 import dots.Dom;
