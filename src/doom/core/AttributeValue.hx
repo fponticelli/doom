@@ -56,16 +56,16 @@ abstract AttributeValue(AttributeValueImpl) from AttributeValueImpl to Attribute
   @:from inline static public function fromBoolValueAndEventHandler<TE: Event>(f: Bool -> TE -> Void): AttributeValue
     return fromEventHandler(f);
 
-  @:from inline static public function fromIntValueHandler(f: Int -> Void): AttributeValue
-    return fromEventHandler(f);
-
-  @:from inline static public function fromIntValueAndEventHandler<TE: Event>(f: Int -> TE -> Void): AttributeValue
-    return fromEventHandler(f);
-
   @:from inline static public function fromFloatValueHandler(f: Float -> Void): AttributeValue
     return fromEventHandler(f);
 
   @:from inline static public function fromFloatValueAndEventHandler<TE: Event>(f: Float -> TE -> Void): AttributeValue
+    return fromEventHandler(f);
+
+  @:from inline static public function fromIntValueHandler(f: Int -> Void): AttributeValue
+    return fromEventHandler(f);
+
+  @:from inline static public function fromIntValueAndEventHandler<TE: Event>(f: Int -> TE -> Void): AttributeValue
     return fromEventHandler(f);
 
   public function toString(): String

@@ -56,16 +56,6 @@ abstract EventHandler(Element -> Event -> Void) from Element -> Event -> Void to
       f(value, cast e);
     };
 
-  @:from inline static public function fromIntValueHandler(f: Int -> Void): EventHandler
-    return fromStringValueHandler(function(s: String) {
-      if(Ints.canParse(s)) f(Ints.parse(s));
-    });
-
-  @:from inline static public function fromIntValueAndEventHandler<TE: Event>(f: Int -> TE -> Void): EventHandler
-    return fromStringValueAndEventHandler(function(s: String, e: TE) {
-      if(Ints.canParse(s)) f(Ints.parse(s), e);
-    });
-
   @:from inline static public function fromFloatValueHandler(f: Float -> Void): EventHandler
     return fromStringValueHandler(function(s: String) {
       if(Floats.canParse(s)) f(Floats.parse(s));
@@ -74,5 +64,15 @@ abstract EventHandler(Element -> Event -> Void) from Element -> Event -> Void to
   @:from inline static public function fromFloatValueAndEventHandler<TE: Event>(f: Float -> TE -> Void): EventHandler
     return fromStringValueAndEventHandler(function(s: String, e: TE) {
       if(Floats.canParse(s)) f(Floats.parse(s), e);
+    });
+
+  @:from inline static public function fromIntValueHandler(f: Int -> Void): EventHandler
+    return fromStringValueHandler(function(s: String) {
+      if(Ints.canParse(s)) f(Ints.parse(s));
+    });
+
+  @:from inline static public function fromIntValueAndEventHandler<TE: Event>(f: Int -> TE -> Void): EventHandler
+    return fromStringValueAndEventHandler(function(s: String, e: TE) {
+      if(Ints.canParse(s)) f(Ints.parse(s), e);
     });
 }
