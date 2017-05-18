@@ -1,4 +1,4 @@
--js bin/browser.js
+-js bin/test.js
 -cp src
 -cp test
 -lib thx.core
@@ -9,18 +9,18 @@
 -main TestAll
 -D html
 
-doom.core.AttributeValue
-doom.core.Component
-doom.core.IRender
-doom.core.VNode
-doom.core.VNodes
-doom.html.Attributes
-doom.html.Component
-doom.html.ComponentReducer
-doom.html.Element
-doom.html.Html
-doom.html.Render
-doom.html.Svg
+# doom.core.AttributeValue
+# doom.core.Component
+# doom.core.IRender
+# doom.core.VNode
+# doom.core.VNodes
+# doom.html.Attributes
+# doom.html.Component
+# doom.html.ComponentReducer
+# doom.html.Element
+# doom.html.Html
+# doom.html.Render
+# doom.html.Svg
 
 # -cmd phantomjs bin/phantom.js
--cmd node bin/browser.js
+-cmd node bin/test.js
