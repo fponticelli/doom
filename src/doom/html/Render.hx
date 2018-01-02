@@ -159,6 +159,9 @@ class Render implements doom.core.IRender<Element> {
   }
 
   function migrate<Props>(src: doom.html.Component<Props>, dst: doom.html.Component<Props>) {
+    if (src == dst) {
+      return;
+    }
     var fields = dst.migrationFields();
     for(field in fields) {
       var f = Reflect.field(src, field);
